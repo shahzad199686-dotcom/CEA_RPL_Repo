@@ -1,0 +1,31 @@
+# CEA_RPL ASP.NET Core MVC Guidelines
+
+This repository follows the **Clean Architecture** pattern utilizing ASP.NET Core MVC (net10.0) and Entity Framework Core with SQL Server.
+
+All code generation, architectural decisions, and refactoring by an AI Agent MUST adhere to the following rules:
+
+## 1. Clean Architecture Boundaries
+- **CEA_RPL.Domain**: No external dependencies. Contains Enterprise Domain Logic, Entities, Enums, Value Objects, Domain Exceptions, and Repository Interfaces (e.g., `IApplicantRepository`).
+- **CEA_RPL.Application**: Depends only on `Domain`. Contains Application Use Cases, DTOs, Mapping logic, Application/Domain validation (FluentValidation), and interfaces for Application Services (e.g., `IApplicantService`).
+- **CEA_RPL.Infrastructure**: Depends on `Application` and `Domain`. Implements external data providers (EF Core `DbContext`, Data Migrations, External API Services like OTP/Email). Uses Dependency Injection heavily.
+- **CEA_RPL (Web)**: Depends on `Application` and `Infrastructure`. Contains ASP.NET Core MVC (`Controllers`, `Views`, `ViewModels`), middleware configurations (`Program.cs`), `wwwroot`, and global exception handling.
+
+**CRITICAL RULE**: Do NOT introduce cyclical dependencies or allow `Domain` or `Application` to depend on `Infrastructure` or `Web`.
+
+## 2. Entity Framework Core
+- Always use `ApplicationDbContext` located in the `Infrastructure` layer.
+- Use **Code-First** EF Migrations. Keep model configurations inside `IEntityTypeConfiguration<T>` classes or in `OnModelCreating` rather than polluting Entities with Data Annotations.
+- Utilize `AsNoTracking()` for read-only queries (e.g. loading a dropdown list on the MVC View).
+- Do not expose `DbContext` directly to `Controllers`. Always wrap database operations inside Domain Repository interfaces, injected into Application Services.
+
+## 3. Web & MVC Design
+- **ViewModels vs DTOs**: Forms in MVC should bind to `ViewModels` mapped carefully from/to Application `DTOs`.
+- Views should try to leverage ASP.NET Core Tag Helpers `<input asp-for="Property">` instead of writing plain HTML inputs when binding to ViewModels.
+- Separate CSS/JS into `wwwroot/css` and `wwwroot/js`. Do not leave massive inline scripts inside `<script>` blocks in `.cshtml` if it can be avoided (unless specific logic needs Razor rendering).
+
+## 4. Code Quality & Standards
+- Language: **C# 10+** (target `net10.0`).
+- Async all the way down. Use `async Task` or `async Task<T>` and append `Async` suffix to method names (e.g., `GetApplicantByIdAsync`).
+- Always use `.ConfigureAwait(false)` in library layers (`Application`, `Infrastructure`), unless in `CEA_RPL (Web)` where Context needs preserving.
+- Treat warnings as errors where possible. Prefer explicit types in interfaces but utilize `var` where type is obvious.
+- Handle Exceptions using global Error Handling Middleware or standard `[HandleError]` in MVC. Avoid `try/catch` scattered blindly across code unless specific business recovery is needed.

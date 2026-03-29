@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="CEA_RPL/CEA_RPL.csproj" />
+  <Project Path="CEA_RPL/CEA_RPL.Domain/CEA_RPL.Domain.csproj" />
+  <Project Path="CEA_RPL/CEA_RPL.Application/CEA_RPL.Application.csproj" />
+  <Project Path="CEA_RPL/CEA_RPL.Infrastructure/CEA_RPL.Infrastructure.csproj" />
 </Solution>
