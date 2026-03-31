@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace CEA_RPL.Models;
 
@@ -38,6 +39,7 @@ public class ApplicationSubmissionRequest
     public List<string>? exp_designation { get; set; }
     public List<string>? exp_duration { get; set; }
     public List<string>? exp_nature { get; set; }
+    public List<string>? ref2_name { get; set; } // Added Ref name
     public List<string>? ref2_phone { get; set; }
     public List<IFormFile>? exp_proof { get; set; }
     
@@ -47,4 +49,53 @@ public class ApplicationSubmissionRequest
     public List<string>? project_location_cat1 { get; set; }
     public List<int>? project_year_cat1 { get; set; }
     public List<string>? project_role_cat1 { get; set; }
+
+    // Section 6: Audit Reports
+    public List<IFormFile>? audit_report { get; set; }
+
+    // Section 8: Training
+    public List<string>? training_name { get; set; }
+    public List<string>? training_from { get; set; }
+    public List<string>? training_duration { get; set; }
+    public List<int>? training_year { get; set; }
+    public List<IFormFile>? training_proof { get; set; }
+
+    // Section 9: Memberships
+    public List<string>? membership_name { get; set; }
+    public List<string>? membership_from { get; set; }
+    public List<int>? membership_year { get; set; }
+    public List<string>? membership_duration { get; set; }
+    public List<IFormFile>? membership_proof { get; set; }
+
+    // Section 10: Papers
+    public List<string>? paper_name { get; set; }
+    public List<string>? paper_place { get; set; }
+    public List<int>? paper_year { get; set; }
+    public List<string>? paper_role { get; set; }
+    public List<IFormFile>? paper_proof { get; set; }
+
+    // Section 11: Awards
+    public List<string>? award_name { get; set; }
+    public List<string>? award_from { get; set; }
+    public List<int>? award_year { get; set; }
+    public List<IFormFile>? award_proof { get; set; }
+
+    // Section 12: Software Skills
+    public List<string>? software_skill { get; set; }
+    public List<string>? proficiency_level { get; set; }
+
+    // Section 13: Other Enclosure
+    public IFormFile? other_enclosure { get; set; }
+
+    // Section 13a: Payment Details
+    public decimal payment_amount { get; set; }
+    public string payment_date { get; set; } = string.Empty;
+    public string payment_utr { get; set; } = string.Empty;
+    public IFormFile payment_receipt { get; set; } = null!;
+
+    // Section 14: Declaration & Signature
+    public string decl_name { get; set; } = string.Empty;
+    public string decl_date { get; set; } = string.Empty;
+    public string? decl_place { get; set; }
+    public List<IFormFile>? Any_other_doc { get; set; } // This is signature
 }

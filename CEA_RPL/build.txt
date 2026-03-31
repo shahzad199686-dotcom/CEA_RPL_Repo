@@ -1,0 +1,23 @@
+﻿D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(281,2): error RZ1034: Found a malformed 'body' tag helper. Tag helpers must have a start and end tag or be self closing. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(290,2): error RZ1006: The if block is missing a closing "}" character.  Make sure you have a matching "}" character for all the "{" characters within this block, and that none of the "}" characters are being interpreted as markup. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(292,2): error RZ1025: The "section" element was not closed.  All elements must be either self-closing or have a matching end tag. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1751,3): error RZ1026: Encountered end tag "body" with no matching start tag.  Are your start/end tags properly balanced? [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1751,3): error RZ1034: Found a malformed 'body' tag helper. Tag helpers must have a start and end tag or be self closing. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1752,3): error RZ1026: Encountered end tag "html" with no matching start tag.  Are your start/end tags properly balanced? [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\obj\Debug\net10.0\Microsoft.CodeAnalysis.Razor.Compiler\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\Views\Application\Index_cshtml.g.cs(3274,14): error CS1513: } expected [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(290,7): warning CS8602: Dereference of a possibly null reference. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+
+Build FAILED.
+
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(290,7): warning CS8602: Dereference of a possibly null reference. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(281,2): error RZ1034: Found a malformed 'body' tag helper. Tag helpers must have a start and end tag or be self closing. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(290,2): error RZ1006: The if block is missing a closing "}" character.  Make sure you have a matching "}" character for all the "{" characters within this block, and that none of the "}" characters are being interpreted as markup. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(292,2): error RZ1025: The "section" element was not closed.  All elements must be either self-closing or have a matching end tag. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1751,3): error RZ1026: Encountered end tag "body" with no matching start tag.  Are your start/end tags properly balanced? [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1751,3): error RZ1034: Found a malformed 'body' tag helper. Tag helpers must have a start and end tag or be self closing. [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\Views\Application\Index.cshtml(1752,3): error RZ1026: Encountered end tag "html" with no matching start tag.  Are your start/end tags properly balanced? [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\obj\Debug\net10.0\Microsoft.CodeAnalysis.Razor.Compiler\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\Views\Application\Index_cshtml.g.cs(3274,14): error CS1513: } expected [D:\Programing\C#\CEA_RPL_Sln\CEA_RPL\CEA_RPL.csproj]
+    1 Warning(s)
+    7 Error(s)
+
+Time Elapsed 00:00:02.05

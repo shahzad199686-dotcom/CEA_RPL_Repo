@@ -1,0 +1,126 @@
+@{
+    ViewData["Title"] = "Create Account - CEA RPL";
+}
+
+<div class="auth-page-container" style="max-width: 480px; margin: 60px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
+    <div style="text-align: center; margin-bottom: 35px;">
+        <h2 style="font-size: 2rem; color: #333; margin-bottom: 10px;">Create Access</h2>
+        <p style="color: #666;">Register to start your RPL application</p>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="signupArea">
+        <form id="signupForm">
+            <div style="margin-bottom: 20px;">
+                <label for="regEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email Address</label>
+                <input id="regEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="regMobile" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Mobile Number</label>
+                <input id="regMobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian number" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Create Password</label>
+                <input id="regPass" name="password" type="password" minlength="8" placeholder="Minimum 8 characters" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <button type="submit" id="btnContinue" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(14,165,165,0.2);">
+                Register & Verify
+            </button>
+        </form>
+    </div>
+
+    <!-- OTP AREA (INLINE) -->
+    <div id="otpArea" style="display: none; animation: fadeIn 0.4s ease-out;">
+        <p style="text-align: center; color: #666; margin-bottom: 25px;">We've sent a 6-digit verification code to <br><b id="confirmedEmail"></b></p>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 600; text-align: center;">Verification Code</label>
+            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #0ea5a5; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #f8ffff;" />
+        </div>
+
+        <button id="btnVerify" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+            Verify & Create Account
+        </button>
+    </div>
+
+    <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 12px; border-radius: 10px; display: none; font-weight: 500;"></div>
+
+    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #eee;">
+        <p style="color: #666; font-size: 0.95rem;">Already have an account? <a asp-action="Login" style="color: #0ea5a5; font-weight: 700; text-decoration: none;">Sign In</a></p>
+    </div>
+</div>
+
+<script>
+    const signupForm = document.getElementById('signupForm');
+    const signupArea = document.getElementById('signupArea');
+    const otpArea = document.getElementById('otpArea');
+    const authStatus = document.getElementById('authStatus');
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showStatus('Creating account...', '#eee', '#666');
+        
+        const formData = new FormData(signupForm);
+        try {
+            const resp = await fetch('/api/auth/signup', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await resp.json();
+            
+            if (resp.ok) {
+                document.getElementById('confirmedEmail').innerText = formData.get('email');
+                signupArea.style.display = 'none';
+                otpArea.style.display = 'block';
+                showStatus(data.message, '#e6f6f6', '#0ea5a5');
+            } else {
+                showStatus(data.message || 'Registration failed.', '#fff5f5', '#e53e3e');
+            }
+        } catch (err) {
+            showStatus('Connection failed.', '#fff5f5', '#e53e3e');
+        }
+    });
+
+    document.getElementById('btnVerify').addEventListener('click', async () => {
+        const otp = document.getElementById('emailOtp').value;
+        const email = document.getElementById('confirmedEmail').innerText;
+        
+        if (!otp || otp.length < 6) return alert('Enter 6-digit OTP');
+
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('emailOtp', otp);
+
+        try {
+            const resp = await fetch('/api/auth/verifyotp', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await resp.json();
+
+            if (resp.ok) {
+                showStatus('Account verified! Redirecting...', '#e6f6f6', '#0ea5a5');
+                setTimeout(() => window.location.href = '/Application/Index', 1000);
+            } else {
+                showStatus(data.message, '#fff5f5', '#e53e3e');
+            }
+        } catch (err) {
+            showStatus('Verification failed.', '#fff5f5', '#e53e3e');
+        }
+    });
+
+    function showStatus(msg, bg, color) {
+        authStatus.innerText = msg;
+        authStatus.style.background = bg;
+        authStatus.style.color = color;
+        authStatus.style.display = 'block';
+    }
+</script>
+
+<style>
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    input:focus { border-color: #0ea5a5 !important; }
+</style>

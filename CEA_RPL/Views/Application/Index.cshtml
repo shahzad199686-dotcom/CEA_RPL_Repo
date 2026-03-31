@@ -266,253 +266,152 @@ button {
 }
 
 /* =========================
-   Responsive
+   Toast Notifications
+========================= */
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: #fff;
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-lg);
+  padding: 16px 20px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out forwards;
+  max-width: 350px;
+}
+.toast.error { border-left-color: var(--warn); }
+.toast.success { border-left-color: var(--success); }
+@@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* =========================
+   Responsive & Modals
 ========================= */
 @@media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
+}
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-card {
+  background: #fff; border-radius: 16px; padding: 32px; width: 100%; max-width: 400px;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center;
+  animation: slideIn 0.3s ease-out forwards;
+}
+.auth-tabs {
+  display: flex; background: #f4f8f7; border-radius: 12px; padding: 4px; margin-bottom: 24px;
+}
+.auth-tab {
+  flex: 1; text-align: center; padding: 10px; border-radius: 8px; cursor: pointer;
+  font-weight: 600; color: var(--muted); transition: all 0.2s;
+}
+.auth-tab.active { background: #fff; color: var(--accent); box-shadow: var(--shadow); }
+.auth-container { max-width: 440px; margin: 0 auto; }
+
+/* Enhanced Button States */
+.btn-primary:hover, .btn-ghost:hover, .add-row:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 8px 15px -3px rgba(0,0,0,0.15);
+}
+.btn-primary:active, .btn-ghost:active {
+  transform: translateY(0);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Modal Animations */
+.modal-overlay {
+  transition: opacity 0.3s ease;
+}
+.modal-card {
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-overlay.show .modal-card {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#authSection {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* FORM LAYOUT STYLES */
+section {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+section h2 {
+  color: var(--accent);
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e6f6f6;
+  padding-bottom: 10px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
 }
 </style>
 
 </head>
 
 <body>
+<div id="toast-container"></div>
 <div class="wrap">
-<header>
-  <h1>CEA RPL Application</h1>
-    <p><strong>Application Form — Certification of Environment Auditors (CEA) via Recognition of Prior Learning (RPL)</strong><br>
-    (Under Clause 7(i) of Environment Audit Rules, 2025)</p>
 </header>
+
+<div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: flex-end; padding: 10px 20px;">
+    <a href="/Auth/Logout" style="color: var(--accent); font-weight: 600; text-decoration: none; font-size: 0.9rem;">Sign Out</a>
+</div>
 
 <form id="rplForm" novalidate>
 
-<!-- AUTH SECTION -->
-<section id="authSection">
-  <h2>1) Account & Authentication</h2>
+<!-- Start Application Sections -->
+<div id="applicationSections" style="position: relative; max-width: 1000px; margin: 0 auto; padding: 20px;">
 
-<section>
-
-  <!-- Row 1: Email & Password -->
-  <div class="grid">
-    <div class="col-6">
-      <label for="authEmail">
-        Email (for login & OTP) <span class="req">*</span>
-      </label>
-      <input
-        id="authEmail"
-        name="auth_email"
-        type="email"
-        autocomplete="username"
-        required
-      />
-    </div>
-
-    <div class="col-6">
-      <label for="authPass">
-        Password (min 8 chars) <span class="req">*</span>
-      </label>
-      <input
-        id="authPass"
-        name="auth_password"
-        type="password"
-        minlength="8"
-        autocomplete="current-password"
-        required
-      />
-      <small class="hint">
-        Use at least 8 characters with letters and numbers.
-      </small>
-    </div>
-  </div>
-
-  <!-- Row 2: Sign up / Sign in / Status -->
-  <div class="grid">
-    <div class="col-4">
-      <button
-        id="btnSignUp"
-        type="button"
-        class="btn-ghost"
-        style="width:100%;"
-      >
-        Create Account
-      </button>
-    </div>
-
-    <div class="col-4">
-      <button
-        id="btnSignIn"
-        type="button"
-        class="btn-primary"
-        style="width:100%;"
-      >
-        Sign In
-      </button>
-    </div>
-
-    <div class="col-4">
-      <div id="authStatus" class="alert caption">
-        Not signed in.
-      </div>
-    </div>
-  </div>
-
-  <!-- Row 3: CAPTCHA -->
-  <div class="grid">
-    <div class="col-12">
-      <div id="captchaPlaceholder" class="caption">
-        [reCAPTCHA — integrate site key & server verification]
-      </div>
-    </div>
-  </div>
-
-  <!-- Row 4: Mobile & OTP Triggers -->
-<div class="grid">
-  <div class="col-6">
-    <label for="authMobile">
-      Mobile Number (OTP) <span class="req">*</span>
-    </label>
-    <input
-      id="authMobile"
-      name="auth_mobile"
-      type="text"
-      inputmode="numeric"
-      pattern="[6-9][0-9]{9}"
-      placeholder="10-digit Indian number"
-      required
-    />
-    <small class="hint">
-      OTPs will be sent to your registered email and mobile number.
-    </small>
-  </div>
-
-  <div class="col-6"></div>
-</div>
-
-<div class="grid">
-  <div class="col-3">
-    <button
-      id="btnSendEmailOtp"
-      type="button"
-      class="btn-ghost"
-      style="width:100%;"
-    >
-      Send Email OTP
-    </button>
-  </div>
-
-  <div class="col-3">
-    <button
-      id="btnSendSmsOtp"
-      type="button"
-      class="btn-ghost"
-      style="width:100%;"
-    >
-      Send SMS OTP
-    </button>
-  </div>
-
-  <div class="col-6">
-    <div class="alert caption">
-      OTPs are valid for a limited time. Please verify promptly.
-    </div>
-  </div>
-</div>
-
-  <!-- Row 5: OTP Inputs -->
-  <div class="grid">
-    <div class="col-4">
-      <label for="emailOtp">Enter Email OTP</label>
-      <input
-        id="emailOtp"
-        name="email_otp"
-        type="text"
-        inputmode="numeric"
-        maxlength="6"
-      />
-    </div>
-
-    <div class="col-4">
-      <label for="smsOtp">Enter SMS OTP</label>
-      <input
-        id="smsOtp"
-        name="sms_otp"
-        type="text"
-        inputmode="numeric"
-        maxlength="6"
-      />
-    </div>
-
-    <div class="col-4" style="display:flex; align-items:flex-end;">
-      <button
-        id="btnVerifyOtps"
-        type="button"
-        class="btn-primary"
-        style="width:100%;"
-      >
-        Verify OTPs
-      </button>
-    </div>
-  </div>
-
-  <!-- Row 6: TOTP -->
-  <div class="grid">
-    <div class="col-12">
-      <div class="rowline"></div>
-
-      <label>
-        Two-Factor Authentication (TOTP – optional)
-      </label>
-
-      <div class="grid">
-        <div class="col-8">
-          <small class="hint">
-            Enable TOTP to scan QR code via Google Authenticator / Authy.
-          </small>
-        </div>
-
-        <div
-          class="col-4"
-          style="display:flex; gap:8px; justify-content:flex-end;"
-        >
-          <button
-            id="btnEnableTotp"
-            type="button"
-            class="btn-ghost"
-          >
-            Enable TOTP
-          </button>
-
-          <button
-            id="btnVerifyTotp"
-            type="button"
-            class="btn-ghost"
-          >
-            Verify TOTP
-          </button>
-        </div>
-      </div>
-
-      <div id="totpArea" class="caption"></div>
-    </div>
-  </div>
-
-  <!-- Row 7: Final Status -->
-  <div class="grid">
-    <div class="col-12">
-      <div class="rowline"></div>
-      <div class="alert">
-        <strong>Status:</strong>
-        You must be signed in and OTP-verified to access the application form.
-      </div>
-    </div>
-  </div>
-
-</section>
-
-</section>
+  <!-- APPLICANT DETAILS -->
+    <section>
+      <h2>Step 1: Applicant Details</h2>
+      <p class="caption">Please provide your basic contact and identity information</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
 <!-- PERSONAL DETAILS -->
-<section>
-  <h2>2) Applicant Details</h2>
+    </section>
+  <!-- CATEGORY OF CERTIFICATION -->
+    <section>
+      <h2>Step 2: Category of Certification Applied For</h2>
+      <p class="caption">Select the categories you wish to be certified in</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <div class="grid">
     <div class="col-6">
       <label>Full Name <span class="req">*</span></label>
@@ -619,9 +518,11 @@ button {
 
 </section>
 
-<!-- 2. Category -->
-<section>
-  <h2>3) Category of Certification Applied For</h2>
+  <!-- EDUCATIONAL QUALIFICATIONS -->
+    <section>
+      <h2>Step 3: Educational Qualifications</h2>
+      <p class="caption">Provide details of your academic background</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
   <div class="chips">
     <label class="chip">
@@ -665,9 +566,11 @@ button {
 </section>
 
 
-<!-- EDUCATION -->
-<section>
-  <h2>4) Educational Qualifications</h2>
+  <!-- PROFESSIONAL EXPERIENCE -->
+    <section>
+      <h2>Step 4: Professional Experience</h2>
+      <p class="caption">Detail your relevant work history</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <table class="table" id="educationTable">
     <thead>
       <tr>
@@ -696,7 +599,7 @@ button {
           <input type="number" name="edu_year[]" min="1950" max="2026" required>
         </td>
         <td>
-          <input type="file" name="edu_cert[]" accept=".pdf,.jpg,.png" required>
+          <input type="file" name="edu_cert" accept=".pdf,.jpg,.png" required>
         </td>
         <td class="row-actions">
           <!-- initial row has no delete button -->
@@ -708,9 +611,11 @@ button {
   <button type="button" class="add-row" onclick="addEducationRow()">+ Add Row</button>
 </section>
 
-<!-- EXPERIENCE -->
-<section>
-  <h2>5) Professional Experience</h2>
+  <!-- PROJECT EXPERIENCE -->
+    <section>
+      <h2>Step 5: Project Experience</h2>
+      <p class="caption">List major projects undertaken in the applied categories</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
   <label>Total Years of Experience <span class="req">*</span></label>
   <input name="total_experience" required>
@@ -740,7 +645,7 @@ button {
           <textarea name="exp_nature[]" required></textarea>
         </td>
         <td>
-          <input type="file" name="exp_proof[]" accept=".pdf,.jpg,.png" required>
+          <input type="file" name="exp_proof" accept=".pdf,.jpg,.png" required>
         </td>
         <td>
           <input type="tel" name="ref2_phone[]" required />
@@ -755,9 +660,7 @@ button {
   <button type="button" class="add-row" onclick="addExperienceRow()">+ Add Row</button>
 </section>
 
-<!-- 6. Projects -->
-<section>
-  <h2>6) Project Experience </h2>
+
 
   <h3> 6.1 For Category 1: List the  major Environment Auditing / Assessment / verification/ Inspection Projects undertaken by applicant </h3>
   <table class="table" aria-label="Projects" id="cat1Projects">
@@ -965,11 +868,16 @@ button {
     </tbody>
   </table>
   <button type="button" class="add-row" onclick="addGenericRow('cat4Projects')">+ Add Row</button>
-</section>
+  <!-- UPLOAD REPORTS -->
 
-<!-- AUDIT REPORTS -->
-<section>
-  <h2>7) Upload Reports</h2>
+    <section>
+      <h2>Step 6: Upload Reports</h2>
+      <p class="caption">Upload details of 2 to 5 audits/studies conducted within the applied categories</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+      
+      <div class="alert" style="margin-bottom:20px; background:#f4f8ff; color:#0c3b2e; border-left:4px solid var(--accent); padding: 12px;">
+        <strong>Requirement:</strong> Reports must be authored or co-authored by the applicant.
+      </div>
 
   <label>
     Upload details of 2 to 5 audits/studies conducted within the applied category/categories for evaluation purposes
@@ -979,7 +887,7 @@ button {
   <div class="file-group">
     <input 
       type="file" 
-      name="audit_report[]" 
+      name="audit_report" 
       accept=".pdf" 
       required
       onchange="validateSingleAuditFile(this)"
@@ -987,20 +895,18 @@ button {
 
     <input 
       type="file" 
-      name="audit_report[]" 
+      name="audit_report" 
       accept=".pdf" 
       required
       onchange="validateSingleAuditFile(this)"
     />
   </div>
 
-  <b>Reports must be authored / co-authored by the applicant</b>
-</section>
-
-
-<!-- Details of Certification/Training -->
-<section>
-  <h2>8) Details of Certification/ Training</h2>
+  <!-- CERTIFICATIONS / TRAINING -->
+    <section>
+      <h2>Step 7: Details of Certification / Training</h2>
+      <p class="caption">Provide information about your professional certifications</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
   <table class="table" aria-label="Projects" id="trainingTable">
     <thead>
@@ -1035,13 +941,15 @@ button {
       </tr>
     </tbody>
   </table>
-  <button type="button" class="add-row" onclick="addTrainingRow()">+ Add Row</button>
+  <button type="button" class="add-row" onclick="addGenericRow('trainingTable')">+ Add Row</button>
 
 </section>
 
-<!-- Membership in Professional Bodies -->
-<section>
-  <h2>9) Membership in Professional Bodies</h2>
+  <!-- MEMBERSHIPS -->
+    <section>
+      <h2>Step 8: Membership in Professional Bodies</h2>
+      <p class="caption">List your professional affiliations and roles</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <label> List of professional body memberships or institutional affiliations, including advisory roles or membership in any government committees  </label>
   <table class="table" aria-label="Projects" id="membershipTable">
     <thead>
@@ -1067,7 +975,7 @@ button {
         <td>
           <input 
             type="file" 
-            name="membership_proof[]" 
+            name="membership_proof" 
             accept=".pdf" 
             required
             onchange="validateSingleAuditFile(this)"
@@ -1083,9 +991,15 @@ button {
 </section>
 
 
-<!-- Paper Published/ Presented -->
-<section>
-  <h2>10) Paper Published/ Presented</h2>
+    </section>
+  </div>
+
+  <!-- STEP 9: PUBLICATIONS -->
+  <div class="step-pane" id="step-9">
+    <section>
+      <h2>Step 9: Paper Published / Presented</h2>
+      <p class="caption">List technical papers authored or published by you</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <label> List the major technical papers authored or published by the applicant </label>
   <table class="table" aria-label="Projects" id="paperTable">
     <thead>
@@ -1117,7 +1031,7 @@ button {
         <td>
           <input 
             type="file" 
-            name="paper_proof[]" 
+            name="paper_proof" 
             accept=".pdf" 
             required
             onchange="validateSingleAuditFile(this)"
@@ -1133,9 +1047,11 @@ button {
 </section>
 
 
-<!-- Awards/ Recognition-->
-<section>
-  <h2>11) Awards/ Recognition</h2>
+  <!-- AWARDS -->
+    <section>
+      <h2>Step 10: Awards / Recognition</h2>
+      <p class="caption">List major awards or appreciation received</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <label> List the major awards/ recognition/ appriciation received by applicant </label>
   <table class="table" aria-label="Projects" id="awardTable">
     <thead>
@@ -1159,7 +1075,7 @@ button {
         <td>
           <input 
             type="file" 
-            name="award_proof[]" 
+            name="award_proof" 
             accept=".pdf" 
             required
             onchange="validateSingleAuditFile(this)"
@@ -1174,9 +1090,11 @@ button {
 
 </section>
 
-<!-- 5. Software Skills (Max 5) -->
-<section>
-  <h2>12) Software, Tools or Applications Skills (Maximum 5)</h2>
+  <!-- SKILLS -->
+    <section>
+      <h2>Step 11: Software, Tools or Applications Skills</h2>
+      <p class="caption">List the software tools you are conversant with (Max 5)</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
   <label> List the software tools or application the applicant is conversant with</label>
 
 <table class="table" aria-label="Software Skills" id="softwareTable">
@@ -1213,485 +1131,204 @@ button {
 
 
   <button type="button" class="add-row" onclick="addSoftwareRow()">+ Add Row</button>
-
-</section>
-
-
-
-    <!-- 8. Other Enclosures -->
+  <!-- OTHER ENCLOSURES -->
     <section>
-      <h2>13) Upload Any Other Relevant Enclosures</h2>
+      <h2>Step 12: Other Relevant Enclosures</h2>
+      <p class="caption">Upload any other documents that support your application</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
       <label>  List any relevant Enclosures (PDF only, ≤ 5 MB)</label>
       <input type="file" name="other_enclosure" accept=".pdf" />
     </section>
 
-        
-<!-- PAYMENT DETAILS -->
-<section id="paymentSection">
-  <h2>13a) Payment Details</h2>
+    <!-- PAYMENT DETAILS -->
+    <section id="paymentSection">
+      <h2>Step 13: Payment Details</h2>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
-  <div class="alert" style="margin-bottom:20px; background:#f4f8ff; border-color:#b6d0f0; border-left:4px solid #0ea5a5;">
-    <div style="font-weight:700; color:#0c3b2e; margin-bottom:10px;">Payee Details</div>
-    <div style="font-size:0.93rem; color:#0c3b2e; line-height:2.1;">
-      <strong>Amount:</strong>&nbsp; As applicable &nbsp;&nbsp;
-      <strong>In the Name of:</strong>&nbsp; Authority Name &nbsp;&nbsp;
-      <strong>Bank Details:</strong>&nbsp; Bank Name &amp; Branch<br>
-      <strong>Account Number:</strong>&nbsp; Account Number &nbsp;&nbsp;
-      <strong>IFSC Code:</strong>&nbsp; IFSC Code &nbsp;&nbsp;
-      <strong>Mode:</strong>&nbsp; NEFT / RTGS
-    </div>
-  </div>
+      <div class="alert" style="margin-bottom:20px; background:#f4f8ff; border-color:#b6d0f0; border-left:4px solid #0ea5a5; padding: 15px; border-radius: 8px;">
+        <div style="font-weight:700; color:#0c3b2e; margin-bottom:10px;">Payee Details</div>
+        <div style="font-size:0.93rem; color:#0c3b2e; line-height:2.1;">
+          <strong>Amount:</strong>&nbsp; As applicable &nbsp;&nbsp;
+          <strong>In the Name of:</strong>&nbsp; Authority Name &nbsp;&nbsp;
+          <strong>Bank Details:</strong>&nbsp; Bank Name &amp; Branch<br>
+          <strong>Account Number:</strong>&nbsp; Account Number &nbsp;&nbsp;
+          <strong>IFSC Code:</strong>&nbsp; IFSC Code &nbsp;&nbsp;
+          <strong>Mode:</strong>&nbsp; NEFT / RTGS
+        </div>
+      </div>
 
-  <div class="grid">
-    <div class="col-4">
-      <label for="paymentAmount">
-        1. Certification Fee Amount Paid <span class="req">*</span>
-      </label>
-      <input
-        id="paymentAmount"
-        name="payment_amount"
-        type="number"
-        min="0"
-        placeholder="As applicable"
-        required
-      />
-    </div>
+      <div class="grid">
+        <div class="col-4">
+          <label>1. Certification Fee Amount Paid <span class="req">*</span></label>
+          <input name="payment_amount" type="number" min="0" placeholder="As applicable" required />
+        </div>
+        <div class="col-4">
+          <label>2. Date of Payment <span class="req">*</span></label>
+          <input name="payment_date" type="date" required />
+        </div>
+        <div class="col-4">
+          <label>3. UTR Number <span class="req">*</span></label>
+          <input name="payment_utr" type="text" placeholder="e.g. SBIN026251234567" required />
+        </div>
+        <div class="col-6">
+          <label>4. Upload Payment Receipt <span class="req">*</span></label>
+          <input name="payment_receipt" type="file" accept=".pdf,.jpg,.jpeg,.png" required onchange="validatePaymentReceipt(this)" />
+        </div>
+      </div>
+    </section>
 
-    <div class="col-4">
-      <label for="paymentDate">
-        2. Date of Payment <span class="req">*</span>
-      </label>
-      <input
-        id="paymentDate"
-        name="payment_date"
-        type="date"
-        required
-      />
-    </div>
-
-    <div class="col-4">
-      <label for="paymentUTR">
-        3. UTR Number <span class="req">*</span>
-      </label>
-      <input
-        id="paymentUTR"
-        name="payment_utr"
-        type="text"
-        placeholder="e.g. SBIN026251234567"
-        required
-      />
-      <small class="hint">UTR No. as appearing on NEFT / RTGS payment confirmation.</small>
-    </div>
-
-    <div class="col-6">
-      <label for="paymentReceipt">
-        4. Upload Payment Receipt <span class="req">*</span>
-      </label>
-      <input
-        id="paymentReceipt"
-        name="payment_receipt"
-        type="file"
-        accept=".pdf,.jpg,.jpeg,.png"
-        required
-        onchange="validatePaymentReceipt(this)"
-      />
-      <small class="hint">PDF / Image, Max 2 MB — Bank receipt / challan copy.</small>
-    </div>
-  </div>
-</section>
-
-<!-- 9. Declaration -->
+    <!-- DECLARATION -->
     <section>
-      <h2>14) Declaration by applicant</h2>
-      <p>I, <input type="text" name="decl_name" style="width:260px" placeholder="Your full name" required />, hereby declare that:</p>
+      <h2>Step 14: Declaration by applicant</h2>
+      <p class="caption">Please read and sign the declaration</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+      <p>I, <input type="text" name="decl_name" style="width:260px" placeholder="Your full name" required />, hereby declare that accurately reflects my credentials.</p>
       <ul>
         <li>All information provided in this application is true and correct to the best of my knowledge.</li>
-        <li>I am not engaged in any activity or employment that may create a conflict of interest.</li>
         <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
-        <li>I understand that any false information may lead to disqualification or revocation of certification.</li>
       </ul>
       <div class="grid">
         <div class="col-4"><label>Date</label><input type="date" name="decl_date" /></div>
         <div class="col-4"><label>Place</label><input type="text" name="decl_place" /></div>
         <div class="col-4">
-          <label>Signature</label>
-          <input 
-            type="file" 
-            name="Any_other_doc[]" 
-            accept=".pdf" 
-            required
-            onchange="validateSingleAuditFile(this)"
-          />
+          <label>Signature Proof</label>
+          <input type="file" name="Any_other_doc" accept=".pdf,.jpg,.png" required onchange="validateSingleAuditFile(this)" />
         </div>
       </div>
     </section>
 
-    <!-- 10. Checklist -->
+    <!-- REVIEW & SUBMIT -->
     <section>
-      <h2>15) Document Checklist (Self-Attested Copies)</h2>
-      <table class="table" aria-label="Checklist">
-        <thead><tr><th>Document Type</th><th>Mandatory</th><th>Uploaded</th></tr></thead>
+      <h2>Step 15: Review & Submit</h2>
+      <p class="caption">Final checklist before submission</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+      
+      <table class="table" style="margin-bottom: 30px;">
+        <thead><tr><th>Item</th><th>Mandatory</th><th>Checked</th></tr></thead>
         <tbody>
-          <tr><td>Proof of Citizenship (Aadhaar/Passport)</td><td>Yes</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Degree Certificates</td><td>Yes</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Experience Certificates</td><td>Yes</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Final Year/Semester Marksheet (optional)</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Passport-size Photograph</td><td>Yes</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Payment Receipt</td><td>Yes</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Audit Report</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Details of Certification/ Training</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Details of Membership in Professional Bodies</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Details of Paper Published/ Presented</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Details of Awards/ Recognition</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Details of Software</td><td>Optional</td><td><input type="checkbox" /></td></tr>
-          <tr><td>Any Additional Enclosure</td><td>Optional</td><td><input type="checkbox" /></td></tr>
+          <tr><td>Proof of Identity</td><td>Yes</td><td><input type="checkbox" required></td></tr>
+          <tr><td>Academic Certificates</td><td>Yes</td><td><input type="checkbox" required></td></tr>
+          <tr><td>Experience Proofs</td><td>Yes</td><td><input type="checkbox" required></td></tr>
+          <tr><td>Payment Receipt</td><td>Yes</td><td><input type="checkbox" required></td></tr>
         </tbody>
       </table>
+
       <div class="actions">
-        <button type="reset" class="btn-ghost">Clear</button>
-        <button id="btnSubmitApp" type="submit" class="btn-primary">Submit Application</button>
+        <button id="btnSubmitApp" type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.2rem;">Submit Final Application</button>
       </div>
-      <p class="caption">By submitting, you consent to EADA verifying your credentials and contacting you via email/SMS/portal notifications.</p>
     </section>
-  </form>
+
 </div>
-
-
+</form>
+</div>
 
 <script>
 /* ===============================
-   PHOTO PREVIEW
+   DASHBOARD / FORM LOGIC
 ================================ */
 function previewPhoto(event) {
   const file = event.target.files[0];
   const img = document.getElementById('photoPreview');
-  if (!file) {
-    img.style.display = 'none';
-    img.src = '';
-    return;
-  }
+  if (!file) { img.style.display = 'none'; return; }
   const reader = new FileReader();
-  reader.onload = e => {
-    img.src = e.target.result;
-    img.style.display = 'block';
-  };
+  reader.onload = e => { img.src = e.target.result; img.style.display = 'block'; };
   reader.readAsDataURL(file);
 }
 
-/* ===============================
-   EDUCATION SECTION
-================================ */
 function addEducationRow() {
   const tbody = document.querySelector('#educationTable tbody');
-  const firstRow = tbody.querySelector('tr');
-  const newRow = firstRow.cloneNode(true);
-
-  newRow.querySelectorAll('input, select').forEach(el => {
-    if (el.type !== 'file') el.value = '';
-    if (el.type === 'file') el.value = null;
-  });
-
-  const actionsCell = newRow.querySelector('.row-actions');
-  actionsCell.innerHTML = '<button type="button" class="delete-row" onclick="deleteEducationRow(this)">×</button>';
-
-  tbody.appendChild(newRow);
-}
-function deleteEducationRow(btn) {
-  const tbody = document.querySelector('#educationTable tbody');
-  if (tbody.rows.length > 1) {
-    btn.closest('tr').remove();
-  }
+  const row = tbody.querySelector('tr').cloneNode(true);
+  row.querySelectorAll('input').forEach(el => el.value = '');
+  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove()">×</button>';
+  tbody.appendChild(row);
 }
 
-/* ===============================
-   EXPERIENCE SECTION
-================================ */
 function addExperienceRow() {
   const tbody = document.querySelector('#experienceTable tbody');
-  const firstRow = tbody.querySelector('tr');
-  const newRow = firstRow.cloneNode(true);
-
-  newRow.querySelectorAll('input, textarea').forEach(el => {
-    if (el.type !== 'file') el.value = '';
-    if (el.type === 'file') el.value = null;
-  });
-
-  const actionsCell = newRow.querySelector('.row-actions');
-  actionsCell.innerHTML = '<button type="button" class="delete-row" onclick="deleteExperienceRow(this)">×</button>';
-
-  tbody.appendChild(newRow);
+  const row = tbody.querySelector('tr').cloneNode(true);
+  row.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove(); renumberExperienceRows()">×</button>';
+  tbody.appendChild(row);
   renumberExperienceRows();
 }
-function deleteExperienceRow(btn) {
-  const tbody = document.querySelector('#experienceTable tbody');
-  if (tbody.rows.length > 1) {
-    btn.closest('tr').remove();
-    renumberExperienceRows();
-  }
-}
+
 function renumberExperienceRows() {
-  const rows = document.querySelectorAll('#experienceTable tbody tr');
-  rows.forEach((row, index) => {
-    const cell = row.querySelector('.row-no');
-    if (cell) cell.textContent = index + 1;
-    const del = row.querySelector('.delete-row');
-    if (del) del.style.display = index === 0 ? 'none' : 'inline-block';
+  document.querySelectorAll('#experienceTable tbody tr').forEach((row, idx) => {
+    row.querySelector('.row-no').textContent = idx + 1;
   });
 }
 
-/* ===============================
-   GENERIC PROJECT-LIKE TABLES
-================================ */
 function addGenericRow(tableId) {
-  const table = document.getElementById(tableId);
-  const tbody = table.querySelector('tbody');
-  const firstRow = tbody.querySelector('tr');
-  const newRow = firstRow.cloneNode(true);
-
-  newRow.querySelectorAll('input, select, textarea').forEach(el => {
-    if (el.type !== 'file') el.value = '';
-    if (el.type === 'file') el.value = null;
-  });
-
-  tbody.appendChild(newRow);
-  renumberProjectRows(tbody);
-}
-function renumberProjectRows(tbody) {
-  tbody.querySelectorAll('tr').forEach((row, index) => {
-    const firstCell = row.querySelector('td');
-    if (firstCell) firstCell.textContent = index + 1;
-  });
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  const row = tbody.querySelector('tr').cloneNode(true);
+  row.querySelectorAll('input, select').forEach(el => el.value = '');
+  tbody.appendChild(row);
 }
 
-/* ===============================
-   AUDIT / TRAINING TABLES
-================================ */
-function addTrainingRow() {
-  const tbody = document.querySelector('#trainingTable tbody');
-  const firstRow = tbody.querySelector('tr');
-  const newRow = firstRow.cloneNode(true);
-  newRow.querySelectorAll('input, textarea, select').forEach(el => {
-    if (el.type !== 'file') el.value = '';
-    if (el.type === 'file') el.value = null;
-  });
-  tbody.appendChild(newRow);
-  renumberProjectRows(tbody);
-}
-
-/* ===============================
-   SOFTWARE SKILLS SECTION
-================================ */
 function addSoftwareRow() {
   const tbody = document.querySelector('#softwareTable tbody');
-
-  if (tbody.rows.length >= 5) {
-    alert('Maximum 5 software skills allowed');
-    return;
-  }
-
-  const firstRow = tbody.querySelector('tr');
-  const row = firstRow.cloneNode(true);
-
+  if (tbody.rows.length >= 5) return alert('Max 5 skills');
+  const row = tbody.querySelector('tr').cloneNode(true);
   row.querySelectorAll('input, select').forEach(el => el.value = '');
-
-  const actionsCell = row.querySelector('.row-actions');
-  actionsCell.innerHTML = '<button type="button" class="delete-row" onclick="deleteSoftwareRow(this)">×</button>';
-
+  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove(); renumberSoftwareRows()">×</button>';
   tbody.appendChild(row);
   renumberSoftwareRows();
 }
-function deleteSoftwareRow(btn) {
-  const tbody = document.querySelector('#softwareTable tbody');
-  if (tbody.rows.length > 1) {
-    btn.closest('tr').remove();
-    renumberSoftwareRows();
-  }
-}
+
 function renumberSoftwareRows() {
-  document.querySelectorAll('#softwareTable tbody tr')
-    .forEach((row, index) => {
-      row.querySelector('.row-no').textContent = index + 1;
-      const del = row.querySelector('.delete-row');
-      if (del) del.style.display = index === 0 ? 'none' : 'inline-block';
-    });
+  document.querySelectorAll('#softwareTable tbody tr').forEach((row, idx) => {
+    row.querySelector('.row-no').textContent = idx + 1;
+  });
 }
 
-
-/* ===============================
-   PAYMENT RECEIPT VALIDATION
-================================ */
 function validatePaymentReceipt(input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (file.size > 2 * 1024 * 1024) {
-    alert('Payment receipt must be 2 MB or less.');
-    input.value = '';
+  if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
+    alert('File > 2MB'); input.value = '';
   }
 }
 
-/* ===============================
-   FILE VALIDATION
-================================ */
 function validateSingleAuditFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  if (file.size > 2 * 1024 * 1024) {
-    alert('Each audit or proof file must be 2 MB or less.');
-    input.value = '';
+  if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
+    alert('File > 2MB'); input.value = '';
   }
 }
 
-/* ===============================
-   GOV ID TOGGLE
-================================ */
 function toggleGovIdUpload() {
   const type = document.getElementById('govIdType').value;
   const number = document.getElementById('govIdNumber');
   const label = document.getElementById('govIdLabel');
-  const hint = document.getElementById('govIdHint');
-
   number.value = '';
-
-  if (type === 'aadhaar') {
-    label.textContent = 'Aadhaar Number *';
-    hint.textContent = 'Enter 12-digit Aadhaar number.';
-    number.pattern = '[0-9]{12}';
-    number.placeholder = 'XXXXXXXXXXXX';
-  } else if (type === 'pan') {
-    label.textContent = 'PAN Number *';
-    hint.textContent = 'Enter PAN (e.g., ABCDE1234F).';
-    number.pattern = '[A-Z]{5}[0-9]{4}[A-Z]';
-    number.placeholder = 'ABCDE1234F';
-  } else if (type === 'passport') {
-    label.textContent = 'Passport Number *';
-    hint.textContent = 'Enter valid passport number.';
-    number.pattern = '';
-    number.placeholder = 'Passport Number';
-  } else {
-    label.textContent = 'ID Number *';
-    hint.textContent = 'Only the selected ID number is required. Full value stored securely.';
-    number.pattern = '';
-    number.placeholder = '';
-  }
+  if (type === 'aadhaar') { label.textContent = 'Aadhaar Number *'; number.placeholder = '12 Digits'; }
+  else if (type === 'pan') { label.textContent = 'PAN Number *'; number.placeholder = 'ABCDE1234F'; }
+  else { label.textContent = 'ID Number *'; number.placeholder = ''; }
 }
 
-/* ===============================
-   CATEGORY GROUP VALIDATION
-================================ */
-function validateCategoryGroup() {
-  return [...document.querySelectorAll('input[name="cert_category[]"]')]
-    .some(cb => cb.checked);
+// TOAST SYSTEM
+function showToast(msg, type = 'info') {
+    const t = document.createElement('div');
+    t.innerText = msg;
+    t.style = `position:fixed; top:20px; right:20px; background:${type==='error'?'#f55':'#0ea5a5'}; color:white; padding:15px; border-radius:8px; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-weight:600;`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 5000);
 }
 
-/* ===============================
-   FORM SUBMIT
-================================ */
-document.addEventListener('DOMContentLoaded', async () => {
-  renumberSoftwareRows();
-  renumberExperienceRows();
-
-  // AUTH STATE VERIFICATION
-  let isVerified = false;
-  
+document.addEventListener('DOMContentLoaded', () => {
+  // SESSION CHECK
   const checkSession = async () => {
     try {
-      const res = await fetch('/api/Auth/status');
+      const res = await fetch('/api/auth/status');
       const data = await res.json();
-      if(data.authenticated) {
-        document.getElementById('authStatus').innerText = `Signed in as ${data.email}`;
-        document.getElementById('authStatus').style.color = 'green';
+      if(!data.authenticated) {
+          window.location.href = '/Auth/Login';
       }
     } catch {}
   };
   checkSession();
 
-  // AUTH BINDINGS
-  document.getElementById('btnSignUp').addEventListener('click', async () => {
-    const fd = new FormData();
-    fd.append('email', document.getElementById('authEmail').value);
-    fd.append('mobile', document.getElementById('authMobile').value);
-    fd.append('password', document.getElementById('authPass').value);
-
-    try {
-      const res = await fetch('/api/Auth/signup', { method: 'POST', body: fd });
-      const data = await res.json();
-      alert(data.message || (res.ok ? 'Success Check Console' : 'Failed'));
-    } catch(err) { alert(err); }
-  });
-
-  document.getElementById('btnSignIn').addEventListener('click', async () => {
-    const fd = new FormData();
-    fd.append('email', document.getElementById('authEmail').value);
-    fd.append('password', document.getElementById('authPass').value);
-
-    try {
-      const res = await fetch('/api/Auth/signin', { method: 'POST', body: fd });
-      const data = await res.json();
-      if(res.ok) {
-         document.getElementById('authStatus').innerText = `Signed in successfully.`;
-         document.getElementById('authStatus').style.color = 'green';
-      } else {
-         alert(data.message);
-      }
-    } catch(err) { alert(err); }
-  });
-
-  document.getElementById('btnSendEmailOtp').addEventListener('click', async () => {
-    const fd = new FormData();
-    fd.append('email', document.getElementById('authEmail').value);
-    fd.append('type', 'email');
-    await fetch('/api/Auth/sendotp', { method: 'POST', body: fd });
-    alert('Email OTP generated (Check console).');
-  });
-
-  document.getElementById('btnSendSmsOtp').addEventListener('click', async () => {
-    const fd = new FormData();
-    fd.append('mobile', document.getElementById('authMobile').value);
-    fd.append('type', 'sms');
-    await fetch('/api/Auth/sendotp', { method: 'POST', body: fd });
-    alert('SMS OTP generated (Check console).');
-  });
-
-  document.getElementById('btnVerifyOtps').addEventListener('click', async () => {
-    const fd = new FormData();
-    fd.append('email', document.getElementById('authEmail').value);
-    fd.append('mobile', document.getElementById('authMobile').value);
-    if(document.getElementById('emailOtp').value) fd.append('emailOtp', document.getElementById('emailOtp').value);
-    if(document.getElementById('smsOtp').value) fd.append('smsOtp', document.getElementById('smsOtp').value);
-
-    try {
-      const res = await fetch('/api/Auth/verifyotp', { method: 'POST', body: fd });
-      const data = await res.json();
-      if(res.ok) {
-        alert('OTP Verified. You can now submit the application.');
-        isVerified = true;
-      } else {
-        alert(data.message);
-      }
-    } catch(err) { alert(err); }
-  });
-
-
   // FORM SUBMIT
   document.getElementById('rplForm').addEventListener('submit', async e => {
     e.preventDefault();
-    if (!validateCategoryGroup()) {
-      alert('Please select at least one certification category');
-      return;
-    }
     
-    if(!isVerified) {
-      alert('You must Verify your Email & SMS OTP before submitting.');
-      return;
-    }
-
-    const payReceipt = document.getElementById('paymentReceipt');
-    if (!payReceipt || !payReceipt.files.length) {
-      alert('Section 13a: Please upload the payment receipt.');
-      return;
-    }
-
     const formData = new FormData(e.target);
     const submitBtn = document.getElementById('btnSubmitApp');
     submitBtn.disabled = true;
@@ -1706,20 +1343,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       const result = await response.json();
       
       if(response.ok) {
-        alert('Application Successfully Submitted! ID: ' + result.applicantId);
-        window.location.reload();
+        showToast('Application Successfully Submitted!', 'success');
+        setTimeout(() => window.location.href = '/', 3000);
       } else {
-        alert('Failed to submit: ' + result.message);
+        showToast(result.message || 'Submission failed.', 'error');
       }
     } catch(error) {
-      alert('An error occurred during submission.');
+      showToast('An error occurred during submission.', 'error');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.innerText = 'Submit Application';
+      submitBtn.innerText = 'Submit Final Application';
     }
   });
 });
 </script>
-
 </body>
 </html>

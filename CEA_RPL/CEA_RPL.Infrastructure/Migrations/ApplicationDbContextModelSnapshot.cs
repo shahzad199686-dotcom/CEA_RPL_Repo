@@ -50,6 +50,16 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DeclarationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeclarationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeclarationPlace")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -80,7 +90,23 @@ namespace CEA_RPL.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<string>("OtherEnclosurePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ParentName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PaymentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentReceiptPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentUtr")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PermanentAddress")
@@ -88,6 +114,15 @@ namespace CEA_RPL.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReportPath1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReportPath2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SignaturePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -106,6 +141,86 @@ namespace CEA_RPL.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Applicants");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Award", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProofPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceivedFrom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("Awards");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.CertificationTraining", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ObtainedFrom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProofPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("CertificationTrainings");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Education", b =>
@@ -148,6 +263,85 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.HasIndex("ApplicantId");
 
                     b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Membership", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ObtainedFrom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProofPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("Memberships");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.OtpRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactKey")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactKey", "IsUsed");
+
+                    b.ToTable("OtpRecords");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.ProfessionalExperience", b =>
@@ -244,6 +438,80 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.ToTable("ProjectExperiences");
                 });
 
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Publication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Place")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProofPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("Publications");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.SoftwareSkill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProficiencyLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SoftwareName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("SoftwareSkills");
+                });
+
             modelBuilder.Entity("CEA_RPL.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -298,10 +566,43 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Award", b =>
+                {
+                    b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
+                        .WithMany("Awards")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.CertificationTraining", b =>
+                {
+                    b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
+                        .WithMany("CertificationTrainings")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Education", b =>
                 {
                     b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
                         .WithMany("Educations")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Membership", b =>
+                {
+                    b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
+                        .WithMany("Memberships")
                         .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -331,13 +632,45 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.Navigation("Applicant");
                 });
 
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.Publication", b =>
+                {
+                    b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
+                        .WithMany("Publications")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
+            modelBuilder.Entity("CEA_RPL.Domain.Entities.SoftwareSkill", b =>
+                {
+                    b.HasOne("CEA_RPL.Domain.Entities.Applicant", "Applicant")
+                        .WithMany("SoftwareSkills")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Applicant", b =>
                 {
+                    b.Navigation("Awards");
+
+                    b.Navigation("CertificationTrainings");
+
                     b.Navigation("Educations");
+
+                    b.Navigation("Memberships");
 
                     b.Navigation("ProfessionalExperiences");
 
                     b.Navigation("ProjectExperiences");
+
+                    b.Navigation("Publications");
+
+                    b.Navigation("SoftwareSkills");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.User", b =>

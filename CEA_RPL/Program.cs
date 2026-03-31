@@ -15,16 +15,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register our Custom Services
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<IOtpService, InMemoryOtpService>();
-builder.Services.AddSingleton<IOtpSender, ConsoleOtpSender>();
+builder.Services.AddScoped<IOtpService, DbOtpService>();
+builder.Services.AddScoped<IOtpSender, SmtpOtpSender>();
 builder.Services.AddSingleton<IFileService, LocalFileService>();
 
 // Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/"; // Stay on Index page
-        options.AccessDeniedPath = "/";
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/Login";
         options.ExpireTimeSpan = TimeSpan.FromHours(2);
     });
 
@@ -46,13 +46,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Application}/{action=Index}/{id?}")
+    pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

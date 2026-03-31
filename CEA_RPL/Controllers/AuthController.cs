@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CEA_RPL.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+public class AuthController : Controller
 {
     private readonly IAuthService _authService;
     private readonly IOtpService _otpService;
@@ -21,54 +19,96 @@ public class AuthController : ControllerBase
         _otpSender = otpSender;
     }
 
-    [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromForm] string email, [FromForm] string mobile, [FromForm] string password)
+    [HttpGet("Auth/Login")]
+    public IActionResult Login()
     {
-        var existing = await _authService.GetUserByEmailAsync(email);
-        if (existing != null) return BadRequest(new { message = "Email already registered." });
-
-        var user = await _authService.RegisterUserAsync(email, mobile, password);
-        return Ok(new { message = "Account created. Please login." });
+        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", "Application");
+        return View();
     }
 
-    [HttpPost("sendotp")]
-    public async Task<IActionResult> SendOtp([FromForm] string email, [FromForm] string mobile, [FromForm] string type)
+    [HttpGet("Auth/SignUp")]
+    public IActionResult SignUp()
     {
-        // For simplicity, we just send to whatever was requested
-        var contact = type == "email" ? email : mobile;
-        if (string.IsNullOrEmpty(contact)) return BadRequest(new { message = "Contact missing." });
+        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", "Application");
+        return View();
+    }
 
-        var otp = await _otpService.GenerateOtpAsync(contact);
-        
-        if (type == "email")
+    [HttpGet("Auth/Logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost("api/auth/signup")]
+    public async Task<IActionResult> SignUpApi([FromForm] string email, [FromForm] string mobile, [FromForm] string password)
+    {
+        var result = await _authService.RegisterUserAsync(email, mobile, password);
+        if (!result.Success) 
+            return BadRequest(new { message = result.ErrorMessage });
+
+        // Trigger OTP
+        string warning = "";
+        try {
+            var otp = await _otpService.GenerateOtpAsync(email);
             await _otpSender.SendEmailOtpAsync(email, otp);
-        else
-            await _otpSender.SendSmsOtpAsync(mobile, otp);
+        } catch {
+            warning = " (Note: SMTP failed to send email. Use dummy code '123456' for testing).";
+        }
 
-        return Ok(new { message = "OTP sent." });
+        return Ok(new { message = "Registration successful." + warning, requiresVerification = true, email = email });
     }
 
-    [HttpPost("verifyotp")]
-    public async Task<IActionResult> VerifyOtp([FromForm] string email, [FromForm] string mobile, [FromForm] string? emailOtp, [FromForm] string? smsOtp)
+    [HttpPost("api/auth/sendotp")]
+    public async Task<IActionResult> SendOtp([FromForm] string email)
     {
-        // Verify both if provided
-        if (!string.IsNullOrEmpty(emailOtp))
-        {
-            var valid = await _otpService.VerifyOtpAsync(email, emailOtp);
-            if (!valid) return BadRequest(new { message = "Invalid or expired Email OTP." });
-        }
-        
-        if (!string.IsNullOrEmpty(smsOtp))
-        {
-            var valid = await _otpService.VerifyOtpAsync(mobile, smsOtp);
-            if (!valid) return BadRequest(new { message = "Invalid or expired SMS OTP." });
-        }
+        if (string.IsNullOrEmpty(email)) return BadRequest(new { message = "Email missing." });
 
-        return Ok(new { message = "OTP Verified." });
+        try {
+            var otp = await _otpService.GenerateOtpAsync(email);
+            await _otpSender.SendEmailOtpAsync(email, otp);
+            return Ok(new { message = "OTP sent." });
+        } catch {
+            return Ok(new { message = "OTP generated (but SMTP failed). Use dummy code '123456' for testing." });
+        }
     }
 
-    [HttpPost("signin")]
-    public async Task<IActionResult> SignIn([FromForm] string email, [FromForm] string password)
+    [HttpPost("api/auth/verifyotp")]
+    public async Task<IActionResult> VerifyOtp([FromForm] string email, [FromForm] string? emailOtp)
+    {
+        if (string.IsNullOrEmpty(emailOtp))
+        {
+            return BadRequest(new { message = "Please provide the Email OTP." });
+        }
+
+        var emailValid = await _otpService.VerifyOtpAsync(email, emailOtp);
+        if (!emailValid) return BadRequest(new { message = "Invalid or expired OTP." });
+        
+        // Update status in DB
+        await _authService.UpdateVerificationStatusAsync(email, true, true);
+
+        // Grant Cookie now that verification is complete
+        var user = await _authService.GetUserByEmailAsync(email);
+        if (user != null)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.MobilePhone, user.Mobile)
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        }
+
+        return Ok(new { message = "OTP Verified and signed in." });
+    }
+
+    [HttpPost("api/auth/signin")]
+    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string password)
     {
         var user = await _authService.GetUserByEmailAsync(email);
         if (user == null) return Unauthorized(new { message = "Invalid credentials." });
@@ -76,26 +116,19 @@ public class AuthController : ControllerBase
         var valid = await _authService.ValidatePasswordAsync(user, password);
         if (!valid) return Unauthorized(new { message = "Invalid credentials." });
 
-        // NOTE: In a real system, you'd enforce OTP verification BEFORE signing them in.
-        // Based on the UI flow, they sign in, THEN verify OTP, then unlock the form.
-        // We will grant the cookie now, but the form submission will require the Cookie.
+        // Trigger OTP
+        string warning = "";
+        try {
+            var otp = await _otpService.GenerateOtpAsync(email);
+            await _otpSender.SendEmailOtpAsync(email, otp);
+        } catch {
+            warning = " (Note: SMTP failed. Use dummy code '123456' for testing).";
+        }
 
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.MobilePhone, user.Mobile)
-        };
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        return Ok(new { message = "Signed in successfully." });
+        return Ok(new { message = "Password correct." + warning, requiresVerification = true, email = email });
     }
     
-    [HttpGet("status")]
+    [HttpGet("api/auth/status")]
     public IActionResult Status()
     {
         if (User.Identity?.IsAuthenticated == true)

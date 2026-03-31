@@ -1,0 +1,128 @@
+@{
+    ViewData["Title"] = "Sign In - CEA RPL";
+}
+
+<div class="auth-page-container" style="max-width: 480px; margin: 60px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
+    <div style="text-align: center; margin-bottom: 35px;">
+        <h2 style="font-size: 2rem; color: #333; margin-bottom: 10px;">Welcome Back</h2>
+        <p style="color: #666;">Sign in to manage your application</p>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginArea">
+        <form id="loginForm" method="POST">
+            <div style="margin-bottom: 20px;">
+                <label for="authEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email Address</label>
+                <input id="authEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label for="authPass" style="font-weight: 600; font-size: 0.9rem; margin: 0;">Password</label>
+                    <a href="#" style="color: #0ea5a5; font-size: 0.85rem; text-decoration: none; font-weight: 500;">Forgot?</a>
+                </div>
+                <input id="authPass" name="password" type="password" placeholder="••••••••" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <button type="submit" id="btnContinue" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(14,165,165,0.2);">
+                Continue
+            </button>
+        </form>
+    </div>
+
+    <!-- OTP AREA (INLINE) -->
+    <div id="otpArea" style="display: none; animation: fadeIn 0.4s ease-out;">
+        <p style="text-align: center; color: #666; margin-bottom: 25px;">Enter the 6-digit code sent to <br><b id="confirmedEmail"></b></p>
+        
+        <div style="margin-bottom: 25px;">
+            <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 600; text-align: center;">Verification Code</label>
+            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #0ea5a5; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #f8ffff;" />
+        </div>
+
+        <button id="btnVerify" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+            Verify & Sign In
+        </button>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="btnResend" style="background: none; border: none; color: #0ea5a5; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Resend OTP</button>
+        </div>
+    </div>
+
+    <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 12px; border-radius: 10px; display: none; font-weight: 500;"></div>
+
+    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #eee;">
+        <p style="color: #666; font-size: 0.95rem;">Don't have an account? <a asp-action="SignUp" style="color: #0ea5a5; font-weight: 700; text-decoration: none;">Create Account</a></p>
+    </div>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const loginArea = document.getElementById('loginArea');
+    const otpArea = document.getElementById('otpArea');
+    const authStatus = document.getElementById('authStatus');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showStatus('Verifying credentials...', '#eee', '#666');
+        
+        const formData = new FormData(loginForm);
+        try {
+            const resp = await fetch('/api/auth/signin', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await resp.json();
+            
+            if (resp.ok) {
+                document.getElementById('confirmedEmail').innerText = formData.get('email');
+                loginArea.style.display = 'none';
+                otpArea.style.display = 'block';
+                showStatus(data.message, '#e6f6f6', '#0ea5a5');
+            } else {
+                showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
+            }
+        } catch (err) {
+            showStatus('Connection failed. Please try again.', '#fff5f5', '#e53e3e');
+        }
+    });
+
+    document.getElementById('btnVerify').addEventListener('click', async () => {
+        const otp = document.getElementById('emailOtp').value;
+        const email = document.getElementById('confirmedEmail').innerText;
+        
+        if (!otp || otp.length < 6) return alert('Enter 6-digit OTP');
+
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('emailOtp', otp);
+
+        try {
+            const resp = await fetch('/api/auth/verifyotp', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await resp.json();
+
+            if (resp.ok) {
+                showStatus('Successfully signed in! Redirecting...', '#e6f6f6', '#0ea5a5');
+                setTimeout(() => window.location.href = '/Application/Index', 1000);
+            } else {
+                showStatus(data.message, '#fff5f5', '#e53e3e');
+            }
+        } catch (err) {
+            showStatus('Verification failed.', '#fff5f5', '#e53e3e');
+        }
+    });
+
+    function showStatus(msg, bg, color) {
+        authStatus.innerText = msg;
+        authStatus.style.background = bg;
+        authStatus.style.color = color;
+        authStatus.style.display = 'block';
+    }
+</script>
+
+<style>
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    input:focus { border-color: #0ea5a5 !important; }
+</style>

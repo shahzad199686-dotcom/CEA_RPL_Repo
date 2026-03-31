@@ -5,6 +5,7 @@ namespace CEA_RPL.Application.Interfaces;
 public interface IAuthService
 {
     Task<User?> GetUserByEmailAsync(string email);
-    Task<User> RegisterUserAsync(string email, string mobile, string password);
+    Task<(bool Success, User? User, string ErrorMessage)> RegisterUserAsync(string email, string mobile, string password);
     Task<bool> ValidatePasswordAsync(User user, string password);
+    Task UpdateVerificationStatusAsync(string email, bool emailVerified, bool mobileVerified);
 }

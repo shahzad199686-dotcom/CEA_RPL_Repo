@@ -15,6 +15,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<Education> Educations => Set<Education>();
     public DbSet<ProfessionalExperience> ProfessionalExperiences => Set<ProfessionalExperience>();
     public DbSet<ProjectExperience> ProjectExperiences => Set<ProjectExperience>();
+    public DbSet<OtpRecord> OtpRecords => Set<OtpRecord>();
+    public DbSet<Award> Awards => Set<Award>();
+    public DbSet<CertificationTraining> CertificationTrainings => Set<CertificationTraining>();
+    public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<Publication> Publications => Set<Publication>();
+    public DbSet<SoftwareSkill> SoftwareSkills => Set<SoftwareSkill>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

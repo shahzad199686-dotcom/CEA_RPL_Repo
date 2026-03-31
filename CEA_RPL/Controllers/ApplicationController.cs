@@ -32,11 +32,38 @@ public class ApplicationController : Controller
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
             return Unauthorized();
             
+        // Enforce OTP verification
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null || !user.IsEmailVerified || !user.IsMobileVerified)
+            return BadRequest(new { message = "You must verify your email and mobile OTPs before submitting." });
+
         // Check if user already submitted an application
         if (_context.Applicants.Any(a => a.UserId == userId))
         {
             return BadRequest(new { message = "You have already submitted an application." });
         }
+
+        string? report1 = null;
+        string? report2 = null;
+        if (req.audit_report != null)
+        {
+            if (req.audit_report.Count > 0 && req.audit_report[0] != null)
+                report1 = await _fileService.SaveFileAsync(req.audit_report[0].OpenReadStream(), req.audit_report[0].FileName);
+            if (req.audit_report.Count > 1 && req.audit_report[1] != null)
+                report2 = await _fileService.SaveFileAsync(req.audit_report[1].OpenReadStream(), req.audit_report[1].FileName);
+        }
+
+        string? otherEnc = null;
+        if (req.other_enclosure != null)
+            otherEnc = await _fileService.SaveFileAsync(req.other_enclosure.OpenReadStream(), req.other_enclosure.FileName);
+
+        string? payReceipt = null;
+        if (req.payment_receipt != null)
+            payReceipt = await _fileService.SaveFileAsync(req.payment_receipt.OpenReadStream(), req.payment_receipt.FileName);
+
+        string? signature = null;
+        if (req.Any_other_doc != null && req.Any_other_doc.Count > 0 && req.Any_other_doc[0] != null)
+            signature = await _fileService.SaveFileAsync(req.Any_other_doc[0].OpenReadStream(), req.Any_other_doc[0].FileName);
 
         var photoPath = await _fileService.SaveFileAsync(req.applicant_photo.OpenReadStream(), req.applicant_photo.FileName);
         var govIdPath = await _fileService.SaveFileAsync(req.gov_id_upload.OpenReadStream(), req.gov_id_upload.FileName);
@@ -58,6 +85,17 @@ public class ApplicationController : Controller
             GovIdType = req.gov_id_type,
             GovIdNumber = req.gov_id_number,
             GovIdPath = govIdPath,
+            ReportPath1 = report1,
+            ReportPath2 = report2,
+            OtherEnclosurePath = otherEnc,
+            PaymentAmount = req.payment_amount,
+            PaymentDate = DateTime.TryParse(req.payment_date, out var pd) ? pd : DateTime.MinValue,
+            PaymentUtr = req.payment_utr,
+            PaymentReceiptPath = payReceipt,
+            DeclarationName = req.decl_name,
+            DeclarationDate = DateTime.TryParse(req.decl_date, out var dd) ? dd : DateTime.MinValue,
+            DeclarationPlace = req.decl_place,
+            SignaturePath = signature,
             Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty,
             Status = "Submitted"
         };
@@ -121,6 +159,103 @@ public class ApplicationController : Controller
                     Location = req.project_location_cat1?[i] ?? "",
                     Year = req.project_year_cat1 != null && i < req.project_year_cat1.Count ? req.project_year_cat1[i] : 0,
                     Role = req.project_role_cat1?[i] ?? ""
+                });
+            }
+        }
+
+        // 4) Training
+        if (req.training_name != null)
+        {
+            for (int i = 0; i < req.training_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.training_name[i])) continue;
+                string? proof = null;
+                if (req.training_proof != null && i < req.training_proof.Count && req.training_proof[i] != null)
+                    proof = await _fileService.SaveFileAsync(req.training_proof[i].OpenReadStream(), req.training_proof[i].FileName);
+
+                applicant.CertificationTrainings.Add(new CertificationTraining
+                {
+                    Name = req.training_name[i],
+                    ObtainedFrom = req.training_from != null && i < req.training_from.Count ? req.training_from[i] : "",
+                    Duration = req.training_duration != null && i < req.training_duration.Count ? req.training_duration[i] : "",
+                    Year = req.training_year != null && i < req.training_year.Count ? req.training_year[i] : 0,
+                    ProofPath = proof
+                });
+            }
+        }
+
+        // 5) Memberships
+        if (req.membership_name != null)
+        {
+            for (int i = 0; i < req.membership_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.membership_name[i])) continue;
+                string? proof = null;
+                if (req.membership_proof != null && i < req.membership_proof.Count && req.membership_proof[i] != null)
+                    proof = await _fileService.SaveFileAsync(req.membership_proof[i].OpenReadStream(), req.membership_proof[i].FileName);
+
+                applicant.Memberships.Add(new Membership
+                {
+                    Name = req.membership_name[i],
+                    ObtainedFrom = req.membership_from != null && i < req.membership_from.Count ? req.membership_from[i] : "",
+                    Year = req.membership_year != null && i < req.membership_year.Count ? req.membership_year[i] : 0,
+                    Duration = req.membership_duration != null && i < req.membership_duration.Count ? req.membership_duration[i] : "",
+                    ProofPath = proof
+                });
+            }
+        }
+
+        // 6) Publications
+        if (req.paper_name != null)
+        {
+            for (int i = 0; i < req.paper_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.paper_name[i])) continue;
+                string? proof = null;
+                if (req.paper_proof != null && i < req.paper_proof.Count && req.paper_proof[i] != null)
+                    proof = await _fileService.SaveFileAsync(req.paper_proof[i].OpenReadStream(), req.paper_proof[i].FileName);
+
+                applicant.Publications.Add(new Publication
+                {
+                    Name = req.paper_name[i],
+                    Place = req.paper_place != null && i < req.paper_place.Count ? req.paper_place[i] : "",
+                    Year = req.paper_year != null && i < req.paper_year.Count ? req.paper_year[i] : 0,
+                    Role = req.paper_role != null && i < req.paper_role.Count ? req.paper_role[i] : "",
+                    ProofPath = proof
+                });
+            }
+        }
+
+        // 7) Awards
+        if (req.award_name != null)
+        {
+            for (int i = 0; i < req.award_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.award_name[i])) continue;
+                string? proof = null;
+                if (req.award_proof != null && i < req.award_proof.Count && req.award_proof[i] != null)
+                    proof = await _fileService.SaveFileAsync(req.award_proof[i].OpenReadStream(), req.award_proof[i].FileName);
+
+                applicant.Awards.Add(new Award
+                {
+                    Name = req.award_name[i],
+                    ReceivedFrom = req.award_from != null && i < req.award_from.Count ? req.award_from[i] : "",
+                    Year = req.award_year != null && i < req.award_year.Count ? req.award_year[i] : 0,
+                    ProofPath = proof
+                });
+            }
+        }
+
+        // 8) Software Skills
+        if (req.software_skill != null)
+        {
+            for (int i = 0; i < req.software_skill.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.software_skill[i])) continue;
+                applicant.SoftwareSkills.Add(new SoftwareSkill
+                {
+                    SoftwareName = req.software_skill[i],
+                    ProficiencyLevel = req.proficiency_level != null && i < req.proficiency_level.Count ? req.proficiency_level[i] : ""
                 });
             }
         }

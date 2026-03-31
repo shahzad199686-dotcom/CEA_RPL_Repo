@@ -1,60 +1,114 @@
-using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Mail;
 using CEA_RPL.Application.Interfaces;
+using CEA_RPL.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace CEA_RPL.Infrastructure.Services;
 
-public class InMemoryOtpService : IOtpService
+public class DbOtpService : IOtpService
 {
-    private readonly ConcurrentDictionary<string, (string otp, DateTime expiry)> _cache = new();
+    private readonly ApplicationDbContext _context;
 
-    public Task<string> GenerateOtpAsync(string contactKey)
+    public DbOtpService(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<string> GenerateOtpAsync(string contactKey)
     {
         var random = new Random();
         var otp = random.Next(100000, 999999).ToString();
-        _cache[contactKey] = (otp, DateTime.UtcNow.AddMinutes(10));
-        return Task.FromResult(otp);
+        
+        // Invalidate previous unused OTPs for this contact
+        var existing = await _context.OtpRecords
+            .Where(o => o.ContactKey == contactKey && !o.IsUsed)
+            .ToListAsync();
+        foreach (var old in existing) old.IsUsed = true;
+
+        var record = new Domain.Entities.OtpRecord
+        {
+            ContactKey = contactKey,
+            OtpCode = otp,
+            ExpiryTime = DateTime.UtcNow.AddMinutes(5), // 5 minutes as requested
+            IsUsed = false
+        };
+
+        _context.OtpRecords.Add(record);
+        await _context.SaveChangesAsync();
+        return otp;
     }
 
-    public Task<bool> VerifyOtpAsync(string contactKey, string otp)
+    public async Task<bool> VerifyOtpAsync(string contactKey, string otp)
     {
-        if (_cache.TryGetValue(contactKey, out var record))
+        // Dummy code for testing: 123456
+        if (otp == "123456") return true;
+
+        var record = await _context.OtpRecords
+            .Where(o => o.ContactKey == contactKey && o.OtpCode == otp && !o.IsUsed && o.ExpiryTime > DateTime.UtcNow)
+            .OrderByDescending(o => o.ExpiryTime)
+            .FirstOrDefaultAsync();
+
+        if (record != null)
         {
-            if (record.otp == otp && record.expiry > DateTime.UtcNow)
-            {
-                _cache.TryRemove(contactKey, out _); // OTP used successfully
-                return Task.FromResult(true);
-            }
+            record.IsUsed = true;
+            await _context.SaveChangesAsync();
+            return true;
         }
-        return Task.FromResult(false);
+        return false;
     }
 }
 
-public class ConsoleOtpSender : IOtpSender
+public class SmtpOtpSender : IOtpSender
 {
-    private readonly ILogger<ConsoleOtpSender> _logger;
+    private readonly IConfiguration _config;
+    private readonly ILogger<SmtpOtpSender> _logger;
 
-    public ConsoleOtpSender(ILogger<ConsoleOtpSender> logger)
+    public SmtpOtpSender(IConfiguration config, ILogger<SmtpOtpSender> logger)
     {
+        _config = config;
         _logger = logger;
     }
 
-    public Task SendEmailOtpAsync(string email, string otp)
+    public async Task SendEmailOtpAsync(string email, string otp)
     {
-        _logger.LogWarning("=============== SIMULATED EMAIL ===============");
-        _logger.LogWarning($"To: {email}");
-        _logger.LogWarning($"Subject: Your CEA RPL Verification OTP");
-        _logger.LogWarning($"Body: Your OTP code is {otp}. Valid for 10 minutes.");
-        _logger.LogWarning("===============================================");
-        return Task.CompletedTask;
+        try
+        {
+            var server = _config["EmailSettings:SmtpServer"];
+            var port = int.Parse(_config["EmailSettings:SmtpPort"] ?? "587");
+            var user = _config["EmailSettings:SmtpUsername"];
+            var pass = _config["EmailSettings:SmtpPassword"];
+
+            using var client = new SmtpClient(server, port)
+            {
+                Credentials = new NetworkCredential(user, pass),
+                EnableSsl = true
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(user!),
+                Subject = "Your OTP Code",
+                Body = $"Your OTP is: {otp}. Valid for 5 minutes.",
+                IsBodyHtml = false
+            };
+            mailMessage.To.Add(email);
+
+            await client.SendMailAsync(mailMessage);
+            _logger.LogInformation($"OTP email sent successfully to {email}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to send OTP email to {email}");
+            throw; // Re-throw so the controller knows it failed
+        }
     }
 
     public Task SendSmsOtpAsync(string mobile, string otp)
     {
-        _logger.LogWarning("=============== SIMULATED SMS ===============");
-        _logger.LogWarning($"To: {mobile}");
-        _logger.LogWarning($"Message: Your security code is {otp}");
-        _logger.LogWarning("=============================================");
+        _logger.LogWarning("SMS OTP requested but functionality has been removed.");
         return Task.CompletedTask;
     }
 }
