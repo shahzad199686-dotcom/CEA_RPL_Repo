@@ -28,22 +28,11 @@ public class Applicant : BaseEntity
     // Selected Categories
     public string Categories { get; set; } = string.Empty; // Comma separated Category 1, Category 2 etc.
     
-    // Additional Documents
-    public string? ReportPath1 { get; set; }
-    public string? ReportPath2 { get; set; }
-    public string? OtherEnclosurePath { get; set; }
-    
-    // Payment Details
-    public decimal PaymentAmount { get; set; }
-    public DateTime PaymentDate { get; set; }
-    public string? PaymentUtr { get; set; }
-    public string? PaymentReceiptPath { get; set; }
-    
-    // Declaration
-    public string? DeclarationName { get; set; }
-    public DateTime DeclarationDate { get; set; }
-    public string? DeclarationPlace { get; set; }
-    public string? SignaturePath { get; set; }
+    // Navigation Properties
+    public virtual Declaration? Declaration { get; set; } = null!;
+    public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
+    public virtual ICollection<UploadReport> UploadReports { get; set; } = new List<UploadReport>();
+    public virtual ICollection<OtherEnclosure> OtherEnclosures { get; set; } = new List<OtherEnclosure>();
     
     // Navigation Collections
     public virtual ICollection<Education> Educations { get; set; } = new List<Education>();
@@ -52,6 +41,6 @@ public class Applicant : BaseEntity
     public virtual ICollection<Award> Awards { get; set; } = new List<Award>();
     public virtual ICollection<CertificationTraining> CertificationTrainings { get; set; } = new List<CertificationTraining>();
     public virtual ICollection<Membership> Memberships { get; set; } = new List<Membership>();
-    public virtual ICollection<Publication> Publications { get; set; } = new List<Publication>();
+    public virtual ICollection<PaperPublished> PaperPublisheds { get; set; } = new List<PaperPublished>();
     public virtual ICollection<SoftwareSkill> SoftwareSkills { get; set; } = new List<SoftwareSkill>();
 }

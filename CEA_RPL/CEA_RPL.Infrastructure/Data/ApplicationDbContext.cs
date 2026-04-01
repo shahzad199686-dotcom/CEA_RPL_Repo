@@ -19,8 +19,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<Award> Awards => Set<Award>();
     public DbSet<CertificationTraining> CertificationTrainings => Set<CertificationTraining>();
     public DbSet<Membership> Memberships => Set<Membership>();
-    public DbSet<Publication> Publications => Set<Publication>();
+    public DbSet<PaperPublished> PaperPublisheds => Set<PaperPublished>();
     public DbSet<SoftwareSkill> SoftwareSkills => Set<SoftwareSkill>();
+    public DbSet<UploadReport> UploadReports => Set<UploadReport>();
+    public DbSet<PaymentDetail> PaymentDetails => Set<PaymentDetail>();
+    public DbSet<Declaration> Declarations => Set<Declaration>();
+    public DbSet<OtherEnclosure> OtherEnclosures => Set<OtherEnclosure>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,6 +50,12 @@ public class ApplicationDbContext : DbContext
             e.Property(a => a.FullName).IsRequired().HasMaxLength(255);
             e.Property(a => a.Email).IsRequired().HasMaxLength(255); 
             e.Property(a => a.Mobile).IsRequired().HasMaxLength(15);
+
+            // 1-to-1 Applicant <-> Declaration
+            e.HasOne(a => a.Declaration)
+             .WithOne(d => d.Applicant)
+             .HasForeignKey<Declaration>(d => d.ApplicantId)
+             .OnDelete(DeleteBehavior.Cascade);
         });
         
         // Education
@@ -72,6 +82,16 @@ public class ApplicationDbContext : DbContext
             e.HasOne(pe => pe.Applicant)
              .WithMany(a => a.ProjectExperiences)
              .HasForeignKey(pe => pe.ApplicantId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // PaperPublished
+        modelBuilder.Entity<PaperPublished>(e =>
+        {
+            e.ToTable("PaperPublishedEntries");
+            e.HasOne(p => p.Applicant)
+             .WithMany(a => a.PaperPublisheds)
+             .HasForeignKey(p => p.ApplicantId)
              .OnDelete(DeleteBehavior.Cascade);
         });
     }

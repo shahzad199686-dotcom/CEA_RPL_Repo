@@ -2,1360 +2,671 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CEA RPL Application – Full Version</title>
-
-<style>
-
-/* =========================
-   Design Tokens
-========================= */
-:root {
-  --ink:#0c3b2e;
-  --muted:#5b6b68;
-  --line:#e7eceb;
-  --bg:#f8fbfa;
-  --accent:#0ea5a5;
-  --accent-light:#d1f2f0;
-  --warn:#b42318;
-  --success:#0b7a53;
-  --shadow:0 4px 6px -1px rgba(0,0,0,.1);
-  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1);
-}
-
-/* =========================
-   Base
-========================= */
-* { box-sizing: border-box; }
-
-body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: linear-gradient(135deg, var(--bg), #e8f5f2);
-  color: var(--ink);
-  margin: 0;
-}
-
-.wrap {
-  max-width: 1120px;
-  margin: 0 auto 64px;
-  padding: 0 16px;
-}
-
-header {
-  text-align: center;
-  padding: 36px 0 20px;
-  background: linear-gradient(135deg, var(--accent), #00b3a5);
-  color: #fff;
-  border-radius: 0 0 24px 24px;
-  box-shadow: var(--shadow-lg);
-}
-
-header h1 {
-  margin: 0 0 6px;
-  font-size: 1.8rem;
-}
-
-header p {
-  margin: 0;
-  opacity: 0.95;
-}
-
-/* =========================
-   Sections
-========================= */
-section {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 28px;
-  margin: 24px 0;
-  box-shadow: var(--shadow);
-  position: relative;
-}
-
-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--accent), var(--success));
-}
-
-h2 {
-  font-size: 1.25rem;
-  margin: 0 0 16px;
-}
-
-/* =========================
-   Layout Grid
-========================= */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
-}
-
-.col-3 { grid-column: span 3; }
-.col-4 { grid-column: span 4; }
-.col-6 { grid-column: span 6; }
-.col-8 { grid-column: span 8; }
-.col-12 { grid-column: span 12; }
-
-/* =========================
-   Form Controls
-========================= */
-label {
-  display: block;
-  font-weight: 600;
-  margin: 4px 0 6px;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 2px solid var(--line);
-  font-size: 1rem;
-  background: #fff;
-}
-
-textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-
-.req {
-  color: var(--warn);
-  font-weight: 600;
-  margin-left: 4px;
-}
-
-.caption,
-small.hint {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-/* =========================
-   Tables
-========================= */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
-}
-
-.table th,
-.table td {
-  border: 1px solid var(--line);
-  padding: 10px;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.table th {
-  background: #f4f8f7;
-  font-weight: 600;
-}
-
-/* ===== Category Chips ===== */
-.chip input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  min-height: 16px;
-  margin: 2px 0 0 0;
-  padding: 0;
-  flex-shrink: 0;
-  transform: scale(1);
-}
-
-.chip {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.chips {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* =========================
-   Buttons & Actions
-========================= */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-button {
-  appearance: none;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), #00b3a5);
-  color: #fff;
-}
-
-.btn-ghost {
-  background: #fff;
-  border: 1px solid var(--line);
-  color: var(--ink);
-}
-
-.add-row {
-  background: var(--success);
-  color: #fff;
-}
-
-.delete-row {
-  background: var(--warn);
-  color: #fff;
-  padding: 6px 10px;
-}
-
-/* =========================
-   Utility
-========================= */
-.rowline {
-  border-top: 1px dashed var(--line);
-  margin: 16px 0;
-}
-
-.alert {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: #fffdf6;
-}
-
-.ok { color: var(--success); font-weight: 600; }
-.fail { color: var(--warn); font-weight: 600; }
-
-.disabled {
-  opacity: .6;
-  pointer-events: none;
-}
-.hint {
-  color: var(--muted);
-  display: block;
-  margin-top: 12px;
-  font-size: 0.9rem;
-}
-
-/* =========================
-   Toast Notifications
-========================= */
-#toast-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.toast {
-  background: #fff;
-  border-left: 4px solid var(--accent);
-  box-shadow: var(--shadow-lg);
-  padding: 16px 20px;
-  border-radius: 8px;
-  color: var(--ink);
-  font-weight: 500;
-  animation: slideIn 0.3s ease-out forwards;
-  max-width: 350px;
-}
-.toast.error { border-left-color: var(--warn); }
-.toast.success { border-left-color: var(--success); }
-@@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-/* =========================
-   Responsive & Modals
-========================= */
-@@media (max-width: 768px) {
-  .grid { grid-template-columns: 1fr; }
-}
-
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center; z-index: 1000;
-}
-.modal-card {
-  background: #fff; border-radius: 16px; padding: 32px; width: 100%; max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center;
-  animation: slideIn 0.3s ease-out forwards;
-}
-.auth-tabs {
-  display: flex; background: #f4f8f7; border-radius: 12px; padding: 4px; margin-bottom: 24px;
-}
-.auth-tab {
-  flex: 1; text-align: center; padding: 10px; border-radius: 8px; cursor: pointer;
-  font-weight: 600; color: var(--muted); transition: all 0.2s;
-}
-.auth-tab.active { background: #fff; color: var(--accent); box-shadow: var(--shadow); }
-.auth-container { max-width: 440px; margin: 0 auto; }
-
-/* Enhanced Button States */
-.btn-primary:hover, .btn-ghost:hover, .add-row:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-  box-shadow: 0 8px 15px -3px rgba(0,0,0,0.15);
-}
-.btn-primary:active, .btn-ghost:active {
-  transform: translateY(0);
-}
-.btn-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Modal Animations */
-.modal-overlay {
-  transition: opacity 0.3s ease;
-}
-.modal-card {
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.modal-overlay.show .modal-card {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-#authSection {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* FORM LAYOUT STYLES */
-section {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  margin-bottom: 40px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-section h2 {
-  color: var(--accent);
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  border-bottom: 2px solid #e6f6f6;
-  padding-bottom: 10px;
-}
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 20px;
-}
-</style>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CEA RPL Application – Modern Portal</title>
+    <link rel="stylesheet" href="~/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
+
 <div id="toast-container"></div>
-<div class="wrap">
+
+<!-- Top Progress Header -->
+<header class="top-progress">
+    <div class="progress-info">
+        <h3>Application Progress</h3>
+        <p>Step <span id="currentStepDisplay">1</span> of 15: <span id="currentStepName">Applicant Details</span></p>
+    </div>
+    <div class="progress-bar-wrap">
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBarFill" style="width: 6.67%;"></div>
+        </div>
+    </div>
+    <div class="profile-section">
+        <div class="profile-trigger">
+            <div class="profile-avatar">
+                @{
+                    var displayName = ViewBag.UserName as string ?? "User";
+                    var initials = "";
+                    if (!string.IsNullOrEmpty(displayName))
+                    {
+                        var words = displayName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (words.Length >= 2) {
+                            initials = (words[0][0].ToString() + words[1][0].ToString()).ToUpper();
+                        } else if (words[0].Length >= 2) {
+                            initials = words[0].Substring(0, 2).ToUpper();
+                        } else {
+                            initials = words[0][0].ToString().ToUpper();
+                        }
+                    }
+                }
+                @initials
+            </div>
+            <span>Welcome, @displayName</span>
+        </div>
+        <div class="profile-dropdown">
+            <a href="#" class="dropdown-item">My Profile</a>
+            <a href="#" class="dropdown-item">My Applications</a>
+            <hr style="border: 0; border-top: 1px solid var(--line); margin: 4px 0;">
+            <a href="/Auth/Logout" class="dropdown-item logout">Sign Out</a>
+        </div>
+    </div>
 </header>
 
-<div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: flex-end; padding: 10px 20px;">
-    <a href="/Auth/Logout" style="color: var(--accent); font-weight: 600; text-decoration: none; font-size: 0.9rem;">Sign Out</a>
+<div class="application-wrap">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar-nav" id="sidebarNav">
+        <a href="#step-1" class="nav-item active" data-step="1"><span class="nav-num">01</span><span class="nav-text">Applicant Details</span></a>
+        <a href="#step-2" class="nav-item locked" data-step="2"><span class="nav-num">02</span><span class="nav-text">Category Selection</span></a>
+        <a href="#step-3" class="nav-item locked" data-step="3"><span class="nav-num">03</span><span class="nav-text">Education</span></a>
+        <a href="#step-4" class="nav-item locked" data-step="4"><span class="nav-num">04</span><span class="nav-text">Work Experience</span></a>
+        <a href="#step-5" class="nav-item locked" data-step="5"><span class="nav-num">05</span><span class="nav-text">Project Experience</span></a>
+        <a href="#step-6" class="nav-item locked" data-step="6"><span class="nav-num">06</span><span class="nav-text">Upload Reports</span></a>
+        <a href="#step-7" class="nav-item locked" data-step="7"><span class="nav-num">07</span><span class="nav-text">Training/Cert.</span></a>
+        <a href="#step-8" class="nav-item locked" data-step="8"><span class="nav-num">08</span><span class="nav-text">Membership</span></a>
+        <a href="#step-9" class="nav-item locked" data-step="9"><span class="nav-num">09</span><span class="nav-text">Publications</span></a>
+        <a href="#step-10" class="nav-item locked" data-step="10"><span class="nav-num">10</span><span class="nav-text">Awards</span></a>
+        <a href="#step-11" class="nav-item locked" data-step="11"><span class="nav-num">11</span><span class="nav-text">Software Skills</span></a>
+        <a href="#step-12" class="nav-item locked" data-step="12"><span class="nav-num">12</span><span class="nav-text">Other Enclosures</span></a>
+        <a href="#step-13" class="nav-item locked" data-step="13"><span class="nav-num">13</span><span class="nav-text">Payment Details</span></a>
+        <a href="#step-14" class="nav-item locked" data-step="14"><span class="nav-num">14</span><span class="nav-text">Declaration</span></a>
+        <a href="#step-15" class="nav-item locked" data-step="15"><span class="nav-num">15</span><span class="nav-text">Review & Submit</span></a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="form-content">
+        <form id="rplForm" novalidate>
+            
+            <!-- STEP 1: APPLICANT DETAILS -->
+            <div class="form-section active" id="step-1">
+                <div class="section-header"><h2>Step 1: Applicant Details</h2><span class="section-status">Active</span></div>
+                <div class="section-content">
+                    <div class="grid">
+                        <div class="col-6"><label>Full Name <span class="req">*</span></label><input name="full_name" type="text" required placeholder="As per ID proof" /></div>
+                        <div class="col-6"><label>Father’s / Mother’s Name</label><input name="parent_name" type="text" placeholder="Optional" /></div>
+                        <div class="col-4"><label>Date of Birth <span class="req">*</span></label><input name="dob" type="date" required /></div>
+                        <div class="col-4"><label>Gender</label><select name="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+                        <div class="col-4"><label>Citizenship <span class="req">*</span></label><select name="citizenship" required><option value="">Select</option><option>Indian</option></select></div>
+                        <div class="col-4">
+                            <label>Applicant Photograph <span class="req">*</span></label>
+                            <input type="file" name="applicant_photo" accept=".jpg,.jpeg,.png" required onchange="previewPhoto(event)" />
+                            <div style="margin-top: 12px; display: flex; justify-content: center;">
+                                <img id="photoPreview" src="" alt="" style="display:none; width:120px; height:150px; border:2px solid var(--line); border-radius: var(--radius-sm); object-fit: cover;" />
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="grid">
+                                <div class="col-12"><label>Permanent Address <span class="req">*</span></label><textarea name="address_perm" required placeholder="Include City, State, ZIP"></textarea></div>
+                                <div class="col-12"><label>Correspondence Address</label><textarea name="address_corr" placeholder="Leave blank if same as permanent"></textarea></div>
+                            </div>
+                        </div>
+                        <div class="col-4"><label>Email ID <span class="req">*</span></label><input name="email" type="email" required /></div>
+                        <div class="col-4"><label>Mobile Number <span class="req">*</span></label><input name="mobile" type="text" inputmode="numeric" required placeholder="10-digit number" /></div>
+                        <div class="col-4"><label>Alternate Number</label><input name="alt_mobile" type="text" inputmode="numeric" /></div>
+                        <div class="col-6"><label>Government ID Type <span class="req">*</span></label><select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()"><option value="">Select</option><option value="aadhaar">Aadhaar</option><option value="pan">PAN</option><option value="passport">Passport</option></select></div>
+                        <div class="col-6"><label id="govIdLabel">ID Number <span class="req">*</span></label><input id="govIdNumber" name="gov_id_number" type="text" required /></div>
+                        <div class="col-12"><label>Upload ID Proof <span class="req">*</span></label><input id="govIdUpload" name="gov_id_upload" type="file" accept=".jpg,.jpeg,.png,.pdf" required /><span class="hint">JPG/PNG/PDF, max 2MB</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: CATEGORY SELECTION -->
+            <div class="form-section hide" id="step-2">
+                <div class="section-header"><h2>Step 2: Category of Certification</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <div class="alert"><strong>Note:</strong> You may choose multiple categories. Certification fees apply per category.</div>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <label class="cat-label"><input type="checkbox" name="cert_category[]" value="Category 1"><div><strong>Category 1: Environment Auditing / Assessment</strong><small>EPA Act, Air/Water Act, Waste Management, CRZ Regulation, Eco-mark, etc.</small></div></label>
+                        <label class="cat-label"><input type="checkbox" name="cert_category[]" value="Category 2"><div><strong>Category 2: Sustainability or ESG Audit</strong><small>SEBI Act, ESG / Sustainability / SEBI BRSR compliance.</small></div></label>
+                        <label class="cat-label"><input type="checkbox" name="cert_category[]" value="Category 3"><div><strong>Category 3: Forest Conservation Audit</strong><small>Forest Conservation Act / Van Sanrakshan evam Samvardhan Adhiniyam.</small></div></label>
+                        <label class="cat-label"><input type="checkbox" name="cert_category[]" value="Category 4"><div><strong>Category 4: Wildlife Protection Audit</strong><small>Wildlife Protection Act compliance and verification.</small></div></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: EDUCATIONAL QUALIFICATIONS -->
+            <div class="form-section hide" id="step-3">
+                <div class="section-header"><h2>Step 3: Educational Qualifications</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="educationTable">
+                        <thead><tr><th>Degree/Diploma</th><th>Discipline</th><th>Institution</th><th>Year</th></tr></thead>
+                        <tbody><tr><td><input name="edu_degree[]" required /></td><td><input name="edu_discipline[]" required /></td><td><input name="edu_institution[]" required /></td><td><input type="number" name="edu_year[]" required /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('educationTable')">+ Add Degree</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: PROFESSIONAL EXPERIENCE -->
+            <div class="form-section hide" id="step-4">
+                <div class="section-header"><h2>Step 4: Professional Experience</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <div class="grid" style="margin-bottom: 24px;"><div class="col-6"><label>Total Experience (Years) <span class="req">*</span></label><input name="total_experience" type="text" required placeholder="e.g. 5.5" /></div></div>
+                    <table class="modern-table" id="experienceTable">
+                        <thead><tr><th>Organization</th><th>Designation</th><th>Duration</th><th>Nature of Work</th></tr></thead>
+                        <tbody><tr><td><input name="exp_org[]" required /></td><td><input name="exp_designation[]" required /></td><td><input name="exp_duration[]" required /></td><td><input name="exp_nature[]" required /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('experienceTable')">+ Add Experience</button>
+                    <div class="grid" style="margin-top: 24px;">
+                        <div class="col-6"><label>Ref Name</label><input name="ref2_name[]" /></div>
+                        <div class="col-6"><label>Ref Phone</label><input name="ref2_phone[]" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5: PROJECT EXPERIENCE (CAT 1) -->
+            <div class="form-section hide" id="step-5">
+                <div class="section-header"><h2>Step 5: Project Experience (Category 1)</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="cat1Projects">
+                        <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th><th>Role</th></tr></thead>
+                        <tbody><tr><td><input name="project_name_cat1[]" /></td><td><input name="project_client_cat1[]" /></td><td><input name="project_location_cat1[]" /></td><td><input type="number" name="project_year_cat1[]" /></td><td><input name="project_role_cat1[]" /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('cat1Projects')">+ Add Project</button>
+                </div>
+            </div>
+
+            <!-- STEP 6: UPLOAD REPORTS -->
+            <div class="form-section hide" id="step-6">
+                <div class="section-header"><h2>Step 6: Upload Audit Reports</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <div class="alert">Upload PDF reports of recent audits (Max 2MB each).</div>
+                    <div class="grid">
+                        <div class="col-6"><label>Report 1 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required /></div>
+                        <div class="col-6"><label>Report 2 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 7: TRAINING / CERTIFICATION -->
+            <div class="form-section hide" id="step-7">
+                <div class="section-header"><h2>Step 7: Details of Certification / Training</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="trainingTable">
+                        <thead><tr><th>Training Name</th><th>Institution</th><th>Duration</th><th>Year</th></tr></thead>
+                        <tbody><tr><td><input name="training_name[]" /></td><td><input name="training_from[]" /></td><td><input name="training_duration[]" /></td><td><input type="number" name="training_year[]" /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('trainingTable')">+ Add Training</button>
+                </div>
+            </div>
+
+            <!-- STEP 8: MEMBERSHIP -->
+            <div class="form-section hide" id="step-8">
+                <div class="section-header"><h2>Step 8: Membership in Professional Bodies</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="membershipTable">
+                        <thead><tr><th>Body/Society</th><th>From (Year)</th><th>Duration</th></tr></thead>
+                        <tbody><tr><td><input name="membership_name[]" /></td><td><input type="number" name="membership_year[]" /></td><td><input name="membership_duration[]" /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('membershipTable')">+ Add Membership</button>
+                </div>
+            </div>
+
+            <!-- STEP 9: PUBLICATIONS -->
+            <div class="form-section hide" id="step-9">
+                <div class="section-header"><h2>Step 9: Paper Published / Presented</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="paperTable">
+                        <thead><tr><th>Paper Title</th><th>Place/Journal</th><th>Year</th><th>Role</th></tr></thead>
+                        <tbody><tr><td><input name="paper_name[]" /></td><td><input name="paper_place[]" /></td><td><input type="number" name="paper_year[]" /></td><td><input name="paper_role[]" /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('paperTable')">+ Add Paper</button>
+                </div>
+            </div>
+
+            <!-- STEP 10: AWARDS -->
+            <div class="form-section hide" id="step-10">
+                <div class="section-header"><h2>Step 10: Awards / Recognition</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="awardTable">
+                        <thead><tr><th>Award/Recognition</th><th>From</th><th>Year</th></tr></thead>
+                        <tbody><tr><td><input name="award_name[]" /></td><td><input name="award_from[]" /></td><td><input type="number" name="award_year[]" /></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('awardTable')">+ Add Award</button>
+                </div>
+            </div>
+
+            <!-- STEP 11: SOFTWARE SKILLS -->
+            <div class="form-section hide" id="step-11">
+                <div class="section-header"><h2>Step 11: Software Skills</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <table class="modern-table" id="softwareTable">
+                        <thead><tr><th>Software Skill</th><th>Proficiency</th></tr></thead>
+                        <tbody><tr><td><input name="software_skill[]" /></td><td><select name="proficiency_level[]"><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td></tr></tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('softwareTable')">+ Add Skill</button>
+                </div>
+            </div>
+
+            <!-- STEP 12: OTHER ENCLOSURES -->
+            <div class="form-section hide" id="step-12">
+                <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <label>Upload additional supporting documents (if any)</label>
+                    <input type="file" name="other_enclosure" accept=".pdf,.zip,.rar" />
+                    <span class="hint">PDF/ZIP/RAR, max 5MB</span>
+                </div>
+            </div>
+
+            <!-- STEP 13: PAYMENT DETAILS -->
+            <div class="form-section hide" id="step-13">
+                <div class="section-header"><h2>Step 13: Payment Details</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <div class="grid">
+                        <div class="col-4"><label>Amount Paid <span class="req">*</span></label><input name="payment_amount" type="number" step="0.01" required /></div>
+                        <div class="col-4"><label>Payment Date <span class="req">*</span></label><input name="payment_date" type="date" required /></div>
+                        <div class="col-4"><label>UTR / Transaction ID <span class="req">*</span></label><input name="payment_utr" type="text" required /></div>
+                        <div class="col-12"><label>Upload Payment Receipt <span class="req">*</span></label><input name="payment_receipt" type="file" accept=".pdf,.jpg,.png" required /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 14: DECLARATION -->
+            <div class="form-section hide" id="step-14">
+                <div class="section-header"><h2>Step 14: Declaration by Applicant</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <div class="alert alert-info">I hereby certify that the information given in this application is true and correct to the best of my knowledge and belief.</div>
+                    <div class="grid">
+                        <div class="col-6"><label>Full Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type your full name" /></div>
+                        <div class="col-6"><label>Place</label><input type="text" name="decl_place" placeholder="City" /></div>
+                        <div class="col-6"><label>Date <span class="req">*</span></label><input type="date" name="decl_date" required /></div>
+                        <div class="col-6"><label>Signature File (Upload Image) <span class="req">*</span></label><input type="file" name="Any_other_doc" accept=".jpg,.jpeg,.png" required /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 15: REVIEW & SUBMIT -->
+            <div class="form-section hide" id="step-15">
+                <div class="section-header"><h2>Step 15: Review & Submit</h2><span class="section-status">Pending</span></div>
+                <div class="section-content">
+                    <!-- 1. Real-time Review Summary -->
+                    <div id="reviewSummary" class="review-grid">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- 2. Document Confirmation Checklist -->
+                    <div class="review-section" style="margin-top: 32px;">
+                        <h4>Document Upload Confirmation</h4>
+                        <p class="hint" style="margin-bottom: 16px;">Please confirm that you have uploaded the following documents in their respective sections.</p>
+                        <table class="checklist-table">
+                            <thead>
+                                <tr><th>Document Type</th><th>Mandatory</th><th style="width: 80px; text-align: center;">Confirmed</th></tr>
+                            </thead>
+                            <tbody id="checklistBody">
+                                <tr><td>Applicant Photograph</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Photograph"></td></tr>
+                                <tr><td>Government ID Proof (Aadhaar/PAN/Passport)</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Gov ID"></td></tr>
+                                <tr><td>Step 3: Degree Certificates / Marksheets</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Degree"></td></tr>
+                                <tr><td>Step 4: Experience Certificates / Proof</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Experience"></td></tr>
+                                <tr><td>Step 6: Environmental Audit Reports</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Reports"></td></tr>
+                                <tr><td>Step 13: Payment Receipt / UTR Proof</td><td><span class="status-tag status-yes">Yes</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Payment"></td></tr>
+                                <tr><td>Step 7: Training Certificates</td><td><span class="status-tag status-opt">Optional</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb" data-doc="Training"></td></tr>
+                                <tr><td>Step 8: Professional Membership Proof</td><td><span class="status-tag status-opt">Optional</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb" data-doc="Membership"></td></tr>
+                                <tr><td>Step 9: Research Publications / Presentations</td><td><span class="status-tag status-opt">Optional</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb" data-doc="Publications"></td></tr>
+                                <tr><td>Step 10: Awards / Recognitions Proof</td><td><span class="status-tag status-opt">Optional</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb" data-doc="Awards"></td></tr>
+                                <tr><td>Step 12: Other Relevant Documents</td><td><span class="status-tag status-opt">Optional</span></td><td style="text-align: center;"><input type="checkbox" class="checklist-cb" data-doc="Extra"></td></tr>
+                            </tbody>
+                        </table>
+                        <div id="checklistError">⚠️ Please confirm all mandatory documents are uploaded before submitting.</div>
+                    </div>
+                    
+                    <div style="margin-top: 40px; padding: 24px; border: 2px dashed var(--line); border-radius: var(--radius-lg); text-align: center;">
+                        <div class="alert alert-info" style="margin-bottom: 24px; text-align: left;">
+                            <strong>Ready to Submit?</strong><br>
+                            Clicking "Submit Final Application" will lock your application for review by the administrators.
+                        </div>
+                        <button type="submit" id="btnSubmitApp" class="btn btn-primary" style="padding: 18px 60px; font-size: 1.1rem; width: 100%; box-shadow: 0 10px 15px -3px rgba(180, 84, 35, 0.3);">Submit Final Application</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </main>
 </div>
 
-<form id="rplForm" novalidate>
-
-<!-- Start Application Sections -->
-<div id="applicationSections" style="position: relative; max-width: 1000px; margin: 0 auto; padding: 20px;">
-
-  <!-- APPLICANT DETAILS -->
-    <section>
-      <h2>Step 1: Applicant Details</h2>
-      <p class="caption">Please provide your basic contact and identity information</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-<!-- PERSONAL DETAILS -->
-    </section>
-  <!-- CATEGORY OF CERTIFICATION -->
-    <section>
-      <h2>Step 2: Category of Certification Applied For</h2>
-      <p class="caption">Select the categories you wish to be certified in</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <div class="grid">
-    <div class="col-6">
-      <label>Full Name <span class="req">*</span></label>
-      <input name="full_name" type="text" required />
-    </div>
-    <div class="col-6">
-      <label>Father’s / Mother’s Name</label>
-      <input name="parent_name" type="text" />
-    </div>
-    <div class="col-4">
-      <label>Date of Birth <span class="req">*</span></label>
-      <input name="dob" type="date" required />
-    </div>
-    <div class="col-4">
-      <label>Gender</label>
-      <select name="gender">
-        <option value="">Select</option>
-        <option>Male</option><option>Female</option><option>Other</option>
-      </select>
-    </div>
-    <div class="col-4">
-      <label>Citizenship (Indian) <span class="req">*</span></label>
-      <select name="citizenship" required>
-        <option value="">Select</option>
-        <option>Indian</option>
-      </select>
-    </div>
-    <div class="col-4">
-      <label>
-        Applicant Photograph <span class="req">*</span>
-      </label>
-      <input
-        type="file"
-        name="applicant_photo"
-        accept=".jpg,.jpeg,.png"
-        required
-        onchange="previewPhoto(event)"
-      />
-      <small class="hint">
-        JPG / PNG only, max size 2 MB, recent passport-size photo
-      </small>
-
-      <div style="margin-top:8px;">
-        <img
-          id="photoPreview"
-          src=""
-          alt="Photo Preview"
-          style="display:none; width:120px; height:150px; border:1px solid #000; object-fit:cover;"
-        />
-      </div>
-    </div>
-
-    <div class="col-6">
-      <label>Permanent Address <span class="req">*</span></label>
-      <textarea name="address_perm" required></textarea>
-    </div>
-    <div class="col-6">
-      <label>Correspondence Address</label>
-      <textarea name="address_corr"></textarea>
-    </div>
-    <div class="col-4">
-      <label>Email ID <span class="req">*</span></label>
-      <input name="email" type="email" required />
-      <small class="hint">Pre-filled from your account after sign-in.</small>
-    </div>
-    <div class="col-4">
-      <label>Mobile Number (OTP verification) <span class="req">*</span></label>
-      <input name="mobile" type="text" inputmode="numeric" pattern="[6-9]\d{9}" placeholder="10-digit Indian number" required />
-    </div>
-    <div class="col-4">
-      <label>Alternate Contact No.</label>
-      <input name="alt_mobile" type="text" inputmode="numeric" pattern="[0-9]{10}" />
-    </div>
-  <div class="col-6">
-    <label>Government Photo ID Type <span class="req">*</span></label>
-    <select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()">
-      <option value="">Select</option>
-      <option value="aadhaar">Aadhaar</option>
-      <option value="pan">PAN</option>
-      <option value="passport">Passport</option>
-    </select>
-  </div>
-
-  <div class="col-6">
-    <label id="govIdLabel">ID Number <span class="req">*</span></label>
-    <input id="govIdNumber" name="gov_id_number" type="text" required />
-    <small class="hint" id="govIdHint">
-      Only the selected ID number is required. Full value stored securely.
-    </small>
-  </div>
-
-  <div class="col-6">
-    <label id="govUploadLabel">
-      Upload Selected ID Proof (JPG / PNG / PDF ≤ 2 MB) <span class="req">*</span>
-    </label>
-    <input
-      id="govIdUpload"
-      name="gov_id_upload"
-      type="file"
-      accept=".jpg,.jpeg,.png,.pdf"
-      required
-    />
-  </div>
-
-</section>
-
-  <!-- EDUCATIONAL QUALIFICATIONS -->
-    <section>
-      <h2>Step 3: Educational Qualifications</h2>
-      <p class="caption">Provide details of your academic background</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-  <div class="chips">
-    <label class="chip">
-      <input type="checkbox" name="cert_category[]" value="Category 1">
-      <span>
-        <strong>Category 1 — Compliance or Verification audits </strong><br>
-        EPA Act & Rules, Air Act, Water Act, GHG emission intensity target Rules,Waste management Rules, CRZ Regulation, Eco-mark Rules , Green Credit Rules etc
-      </span>
-    </label>
-
-    <label class="chip">
-      <input type="checkbox" name="cert_category[]" value="Category 2">
-      <span>
-        <strong>Category 2 — Compliance or Verification audits  </strong><br>
-        SEBI Act, ESG / Sustainability/ SEBI BRSR
-      </span>
-    </label>
-
-    <label class="chip">
-      <input type="checkbox" name="cert_category[]" value="Category 3">
-      <span>
-        <strong>Category 3 — Compliance or Verification audits </strong><br>
-        Forest Conservation Act / Van (Sanrakshan evam Samvardhan) Adhiniyam
-      </span>
-
-    </label>
-
-    <label class="chip">
-      <input type="checkbox" name="cert_category[]" value="Category 4">
-      <span>
-      <strong>Category 4 — Compliance or Verification audits </strong><br>
-      Wildlife Protection Act
-      </span>
-
-    </label>
-  </div>
-
-  <small class="hint">
-    You may choose one or more categories. Certification fees apply per selected category.
-  </small>
-</section>
-
-
-  <!-- PROFESSIONAL EXPERIENCE -->
-    <section>
-      <h2>Step 4: Professional Experience</h2>
-      <p class="caption">Detail your relevant work history</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <table class="table" id="educationTable">
-    <thead>
-      <tr>
-        <th>Degree</th>
-        <th>Discipline</th>
-        <th>Institution</th>
-        <th>Year</th>
-        <th>Certificate</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>
-          <select name="edu_degree[]" required>
-            <option value="">Select</option>
-            <option>Bachelor's</option>
-            <option>Master's</option>
-            <option>PhD</option>
-          </select>
-        </td>
-        <td><input name="edu_discipline[]" required></td>
-        <td><input name="edu_institution[]" required></td>
-        <td>
-          <input type="number" name="edu_year[]" min="1950" max="2026" required>
-        </td>
-        <td>
-          <input type="file" name="edu_cert" accept=".pdf,.jpg,.png" required>
-        </td>
-        <td class="row-actions">
-          <!-- initial row has no delete button -->
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <button type="button" class="add-row" onclick="addEducationRow()">+ Add Row</button>
-</section>
-
-  <!-- PROJECT EXPERIENCE -->
-    <section>
-      <h2>Step 5: Project Experience</h2>
-      <p class="caption">List major projects undertaken in the applied categories</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-  <label>Total Years of Experience <span class="req">*</span></label>
-  <input name="total_experience" required>
-  <table class="table" id="experienceTable">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Organization</th>
-        <th>Designation</th>
-        <th>Duration</th>
-        <th>Nature of Work</th>
-        <th>Proof of Experience <br> (Experiance Certificate/ Goverment reference)</th>
-        <th>Contact details of two organizational references</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td class="row-no"></td>
-        <td><input name="exp_org[]" required></td>
-        <td><input name="exp_designation[]" required></td>
-        <td>
-          <input name="exp_duration[]" placeholder="MM/YYYY – MM/YYYY" required>
-        </td>
-        <td>
-          <textarea name="exp_nature[]" required></textarea>
-        </td>
-        <td>
-          <input type="file" name="exp_proof" accept=".pdf,.jpg,.png" required>
-        </td>
-        <td>
-          <input type="tel" name="ref2_phone[]" required />
-        </td>
-        <td class="row-actions">
-          <!-- initial row: no delete -->
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <button type="button" class="add-row" onclick="addExperienceRow()">+ Add Row</button>
-</section>
-
-
-
-  <h3> 6.1 For Category 1: List the  major Environment Auditing / Assessment / verification/ Inspection Projects undertaken by applicant </h3>
-  <table class="table" aria-label="Projects" id="cat1Projects">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Project</th>
-        <th>Client</th>
-        <th>Location</th>
-        <th>Executed in Year</th>
-        <th>Role of Applicant</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="project_name_cat1[]" /></td>
-        <td><input type="text" name="project_client_cat1[]" /></td>
-        <td><input type="text" name="project_location_cat1[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat1[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat1[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td><input type="text" name="project_name_cat1[]" /></td>
-        <td><input type="text" name="project_client_cat1[]" /></td>
-        <td><input type="text" name="project_location_cat1[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat1[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat1[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('cat1Projects')">+ Add Row</button>
-
-
-  <h3> 6.2 For Category 2: List the  major Sustainability or ESG Audit / Assessment / verification/ Inspection Projects undertaken by applicant</h3>
-  <table class="table" aria-label="Projects" id="cat2Projects">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Project</th>
-        <th>Client</th>
-        <th>Location</th>
-        <th>Executed in Year</th>
-        <th>Role of Applicant</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="project_name_cat2[]" /></td>
-        <td><input type="text" name="project_client_cat2[]" /></td>
-        <td><input type="text" name="project_location_cat2[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat2[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat2[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td><input type="text" name="project_name_cat2[]" /></td>
-        <td><input type="text" name="project_client_cat2[]" /></td>
-        <td><input type="text" name="project_location_cat2[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat2[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat2[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('cat2Projects')">+ Add Row</button>
-
-
-  <h3> 6.3 For Category 3: List the  major Forest Conservation Audit / Assessment / verification/ Inspection Projects undertaken by applicant</h3>
-  <table class="table" aria-label="Projects" id="cat3Projects">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Project</th>
-        <th>Client</th>
-        <th>Location</th>
-        <th>Executed in Year</th>
-        <th>Role of Applicant</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="project_name_cat3[]" /></td>
-        <td><input type="text" name="project_client_cat3[]" /></td>
-        <td><input type="text" name="project_location_cat3[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat3[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat3[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td><input type="text" name="project_name_cat3[]" /></td>
-        <td><input type="text" name="project_client_cat3[]" /></td>
-        <td><input type="text" name="project_location_cat3[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat3[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat3[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('cat3Projects')">+ Add Row</button>
-
-
-  <h3> 6.4 For Category 4: List the  major Wildlife Conservation Audit / Assessment / verification/ Inspection Projects undertaken by applicant</h3>
-  <table class="table" aria-label="Projects" id="cat4Projects">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Project</th>
-        <th>Client</th>
-        <th>Location</th>
-        <th>Executed in Year</th>
-        <th>Role of Applicant</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="project_name_cat4[]" /></td>
-        <td><input type="text" name="project_client_cat4[]" /></td>
-        <td><input type="text" name="project_location_cat4[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat4[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat4[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td><input type="text" name="project_name_cat4[]" /></td>
-        <td><input type="text" name="project_client_cat4[]" /></td>
-        <td><input type="text" name="project_location_cat4[]" /></td>
-        <td>
-          <input type="number" name="project_year_cat4[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="project_role_cat4[]">
-            <option value="">Select</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Team Member">Team Member</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('cat4Projects')">+ Add Row</button>
-  <!-- UPLOAD REPORTS -->
-
-    <section>
-      <h2>Step 6: Upload Reports</h2>
-      <p class="caption">Upload details of 2 to 5 audits/studies conducted within the applied categories</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-      
-      <div class="alert" style="margin-bottom:20px; background:#f4f8ff; color:#0c3b2e; border-left:4px solid var(--accent); padding: 12px;">
-        <strong>Requirement:</strong> Reports must be authored or co-authored by the applicant.
-      </div>
-
-  <label>
-    Upload details of 2 to 5 audits/studies conducted within the applied category/categories for evaluation purposes
-    (PDF ≤ 2 MB each)
-  </label>
-
-  <div class="file-group">
-    <input 
-      type="file" 
-      name="audit_report" 
-      accept=".pdf" 
-      required
-      onchange="validateSingleAuditFile(this)"
-    />
-
-    <input 
-      type="file" 
-      name="audit_report" 
-      accept=".pdf" 
-      required
-      onchange="validateSingleAuditFile(this)"
-    />
-  </div>
-
-  <!-- CERTIFICATIONS / TRAINING -->
-    <section>
-      <h2>Step 7: Details of Certification / Training</h2>
-      <p class="caption">Provide information about your professional certifications</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-  <table class="table" aria-label="Projects" id="trainingTable">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Training/Certifiation</th>
-        <th>Obtained from</th>
-        <th>Duration of Training/ Certification</th>
-        <th>Executed in Year</th>
-        <th>Upload Proof of Training/Certification</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="training_name[]" /></td>
-        <td><input type="text" name="training_from[]" /></td>
-        <td><input type="text" name="training_duration[]" /></td>
-        <td>
-          <input type="number" name="training_year[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <input 
-            type="file" 
-            name="training_proof[]" 
-            accept=".pdf" 
-            required
-            onchange="validateSingleAuditFile(this)"
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('trainingTable')">+ Add Row</button>
-
-</section>
-
-  <!-- MEMBERSHIPS -->
-    <section>
-      <h2>Step 8: Membership in Professional Bodies</h2>
-      <p class="caption">List your professional affiliations and roles</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <label> List of professional body memberships or institutional affiliations, including advisory roles or membership in any government committees  </label>
-  <table class="table" aria-label="Projects" id="membershipTable">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Membership/ Association</th>
-        <th>Obtained from</th>
-        <th>Obtained in Year</th>
-        <th>Duration of Membership/ Association</th>
-        <th>Upload Proof of Affiliation/ Membership</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="membership_name[]" /></td>
-        <td><input type="text" name="membership_from[]" /></td>
-        <td>
-          <input type="number" name="membership_year[]" min="1990" max="2100" />
-        </td>
-        <td><input type="text" name="membership_duration[]" /></td>
-        <td>
-          <input 
-            type="file" 
-            name="membership_proof" 
-            accept=".pdf" 
-            required
-            onchange="validateSingleAuditFile(this)"
-          />
-        </td>
-
-      </tr>
-
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('membershipTable')">+ Add Row</button>
-
-</section>
-
-
-    </section>
-  </div>
-
-  <!-- STEP 9: PUBLICATIONS -->
-  <div class="step-pane" id="step-9">
-    <section>
-      <h2>Step 9: Paper Published / Presented</h2>
-      <p class="caption">List technical papers authored or published by you</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <label> List the major technical papers authored or published by the applicant </label>
-  <table class="table" aria-label="Projects" id="paperTable">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Paper</th>
-        <th>Published or Presented in </th>
-        <th>Year of Publication or Presentation</th>
-        <th>Role of Applicant</th>
-        <th>Upload Proof of Paper Published/ Presented </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="paper_name[]" /></td>
-        <td><input type="text" name="paper_place[]" /></td>
-        <td>
-          <input type="number" name="paper_year[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <select name="paper_role[]">
-            <option value="">Select</option>
-            <option value="Author">Author</option>
-            <option value="Co-Author">Co-author</option>
-          </select>
-        </td>
-        <td>
-          <input 
-            type="file" 
-            name="paper_proof" 
-            accept=".pdf" 
-            required
-            onchange="validateSingleAuditFile(this)"
-          />
-        </td>
-
-      </tr>
-
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('paperTable')">+ Add Row</button>
-
-</section>
-
-
-  <!-- AWARDS -->
-    <section>
-      <h2>Step 10: Awards / Recognition</h2>
-      <p class="caption">List major awards or appreciation received</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <label> List the major awards/ recognition/ appriciation received by applicant </label>
-  <table class="table" aria-label="Projects" id="awardTable">
-    <thead>
-      <tr>
-        <th>S. No.</th>
-        <th>Name of Award/recognition/ appriciation</th>
-        <th>Received from </th>
-        <th>Year of Receipt</th>
-        <th>Upload Proof of Receipt</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><input type="text" name="award_name[]" /></td>
-        <td><input type="text" name="award_from[]" /></td>
-        <td>
-          <input type="number" name="award_year[]" min="1990" max="2100" />
-        </td>
-        <td>
-          <input 
-            type="file" 
-            name="award_proof" 
-            accept=".pdf" 
-            required
-            onchange="validateSingleAuditFile(this)"
-          />
-        </td>
-
-      </tr>
-
-    </tbody>
-  </table>
-  <button type="button" class="add-row" onclick="addGenericRow('awardTable')">+ Add Row</button>
-
-</section>
-
-  <!-- SKILLS -->
-    <section>
-      <h2>Step 11: Software, Tools or Applications Skills</h2>
-      <p class="caption">List the software tools you are conversant with (Max 5)</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-  <label> List the software tools or application the applicant is conversant with</label>
-
-<table class="table" aria-label="Software Skills" id="softwareTable">
-  <thead>
-    <tr>
-      <th>S. No.</th>
-      <th>Software (e.g., MS Office, SPSS, MATLAB, ArcGIS, AutoCAD, AERMOD, etc.)</th>
-      <th>Level of Proficiency</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td class="row-no"></td>
-
-      <td>
-        <input type="text" name="software_skill[]" />
-      </td>
-
-      <td>
-        <select name="proficiency_level[]">
-          <option value="">Select</option>
-          <option value="Basic">Basic</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Proficient">Proficient</option>
-        </select>
-      </td>
-
-      <td class="row-actions"></td>
-    </tr>
-  </tbody>
-</table>
-
-
-  <button type="button" class="add-row" onclick="addSoftwareRow()">+ Add Row</button>
-  <!-- OTHER ENCLOSURES -->
-    <section>
-      <h2>Step 12: Other Relevant Enclosures</h2>
-      <p class="caption">Upload any other documents that support your application</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-      <label>  List any relevant Enclosures (PDF only, ≤ 5 MB)</label>
-      <input type="file" name="other_enclosure" accept=".pdf" />
-    </section>
-
-    <!-- PAYMENT DETAILS -->
-    <section id="paymentSection">
-      <h2>Step 13: Payment Details</h2>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-      <div class="alert" style="margin-bottom:20px; background:#f4f8ff; border-color:#b6d0f0; border-left:4px solid #0ea5a5; padding: 15px; border-radius: 8px;">
-        <div style="font-weight:700; color:#0c3b2e; margin-bottom:10px;">Payee Details</div>
-        <div style="font-size:0.93rem; color:#0c3b2e; line-height:2.1;">
-          <strong>Amount:</strong>&nbsp; As applicable &nbsp;&nbsp;
-          <strong>In the Name of:</strong>&nbsp; Authority Name &nbsp;&nbsp;
-          <strong>Bank Details:</strong>&nbsp; Bank Name &amp; Branch<br>
-          <strong>Account Number:</strong>&nbsp; Account Number &nbsp;&nbsp;
-          <strong>IFSC Code:</strong>&nbsp; IFSC Code &nbsp;&nbsp;
-          <strong>Mode:</strong>&nbsp; NEFT / RTGS
+<!-- Sticky Bottom Action Bar -->
+<div class="action-bar">
+    <div class="action-inner">
+        <button type="button" id="btnPrev" class="btn btn-ghost" onclick="prevStep()">Previous Step</button>
+        <div style="display: flex; gap: 12px;">
+            <button type="button" class="btn btn-ghost" onclick="saveDraft()">Save Draft</button>
+            <button type="button" id="btnNext" class="btn btn-primary" onclick="nextStep()">Next Section</button>
         </div>
-      </div>
-
-      <div class="grid">
-        <div class="col-4">
-          <label>1. Certification Fee Amount Paid <span class="req">*</span></label>
-          <input name="payment_amount" type="number" min="0" placeholder="As applicable" required />
-        </div>
-        <div class="col-4">
-          <label>2. Date of Payment <span class="req">*</span></label>
-          <input name="payment_date" type="date" required />
-        </div>
-        <div class="col-4">
-          <label>3. UTR Number <span class="req">*</span></label>
-          <input name="payment_utr" type="text" placeholder="e.g. SBIN026251234567" required />
-        </div>
-        <div class="col-6">
-          <label>4. Upload Payment Receipt <span class="req">*</span></label>
-          <input name="payment_receipt" type="file" accept=".pdf,.jpg,.jpeg,.png" required onchange="validatePaymentReceipt(this)" />
-        </div>
-      </div>
-    </section>
-
-    <!-- DECLARATION -->
-    <section>
-      <h2>Step 14: Declaration by applicant</h2>
-      <p class="caption">Please read and sign the declaration</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-      <p>I, <input type="text" name="decl_name" style="width:260px" placeholder="Your full name" required />, hereby declare that accurately reflects my credentials.</p>
-      <ul>
-        <li>All information provided in this application is true and correct to the best of my knowledge.</li>
-        <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
-      </ul>
-      <div class="grid">
-        <div class="col-4"><label>Date</label><input type="date" name="decl_date" /></div>
-        <div class="col-4"><label>Place</label><input type="text" name="decl_place" /></div>
-        <div class="col-4">
-          <label>Signature Proof</label>
-          <input type="file" name="Any_other_doc" accept=".pdf,.jpg,.png" required onchange="validateSingleAuditFile(this)" />
-        </div>
-      </div>
-    </section>
-
-    <!-- REVIEW & SUBMIT -->
-    <section>
-      <h2>Step 15: Review & Submit</h2>
-      <p class="caption">Final checklist before submission</p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-      
-      <table class="table" style="margin-bottom: 30px;">
-        <thead><tr><th>Item</th><th>Mandatory</th><th>Checked</th></tr></thead>
-        <tbody>
-          <tr><td>Proof of Identity</td><td>Yes</td><td><input type="checkbox" required></td></tr>
-          <tr><td>Academic Certificates</td><td>Yes</td><td><input type="checkbox" required></td></tr>
-          <tr><td>Experience Proofs</td><td>Yes</td><td><input type="checkbox" required></td></tr>
-          <tr><td>Payment Receipt</td><td>Yes</td><td><input type="checkbox" required></td></tr>
-        </tbody>
-      </table>
-
-      <div class="actions">
-        <button id="btnSubmitApp" type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.2rem;">Submit Final Application</button>
-      </div>
-    </section>
-
-</div>
-</form>
+    </div>
 </div>
 
 <script>
-/* ===============================
-   DASHBOARD / FORM LOGIC
-================================ */
-function previewPhoto(event) {
-  const file = event.target.files[0];
-  const img = document.getElementById('photoPreview');
-  if (!file) { img.style.display = 'none'; return; }
-  const reader = new FileReader();
-  reader.onload = e => { img.src = e.target.result; img.style.display = 'block'; };
-  reader.readAsDataURL(file);
-}
+    let currentStep = 1;
+    let maxReachedStep = 1; 
+    const totalSteps = 15;
+    const stepNames = ["Applicant Details", "Category Selection", "Education", "Work Experience", "Project Experience", "Upload Reports", "Training/Cert.", "Membership", "Publications", "Awards", "Software Skills", "Other Enclosures", "Payment Details", "Declaration", "Review & Submit"];
 
-function addEducationRow() {
-  const tbody = document.querySelector('#educationTable tbody');
-  const row = tbody.querySelector('tr').cloneNode(true);
-  row.querySelectorAll('input').forEach(el => el.value = '');
-  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove()">×</button>';
-  tbody.appendChild(row);
-}
+    function updateUI() {
+        // Force sequential redirect if user tries to bypass
+        if (currentStep > maxReachedStep + 1) currentStep = maxReachedStep + 1;
 
-function addExperienceRow() {
-  const tbody = document.querySelector('#experienceTable tbody');
-  const row = tbody.querySelector('tr').cloneNode(true);
-  row.querySelectorAll('input, textarea').forEach(el => el.value = '');
-  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove(); renumberExperienceRows()">×</button>';
-  tbody.appendChild(row);
-  renumberExperienceRows();
-}
+        // Toggle Sections
+        document.querySelectorAll('.form-section').forEach((sec, idx) => {
+            const stepNum = idx + 1;
+            if (stepNum === currentStep) {
+                sec.classList.remove('hide');
+                sec.classList.add('active');
+                sec.querySelector('.section-status').textContent = 'Active';
+            } else {
+                sec.classList.add('hide');
+                sec.classList.remove('active');
+                sec.querySelector('.section-status').textContent = (stepNum <= maxReachedStep) ? 'Completed' : 'Pending';
+            }
+        });
 
-function renumberExperienceRows() {
-  document.querySelectorAll('#experienceTable tbody tr').forEach((row, idx) => {
-    row.querySelector('.row-no').textContent = idx + 1;
-  });
-}
+        // Update Sidebar items
+        document.querySelectorAll('.nav-item').forEach((item, idx) => {
+            const stepNum = idx + 1;
+            item.classList.toggle('active', stepNum === currentStep);
+            
+            if (stepNum <= maxReachedStep) {
+                item.classList.add('completed');
+                item.classList.remove('locked');
+            } else if (stepNum === maxReachedStep + 1) {
+                item.classList.remove('locked', 'completed');
+            } else {
+                item.classList.add('locked');
+                item.classList.remove('completed');
+            }
+        });
 
-function addGenericRow(tableId) {
-  const tbody = document.querySelector(`#${tableId} tbody`);
-  const row = tbody.querySelector('tr').cloneNode(true);
-  row.querySelectorAll('input, select').forEach(el => el.value = '');
-  tbody.appendChild(row);
-}
+        // Progress
+        const progress = (currentStep / totalSteps) * 100;
+        const fill = document.getElementById('progressBarFill');
+        if (fill) fill.style.width = progress + '%';
+        
+        document.getElementById('currentStepDisplay').textContent = currentStep;
+        document.getElementById('currentStepName').textContent = stepNames[currentStep - 1];
 
-function addSoftwareRow() {
-  const tbody = document.querySelector('#softwareTable tbody');
-  if (tbody.rows.length >= 5) return alert('Max 5 skills');
-  const row = tbody.querySelector('tr').cloneNode(true);
-  row.querySelectorAll('input, select').forEach(el => el.value = '');
-  row.querySelector('.row-actions').innerHTML = '<button type="button" class="delete-row" onclick="this.closest(\'tr\').remove(); renumberSoftwareRows()">×</button>';
-  tbody.appendChild(row);
-  renumberSoftwareRows();
-}
+        // Buttons
+        document.getElementById('btnPrev').style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+        
+        // Final Submit Logic
+        const nextBtn = document.getElementById('btnNext');
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            populateReviewSummary(); // Refresh review data when on last step
+        } else {
+            nextBtn.style.display = 'inline-block';
+            nextBtn.textContent = (currentStep === totalSteps - 1) ? 'Go to Review' : 'Next Section';
+        }
 
-function renumberSoftwareRows() {
-  document.querySelectorAll('#softwareTable tbody tr').forEach((row, idx) => {
-    row.querySelector('.row-no').textContent = idx + 1;
-  });
-}
-
-function validatePaymentReceipt(input) {
-  if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
-    alert('File > 2MB'); input.value = '';
-  }
-}
-
-function validateSingleAuditFile(input) {
-  if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
-    alert('File > 2MB'); input.value = '';
-  }
-}
-
-function toggleGovIdUpload() {
-  const type = document.getElementById('govIdType').value;
-  const number = document.getElementById('govIdNumber');
-  const label = document.getElementById('govIdLabel');
-  number.value = '';
-  if (type === 'aadhaar') { label.textContent = 'Aadhaar Number *'; number.placeholder = '12 Digits'; }
-  else if (type === 'pan') { label.textContent = 'PAN Number *'; number.placeholder = 'ABCDE1234F'; }
-  else { label.textContent = 'ID Number *'; number.placeholder = ''; }
-}
-
-// TOAST SYSTEM
-function showToast(msg, type = 'info') {
-    const t = document.createElement('div');
-    t.innerText = msg;
-    t.style = `position:fixed; top:20px; right:20px; background:${type==='error'?'#f55':'#0ea5a5'}; color:white; padding:15px; border-radius:8px; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-weight:600;`;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 5000);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  // SESSION CHECK
-  const checkSession = async () => {
-    try {
-      const res = await fetch('/api/auth/status');
-      const data = await res.json();
-      if(!data.authenticated) {
-          window.location.href = '/Auth/Login';
-      }
-    } catch {}
-  };
-  checkSession();
-
-  // FORM SUBMIT
-  document.getElementById('rplForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const submitBtn = document.getElementById('btnSubmitApp');
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Submitting...';
-
-    try {
-      const response = await fetch('/submit', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-      
-      if(response.ok) {
-        showToast('Application Successfully Submitted!', 'success');
-        setTimeout(() => window.location.href = '/', 3000);
-      } else {
-        showToast(result.message || 'Submission failed.', 'error');
-      }
-    } catch(error) {
-      showToast('An error occurred during submission.', 'error');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerText = 'Submit Final Application';
+        // Scroll
+        const activeSec = document.getElementById('step-' + currentStep);
+        if (activeSec) {
+            window.scrollTo({ top: activeSec.offsetTop - 120, behavior: 'smooth' });
+        }
     }
-  });
-});
+
+    function validateSection(step) {
+        const section = document.getElementById('step-' + step);
+        if (!section) return true;
+
+        const inputs = section.querySelectorAll('[required]');
+        let firstInvalid = null;
+        let valid = true;
+        
+        section.querySelectorAll('.field-error-pulse').forEach(el => el.classList.remove('field-error-pulse'));
+
+        inputs.forEach(input => {
+            let isInvalid = false;
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                if (!input.checked) isInvalid = true;
+            } else {
+                if (!input.value || input.value.trim() === '') isInvalid = true;
+            }
+
+            if (isInvalid) {
+                valid = false;
+                input.style.borderColor = 'var(--warn)';
+                input.classList.add('field-error-pulse');
+                if (!firstInvalid) firstInvalid = input;
+            } else {
+                input.style.borderColor = '';
+            }
+        });
+
+        // Step 2 specific check
+        if (step === 2) {
+            const categories = section.querySelectorAll('input[name="cert_category[]"]:checked');
+            if (categories.length === 0) {
+                valid = false;
+                showToast("Please select at least one certification category.", "error");
+                const gridElem = section.querySelector('.alert').nextElementSibling;
+                if (!firstInvalid) firstInvalid = gridElem;
+                gridElem.classList.add('field-error-pulse');
+            }
+        }
+
+        if (!valid) {
+            showToast("Required fields are missing. Please complete them to proceed.", "error");
+            if (firstInvalid) {
+                const rect = firstInvalid.getBoundingClientRect();
+                const absoluteTop = rect.top + window.pageYOffset;
+                window.scrollTo({ top: absoluteTop - 180, behavior: 'smooth' });
+                try { firstInvalid.focus({ preventScroll: true }); } catch(e) {}
+            }
+        }
+        return valid;
+    }
+
+    function nextStep() {
+        if (!validateSection(currentStep)) return;
+        if (currentStep < totalSteps) {
+            maxReachedStep = Math.max(maxReachedStep, currentStep);
+            currentStep++;
+            updateUI();
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateUI();
+        }
+    }
+
+    function showToast(msg, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast ' + type;
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    function saveDraft() {
+        showToast("Progress saved. You can continue later.", "success");
+    }
+
+    function addGenericRow(tableId) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        if (!tbody) return;
+        const row = tbody.querySelector('tr').cloneNode(true);
+        row.querySelectorAll('input, select').forEach(el => el.value = '');
+        tbody.appendChild(row);
+    }
+
+    function populateReviewSummary() {
+        const summary = document.getElementById('reviewSummary');
+        if (!summary) return;
+
+        const getData = (name) => document.querySelector(`[name="${name}"]`)?.value || 'N/A';
+        const getCheckboxes = (name) => {
+            const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+            return checked.length > 0 ? checked.join(', ') : 'None selected';
+        };
+
+        let html = `
+            <div class="review-section">
+                <h4>Applicant Information <a href="#" onclick="event.preventDefault(); currentStep=1; updateUI();" style="font-size: 0.7rem; text-decoration: underline;">Edit</a></h4>
+                <div class="review-dl">
+                    <div><dt>Full Name</dt><dd>${getData('full_name')}</dd></div>
+                    <div><dt>Date of Birth</dt><dd>${getData('dob')}</dd></div>
+                    <div><dt>Gender</dt><dd>${getData('gender')}</dd></div>
+                    <div><dt>Citizenship</dt><dd>${getData('citizenship')}</dd></div>
+                    <div><dt>Email</dt><dd>${getData('email')}</dd></div>
+                    <div><dt>Mobile</dt><dd>${getData('mobile')}</dd></div>
+                    <div><dt>Permanent Address</dt><dd>${getData('address_perm')}</dd></div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h4>Certification Categories <a href="#" onclick="event.preventDefault(); currentStep=2; updateUI();" style="font-size: 0.7rem;">Edit</a></h4>
+                <div class="review-dl">
+                    <div><dt>Selected Categories</dt><dd>${getCheckboxes('cert_category[]')}</dd></div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h4>Education Summary <a href="#" onclick="event.preventDefault(); currentStep=3; updateUI();" style="font-size: 0.7rem;">Edit</a></h4>
+                <div id="eduSummary">
+                    ${Array.from(document.querySelectorAll('#educationTable tbody tr')).map(tr => {
+                        const deg = tr.querySelector('[name="edu_degree[]"]')?.value;
+                        const inst = tr.querySelector('[name="edu_institution[]"]')?.value;
+                        return deg ? `<div style="padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 0.9rem;"><strong>${deg}</strong> from ${inst}</div>` : '';
+                    }).join('') || 'No education records added.'}
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h4>Payment Details <a href="#" onclick="event.preventDefault(); currentStep=13; updateUI();" style="font-size: 0.7rem;">Edit</a></h4>
+                <div class="review-dl">
+                    <div><dt>Amount</dt><dd>${getData('payment_amount')}</dd></div>
+                    <div><dt>Date</dt><dd>${getData('payment_date')}</dd></div>
+                    <div><dt>UTR No</dt><dd>${getData('payment_utr')}</dd></div>
+                </div>
+            </div>
+        `;
+        summary.innerHTML = html;
+        validateChecklistState(); // Initial button state on review
+    }
+
+    function validateChecklistState() {
+        const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
+        const submitBtn = document.getElementById('btnSubmitApp');
+        const errorMsg = document.getElementById('checklistError');
+        
+        const allChecked = Array.from(mandatoryCbs).every(cb => cb.checked);
+        submitBtn.disabled = !allChecked;
+        errorMsg.style.display = allChecked ? 'none' : 'block';
+    }
+
+    function previewPhoto(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('photoPreview');
+        if (file && preview) {
+            const reader = new FileReader();
+            reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function toggleGovIdUpload() {
+        const type = document.getElementById('govIdType')?.value;
+        const label = document.getElementById('govIdLabel');
+        if (label) label.textContent = (type === 'aadhaar' ? 'Aadhaar' : (type === 'pan' ? 'PAN' : 'Passport')) + ' Number *';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateUI();
+        
+        // Sidebar Navigation Handling
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = parseInt(item.getAttribute('data-step'));
+                
+                if (target <= maxReachedStep + 1) {
+                    if (target > currentStep && !validateSection(currentStep)) return;
+                    currentStep = target;
+                    updateUI();
+                } else {
+                    showToast("Please complete previous steps first.", "error");
+                }
+            });
+        });
+
+        // Checklist Change Listener
+        document.getElementById('checklistBody').addEventListener('change', (e) => {
+            if (e.target.classList.contains('checklist-cb')) {
+                validateChecklistState();
+            }
+        });
+
+        // Form Submit
+        document.getElementById('rplForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            
+            // Final integrity check
+            for (let i = 1; i < totalSteps; i++) {
+                if (!validateSection(i)) {
+                    currentStep = i;
+                    updateUI();
+                    showToast("Your application is incomplete. Please fix errors.", "error");
+                    return;
+                }
+            }
+
+            // Final checklist check
+            const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
+            if (Array.from(mandatoryCbs).some(cb => !cb.checked)) {
+                showToast("Please confirm all mandatory documents are uploaded.", "error");
+                return;
+            }
+            
+            const btn = document.getElementById('btnSubmitApp');
+            btn.disabled = true;
+            btn.textContent = "Finalizing Submission...";
+
+            try {
+                const formData = new FormData(e.target);
+                const res = await fetch('/submit', { method: 'POST', body: formData });
+                if (res.ok) {
+                    // Show Success Modal
+                    const modal = document.getElementById('successModal');
+                    modal.classList.add('active');
+                } else {
+                    const result = await res.json();
+                    showToast(result.message || "Submission failed. Please try again.", "error");
+                    btn.disabled = false;
+                    btn.textContent = "Submit Final Application";
+                }
+            } catch (err) {
+                showToast("Connection lost. Please check internet.", "error");
+                btn.disabled = false;
+                btn.textContent = "Submit Final Application";
+            }
+        });
+    });
 </script>
+
+<style>
+/* Cat Label Styling */
+.cat-label {
+    display: flex; gap: 12px; align-items: flex-start; cursor: pointer; padding: 16px; 
+    border: 2px solid var(--line); border-radius: var(--radius-md); transition: all 0.2s;
+}
+.cat-label:hover { background: var(--accent-light); border-color: var(--accent); }
+.cat-label input[type="checkbox"] { width: 22px; height: 22px; margin-top: 4px; }
+.cat-label div { display: flex; flex-direction: column; }
+.cat-label small { color: var(--muted); margin-top: 4px; }
+</style>
+
+<!-- Success Confirmation Modal -->
+<div class="modal-overlay" id="successModal">
+    <div class="success-modal">
+        <div class="success-icon">✓</div>
+        <h2>Application Submitted!</h2>
+        <p>Your application has been successfully submitted and is now under review. You will receive an email notification regarding the next steps.</p>
+        <button class="btn-success-modal" onclick="window.location.href='/'">Go to Dashboard</button>
+    </div>
+</div>
+
 </body>
 </html>

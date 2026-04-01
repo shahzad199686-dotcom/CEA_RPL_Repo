@@ -5,6 +5,7 @@ using CEA_RPL.Domain.Entities;
 using CEA_RPL.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CEA_RPL.Controllers;
 
@@ -19,8 +20,22 @@ public class ApplicationController : Controller
         _fileService = fileService;
     }
 
-    public IActionResult Index()
+    [Authorize]
+    public async Task<IActionResult> Index()
     {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (int.TryParse(userIdString, out var userId))
+        {
+            var user = await _context.Users
+                .Include(u => u.Applicant)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user != null)
+            {
+                ViewBag.UserName = user.Applicant?.FullName ?? user.Email;
+            }
+        }
+        
         return View();
     }
 
@@ -71,33 +86,47 @@ public class ApplicationController : Controller
         var applicant = new Applicant
         {
             UserId = userId,
-            FullName = req.full_name,
+            FullName = req.full_name ?? "",
             ParentName = req.parent_name,
-            DateOfBirth = DateTime.Parse(req.dob),
-            Gender = req.gender,
-            Citizenship = req.citizenship,
-            PermanentAddress = req.address_perm,
+            DateOfBirth = DateTime.TryParse(req.dob, out var dob) ? dob : DateTime.Now,
+            Gender = string.IsNullOrWhiteSpace(req.gender) ? "Other" : req.gender,
+            Citizenship = string.IsNullOrWhiteSpace(req.citizenship) ? "Indian" : req.citizenship,
+            PermanentAddress = req.address_perm ?? "",
             CorrespondenceAddress = req.address_corr,
-            Email = req.email,
-            Mobile = req.mobile,
+            Email = req.email ?? "",
+            Mobile = req.mobile ?? "",
             AlternateMobile = req.alt_mobile,
             PhotoPath = photoPath,
-            GovIdType = req.gov_id_type,
-            GovIdNumber = req.gov_id_number,
+            GovIdType = req.gov_id_type ?? "",
+            GovIdNumber = req.gov_id_number ?? "",
             GovIdPath = govIdPath,
-            ReportPath1 = report1,
-            ReportPath2 = report2,
-            OtherEnclosurePath = otherEnc,
-            PaymentAmount = req.payment_amount,
-            PaymentDate = DateTime.TryParse(req.payment_date, out var pd) ? pd : DateTime.MinValue,
-            PaymentUtr = req.payment_utr,
-            PaymentReceiptPath = payReceipt,
-            DeclarationName = req.decl_name,
-            DeclarationDate = DateTime.TryParse(req.decl_date, out var dd) ? dd : DateTime.MinValue,
-            DeclarationPlace = req.decl_place,
-            SignaturePath = signature,
             Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty,
             Status = "Submitted"
+        };
+
+        // Section 6: Audit Reports
+        if (report1 != null) applicant.UploadReports.Add(new UploadReport { FilePath = report1, FileName = req.audit_report?[0].FileName ?? "Report1" });
+        if (report2 != null) applicant.UploadReports.Add(new UploadReport { FilePath = report2, FileName = req.audit_report?[1].FileName ?? "Report2" });
+
+        // Section 12: Other Enclosures
+        if (otherEnc != null) applicant.OtherEnclosures.Add(new OtherEnclosure { FilePath = otherEnc, FileName = req.other_enclosure?.FileName ?? "AdditionalDoc" });
+
+        // Section 13: Payment Details
+        applicant.PaymentDetails.Add(new PaymentDetail
+        {
+            Amount = req.payment_amount,
+            PaymentDate = DateTime.TryParse(req.payment_date, out var pd) ? pd : DateTime.Now,
+            UtrNumber = req.payment_utr ?? "",
+            ReceiptPath = payReceipt
+        });
+
+        // Section 14: Declaration & Signature
+        applicant.Declaration = new Declaration
+        {
+            Name = req.decl_name ?? "",
+            Date = DateTime.TryParse(req.decl_date, out var dd) ? dd : DateTime.Now,
+            Place = req.decl_place,
+            SignaturePath = signature
         };
 
         // 1) Educations
@@ -208,16 +237,16 @@ public class ApplicationController : Controller
         // 6) Publications
         if (req.paper_name != null)
         {
-            for (int i = 0; i < req.paper_name.Count; i++)
+            for (int i = 0; i < (req.paper_name?.Count ?? 0); i++)
             {
-                if (string.IsNullOrWhiteSpace(req.paper_name[i])) continue;
+                if (string.IsNullOrWhiteSpace(req.paper_name?[i])) continue;
                 string? proof = null;
                 if (req.paper_proof != null && i < req.paper_proof.Count && req.paper_proof[i] != null)
                     proof = await _fileService.SaveFileAsync(req.paper_proof[i].OpenReadStream(), req.paper_proof[i].FileName);
 
-                applicant.Publications.Add(new Publication
+                applicant.PaperPublisheds.Add(new PaperPublished
                 {
-                    Name = req.paper_name[i],
+                    Name = req.paper_name?[i] ?? "",
                     Place = req.paper_place != null && i < req.paper_place.Count ? req.paper_place[i] : "",
                     Year = req.paper_year != null && i < req.paper_year.Count ? req.paper_year[i] : 0,
                     Role = req.paper_role != null && i < req.paper_role.Count ? req.paper_role[i] : "",
