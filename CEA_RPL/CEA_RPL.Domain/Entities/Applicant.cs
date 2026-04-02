@@ -3,6 +3,7 @@ namespace CEA_RPL.Domain.Entities;
 public class Applicant : BaseEntity
 {
     public string FullName { get; set; } = string.Empty;
+    public string? ParentRelation { get; set; }
     public string? ParentName { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string Gender { get; set; } = string.Empty;
@@ -18,6 +19,7 @@ public class Applicant : BaseEntity
     
     // Status
     public string Status { get; set; } = "Draft"; // Draft, Submitted, UnderReview, Approved, Rejected
+    public string? AdminFeedback { get; set; }
     
     // Photo & IDs
     public string? PhotoPath { get; set; }

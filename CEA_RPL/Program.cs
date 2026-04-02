@@ -3,6 +3,7 @@ using CEA_RPL.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CEA_RPL.Application.Interfaces;
 using CEA_RPL.Infrastructure.Services;
+using CEA_RPL.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,5 +54,27 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+
+// Seed Admin User
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    
+    if (!context.Users.Any(u => u.Email == "admin@cearpl.gov.in"))
+    {
+        var admin = new User
+        {
+            Email = "admin@cearpl.gov.in",
+            Mobile = "9999999999",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+            IsEmailVerified = true,
+            IsMobileVerified = true,
+            Role = "Admin"
+        };
+        context.Users.Add(admin);
+        context.SaveChanges();
+    }
+}
 
 app.Run();

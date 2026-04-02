@@ -1,0 +1,151 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin Support Center";
+}
+
+<div class="dashboard-content">
+    <div class="admin-container-limit">
+        <!-- TIER 1: EXECUTIVE HEADER -->
+        <div class="welcome-hero-alt">
+            <div>
+                <h1>Admin <span style="color: var(--a-primary);">Support Center</span></h1>
+                <p>Knowledge base, technical documentation, and administrative inquiry management.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn-cta-primary">
+                    <i data-lucide="plus-circle" style="width: 20px; height: 20px;"></i>
+                    Create Ticket
+                </button>
+            </div>
+        </div>
+
+        <!-- TIER 2: SUPPORT CATEGORY CARDS -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="app-row-card d-flex flex-column align-items-center p-4 text-center h-100" style="gap: 16px;">
+                    <div class="row-card-avatar" style="background: #eff6ff; color: #3b82f6; width: 64px; height: 64px; border-radius: 16px;">
+                        <i data-lucide="help-circle" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Knowledge Base</h6>
+                        <p class="text-muted small mb-0">Browse frequently asked questions and guides.</p>
+                    </div>
+                    <button class="btn-export w-100 mt-2" style="font-size: 0.75rem;">View FAQ</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="app-row-card d-flex flex-column align-items-center p-4 text-center h-100" style="gap: 16px;">
+                    <div class="row-card-avatar" style="background: #ecfdf5; color: #10b981; width: 64px; height: 64px; border-radius: 16px;">
+                        <i data-lucide="book-open" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">System Docs</h6>
+                        <p class="text-muted small mb-0">Technical workflows and certification rules.</p>
+                    </div>
+                    <button class="btn-export w-100 mt-2" style="font-size: 0.75rem;">Read Docs</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="app-row-card d-flex flex-column align-items-center p-4 text-center h-100" style="gap: 16px;">
+                    <div class="row-card-avatar" style="background: #fffbeb; color: #f59e0b; width: 64px; height: 64px; border-radius: 16px;">
+                        <i data-lucide="life-buoy" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Technical Desk</h6>
+                        <p class="text-muted small mb-0">Direct support for system errors and bugs.</p>
+                    </div>
+                    <button class="btn-export w-100 mt-2" style="font-size: 0.75rem;">Open Chat</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="app-row-card d-flex flex-column align-items-center p-4 text-center h-100" style="gap: 16px;">
+                    <div class="row-card-avatar" style="background: #fef2f2; color: #ef4444; width: 64px; height: 64px; border-radius: 16px;">
+                        <i data-lucide="settings" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Account Tools</h6>
+                        <p class="text-muted small mb-0">Manage profile, security, and preferences.</p>
+                    </div>
+                    <button class="btn-export w-100 mt-2" style="font-size: 0.75rem;">Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 3: ACTIVE SUPPORT TICKETS -->
+        <div class="application-card mt-0" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--a-line);">
+            <div class="card-toolbar py-3 px-4 d-flex justify-content-between align-items-center" style="background: #f8fafc;">
+                <h5 class="mb-0 fw-bold">Active Support Tickets</h5>
+                <span class="badge bg-white border text-muted px-2 py-1" style="font-size: 0.7rem;">3 OPEN TICKETS</span>
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th style="padding-left: 24px;">Ticket ID</th>
+                            <th>Issue Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th class="text-end" style="padding-right: 24px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding-left: 24px;">
+                                <span class="fw-bold text-primary">#T-8821</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold mb-0" style="font-size: 0.85rem;">Document Preview Error</div>
+                                <div class="text-muted small">Candidate #RPL-0006 attachment issue</div>
+                            </td>
+                            <td><span class="badge" style="background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2;">HIGH</span></td>
+                            <td><span class="status-pill pill-amber" style="font-size: 0.6rem;">IN PROGRESS</span></td>
+                            <td class="text-muted small fw-bold">2 Hours Ago</td>
+                            <td class="text-end" style="padding-right: 24px;">
+                                <button class="btn-review-pill py-2" style="font-size: 0.75rem;">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 24px;">
+                                <span class="fw-bold text-primary">#T-8819</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold mb-0" style="font-size: 0.85rem;">Email Notification Delay</div>
+                                <div class="text-muted small">Approval emails reaching spam folder</div>
+                            </td>
+                            <td><span class="badge" style="background: #fffbeb; color: #f59e0b; border: 1px solid #fef3c7;">MEDIUM</span></td>
+                            <td><span class="status-pill pill-blue" style="font-size: 0.6rem;">QUEUED</span></td>
+                            <td class="text-muted small fw-bold">5 Hours Ago</td>
+                            <td class="text-end" style="padding-right: 24px;">
+                                <button class="btn-review-pill py-2" style="font-size: 0.75rem;">Update</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 24px;">
+                                <span class="fw-bold text-primary">#T-8815</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold mb-0" style="font-size: 0.85rem;">Admin Profile Avatar</div>
+                                <div class="text-muted small">Unable to upload profile photo</div>
+                            </td>
+                            <td><span class="badge" style="background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;">LOW</span></td>
+                            <td><span class="status-pill pill-blue" style="font-size: 0.6rem;">QUEUED</span></td>
+                            <td class="text-muted small fw-bold">Yesterday</td>
+                            <td class="text-end" style="padding-right: 24px;">
+                                <button class="btn-review-pill py-2" style="font-size: 0.75rem;">Update</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+}

@@ -12,18 +12,33 @@
     <div id="signupArea">
         <form id="signupForm">
             <div style="margin-bottom: 20px;">
+                <label for="regFirstName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">First Name *</label>
+                <input id="regFirstName" name="firstName" type="text" placeholder="Enter first name" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="regMiddleName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Middle Name</label>
+                <input id="regMiddleName" name="middleName" type="text" placeholder="Enter middle name" style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="regLastName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Last Name</label>
+                <input id="regLastName" name="lastName" type="text" placeholder="Enter last name" style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+            </div>
+
+            <div style="margin-bottom: 20px;">
                 <label for="regEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email Address</label>
-                <input id="regEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <input id="regEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label for="regMobile" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Mobile Number</label>
-                <input id="regMobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian number" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <input id="regMobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian number" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 25px;">
                 <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Create Password</label>
-                <input id="regPass" name="password" type="password" minlength="8" placeholder="Minimum 8 characters" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <input id="regPass" name="password" type="password" minlength="8" placeholder="Minimum 8 characters" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <button type="submit" id="btnContinue" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(14,165,165,0.2);">
@@ -103,6 +118,7 @@
 
             if (resp.ok) {
                 showStatus('Account verified! Redirecting...', '#e6f6f6', '#0ea5a5');
+                localStorage.setItem('showDocPopup', 'true');
                 setTimeout(() => window.location.href = '/Application/Index', 1000);
             } else {
                 showStatus(data.message, '#fff5f5', '#e53e3e');

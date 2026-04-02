@@ -76,6 +76,45 @@
 
     <!-- Main Content -->
     <main class="form-content">
+        @if (ViewBag.ApplicationStatus != null && ViewBag.ApplicationStatus != "Draft")
+        {
+            var status = ViewBag.ApplicationStatus;
+            var feedback = ViewBag.AdminFeedback;
+            var statusColor = status switch {
+                "Approved" => "#10b981",
+                "Rejected" => "#ef4444",
+                "Submitted" => "#f59e0b",
+                "UnderReview" => "#0ea5a5",
+                "Feedback Pending" => "#f59e0b",
+                _ => "#64748b"
+            };
+            
+            <div class="status-banner" style="background: white; border-radius: 16px; padding: 24px; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-left: 6px solid @statusColor;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h4 style="margin: 0; color: #333; font-weight: 700;">Application Status: <span style="color: @statusColor;">@status</span></h4>
+                    <span class="badge" style="background: @statusColor; color: white; padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 700;">LIVE</span>
+                </div>
+                
+                @if (status == "Feedback Pending" && !string.IsNullOrEmpty(feedback))
+                {
+                    <div style="background: #fff8e1; border: 1px solid #ffecb3; border-radius: 12px; padding: 16px; margin-top: 15px;">
+                        <strong style="color: #856404; display: block; margin-bottom: 5px;">Action Required: Admin Feedback</strong>
+                        <p style="margin: 0; color: #856404; font-size: 0.95rem;">@feedback</p>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(feedback))
+                {
+                    <p style="margin: 10px 0 0; color: #666; font-size: 0.9rem;"><strong>Admin Remarks:</strong> @feedback</p>
+                }
+                
+                <p style="margin: 15px 0 0; color: #888; font-size: 0.85rem;">
+                    @if (status == "Submitted") { <span>Your application is in queue for review. We will notify you once an auditor is assigned.</span> }
+                    else if (status == "UnderReview") { <span>Your document verification is currently in progress. This usually takes 3-5 working days.</span> }
+                    else if (status == "Approved") { <span>Congratulations! Your application has been approved. You can now download your digital certificate.</span> }
+                </p>
+            </div>
+        }
+        
         <form id="rplForm" novalidate>
             
             <!-- STEP 1: APPLICANT DETAILS -->
@@ -84,7 +123,26 @@
                 <div class="section-content">
                     <div class="grid">
                         <div class="col-6"><label>Full Name <span class="req">*</span></label><input name="full_name" type="text" required placeholder="As per ID proof" /></div>
-                        <div class="col-6"><label>Father’s / Mother’s Name</label><input name="parent_name" type="text" placeholder="Optional" /></div>
+                        <div class="col-6">
+                            <label>Parent / Guardian Details</label>
+                            <div class="grid" style="gap: 12px; grid-template-columns: 1fr 1.5fr;">
+                                <div style="grid-column: span 12; display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px;">
+                                    <div>
+                                        <label style="font-size: 0.8rem; margin-bottom: 4px;">Select Relation <span class="req">*</span></label>
+                                        <select name="parent_relation" required>
+                                            <option value="">Select relation</option>
+                                            <option>Father</option>
+                                            <option>Mother</option>
+                                            <option>Guardian</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.8rem; margin-bottom: 4px;">Name <span class="req">*</span></label>
+                                        <input name="parent_name" type="text" required placeholder="Enter selected parent / guardian name" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-4"><label>Date of Birth <span class="req">*</span></label><input name="dob" type="date" required /></div>
                         <div class="col-4"><label>Gender</label><select name="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
                         <div class="col-4"><label>Citizenship <span class="req">*</span></label><select name="citizenship" required><option value="">Select</option><option>Indian</option></select></div>
@@ -97,8 +155,18 @@
                         </div>
                         <div class="col-8">
                             <div class="grid">
-                                <div class="col-12"><label>Permanent Address <span class="req">*</span></label><textarea name="address_perm" required placeholder="Include City, State, ZIP"></textarea></div>
-                                <div class="col-12"><label>Correspondence Address</label><textarea name="address_corr" placeholder="Leave blank if same as permanent"></textarea></div>
+                                <div class="col-12">
+                                    <label>Permanent Address <span class="req">*</span></label>
+                                    <textarea name="address_perm" id="address_perm" required placeholder="Include City, State, ZIP" oninput="syncAddress()"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                        <input type="checkbox" id="sameAddress" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);" onchange="toggleAddressSync()">
+                                        <label for="sameAddress" style="margin: 0; cursor: pointer; font-weight: 500;">Same as Permanent Address</label>
+                                    </div>
+                                    <label>Correspondence Address</label>
+                                    <textarea name="address_corr" id="address_corr" placeholder="Leave blank if same as permanent"></textarea>
+                                </div>
                             </div>
                         </div>
                         <div class="col-4"><label>Email ID <span class="req">*</span></label><input name="email" type="email" required /></div>
@@ -643,7 +711,68 @@
                 btn.textContent = "Submit Final Application";
             }
         });
+
+        // Trigger Document Requirement Modal only after successful login/signup
+        const shouldShow = localStorage.getItem('showDocPopup');
+        const hidePermanently = localStorage.getItem('hideDocPopupForever');
+
+        if (shouldShow === 'true' && hidePermanently !== 'true') {
+            setTimeout(() => {
+                const docModal = document.getElementById('docReqModal');
+                if (docModal) {
+                    docModal.classList.add('active');
+                    localStorage.removeItem('showDocPopup'); // Ensure it only shows once per login
+                }
+            }, 800);
+        }
     });
+
+    function toggleAddressSync() {
+        const isChecked = document.getElementById('sameAddress').checked;
+        const corr = document.getElementById('address_corr');
+        const perm = document.getElementById('address_perm');
+        
+        if (isChecked) {
+            corr.value = perm.value;
+            corr.readOnly = true;
+            corr.style.background = 'var(--bg)';
+            corr.style.cursor = 'not-allowed';
+        } else {
+            corr.value = '';
+            corr.readOnly = false;
+            corr.style.background = '#fff';
+            corr.style.cursor = 'text';
+        }
+    }
+
+    function syncAddress() {
+        const isChecked = document.getElementById('sameAddress').checked;
+        if (isChecked) {
+            document.getElementById('address_corr').value = document.getElementById('address_perm').value;
+        }
+    }
+
+    function previewPhoto(event) {
+        const input = event.target;
+        const preview = document.getElementById('photoPreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function closeDocModal() {
+        const modal = document.getElementById('docReqModal');
+        const hideForever = document.getElementById('chkHideForever').checked;
+        if (hideForever) {
+            localStorage.setItem('hideDocPopupForever', 'true');
+        }
+        modal.classList.remove('active');
+    }
 </script>
 
 <style>
@@ -656,15 +785,134 @@
 .cat-label input[type="checkbox"] { width: 22px; height: 22px; margin-top: 4px; }
 .cat-label div { display: flex; flex-direction: column; }
 .cat-label small { color: var(--muted); margin-top: 4px; }
+
+/* Document Requirement Popup Modal Styles */
+#docReqModal {
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+#docReqModal.active {
+    opacity: 1;
+    visibility: visible;
+}
+.doc-modal {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    transform: scale(0.9);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#docReqModal.active .doc-modal { transform: scale(1); }
+
+.modal-close-icon {
+    position: absolute; top: 20px; right: 20px;
+    background: none; border: none; font-size: 2rem;
+    color: var(--muted); cursor: pointer; line-height: 1;
+}
+
+.modal-header { text-align: center; margin-bottom: 30px; }
+.modal-icon-wrap { 
+    width: 64px; height: 64px; background: var(--bg); color: var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+}
+.modal-header h2 { font-size: 1.5rem; color: var(--ink); margin-bottom: 12px; }
+.modal-header p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin: 0; }
+
+.modal-scroll-area { max-height: 400px; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; }
+.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.check-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+.check-box { 
+    width: 20px; height: 20px; background: var(--accent-light); color: var(--accent);
+    border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+}
+
+.time-info-card {
+    background: #fff8e1; border: 1px solid #ffecb3; border-radius: 12px;
+    padding: 16px 20px; display: flex; gap: 15px; align-items: center;
+    color: #856404;
+}
+
+.modal-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 24px; border-top: 1px solid var(--line);
+}
+.noshow-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; }
+.modal-btns { display: flex; gap: 12px; }
+
+@@media (max-width: 640px) {
+    .doc-modal { border-radius: 0; height: 100vh; max-width: 100%; padding: 30px 20px; overflow-y: auto; }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .modal-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
+    .modal-btns { width: 100%; flex-direction: column; }
+    .modal-btns .btn { width: 100%; }
+}
 </style>
 
-<!-- Success Confirmation Modal -->
+<!-- Success Confirmation Modal (Submission) -->
 <div class="modal-overlay" id="successModal">
     <div class="success-modal">
         <div class="success-icon">✓</div>
         <h2>Application Submitted!</h2>
         <p>Your application has been successfully submitted and is now under review. You will receive an email notification regarding the next steps.</p>
         <button class="btn-success-modal" onclick="window.location.href='/'">Go to Dashboard</button>
+    </div>
+</div>
+
+<!-- Document Requirement Popup Modal (Post-Login) -->
+<div class="modal-overlay" id="docReqModal">
+    <div class="doc-modal">
+        <button class="modal-close-icon" onclick="closeDocModal()">&times;</button>
+        
+        <div class="modal-header">
+            <div class="modal-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h2>Documents Required Before You Start</h2>
+            <p>Please keep the following documents ready before filling the application form for a smooth submission experience.</p>
+        </div>
+
+        <div class="modal-scroll-area">
+            <div class="checklist-grid">
+                <div class="check-item"><span class="check-box">✓</span> Recent Passport Size Photograph</div>
+                <div class="check-item"><span class="check-box">✓</span> Government ID / Citizenship Proof</div>
+                <div class="check-item"><span class="check-box">✓</span> Educational Certificates</div>
+                <div class="check-item"><span class="check-box">✓</span> Experience Certificates</div>
+                <div class="check-item"><span class="check-box">✓</span> Project / Audit Reports</div>
+                <div class="check-item"><span class="check-box">✓</span> Training / Certifications</div>
+                <div class="check-item"><span class="check-box">✓</span> Publications / Research Papers</div>
+                <div class="check-item"><span class="check-box">✓</span> Awards / Recognition</div>
+                <div class="check-item"><span class="check-box">✓</span> Payment Receipt / Transaction ID</div>
+                <div class="check-item"><span class="check-box">✓</span> Signed Declaration</div>
+            </div>
+
+            <div class="time-info-card">
+                <div class="time-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                    <strong>Estimated Time: 20–30 Minutes</strong>
+                    <p style="margin: 4px 0 0; color: #856404; font-size: 0.85rem;">Keep all documents ready for smooth submission</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <label class="noshow-label">
+                <input type="checkbox" id="chkHideForever"> Do not show this again
+            </label>
+            <div class="modal-btns">
+                <button class="btn btn-ghost" onclick="closeDocModal()">Close</button>
+                <button class="btn btn-primary" onclick="closeDocModal()">Continue to Application</button>
+            </div>
+        </div>
     </div>
 </div>
 

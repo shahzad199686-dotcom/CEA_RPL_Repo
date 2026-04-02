@@ -20,7 +20,7 @@ public class AuthService : IAuthService
         return _context.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 
-    public async Task<(bool Success, User? User, string ErrorMessage)> RegisterUserAsync(string email, string mobile, string password)
+    public async Task<(bool Success, User? User, string ErrorMessage)> RegisterUserAsync(string firstName, string? middleName, string? lastName, string email, string mobile, string password)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email || u.Mobile == mobile);
         if (existingUser != null)
@@ -32,7 +32,16 @@ public class AuthService : IAuthService
         try
         {
             var hash = BCrypt.Net.BCrypt.HashPassword(password);
-            var user = new User { Email = email, Mobile = mobile, PasswordHash = hash };
+            var user = new User 
+            { 
+                FirstName = firstName,
+                MiddleName = middleName,
+                LastName = lastName,
+                Email = email, 
+                Mobile = mobile, 
+                PasswordHash = hash, 
+                Role = "Candidate" 
+            };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return (true, user, string.Empty);

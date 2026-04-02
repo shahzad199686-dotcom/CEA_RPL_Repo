@@ -1,0 +1,457 @@
+/* =========================
+   Landing Page Design System
+   ========================= */
+:root {
+    --l-primary: #0ea5a5;
+    --l-primary-dark: #088383;
+    --l-accent: #f0f9f9;
+    --l-ink: #0f172a;
+    --l-muted: #64748b;
+    --l-white: #ffffff;
+    --l-glass: rgba(255, 255, 255, 0.85);
+    --l-radius-lg: 24px;
+    --l-radius-md: 16px;
+    --l-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --l-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================
+   Modern Fixed Header
+   ========================= */
+.l-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: var(--l-glass);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.l-header.scrolled {
+    height: 70px;
+    box-shadow: var(--l-shadow);
+}
+
+.l-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.l-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.l-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--l-ink);
+}
+
+.l-brand-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--l-primary);
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.l-nav {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.l-nav-link {
+    text-decoration: none;
+    color: var(--l-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.l-nav-link:hover {
+    color: var(--l-primary);
+}
+
+.l-auth-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Dropdown Support */
+.l-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.l-btn-dropdown {
+    background: transparent;
+    border: 1.5px solid transparent;
+    color: var(--l-ink);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    height: 44px;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+/* Login Button Specific (Outline Effect) */
+.l-btn-dropdown:not(.l-btn-register):hover {
+    background: var(--l-accent);
+    border-color: var(--l-primary);
+    color: var(--l-primary);
+}
+
+.l-btn-register {
+    background: var(--l-primary);
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 165, 0.2);
+}
+
+.l-btn-register:hover {
+    background: var(--l-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(14, 165, 165, 0.3);
+}
+
+.l-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border-radius: var(--l-radius-md);
+    box-shadow: var(--l-shadow-lg);
+    min-width: 220px;
+    padding: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2001;
+}
+
+.l-dropdown:hover .l-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.l-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--l-ink);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.l-dropdown-item:hover {
+    background: var(--l-accent);
+    color: var(--l-primary);
+}
+
+.main-content {
+    padding-top: 80px;
+}
+
+/* =========================
+   Auth Pages Layout
+   ========================= */
+.auth-page-container {
+    max-width: 520px;
+    margin: 60px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    animation: authFadeIn 0.5s ease-out;
+}
+
+@keyframes authFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   Hero Redesign
+   ========================= */
+.l-hero {
+    padding: 160px 20px 100px;
+    text-align: center;
+    background: radial-gradient(circle at top right, #f0fdfa 0%, #ffffff 50%, #f0f9ff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.l-hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+.l-badge {
+    background: #ccfbf1;
+    color: #115e59;
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+}
+
+.l-hero-title {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--l-ink);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+}
+
+.l-hero-title span {
+    color: var(--l-primary);
+}
+
+.l-hero-sub {
+    font-size: 1.4rem;
+    color: var(--l-muted);
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+}
+
+.l-cta-btn {
+    padding: 20px 48px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    border-radius: 20px;
+    background: var(--l-primary);
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 20px 40px rgba(14, 165, 165, 0.25);
+    transition: all 0.3s;
+}
+
+.l-cta-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px rgba(14, 165, 165, 0.35);
+}
+
+/* =========================
+   Role Selection Modal
+   ========================= */
+.l-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.l-modal {
+    background: white;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 800px;
+    padding: 60px;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+    animation: modalSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlide {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.l-role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.l-role-card {
+    border: 2px solid #f1f5f9;
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 40px;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.l-role-card:hover {
+    border-color: var(--l-primary);
+    background: white;
+    transform: translateY(-8px);
+    box-shadow: var(--l-shadow-lg);
+}
+
+.l-role-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--l-accent);
+    color: var(--l-primary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.l-role-card h3 { font-size: 1.5rem; margin-bottom: 8px; color: var(--l-ink); font-weight: 800; }
+.l-role-card p { font-size: 0.95rem; color: var(--l-muted); line-height: 1.5; }
+
+/* =========================
+   Section Improvements
+   ========================= */
+.l-section { padding: 100px 20px; text-align: center; }
+.l-section-title { font-size: 2.75rem; font-weight: 800; color: var(--l-ink); margin-bottom: 16px; }
+.l-section-sub { font-size: 1.15rem; color: var(--l-muted); margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+.l-step-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* Horizontal Connector Line (Desktop) */
+.l-step-grid::before {
+    content: "";
+    position: absolute;
+    top: 56px;
+    left: 50px;
+    right: 50px;
+    height: 4px;
+    background: #e2e8f0;
+    z-index: -1;
+}
+
+.l-step-card {
+    background: white;
+    padding: 40px 24px;
+    border-radius: var(--l-radius-lg);
+    box-shadow: var(--l-shadow);
+    transition: all 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.l-step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--l-shadow-lg);
+}
+
+.l-step-num {
+    width: 36px;
+    height: 36px;
+    background: var(--l-primary);
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    margin: 0 auto 24px;
+    box-shadow: 0 4px 10px rgba(14, 165, 165, 0.3);
+}
+
+/* =========================
+   Mobile Menu Overlay
+   ========================= */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 1500;
+    display: none;
+    animation: slideInLeft 0.3s forwards;
+    overflow-y: auto;
+}
+
+.mobile-menu-overlay.active {
+    display: block;
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsive Overrides */
+@media (max-width: 1200px) {
+    .l-nav { gap: 20px; font-size: 0.9rem; }
+}
+
+@media (max-width: 1024px) {
+    .l-header .l-nav { display: none; }
+    .l-header .l-auth-group { display: none; }
+    .l-nav { position: static; transform: none; }
+    .l-hero-title { font-size: 3rem; }
+    .l-step-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: 40px; }
+    .l-step-grid::before { display: none; }
+}
+
+@media (max-width: 768px) {
+    .l-step-grid { grid-template-columns: 1fr; }
+    .l-role-grid { grid-template-columns: 1fr; }
+    .l-hero-title { font-size: 2.5rem; }
+    .l-header { padding: 0 20px; }
+}

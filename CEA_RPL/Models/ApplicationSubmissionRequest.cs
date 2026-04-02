@@ -7,6 +7,7 @@ public class ApplicationSubmissionRequest
 {
     // Applicant Details
     public string full_name { get; set; } = string.Empty;
+    public string parent_relation { get; set; } = string.Empty;
     public string? parent_name { get; set; }
     public string dob { get; set; } = string.Empty;
     public string gender { get; set; } = string.Empty;

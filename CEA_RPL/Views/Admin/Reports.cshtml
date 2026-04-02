@@ -1,0 +1,238 @@
+@model CEA_RPL.Models.AdminReportViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Executive Analytics";
+}
+
+<div class="dashboard-content">
+    <div class="admin-container-limit">
+        <!-- TIER 1: EXECUTIVE HEADER -->
+        <div class="welcome-hero-alt">
+            <div>
+                <h1>Portal <span style="color: var(--a-primary);">Analytics</span></h1>
+                <p>Comprehensive insights into application volume, certification rates, and system trends.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-flex gap-2 me-3">
+                    <button class="btn-export" title="Print Report"><i data-lucide="printer"></i></button>
+                    <button class="btn-export" title="Export Excel"><i data-lucide="file-spreadsheet"></i></button>
+                </div>
+                <button class="btn-cta-primary">
+                    <i data-lucide="file-down" style="width: 20px; height: 20px;"></i>
+                    Executive PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- TIER 2: ANALYTICS SUMMARY CARDS -->
+        <div class="stats-row mb-4">
+            <div class="stat-card">
+                <div class="stat-icon bg-blue-subtle"><i data-lucide="users"></i></div>
+                <div class="stat-data">
+                    <span class="stat-label">Total Volume</span>
+                    <h3 class="stat-value">@Model.Total</h3>
+                    <span class="stat-trend text-primary">+@Model.MonthlyGrowth% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-emerald-subtle"><i data-lucide="check-circle"></i></div>
+                <div class="stat-data">
+                    <span class="stat-label">Total Approved</span>
+                    <h3 class="stat-value">@Model.Approved</h3>
+                    <span class="stat-trend text-success">Certification Success</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-amber-subtle"><i data-lucide="clock"></i></div>
+                <div class="stat-data">
+                    <span class="stat-label">Pending Review</span>
+                    <h3 class="stat-value">@Model.Pending</h3>
+                    <span class="stat-trend text-warning">Action Required</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-teal-subtle"><i data-lucide="bar-chart"></i></div>
+                <div class="stat-data">
+                    <span class="stat-label">Rejected Applications</span>
+                    <h3 class="stat-value">@Model.Rejected</h3>
+                    <span class="stat-trend text-muted">Quality Control</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIER 2.5: ANALYTICS CHARTS -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="application-card h-100 p-4 mt-0" style="background: white; border-radius: 16px; box-shadow: var(--a-shadow);">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Application Submission Trends</h5>
+                        <div class="badge pill-teal px-3 py-2">Yearly View</div>
+                    </div>
+                    <div style="height: 350px;">
+                        <canvas id="mainTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="application-card h-100 p-4 mt-0" style="background: white; border-radius: 16px; box-shadow: var(--a-shadow);">
+                    <h5 class="fw-bold mb-4">Approval Distribution</h5>
+                    <div class="d-flex flex-column align-items-center justify-content-center pt-3">
+                        <div style="height: 220px; width: 220px; margin-bottom: 32px;">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                        <div class="w-100">
+                             <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="toolbar-label">Approved</span>
+                                <span class="fw-bold">@Model.Approved</span>
+                             </div>
+                             <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="toolbar-label">Under Review</span>
+                                <span class="fw-bold">@Model.Pending</span>
+                             </div>
+                             <div class="d-flex justify-content-between py-2">
+                                <span class="toolbar-label">Rejected</span>
+                                <span class="fw-bold">@Model.Rejected</span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-lg-12">
+                 <div class="application-card p-4 mt-0" style="background: white; border-radius: 16px; box-shadow: var(--a-shadow);">
+                    <h5 class="fw-bold mb-4">Category Wise Certification Breakdown</h5>
+                    <div style="height: 300px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- TIER 3: RECENT ACTIVITY HUB -->
+        <div class="application-card mt-0" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--a-line);">
+            <div class="card-toolbar py-3 px-4" style="background: #f8fafc;">
+                <h5 class="mb-0 fw-bold">Recent System Activity</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th style="padding-left: 24px;">Activity</th>
+                            <th>Entity Reference</th>
+                            <th>Performed By</th>
+                            <th>Status</th>
+                            <th class="text-end" style="padding-right: 24px;">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var act in Model.RecentActivities)
+                        {
+                            <tr>
+                                <td style="padding-left: 24px;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="stat-icon bg-light" style="width: 32px; height: 32px; border-radius: 8px;"><i data-lucide="refresh-cw" style="width: 14px;"></i></div>
+                                        <span class="fw-bold" style="font-size: 0.85rem;">@act.Action</span>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-primary">@act.Entity</td>
+                                <td><span class="badge bg-light text-muted border px-2 py-1">@act.Actor</span></td>
+                                <td><span class="status-pill pill-green" style="font-size: 0.6rem;">SUCCESS</span></td>
+                                <td class="text-end text-muted small fw-bold" style="padding-right: 24px;">@act.Timestamp.ToString("dd MMM, HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Line Chart
+            const lineCtx = document.getElementById('mainTrendChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Requests',
+                        data: [65, 59, 80, 81, 56, 55, 40, 72, 88, 105, 95, 120],
+                        borderColor: '#0ea5a5',
+                        backgroundColor: 'rgba(14, 165, 165, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#f1f5f9' }, border: { dash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Donut Chart
+            const donutCtx = document.getElementById('donutChart').getContext('2d');
+            new Chart(donutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [@Model.Approved, @Model.Pending, @Model.Rejected],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // 3. Bar Chart
+            const barCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'],
+                    datasets: [{
+                        label: 'Count',
+                        data: [45, 78, 52, 91, 64],
+                        backgroundColor: '#0ea5a5',
+                        borderRadius: 8,
+                        barThickness: 32
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#f1f5f9' }, ticks: { stepSize: 20 } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+            
+            // INITIALIZE ICONS
+            lucide.createIcons();
+        });
+    </script>
+}
+
+<style>
+    .pill-teal { background: #e6f6f6; color: #0ea5a5; }
+</style>

@@ -33,6 +33,8 @@ public class ApplicationController : Controller
             if (user != null)
             {
                 ViewBag.UserName = user.Applicant?.FullName ?? user.Email;
+                ViewBag.ApplicationStatus = user.Applicant?.Status;
+                ViewBag.AdminFeedback = user.Applicant?.AdminFeedback;
             }
         }
         
@@ -87,6 +89,7 @@ public class ApplicationController : Controller
         {
             UserId = userId,
             FullName = req.full_name ?? "",
+            ParentRelation = req.parent_relation,
             ParentName = req.parent_name,
             DateOfBirth = DateTime.TryParse(req.dob, out var dob) ? dob : DateTime.Now,
             Gender = string.IsNullOrWhiteSpace(req.gender) ? "Other" : req.gender,

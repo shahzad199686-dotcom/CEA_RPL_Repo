@@ -1,54 +1,230 @@
 @{
-    ViewData["Title"] = "Welcome to CEA RPL";
+    ViewData["Title"] = "Official Certification Portal - CEA RPL";
 }
 
-<div class="landing-hero" style="padding: 80px 20px; text-align: center; background: linear-gradient(135deg, #0ea5a5 0%, #088383 100%); color: white; border-radius: 20px; margin-top: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
-    <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px;">Certification of Environment Auditors</h1>
-    <p style="font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 40px; line-height: 1.6;">
-        Recognition of Prior Learning (RPL) Application Portal. <br>
-        Under Clause 7(i) of Environment Audit Rules, 2025.
-    </p>
-    
-    <div style="display: flex; gap: 20px; justify-content: center;">
-        <a asp-controller="Application" asp-action="Index" class="btn" style="background: white; color: #0ea5a5; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: transform 0.2s;">
-            Get Started
-        </a>
-        <a asp-controller="Auth" asp-action="Login" class="btn" style="background: rgba(255,255,255,0.15); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px);">
-            Sign In
-        </a>
+<!-- ID Anchors for Navigation -->
+<div id="home"></div>
+
+<!-- HERO SECTION -->
+<div class="l-hero">
+    <div class="l-container">
+        <div class="l-hero-content">
+            <span class="l-badge">Official Government RPL Portal</span>
+            <h1 class="l-hero-title">Certification of <span>Environment Auditors</span></h1>
+            <p class="l-hero-sub">
+                Official Recognition of Prior Learning (RPL) Application Portal. <br>
+                Under Clause 7(i) of Environment Audit Rules, 2025.
+            </p>
+            
+            <div class="l-hero-actions">
+                <a href="javascript:void(0)" class="l-cta-btn" onclick="openRoleModal()">
+                    <span>Start Your Application</span>
+                    <i data-lucide="arrow-right" style="width: 24px; height: 24px;"></i>
+                </a>
+                <p style="margin-top: 24px; color: var(--l-muted); font-weight: 600;">
+                    Already have an account? <a asp-controller="Auth" asp-action="Login" style="color: var(--l-primary); text-decoration: none;">Sign In</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 60px; padding: 0 20px;">
-    <div class="feature-card" style="background: white; padding: 30px; border-radius: 16px; border: 1px solid #eee; transition: transform 0.3s;">
-        <div style="color: #0ea5a5; margin-bottom: 15px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+<!-- HOW IT WORKS SECTION -->
+<section class="l-section" id="process">
+    <div class="l-container">
+        <h2 class="l-section-title">How the Application Process Works</h2>
+        <p class="l-section-sub">A streamlined 5-step process designed for industry professionals.</p>
+        
+        <div class="l-step-grid">
+            <div class="l-step-card">
+                <div class="l-step-num">1</div>
+                <div class="l-step-icon" style="color: #0ea5a5; margin-bottom: 20px;">
+                    <i data-lucide="user-plus" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h4 class="fw-bold">Create Account</h4>
+                <p class="text-muted small">Sign up or sign in to your secure portal.</p>
+            </div>
+            <div class="l-step-card">
+                <div class="l-step-num">2</div>
+                <div class="l-step-icon" style="color: #0ea5a5; margin-bottom: 20px;">
+                    <i data-lucide="edit-3" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h4 class="fw-bold">Fill Form</h4>
+                <p class="text-muted small">Complete 15 sections of professional details.</p>
+            </div>
+            <div class="l-step-card">
+                <div class="l-step-num">3</div>
+                <div class="l-step-icon" style="color: #0ea5a5; margin-bottom: 20px;">
+                    <i data-lucide="upload-cloud" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h4 class="fw-bold">Upload Docs</h4>
+                <p class="text-muted small">Attach all required certificates and proofs.</p>
+            </div>
+            <div class="l-step-card">
+                <div class="l-step-num">4</div>
+                <div class="l-step-icon" style="color: #0ea5a5; margin-bottom: 20px;">
+                    <i data-lucide="check-circle" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h4 class="fw-bold">Review</h4>
+                <p class="text-muted small">Verify all details before final submission.</p>
+            </div>
+            <div class="l-step-card">
+                <div class="l-step-num">5</div>
+                <div class="l-step-icon" style="color: #0ea5a5; margin-bottom: 20px;">
+                    <i data-lucide="map-pin" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h4 class="fw-bold">Track</h4>
+                <p class="text-muted small">Receive confirmation and track progress.</p>
+            </div>
         </div>
-        <h3 style="margin-bottom: 10px;">Streamlined Application</h3>
-        <p style="color: #666; font-size: 0.95rem;">Completely digital recognition of prior learning process for environmental professionals.</p>
     </div>
-    <div class="feature-card" style="background: white; padding: 30px; border-radius: 16px; border: 1px solid #eee; transition: transform 0.3s;">
-        <div style="color: #0ea5a5; margin-bottom: 15px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+</section>
+
+<!-- DOCUMENTS REQUIRED SECTION -->
+<section class="l-section" id="docs" style="background: var(--l-accent); border-radius: 60px; margin: 0 20px;">
+    <div class="l-container">
+        <h2 class="l-section-title">Documents Required</h2>
+        <p class="l-section-sub">Please keep the following documents ready for smooth application submission.</p>
+        
+        <div class="row g-4 text-start">
+            @{
+                string[] docs = { 
+                    "Recent Photograph", "Government ID / Citizenship Proof", "Educational Certificates", 
+                    "Experience Certificates", "Project / Audit Reports", "Training Documents", 
+                    "Research Papers", "Awards / Recognition", "Payment Receipt", "Declaration" 
+                };
+            }
+            @foreach(var doc in docs) {
+                <div class="col-md-6 col-lg-4">
+                    <div class="d-flex align-items-center p-3 bg-white shadow-sm border" style="border-radius: 16px; transition: 0.3s; cursor: default;">
+                        <div class="me-3" style="width: 32px; height: 32px; background: #e6f6f6; color: #0ea5a5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                        </div>
+                        <span class="fw-bold text-muted small">@doc</span>
+                    </div>
+                </div>
+            }
         </div>
-        <h3 style="margin-bottom: 10px;">Secure Verification</h3>
-        <p style="color: #666; font-size: 0.95rem;">Two-step authentication and encrypted data storage to keep your professional records safe.</p>
+
+        <div class="row g-4 mt-5 text-start">
+            <div class="col-md-6">
+                <div class="p-4 bg-white border h-100" style="border-radius: 24px; border-left: 6px solid #0ea5a5 !important;">
+                     <div class="d-flex gap-3 align-items-start">
+                        <i data-lucide="clock" class="text-primary" style="width: 24px; height: 24px; margin-top: 4px;"></i>
+                        <div>
+                            <h5 class="fw-bold">Estimated Time</h5>
+                            <p class="text-muted mb-0">It typically takes 20-30 minutes to complete the dynamic form if all documents are ready.</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4 bg-white border h-100" style="border-radius: 24px; border-left: 6px solid #f59e0b !important;">
+                    <div class="d-flex gap-3 align-items-start">
+                        <i data-lucide="alert-circle" style="width: 24px; height: 24px; color: #f59e0b; margin-top: 4px;"></i>
+                        <div>
+                            <h5 class="fw-bold" style="color: #92400e;">Important Notice</h5>
+                            <p class="text-muted mb-0">Incomplete submissions or incorrect document uploads may lead to application rejection or processing delays.</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="feature-card" style="background: white; padding: 30px; border-radius: 16px; border: 1px solid #eee; transition: transform 0.3s;">
-        <div style="color: #0ea5a5; margin-bottom: 15px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="l-section" id="help">
+    <div class="l-container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 text-start">
+                <h2 class="l-section-title">Professional Excellence in Environment Auditing</h2>
+                <p class="l-section-sub ms-0">We provide a secure, official gateway for environmental professionals to gain certification under official audit rules.</p>
+                <div class="d-flex flex-column gap-4 mt-5">
+                    <div class="d-flex gap-3">
+                        <div class="p-3 bg-light rounded-3 text-primary"><i data-lucide="shield-check"></i></div>
+                        <div><h5 class="fw-bold">Two-Step Verification</h5><p class="text-muted small">Secure OTP-based authentication to protect your official data records.</p></div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="p-3 bg-light rounded-3 text-primary"><i data-lucide="bar-chart-3"></i></div>
+                        <div><h5 class="fw-bold">Real-time Progress</h5><p class="text-muted small">Track your auditor application status directly from your secure candidate portal.</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                 <div class="p-5 bg-white shadow-lg" style="border-radius: 40px; border: 1px solid #f1f5f9;">
+                    <i data-lucide="help-circle" class="text-primary mb-4" style="width: 48px; height: 48px;"></i>
+                    <h3 class="fw-bold">Need Help?</h3>
+                    <p class="text-muted">Our dedicated support team is available during official working hours to assist you with the application process.</p>
+                    <a href="mailto:support@cearpl.gov.in" class="btn btn-hero-primary mt-4" style="background: #0ea5a5; color: white; padding: 12px 30px; border-radius: 12px; text-decoration: none; font-weight: 700;">Contact Support</a>
+                 </div>
+            </div>
         </div>
-        <h3 style="margin-bottom: 10px;">Official Certification</h3>
-        <p style="color: #666; font-size: 0.95rem;">Become a certified environment auditor officially recognized under the 2025 rules.</p>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="l-section">
+    <div class="l-container">
+        <div class="cta-card p-5" style="border-radius: 40px; background: linear-gradient(135deg, #0ea5a5 0%, #064e4e 100%);">
+            <h2 class="text-white fw-bold display-5">Become a Certified Auditor</h2>
+            <p class="text-white opacity-75 fs-5">Fast-track your professional certification today.</p>
+            <button onclick="openRoleModal()" class="btn btn-light btn-lg px-5 py-3 fw-bold mt-4" style="color: #0ea5a5; border-radius: 16px;">Begin Application Process</button>
+        </div>
+    </div>
+</section>
+
+<!-- ROLE SELECTION MODAL -->
+<div class="l-modal-overlay" id="roleModal">
+    <div class="l-modal">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0">Select Your Role</h2>
+            <button class="btn btn-ghost p-2 rounded-circle" onclick="closeRoleModal()"><i data-lucide="x"></i></button>
+        </div>
+        <p class="text-muted">How would you like to use the portal today? Please choose your role to proceed.</p>
+        
+        <div class="l-role-grid">
+            <a asp-controller="Auth" asp-action="CandidateLogin" class="l-role-card">
+                <div class="l-role-icon"><i data-lucide="user"></i></div>
+                <h3>Candidate</h3>
+                <p>Register or Login to start/track your auditor certification application.</p>
+            </a>
+            <a asp-controller="Auth" asp-action="AdminLogin" class="l-role-card">
+                <div class="l-role-icon"><i data-lucide="shield-check"></i></div>
+                <h3>Admin</h3>
+                <p>Audit and manage applications. This requires authorized personnel credentials.</p>
+            </a>
+        </div>
     </div>
 </div>
 
-<style>
-    .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+<script>
+    function openRoleModal() {
+        document.getElementById('roleModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
-    .btn:hover {
-        transform: translateY(-2px);
+    function closeRoleModal() {
+        document.getElementById('roleModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
-</style>
+
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const target = document.querySelector(targetId);
+            if (target) {
+                const headerOffset = 100;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        });
+    });
+</script>

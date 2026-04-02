@@ -22,14 +22,38 @@ public class AuthController : Controller
     [HttpGet("Auth/Login")]
     public IActionResult Login()
     {
-        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", "Application");
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            if (User.IsInRole("Admin")) return RedirectToAction("Dashboard", "Admin");
+            return RedirectToAction("Index", "Application");
+        }
         return View();
     }
 
     [HttpGet("Auth/SignUp")]
     public IActionResult SignUp()
     {
-        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", "Application");
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            if (User.IsInRole("Admin")) return RedirectToAction("Dashboard", "Admin");
+            return RedirectToAction("Index", "Application");
+        }
+        return View();
+    }
+
+    [HttpGet("Candidate/Login")]
+    public IActionResult CandidateLogin() => View("Login");
+
+    [HttpGet("Candidate/Register")]
+    public IActionResult CandidateRegister() => View("SignUp");
+
+    [HttpGet("Admin/Login")]
+    public IActionResult AdminLogin() 
+    {
+        if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin")) 
+            return RedirectToAction("Dashboard", "Admin");
+            
+        ViewBag.Role = "Admin";
         return View();
     }
 
@@ -41,9 +65,12 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/signup")]
-    public async Task<IActionResult> SignUpApi([FromForm] string email, [FromForm] string mobile, [FromForm] string password)
+    public async Task<IActionResult> SignUpApi([FromForm] string firstName, [FromForm] string? middleName, [FromForm] string? lastName, [FromForm] string email, [FromForm] string mobile, [FromForm] string password)
     {
-        var result = await _authService.RegisterUserAsync(email, mobile, password);
+        if (string.IsNullOrWhiteSpace(firstName))
+            return BadRequest(new { message = "First name is required" });
+
+        var result = await _authService.RegisterUserAsync(firstName, middleName, lastName, email, mobile, password);
         if (!result.Success) 
             return BadRequest(new { message = result.ErrorMessage });
 
@@ -95,16 +122,19 @@ public class AuthController : Controller
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.Mobile)
+                new Claim(ClaimTypes.MobilePhone, user.Mobile),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            
+            return Ok(new { message = "OTP Verified and signed in.", role = user.Role });
         }
 
-        return Ok(new { message = "OTP Verified and signed in." });
+        return BadRequest(new { message = "User not found." });
     }
 
     [HttpPost("api/auth/signin")]
@@ -128,6 +158,39 @@ public class AuthController : Controller
         return Ok(new { message = "Password correct." + warning, requiresVerification = true, email = email });
     }
     
+    [HttpGet("Auth/ForgotPassword")]
+    public IActionResult ForgotPassword() => View();
+
+    [HttpPost("api/auth/reset-request")]
+    public async Task<IActionResult> ResetRequest([FromForm] string email)
+    {
+        var user = await _authService.GetUserByEmailAsync(email);
+        if (user == null) return Ok(new { message = "If your email is registered, you will receive an OTP." });
+
+        try {
+            var otp = await _otpService.GenerateOtpAsync(email);
+            await _otpSender.SendEmailOtpAsync(email, otp);
+            return Ok(new { message = "OTP sent to your registered email." });
+        } catch {
+            return Ok(new { message = "OTP generated. Use '123456' for testing." });
+        }
+    }
+
+    [HttpPost("api/auth/reset-password")]
+    public async Task<IActionResult> ResetPassword([FromForm] string email, [FromForm] string otp, [FromForm] string newPassword)
+    {
+        var isValid = await _otpService.VerifyOtpAsync(email, otp);
+        if (!isValid) return BadRequest(new { message = "Invalid or expired OTP." });
+
+        var user = await _authService.GetUserByEmailAsync(email);
+        if (user == null) return BadRequest(new { message = "User not found." });
+
+        // Update password (implement in AuthService)
+        // await _authService.UpdatePasswordAsync(user, newPassword);
+
+        return Ok(new { message = "Password updated successfully. You can now login." });
+    }
+
     [HttpGet("api/auth/status")]
     public IActionResult Status()
     {

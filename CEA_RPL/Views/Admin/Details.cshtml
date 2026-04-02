@@ -1,0 +1,305 @@
+@model CEA_RPL.Domain.Entities.Applicant
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Review Application #{Model.Id}";
+}
+
+<div class="dashboard-content">
+    <!-- PAGE HERO -->
+    <div class="welcome-hero" style="margin-bottom: 24px;">
+        <div class="d-flex align-items-center gap-3">
+            <a asp-action="Dashboard" class="btn-export" style="padding: 10px; border-radius: 50%;" title="Back to Dashboard">
+                <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+            </a>
+            <div>
+                <h1 class="mb-0">Review Application <span style="color: var(--a-primary);">#@Model.Id</span></h1>
+                <p>Submitted by <b>@Model.FullName</b> (@Model.Email)</p>
+            </div>
+        </div>
+        <div class="col-auto">
+            @{
+                var statusClass = Model.Status switch {
+                    "Approved" => "st-approved",
+                    "Rejected" => "st-rejected",
+                    "Submitted" => "st-submitted",
+                    "UnderReview" => "st-review",
+                    _ => "st-draft"
+                };
+            }
+            <span class="status-chip @statusClass" style="font-size: 0.9rem; padding: 10px 28px;">@Model.Status</span>
+        </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="row g-4">
+        <!-- Candidate Data Pane -->
+        <div class="col-lg-8">
+            <div class="application-card mt-0" style="border-radius: 20px; border: none; box-shadow: var(--a-shadow);">
+                <div class="card-body p-4">
+                    <!-- Section Tabs -->
+                    <nav class="nav nav-pills flex-column flex-sm-row mb-4" id="review-tabs" role="tablist">
+                        <button class="flex-sm-fill text-sm-center nav-link active" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">Personal Profile</button>
+                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#academic" type="button" role="tab">Education</button>
+                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#experience" type="button" role="tab">Experience</button>
+                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab">Projects</button>
+                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#downloads" type="button" role="tab">Attachments</button>
+                    </nav>
+
+                    <div class="tab-content" id="review-tab-content">
+                        <!-- Personal Details -->
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                            <div class="row g-4">
+                                <div class="col-md-4 text-center">
+                                    <div class="p-3 bg-light rounded-4 mb-3" style="border: 1px dashed var(--a-line);">
+                                        <img src="@Model.PhotoPath" alt="Photo" class="img-fluid rounded-4 shadow-sm" style="max-height: 220px; width: 100%; object-fit: cover;">
+                                    </div>
+                                    <p class="small text-muted fw-bold">Identification Photo</p>
+                                </div>
+                                <div class="col-md-8">
+                                    <h5 class="fw-bold mb-3 pb-2" style="border-bottom: 2px solid var(--a-primary-light);">Core Identity</h5>
+                                    <div class="row g-3">
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Full Name</label><div class="fw-bold fs-6">@Model.FullName</div></div>
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Parent Name</label><div class="fw-bold fs-6">@(Model.ParentName ?? "-")</div></div>
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Date of Birth</label><div class="fw-bold fs-6">@Model.DateOfBirth.ToString("dd MMM yyyy")</div></div>
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Gender</label><div class="fw-bold fs-6">@Model.Gender</div></div>
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Citizenship</label><div class="fw-bold fs-6">@Model.Citizenship</div></div>
+                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Mobile Number</label><div class="fw-bold fs-6">@Model.Mobile</div></div>
+                                        <div class="col-12"><label class="text-muted small d-block fw-bold">Residential Address</label><div>@Model.PermanentAddress</div></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <h5 class="fw-bold mb-3 pb-2" style="border-bottom: 2px solid var(--a-primary-light);">Government ID (@Model.GovIdType)</h5>
+                                    <div class="d-flex align-items-center p-3 bg-light rounded-3" style="border: 1px solid var(--a-line);">
+                                        <div class="me-3 p-2 bg-white rounded-circle shadow-sm">
+                                            <i data-lucide="credit-card" style="width: 24px; height: 24px; color: var(--a-primary);"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">@Model.GovIdNumber</div>
+                                            <div class="small text-muted">Legal Verification Document</div>
+                                        </div>
+                                        <a href="@Model.GovIdPath" target="_blank" class="btn-export" style="text-decoration: none;">View File</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Academic Details -->
+                        <div class="tab-pane fade" id="academic" role="tabpanel">
+                            <h5 class="fw-bold mb-3">Qualifications Summary</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle" style="border: 1px solid var(--a-line); font-size: 0.9rem;">
+                                    <thead class="bg-light">
+                                        <tr class="fw-bold text-muted small">
+                                            <th class="ps-3">Degree</th><th>Discipline</th><th>Institution</th><th class="pe-3">Year</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var ed in Model.Educations) {
+                                            <tr><td class="ps-3 fw-bold">@ed.Degree</td><td>@ed.Discipline</td><td>@ed.Institution</td><td class="pe-3">@ed.Year</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h5 class="fw-bold mt-4 mb-3">Training & Specializations</h5>
+                            <ul class="list-group list-group-flush" style="border: 1px solid var(--a-line); border-radius: 12px; overflow: hidden;">
+                                @foreach(var tc in Model.CertificationTrainings) {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                        <div>
+                                            <div class="fw-bold">@tc.Name</div>
+                                            <div class="text-muted small">@tc.ObtainedFrom</div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.75rem;">@tc.Duration Days (@tc.Year)</span>
+                                            @if(!string.IsNullOrEmpty(tc.ProofPath)) {
+                                                <a href="@tc.ProofPath" target="_blank" class="btn-export p-2" title="View Certification">
+                                                    <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <!-- Experience -->
+                        <div class="tab-pane fade" id="experience" role="tabpanel">
+                            <h5 class="fw-bold mb-3 text-muted small uppercase">History Log</h5>
+                            @foreach(var exp in Model.ProfessionalExperiences) {
+                                <div class="p-4 border rounded-3 mb-3 bg-light-subtle" style="border: 1px solid var(--a-line) !important; border-radius: 16px !important;">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="fw-bold fs-5" style="color: var(--a-ink);">@exp.Designation</div>
+                                            <div class="text-muted fw-bold small">@exp.Organization</div>
+                                        </div>
+                                        <div class="col-auto text-end">
+                                            <div class="badge bg-white text-dark border-0 shadow-sm p-3 rounded-3" style="font-size: 0.85rem;">@exp.Duration</div>
+                                            @if(!string.IsNullOrEmpty(exp.ProofPath)) {
+                                                <a href="@exp.ProofPath" target="_blank" class="btn-export ms-2">View Reference</a>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-muted" style="font-size: 0.9rem;">@exp.NatureOfWork</div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Projects -->
+                        <div class="tab-pane fade" id="projects" role="tabpanel">
+                            <h5 class="fw-bold mb-3">Audited Projects Portfolio</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm align-middle" style="border: 1px solid var(--a-line); font-size: 0.85rem;">
+                                    <thead class="bg-light">
+                                        <tr class="fw-bold text-muted">
+                                            <th class="ps-3">Project Title</th><th>Role</th><th>Category</th><th>Organization</th><th class="pe-3">Year</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var proj in Model.ProjectExperiences) {
+                                            <tr><td class="ps-3 fw-bold">@proj.Name</td><td>@proj.Role</td><td>@proj.Category</td><td>@proj.Client</td><td class="pe-3">@proj.Year</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Documents -->
+                        <div class="tab-pane fade" id="downloads" role="tabpanel">
+                            <h5 class="fw-bold mb-3">Electronic Attachments</h5>
+                            <div class="row g-3">
+                                @foreach(var rep in Model.UploadReports) {
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 border rounded-4 h-100 bg-light" style="border-color: var(--a-line) !important;">
+                                            <div class="me-3 p-2 bg-white rounded-circle shadow-sm text-primary"><i data-lucide="file-check" style="width: 20px; height: 20px;"></i></div>
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="small fw-bold text-truncate" title="@rep.FileName">@rep.FileName</div>
+                                                <div class="x-small text-muted fw-bold uppercase" style="font-size: 0.65rem;">System Report</div>
+                                            </div>
+                                            <a href="@rep.FilePath" target="_blank" class="btn-export p-2 rounded-circle ms-2" title="Open Document"><i data-lucide="eye" style="width: 14px; height: 14px;"></i></a>
+                                        </div>
+                                    </div>
+                                }
+                                @foreach(var enc in Model.OtherEnclosures) {
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 border rounded-4 h-100 bg-light" style="border-color: var(--a-line) !important;">
+                                            <div class="me-3 p-2 bg-white rounded-circle shadow-sm text-info"><i data-lucide="paperclip" style="width: 20px; height: 20px;"></i></div>
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="small fw-bold text-truncate" title="@enc.FileName">@enc.FileName</div>
+                                                <div class="x-small text-muted fw-bold uppercase" style="font-size: 0.65rem;">Support File</div>
+                                            </div>
+                                            <a href="@enc.FilePath" target="_blank" class="btn-export p-2 rounded-circle ms-2" title="Open Document"><i data-lucide="eye" style="width: 14px; height: 14px;"></i></a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Partial: Financial Log -->
+            <div class="application-card" style="border-radius: 20px; border: none; box-shadow: var(--a-shadow); margin-top: 32px;">
+                <div class="card-header bg-white border-bottom p-4"><h5 class="mb-0 fw-bold">Verification & Payments</h5></div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle" style="font-size: 0.9rem;">
+                            <thead class="text-muted small fw-bold"><tr><th class="ps-3">Transaction UTR</th><th>Amount</th><th>Status</th><th class="pe-3">Date</th></tr></thead>
+                            <tbody>
+                                @foreach(var pay in Model.PaymentDetails) {
+                                    <tr><td class="ps-3 fw-bold text-primary">@pay.UtrNumber</td><td class="fw-bold">₹ @pay.Amount</td><td><span class="status-chip st-approved" style="font-size: 0.65rem; padding: 4px 12px;">Verified</span></td><td class="pe-3 text-muted fw-bold">@pay.PaymentDate.ToString("dd MMM yyyy")</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Control Desk -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px; border-radius: 20px; box-shadow: var(--a-shadow) !important;">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="mb-0 fw-bold">Adjudication Decision</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form id="reviewActionForm">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small uppercase">Final Disposition</label>
+                            <select name="status" id="statusSelect" class="status-select w-100" style="padding: 12px 15px;">
+                                <option value="UnderReview" selected="@(Model.Status == "UnderReview")">Mark Under Review</option>
+                                <option value="Approved" selected="@(Model.Status == "Approved")">Approve Application</option>
+                                <option value="Rejected" selected="@(Model.Status == "Rejected")">Reject Application</option>
+                                <option value="Feedback Pending" selected="@(Model.Status == "Feedback Pending")">Request Changes / Feedback</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small uppercase">Administrative Remarks</label>
+                            <textarea name="feedback" class="form-control border-2 p-3 rounded-3" rows="8" placeholder="Enter detailed feedback or rejection grounds..." style="border-radius: 12px !important; border-color: var(--a-line) !important; font-size: 0.9rem;">@Model.AdminFeedback</textarea>
+                            <div class="form-text small mt-2 fw-bold text-muted">⚠️ Information will be visible to candidate.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 p-3 fw-bold" style="border-radius: 14px; font-size: 1rem; box-shadow: 0 10px 20px rgba(14,165,165,0.25);">
+                            Submit Final Decision
+                        </button>
+                    </form>
+                    
+                    <div id="actionStatus" class="mt-3 p-3 rounded-3 text-center fw-bold" style="display: none; font-size: 0.9rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const reviewForm = document.getElementById('reviewActionForm');
+        const feedbackDiv = document.getElementById('actionStatus');
+
+        reviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(reviewForm);
+            
+            try {
+                const response = await fetch('/api/admin/update-status', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    feedbackDiv.innerHTML = `<span class="text-success">✓ ${result.message}</span>`;
+                    feedbackDiv.style.backgroundColor = '#ecfdf5';
+                    feedbackDiv.style.display = 'block';
+                    setTimeout(() => window.location.href = '/Admin/Dashboard', 1500);
+                } else {
+                    feedbackDiv.innerHTML = `<span class="text-danger">✕ Failed to update.</span>`;
+                    feedbackDiv.style.backgroundColor = '#fef2f2';
+                    feedbackDiv.style.display = 'block';
+                }
+            } catch (err) {
+                feedbackDiv.innerHTML = `<span class="text-danger">✕ Server unreachable.</span>`;
+                feedbackDiv.style.backgroundColor = '#fef2f2';
+                feedbackDiv.style.display = 'block';
+            }
+        });
+    </script>
+}
+
+<style>
+    #review-tabs .nav-link { 
+        border-radius: 12px; margin-right: 8px; color: var(--a-muted); 
+        font-weight: 700; padding: 12px 24px; transition: 0.2s; 
+        border: 1.5px solid #f1f5f9; font-size: 0.85rem;
+    }
+    #review-tabs .nav-link.active { 
+        background-color: var(--a-primary) !important; color: white !important; 
+        border-color: var(--a-primary) !important; 
+        box-shadow: 0 8px 16px rgba(14,165,165,0.15); 
+    }
+    #review-tabs .nav-link:hover:not(.active) { background-color: var(--a-primary-light); border-color: var(--a-primary); color: var(--a-primary); }
+    .bg-light-subtle { background-color: #fbfcfd; }
+    .uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+</style>
