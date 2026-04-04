@@ -99,4 +99,6 @@ public class ApplicationSubmissionRequest
     public string decl_date { get; set; } = string.Empty;
     public string? decl_place { get; set; }
     public List<IFormFile>? Any_other_doc { get; set; } // This is signature
+
+    public int? current_step { get; set; }
 }

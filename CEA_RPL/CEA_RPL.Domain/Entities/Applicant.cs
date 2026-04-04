@@ -20,6 +20,8 @@ public class Applicant : BaseEntity
     // Status
     public string Status { get; set; } = "Draft"; // Draft, Submitted, UnderReview, Approved, Rejected
     public string? AdminFeedback { get; set; }
+    public int CurrentStep { get; set; } = 1;
+    public DateTime? LastSavedAt { get; set; }
     
     // Photo & IDs
     public string? PhotoPath { get; set; }

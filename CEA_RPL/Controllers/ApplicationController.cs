@@ -35,6 +35,9 @@ public class ApplicationController : Controller
                 ViewBag.UserName = user.Applicant?.FullName ?? user.Email;
                 ViewBag.ApplicationStatus = user.Applicant?.Status;
                 ViewBag.AdminFeedback = user.Applicant?.AdminFeedback;
+                ViewBag.LastSavedAt = user.Applicant?.LastSavedAt?.ToString("f");
+                ViewBag.UserEmail = user.Email;
+                ViewBag.UserMobile = user.Mobile;
             }
         }
         
@@ -54,11 +57,15 @@ public class ApplicationController : Controller
         if (user == null || !user.IsEmailVerified || !user.IsMobileVerified)
             return BadRequest(new { message = "You must verify your email and mobile OTPs before submitting." });
 
-        // Check if user already submitted an application
-        if (_context.Applicants.Any(a => a.UserId == userId))
+        // Check if user already submitted an application (Drafts are allowed)
+        var existingApplicant = await _context.Applicants
+            .FirstOrDefaultAsync(a => a.UserId == userId);
+
+        if (existingApplicant != null && existingApplicant.Status != "Draft")
         {
             return BadRequest(new { message = "You have already submitted an application." });
         }
+
 
         string? report1 = null;
         string? report2 = null;
@@ -85,27 +92,29 @@ public class ApplicationController : Controller
         var photoPath = await _fileService.SaveFileAsync(req.applicant_photo.OpenReadStream(), req.applicant_photo.FileName);
         var govIdPath = await _fileService.SaveFileAsync(req.gov_id_upload.OpenReadStream(), req.gov_id_upload.FileName);
 
-        var applicant = new Applicant
-        {
-            UserId = userId,
-            FullName = req.full_name ?? "",
-            ParentRelation = req.parent_relation,
-            ParentName = req.parent_name,
-            DateOfBirth = DateTime.TryParse(req.dob, out var dob) ? dob : DateTime.Now,
-            Gender = string.IsNullOrWhiteSpace(req.gender) ? "Other" : req.gender,
-            Citizenship = string.IsNullOrWhiteSpace(req.citizenship) ? "Indian" : req.citizenship,
-            PermanentAddress = req.address_perm ?? "",
-            CorrespondenceAddress = req.address_corr,
-            Email = req.email ?? "",
-            Mobile = req.mobile ?? "",
-            AlternateMobile = req.alt_mobile,
-            PhotoPath = photoPath,
-            GovIdType = req.gov_id_type ?? "",
-            GovIdNumber = req.gov_id_number ?? "",
-            GovIdPath = govIdPath,
-            Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty,
-            Status = "Submitted"
-        };
+        // --- MAPPING LOGIC (Symmetric for Submit & Draft) ---
+        var applicant = existingApplicant ?? new Applicant { UserId = userId };
+        if (existingApplicant == null) _context.Applicants.Add(applicant);
+
+        applicant.Status = "Submitted";
+        applicant.CurrentStep = 15;
+        
+        applicant.FullName = req.full_name ?? "";
+        applicant.ParentRelation = req.parent_relation;
+        applicant.ParentName = req.parent_name;
+        applicant.DateOfBirth = DateTime.TryParse(req.dob, out var dob) ? dob : DateTime.Now;
+        applicant.Gender = string.IsNullOrWhiteSpace(req.gender) ? "Other" : req.gender;
+        applicant.Citizenship = string.IsNullOrWhiteSpace(req.citizenship) ? "Indian" : req.citizenship;
+        applicant.PermanentAddress = req.address_perm ?? "";
+        applicant.CorrespondenceAddress = req.address_corr;
+        applicant.Email = req.email ?? "";
+        applicant.Mobile = req.mobile ?? "";
+        applicant.AlternateMobile = req.alt_mobile;
+        applicant.PhotoPath = photoPath;
+        applicant.GovIdType = req.gov_id_type ?? "";
+        applicant.GovIdNumber = req.gov_id_number ?? "";
+        applicant.GovIdPath = govIdPath;
+        applicant.Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty;
 
         // Section 6: Audit Reports
         if (report1 != null) applicant.UploadReports.Add(new UploadReport { FilePath = report1, FileName = req.audit_report?[0].FileName ?? "Report1" });
@@ -113,6 +122,26 @@ public class ApplicationController : Controller
 
         // Section 12: Other Enclosures
         if (otherEnc != null) applicant.OtherEnclosures.Add(new OtherEnclosure { FilePath = otherEnc, FileName = req.other_enclosure?.FileName ?? "AdditionalDoc" });
+
+        // --- PAYMENT & UTR VERIFICATION ---
+        // 1. Check for Duplicate UTR
+        if (!string.IsNullOrEmpty(req.payment_utr))
+        {
+            var existingPayment = await _context.PaymentDetails
+                .AnyAsync(p => p.UtrNumber == req.payment_utr);
+            if (existingPayment)
+            {
+                return BadRequest(new { message = "This UTR Number has already been used for another application. Duplicate payments are not allowed." });
+            }
+        }
+
+        // 2. Verify Amount matches categories (₹5,000 per category)
+        int categoryCount = req.cert_category?.Count ?? 0;
+        decimal expectedAmount = categoryCount * 5000;
+        if (req.payment_amount < expectedAmount)
+        {
+            return BadRequest(new { message = $"Insufficient payment. Total fee for {categoryCount} categories is ₹{expectedAmount}. Please pay the full amount." });
+        }
 
         // Section 13: Payment Details
         applicant.PaymentDetails.Add(new PaymentDetail
@@ -145,10 +174,10 @@ public class ApplicationController : Controller
 
                 applicant.Educations.Add(new Education
                 {
-                    Degree = req.edu_degree[i],
-                    Discipline = req.edu_discipline?[i] ?? "",
-                    Institution = req.edu_institution?[i] ?? "",
-                    Year = req.edu_year != null && i < req.edu_year.Count ? req.edu_year[i] : 0,
+                    Degree = req.edu_degree[i] ?? "",
+                    Discipline = (req.edu_discipline != null && req.edu_discipline.Count > i ? req.edu_discipline[i] : "") ?? "",
+                    Institution = (req.edu_institution != null && req.edu_institution.Count > i ? req.edu_institution[i] : "") ?? "",
+                    Year = (req.edu_year != null && req.edu_year.Count > i ? req.edu_year[i] : 0),
                     CertificatePath = certPath
                 });
             }
@@ -167,11 +196,11 @@ public class ApplicationController : Controller
 
                 applicant.ProfessionalExperiences.Add(new ProfessionalExperience
                 {
-                    Organization = req.exp_org[i],
-                    Designation = req.exp_designation?[i] ?? "",
-                    Duration = req.exp_duration?[i] ?? "",
-                    NatureOfWork = req.exp_nature?[i] ?? "",
-                    ReferencePhone = req.ref2_phone?[i] ?? "",
+                    Organization = req.exp_org[i] ?? "",
+                    Designation = (req.exp_designation != null && req.exp_designation.Count > i ? req.exp_designation[i] : "") ?? "",
+                    Duration = (req.exp_duration != null && req.exp_duration.Count > i ? req.exp_duration[i] : "") ?? "",
+                    NatureOfWork = (req.exp_nature != null && req.exp_nature.Count > i ? req.exp_nature[i] : "") ?? "",
+                    ReferencePhone = (req.ref2_phone != null && req.ref2_phone.Count > i ? req.ref2_phone[i] : "") ?? "",
                     ProofPath = proofPath
                 });
             }
@@ -186,11 +215,11 @@ public class ApplicationController : Controller
                 applicant.ProjectExperiences.Add(new ProjectExperience
                 {
                     Category = "Category 1",
-                    Name = req.project_name_cat1[i],
-                    Client = req.project_client_cat1?[i] ?? "",
-                    Location = req.project_location_cat1?[i] ?? "",
-                    Year = req.project_year_cat1 != null && i < req.project_year_cat1.Count ? req.project_year_cat1[i] : 0,
-                    Role = req.project_role_cat1?[i] ?? ""
+                    Name = req.project_name_cat1[i] ?? "",
+                    Client = (req.project_client_cat1 != null && req.project_client_cat1.Count > i ? req.project_client_cat1[i] : "") ?? "",
+                    Location = (req.project_location_cat1 != null && req.project_location_cat1.Count > i ? req.project_location_cat1[i] : "") ?? "",
+                    Year = (req.project_year_cat1 != null && req.project_year_cat1.Count > i ? req.project_year_cat1[i] : 0),
+                    Role = (req.project_role_cat1 != null && req.project_role_cat1.Count > i ? req.project_role_cat1[i] : "") ?? ""
                 });
             }
         }
@@ -207,10 +236,10 @@ public class ApplicationController : Controller
 
                 applicant.CertificationTrainings.Add(new CertificationTraining
                 {
-                    Name = req.training_name[i],
-                    ObtainedFrom = req.training_from != null && i < req.training_from.Count ? req.training_from[i] : "",
-                    Duration = req.training_duration != null && i < req.training_duration.Count ? req.training_duration[i] : "",
-                    Year = req.training_year != null && i < req.training_year.Count ? req.training_year[i] : 0,
+                    Name = req.training_name[i] ?? "",
+                    ObtainedFrom = (req.training_from != null && req.training_from.Count > i ? req.training_from[i] : "") ?? "",
+                    Duration = (req.training_duration != null && req.training_duration.Count > i ? req.training_duration[i] : "") ?? "",
+                    Year = (req.training_year != null && req.training_year.Count > i ? req.training_year[i] : 0),
                     ProofPath = proof
                 });
             }
@@ -228,10 +257,10 @@ public class ApplicationController : Controller
 
                 applicant.Memberships.Add(new Membership
                 {
-                    Name = req.membership_name[i],
-                    ObtainedFrom = req.membership_from != null && i < req.membership_from.Count ? req.membership_from[i] : "",
-                    Year = req.membership_year != null && i < req.membership_year.Count ? req.membership_year[i] : 0,
-                    Duration = req.membership_duration != null && i < req.membership_duration.Count ? req.membership_duration[i] : "",
+                    Name = req.membership_name[i] ?? "",
+                    ObtainedFrom = (req.membership_from != null && req.membership_from.Count > i ? req.membership_from[i] : "") ?? "",
+                    Year = (req.membership_year != null && req.membership_year.Count > i ? req.membership_year[i] : 0),
+                    Duration = (req.membership_duration != null && req.membership_duration.Count > i ? req.membership_duration[i] : "") ?? "",
                     ProofPath = proof
                 });
             }
@@ -249,10 +278,10 @@ public class ApplicationController : Controller
 
                 applicant.PaperPublisheds.Add(new PaperPublished
                 {
-                    Name = req.paper_name?[i] ?? "",
-                    Place = req.paper_place != null && i < req.paper_place.Count ? req.paper_place[i] : "",
-                    Year = req.paper_year != null && i < req.paper_year.Count ? req.paper_year[i] : 0,
-                    Role = req.paper_role != null && i < req.paper_role.Count ? req.paper_role[i] : "",
+                    Name = req.paper_name[i] ?? "",
+                    Place = (req.paper_place != null && req.paper_place.Count > i ? req.paper_place[i] : "") ?? "",
+                    Year = (req.paper_year != null && req.paper_year.Count > i ? req.paper_year[i] : 0),
+                    Role = (req.paper_role != null && req.paper_role.Count > i ? req.paper_role[i] : "") ?? "",
                     ProofPath = proof
                 });
             }
@@ -270,9 +299,9 @@ public class ApplicationController : Controller
 
                 applicant.Awards.Add(new Award
                 {
-                    Name = req.award_name[i],
-                    ReceivedFrom = req.award_from != null && i < req.award_from.Count ? req.award_from[i] : "",
-                    Year = req.award_year != null && i < req.award_year.Count ? req.award_year[i] : 0,
+                    Name = req.award_name[i] ?? "",
+                    ReceivedFrom = (req.award_from != null && req.award_from.Count > i ? req.award_from[i] : "") ?? "",
+                    Year = (req.award_year != null && req.award_year.Count > i ? req.award_year[i] : 0),
                     ProofPath = proof
                 });
             }
@@ -286,15 +315,281 @@ public class ApplicationController : Controller
                 if (string.IsNullOrWhiteSpace(req.software_skill[i])) continue;
                 applicant.SoftwareSkills.Add(new SoftwareSkill
                 {
-                    SoftwareName = req.software_skill[i],
-                    ProficiencyLevel = req.proficiency_level != null && i < req.proficiency_level.Count ? req.proficiency_level[i] : ""
+                    SoftwareName = req.software_skill[i] ?? "",
+                    ProficiencyLevel = (req.proficiency_level != null && req.proficiency_level.Count > i ? req.proficiency_level[i] : "") ?? ""
+                });
+            }
+        }
+        
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Draft saved successfully", savedAt = DateTime.Now.ToString("h:mm tt") });
+    }
+
+    [HttpPost("save-draft")]
+    [Authorize]
+    public async Task<IActionResult> SaveDraft([FromForm] ApplicationSubmissionRequest req)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
+            return Unauthorized();
+
+        var applicant = await _context.Applicants
+            .Include(a => a.Educations)
+            .Include(a => a.SoftwareSkills)
+            .Include(a => a.ProfessionalExperiences)
+            .Include(a => a.ProjectExperiences)
+            .Include(a => a.Awards)
+            .Include(a => a.CertificationTrainings)
+            .Include(a => a.Memberships)
+            .Include(a => a.PaperPublisheds)
+            .Include(a => a.UploadReports)
+            .Include(a => a.OtherEnclosures)
+            .Include(a => a.PaymentDetails)
+            .FirstOrDefaultAsync(a => a.UserId == userId);
+
+        if (applicant != null && applicant.Status != "Draft")
+            return BadRequest(new { message = "You have already submitted an application." });
+
+        if (applicant == null)
+        {
+            applicant = new Applicant { UserId = userId };
+            _context.Applicants.Add(applicant);
+        }
+
+        applicant.Status = "Draft";
+        applicant.CurrentStep = req.current_step ?? 1;
+        applicant.LastSavedAt = DateTime.Now;
+
+        // Map Basic Info
+        applicant.FullName = req.full_name ?? "";
+        applicant.ParentRelation = req.parent_relation;
+        applicant.ParentName = req.parent_name;
+        applicant.DateOfBirth = DateTime.TryParse(req.dob, out var dob) ? dob : DateTime.Now;
+        applicant.Gender = req.gender ?? "";
+        applicant.Citizenship = req.citizenship ?? "Indian";
+        applicant.PermanentAddress = req.address_perm ?? "";
+        applicant.CorrespondenceAddress = req.address_corr;
+        applicant.Email = req.email ?? "";
+        applicant.Mobile = req.mobile ?? "";
+        applicant.AlternateMobile = req.alt_mobile;
+        applicant.GovIdType = req.gov_id_type ?? "";
+        applicant.GovIdNumber = req.gov_id_number ?? "";
+        applicant.Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty;
+
+        // Map Files (Optional in Draft)
+        if (req.applicant_photo != null)
+            applicant.PhotoPath = await _fileService.SaveFileAsync(req.applicant_photo.OpenReadStream(), req.applicant_photo.FileName);
+        if (req.gov_id_upload != null)
+            applicant.GovIdPath = await _fileService.SaveFileAsync(req.gov_id_upload.OpenReadStream(), req.gov_id_upload.FileName);
+
+        // Map Collections (Education)
+        if (req.edu_degree != null)
+        {
+            foreach (var e in applicant.Educations.ToList()) _context.Educations.Remove(e);
+            for (int i = 0; i < req.edu_degree.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.edu_degree[i])) continue;
+                applicant.Educations.Add(new Education { 
+                    Degree = req.edu_degree[i] ?? "", 
+                    Discipline = (req.edu_discipline != null && req.edu_discipline.Count > i ? req.edu_discipline[i] : "") ?? "", 
+                    Institution = (req.edu_institution != null && req.edu_institution.Count > i ? req.edu_institution[i] : "") ?? "", 
+                    Year = (req.edu_year != null && req.edu_year.Count > i ? req.edu_year[i] : 0) 
                 });
             }
         }
 
-        _context.Applicants.Add(applicant);
+        // Map Collections (Experience)
+        if (req.exp_org != null)
+        {
+            foreach (var e in applicant.ProfessionalExperiences.ToList()) _context.ProfessionalExperiences.Remove(e);
+            for (int i = 0; i < req.exp_org.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.exp_org[i])) continue;
+                applicant.ProfessionalExperiences.Add(new ProfessionalExperience { 
+                    Organization = req.exp_org[i] ?? "", 
+                    Designation = (req.exp_designation != null && req.exp_designation.Count > i ? req.exp_designation[i] : "") ?? "", 
+                    Duration = (req.exp_duration != null && req.exp_duration.Count > i ? req.exp_duration[i] : "") ?? "", 
+                    NatureOfWork = (req.exp_nature != null && req.exp_nature.Count > i ? req.exp_nature[i] : "") ?? "" 
+                });
+            }
+        }
+
+        // Map Collections (Projects)
+        if (req.project_name_cat1 != null)
+        {
+            foreach (var p in applicant.ProjectExperiences.ToList()) _context.ProjectExperiences.Remove(p);
+            for (int i = 0; i < req.project_name_cat1.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.project_name_cat1[i])) continue;
+                applicant.ProjectExperiences.Add(new ProjectExperience { 
+                    Category = "Category 1",
+                    Name = req.project_name_cat1[i] ?? "", 
+                    Client = (req.project_client_cat1 != null && req.project_client_cat1.Count > i ? req.project_client_cat1[i] : "") ?? "", 
+                    Location = (req.project_location_cat1 != null && req.project_location_cat1.Count > i ? req.project_location_cat1[i] : "") ?? "", 
+                    Year = (req.project_year_cat1 != null && req.project_year_cat1.Count > i ? req.project_year_cat1[i] : 0), 
+                    Role = (req.project_role_cat1 != null && req.project_role_cat1.Count > i ? req.project_role_cat1[i] : "") ?? "" 
+                });
+            }
+        }
+
+        // Map Collections (Training)
+        if (req.training_name != null)
+        {
+            foreach (var t in applicant.CertificationTrainings.ToList()) _context.CertificationTrainings.Remove(t);
+            for (int i = 0; i < req.training_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.training_name[i])) continue;
+                applicant.CertificationTrainings.Add(new CertificationTraining {
+                    Name = req.training_name[i] ?? "",
+                    ObtainedFrom = (req.training_from != null && req.training_from.Count > i ? req.training_from[i] : "") ?? "",
+                    Duration = (req.training_duration != null && req.training_duration.Count > i ? req.training_duration[i] : "") ?? "",
+                    Year = (req.training_year != null && req.training_year.Count > i ? req.training_year[i] : 0)
+                });
+            }
+        }
+
+        // Map Collections (Membership)
+        if (req.membership_name != null)
+        {
+            foreach (var m in applicant.Memberships.ToList()) _context.Memberships.Remove(m);
+            for (int i = 0; i < req.membership_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.membership_name[i])) continue;
+                applicant.Memberships.Add(new Membership {
+                    Name = req.membership_name[i] ?? "",
+                    ObtainedFrom = (req.membership_from != null && req.membership_from.Count > i ? req.membership_from[i] : "") ?? "",
+                    Year = (req.membership_year != null && req.membership_year.Count > i ? req.membership_year[i] : 0),
+                    Duration = (req.membership_duration != null && req.membership_duration.Count > i ? req.membership_duration[i] : "") ?? ""
+                });
+            }
+        }
+
+        // Map Collections (Papers)
+        if (req.paper_name != null)
+        {
+            foreach (var p in applicant.PaperPublisheds.ToList()) _context.PaperPublisheds.Remove(p);
+            for (int i = 0; i < req.paper_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.paper_name[i])) continue;
+                applicant.PaperPublisheds.Add(new PaperPublished {
+                    Name = req.paper_name[i] ?? "",
+                    Place = (req.paper_place != null && req.paper_place.Count > i ? req.paper_place[i] : "") ?? "",
+                    Year = (req.paper_year != null && req.paper_year.Count > i ? req.paper_year[i] : 0),
+                    Role = (req.paper_role != null && req.paper_role.Count > i ? req.paper_role[i] : "") ?? ""
+                });
+            }
+        }
+
+        // Map Collections (Awards)
+        if (req.award_name != null)
+        {
+            foreach (var a in applicant.Awards.ToList()) _context.Awards.Remove(a);
+            for (int i = 0; i < req.award_name.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(req.award_name[i])) continue;
+                applicant.Awards.Add(new Award {
+                    Name = req.award_name[i] ?? "",
+                    ReceivedFrom = (req.award_from != null && req.award_from.Count > i ? req.award_from[i] : "") ?? "",
+                    Year = (req.award_year != null && req.award_year.Count > i ? req.award_year[i] : 0)
+                });
+            }
+        }
+
         await _context.SaveChangesAsync();
-        
-        return Ok(new { message = "Application submitted successfully", applicantId = applicant.Id });
+        return Ok(new { message = "Draft saved successfully", savedAt = DateTime.Now.ToString("h:mm tt") });
+    }
+
+    [HttpGet("get-draft")]
+    [Authorize]
+    public async Task<IActionResult> GetDraft()
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
+            return Unauthorized();
+
+        var applicant = await _context.Applicants
+            .Include(a => a.Educations)
+            .Include(a => a.SoftwareSkills)
+            .Include(a => a.ProfessionalExperiences)
+            .Include(a => a.ProjectExperiences)
+            .Include(a => a.Awards)
+            .Include(a => a.CertificationTrainings)
+            .Include(a => a.Memberships)
+            .Include(a => a.PaperPublisheds)
+            .Include(a => a.PaymentDetails)
+            .FirstOrDefaultAsync(a => a.UserId == userId);
+
+        if (applicant == null) return NotFound();
+
+        return Ok(new
+        {
+            current_step = applicant.CurrentStep,
+            last_saved_at = applicant.LastSavedAt?.ToString("dd MMM yyyy, h:mm tt") ?? "Unknown",
+            full_name = applicant.FullName,
+            parent_relation = applicant.ParentRelation,
+            parent_name = applicant.ParentName,
+            email = applicant.Email,
+            mobile = applicant.Mobile,
+            alt_mobile = applicant.AlternateMobile,
+            gender = applicant.Gender,
+            dob = applicant.DateOfBirth.ToString("yyyy-MM-dd"),
+            citizenship = applicant.Citizenship,
+            address_perm = applicant.PermanentAddress,
+            address_corr = applicant.CorrespondenceAddress,
+            gov_id_type = applicant.GovIdType,
+            gov_id_number = applicant.GovIdNumber,
+            categories = applicant.Categories.Split(", ", StringSplitOptions.RemoveEmptyEntries).ToList(),
+            educations = applicant.Educations.Select(e => new { 
+                degree = e.Degree, 
+                discipline = e.Discipline, 
+                institution = e.Institution,
+                year = e.Year 
+            }).ToList(),
+            experiences = applicant.ProfessionalExperiences.Select(ex => new {
+                org = ex.Organization,
+                designation = ex.Designation,
+                duration = ex.Duration,
+                nature = ex.NatureOfWork
+            }).ToList(),
+            projects = applicant.ProjectExperiences.Select(p => new {
+                name = p.Name,
+                client = p.Client,
+                location = p.Location,
+                year = p.Year,
+                role = p.Role
+            }).ToList(),
+            trainings = applicant.CertificationTrainings.Select(t => new {
+                name = t.Name,
+                from = t.ObtainedFrom,
+                duration = t.Duration,
+                year = t.Year
+            }).ToList(),
+            memberships = applicant.Memberships.Select(m => new {
+                name = m.Name,
+                from = m.ObtainedFrom,
+                year = m.Year,
+                duration = m.Duration
+            }).ToList(),
+            papers = applicant.PaperPublisheds.Select(p => new {
+                name = p.Name,
+                place = p.Place,
+                year = p.Year,
+                role = p.Role
+            }).ToList(),
+            awards = applicant.Awards.Select(a => new {
+                name = a.Name,
+                from = a.ReceivedFrom,
+                year = a.Year
+            }).ToList(),
+            software_skills = applicant.SoftwareSkills.Select(s => new {
+                skill = s.SoftwareName,
+                level = s.ProficiencyLevel
+            }).ToList(),
+            payment = applicant.PaymentDetails.OrderByDescending(p => p.Id).Select(p => new {
+                amount = p.Amount,
+                date = p.PaymentDate.ToString("yyyy-MM-dd"),
+                utr = p.UtrNumber
+            }).FirstOrDefault()
+        });
     }
 }
