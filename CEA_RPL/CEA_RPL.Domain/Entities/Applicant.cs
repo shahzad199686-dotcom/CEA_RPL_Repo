@@ -2,6 +2,7 @@ namespace CEA_RPL.Domain.Entities;
 
 public class Applicant : BaseEntity
 {
+    public string Title { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string? ParentRelation { get; set; }
     public string? ParentName { get; set; }
@@ -22,15 +23,19 @@ public class Applicant : BaseEntity
     public string? AdminFeedback { get; set; }
     public int CurrentStep { get; set; } = 1;
     public DateTime? LastSavedAt { get; set; }
+    public DateTime? SubmittedAt { get; set; }
     
     // Photo & IDs
     public string? PhotoPath { get; set; }
     public string GovIdType { get; set; } = string.Empty;
+    public string? OtherGovIdType { get; set; }
     public string GovIdNumber { get; set; } = string.Empty;
     public string? GovIdPath { get; set; }
     
     // Selected Categories
     public string Categories { get; set; } = string.Empty; // Comma separated Category 1, Category 2 etc.
+    
+    public string? EnclosureDescription { get; set; }
     
     // Navigation Properties
     public virtual Declaration? Declaration { get; set; } = null!;

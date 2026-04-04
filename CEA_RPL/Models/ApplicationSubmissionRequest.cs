@@ -7,6 +7,7 @@ namespace CEA_RPL.Models;
 public class ApplicationSubmissionRequest
 {
     // Applicant Details
+    public string? title { get; set; }
     public string full_name { get; set; } = string.Empty;
     public string parent_relation { get; set; } = string.Empty;
     public string? parent_name { get; set; }
@@ -15,7 +16,7 @@ public class ApplicationSubmissionRequest
     [Required(ErrorMessage = "Gender is required")]
     public string gender { get; set; } = string.Empty;
     public string citizenship { get; set; } = string.Empty;
-    public IFormFile applicant_photo { get; set; } = null!;
+    public IFormFile? applicant_photo { get; set; }
     public string address_perm { get; set; } = string.Empty;
     public string? address_corr { get; set; }
     public string email { get; set; } = string.Empty;
@@ -24,8 +25,9 @@ public class ApplicationSubmissionRequest
     
     // IDs
     public string gov_id_type { get; set; } = string.Empty;
+    public string? other_gov_id_type { get; set; }
     public string gov_id_number { get; set; } = string.Empty;
-    public IFormFile gov_id_upload { get; set; } = null!;
+    public IFormFile? gov_id_upload { get; set; }
     
     // Selected Categories
     public List<string>? cert_category { get; set; }
@@ -90,18 +92,19 @@ public class ApplicationSubmissionRequest
 
     // Section 13: Other Enclosure
     public IFormFile? other_enclosure { get; set; }
+    public string? enclosure_desc { get; set; }
 
     // Section 13a: Payment Details
     public decimal payment_amount { get; set; }
     public string payment_date { get; set; } = string.Empty;
     public string payment_utr { get; set; } = string.Empty;
-    public IFormFile payment_receipt { get; set; } = null!;
+    public IFormFile? payment_receipt { get; set; }
 
     // Section 14: Declaration & Signature
     public string decl_name { get; set; } = string.Empty;
     public string decl_date { get; set; } = string.Empty;
     public string? decl_place { get; set; }
-    public List<IFormFile>? Any_other_doc { get; set; } // This is signature
+    public IFormFile? signature_file { get; set; }
 
     public int? current_step { get; set; }
 }

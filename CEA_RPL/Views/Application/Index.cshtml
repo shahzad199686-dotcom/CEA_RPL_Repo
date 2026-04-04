@@ -64,7 +64,7 @@
     </div>
 </header>
 
-<div class="application-wrap">
+<div class="application-wrap @(isSubmitted ? "submitted-view" : "")">
     <!-- Sidebar Navigation -->
     @if (!isSubmitted)
     {
@@ -130,23 +130,142 @@
         
         @if (isSubmitted)
         {
-            <div id="submittedDashboard">
-                <div class="info-note-blue" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px; padding: 16px; background: #e0f2fe; color: #0369a1; border-radius: 12px; border: 1px solid #bae6fd;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <div>
-                        <strong style="display: block;">Application Locked</strong>
-                        <span style="font-size: 0.9rem;">This application has been submitted and can no longer be edited.</span>
+            <div id="submittedDashboard" class="dash-layout">
+                <!-- SaaS HERO BANNER -->
+                <div class="dash-hero-banner">
+                    <div class="hero-text">
+                        <p>Welcome back, @ViewBag.UserName</p>
+                        <h1>Your Application is Submitted! 🎉</h1>
+                        <p>Reference: <strong>@ViewBag.AppId</strong> • Filed on @(ViewBag.SubmittedAt ?? "Recently")</p>
+                    </div>
+                    <div class="status-badge-lg">
+                        <div class="pulse-dot"></div>
+                        @ViewBag.ApplicationStatus (LIVE)
                     </div>
                 </div>
 
-                <!-- Read-Only Summary Container -->
-                <div id="readOnlySummary" class="review-grid">
-                    <!-- Populated by JS -->
+                <div class="dash-main-grid">
+                    <!-- LEFT COLUMN (Main Content) -->
+                    <div style="display: flex; flex-direction: column; gap: 32px;">
+                        
+                        <!-- UPDATED HORIZONTAL TIMELINE -->
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                Submission Progress
+                            </div>
+                            <div class="timeline-container">
+                                <div class="timeline-node completed">
+                                    <div class="node-circle">✓</div>
+                                    <div class="node-label">Submitted</div>
+                                </div>
+                                <div class="timeline-node active">
+                                    <div class="node-circle">2</div>
+                                    <div class="node-label">Under<br>Review</div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="node-circle">3</div>
+                                    <div class="node-label">Auditor<br>Assigned</div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="node-circle">4</div>
+                                    <div class="node-label">Final<br>Decision</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEXT STEPS (STEP CARDS) -->
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                What happens next?
+                            </div>
+                            <div class="next-steps-grid">
+                                <div class="step-card">
+                                    <div class="step-number">01</div>
+                                    <div class="step-info">
+                                        <h4>Application Quality Check</h4>
+                                        <p>Our internal secretariat verifies your documents for technical completeness and accuracy.</p>
+                                    </div>
+                                </div>
+                                <div class="step-card">
+                                    <div class="step-number">02</div>
+                                    <div class="step-info">
+                                        <h4>Evidence Validation</h4>
+                                        <p>Expert auditors evaluate your professional experience and training credentials against standard benchmarks.</p>
+                                    </div>
+                                </div>
+                                <div class="step-card">
+                                    <div class="step-number">03</div>
+                                    <div class="step-info">
+                                        <h4>Final Notification</h4>
+                                        <p>Once the audit cycle is complete, you will receive your certification notification via email and your student portal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN (Side Panel) -->
+                    <div style="display: flex; flex-direction: column; gap: 32px;">
+                        
+                        <!-- QUICK ACTIONS -->
+                        <div class="dash-card">
+                            <div class="card-header">Actions</div>
+                            <div class="action-stack">
+                                <button class="btn-saas" onclick="document.getElementById('readOnlySummary').scrollIntoView({behavior: 'smooth'})">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#0F9D9A;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    View Full Application
+                                </button>
+                                <button class="btn-saas" style="opacity: 0.6; cursor: not-allowed;" title="Service currently merging">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#0F9D9A;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Download PDF
+                                </button>
+                                <button class="btn-saas" onclick="window.print()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#0F9D9A;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    Print Application
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- APPLICATION SUMMARY -->
+                        <div class="dash-card">
+                            <div class="card-header">Application Info</div>
+                            <div class="stats-list">
+                                <div class="stat-item">
+                                    <span class="stat-label">Reference ID</span>
+                                    <span class="stat-value">@ViewBag.AppId</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Applied Category</span>
+                                    <span class="stat-value">@ViewBag.AppliedCategories</span>
+                                </div>
+                                <div class="stat-item" style="border-left: 4px solid #4ade80;">
+                                    <span class="stat-label">Application Fee</span>
+                                    <span class="stat-value" style="color: #059669;">Verified (₹@((ViewBag.TotalAmount ?? 0).ToString("N0")))</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Doc Inventory</span>
+                                    <span class="stat-value">@ViewBag.DocCount Verified Files</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HELP CARD -->
+                        <div class="dash-card" style="background: #f8fafb; border: 1px dashed var(--line);">
+                            <h4 style="font-size: 1rem; margin-bottom: 12px; font-weight: 800;">Need Assistance?</h4>
+                            <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; line-height: 1.5;">Our support desk is available 24/7 for technical queries regarding your RPL application.</p>
+                            <a href="mailto:support@cearpl.org" class="btn btn-primary" style="width: 100%; text-align: center; border-radius: 12px; padding: 12px;">Contact Secretariat</a>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 40px; padding: 40px; background: var(--bg); border-radius: 20px; border: 2px dashed var(--line);">
-                    <p style="color: var(--muted); margin-bottom: 20px;">Need to make an urgent change? Contact support@cearpl.org</p>
-                    <button class="btn btn-ghost" onclick="window.print()">Print Application Summary</button>
+                <!-- FULL RECORD SECTION (Scroll target) -->
+                <div id="readOnlySummary" class="review-grid" style="margin-top: 60px; padding-top: 60px; border-top: 2px solid var(--bg);">
+                    <div class="card-header" style="font-size: 1.6rem; margin-bottom: 40px;">Detailed Submission Record</div>
+                    <!-- Populated by JS -->
                 </div>
             </div>
         }
@@ -154,6 +273,7 @@
         @if (!isSubmitted)
         {
         <form id="applicationForm" novalidate>
+            @Html.AntiForgeryToken()
             
             <!-- STEP 1: APPLICANT DETAILS -->
             <div class="form-section active" id="step-1">
@@ -792,7 +912,7 @@
 
                     <div class="description-box-wrap">
                         <label>Description</label>
-                        <textarea class="description-box" id="enclosure_desc" 
+                        <textarea class="description-box" id="enclosure_desc" name="enclosure_desc" 
                                   placeholder="Describe the enclosure you uploaded (maximum 200 words)"
                                   oninput="updateWordCount(this)"></textarea>
                         
@@ -1489,6 +1609,7 @@
         const safeRestore = (name, fn) => { try { fn(); } catch(e) { console.warn(`Restore failed for ${name}:`, e); } };
 
         safeRestore('Basic Fields', () => {
+            setVal('title', draftData.title);
             setVal('full_name', draftData.full_name);
             setVal('email', draftData.email);
             setVal('mobile', draftData.mobile);
@@ -1501,7 +1622,12 @@
             setVal('address_perm', draftData.address_perm);
             setVal('address_corr', draftData.address_corr);
             setVal('gov_id_type', draftData.gov_id_type);
+            setVal('other_gov_id_type', draftData.other_gov_id_type);
             setVal('gov_id_number', draftData.gov_id_number);
+            setVal('enclosure_desc', draftData.enclosure_desc);
+
+            // Trigger UI logic
+            if (typeof toggleGovIdUpload === 'function') toggleGovIdUpload();
         });
 
         safeRestore('Categories', () => {
@@ -1710,8 +1836,84 @@
                 form.addEventListener('input', autoSave);
                 form.addEventListener('change', autoSave);
             }
+
+            // Bind Final Submit
+            const finalBtn = document.getElementById('submitFinalApplicationBtn');
+            if (finalBtn) finalBtn.onclick = submitFinalApplication;
         }
     });
+
+    async function submitFinalApplication() {
+        // 1. Mandatory Steps Integrity Check (Scans all 14 steps for missing required fields)
+        for (let i = 1; i < totalSteps; i++) {
+            if (!validateSection(i)) {
+                currentStep = i;
+                updateUI();
+                showToast("Your application is incomplete. Please complete all mandatory sections first.", "error");
+                return;
+            }
+        }
+
+        // 2. Checklist confirmation check
+        const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
+        if (Array.from(mandatoryCbs).some(cb => !cb.checked)) {
+            showToast("Please confirm all mandatory documents are uploaded in the checklist (Step 15).", "error");
+            document.getElementById('checklistError').style.display = 'block';
+            return;
+        }
+
+        if (!confirm("Are you sure you want to submit your application? No further changes can be made.")) return;
+
+        const btn = document.getElementById('submitFinalApplicationBtn');
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Submitting...";
+
+        try {
+            const form = document.getElementById('applicationForm');
+            const formData = new FormData(form);
+
+            const response = await fetch('/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Show unified success overlay
+                document.getElementById('successOverlay').classList.add('active');
+            } else {
+                // Surface specific backend error messages (e.g., OTP not verified)
+                showToast(result.message || "Submission failed. Please check all fields.", "error");
+                btn.disabled = false;
+                btn.textContent = oldText;
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            showToast("Networking error. Please try again.", "error");
+            btn.disabled = false;
+            btn.textContent = oldText;
+        }
+    }
+
+    function validateChecklistState() {
+        const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
+        const submitBtn = document.getElementById('submitFinalApplicationBtn');
+        const errorMsg = document.getElementById('checklistError');
+        
+        const allChecked = Array.from(mandatoryCbs).every(cb => cb.checked);
+        
+        if (submitBtn) {
+            submitBtn.disabled = !allChecked;
+            submitBtn.style.opacity = allChecked ? '1' : '0.6';
+            submitBtn.style.cursor = allChecked ? 'pointer' : 'not-allowed';
+        }
+        
+        if (errorMsg) {
+            errorMsg.style.display = allChecked ? 'none' : 'block';
+        }
+    }
 
     function populateReviewSummary(isReadOnly = false) {
         const summary = document.getElementById(isReadOnly ? 'readOnlySummary' : 'reviewSummary');
@@ -1741,7 +1943,7 @@
                     ${editLink(1)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Full Name</dt><dd>${getData('full_name')}</dd></div>
+                    <div><dt>Full Name</dt><dd>${getData('title')} ${getData('full_name')}</dd></div>
                     <div><dt>Parent/Guardian</dt><dd>(${getData('parent_relation')}) ${getData('parent_name')}</dd></div>
                     <div><dt>Date of Birth</dt><dd>${getData('dob')}</dd></div>
                     <div><dt>Gender</dt><dd>${getData('gender')}</dd></div>
@@ -1798,6 +2000,114 @@
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 4: Professional Experience</h4>
+                    ${editLink(4)}
+                </div>
+                <div class="review-table-wrap">
+                    <table class="review-table">
+                        <thead><tr><th>Organization</th><th>Designation</th><th>Duration</th><th>Role</th><th>Doc</th></tr></thead>
+                        <tbody>
+                            ${Array.from(document.querySelectorAll('#experienceContainer .experience-card')).map(card => {
+                                const org = card.querySelector('[name="exp_org[]"]')?.value;
+                                if (!org) return '';
+                                return `<tr>
+                                    <td>${org}</td>
+                                    <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
+                                    <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
+                                    <td>${card.querySelector('[name="exp_nature[]"]')?.value || '-'}</td>
+                                    <td>${getFileStatus('exp_proof[]')}</td>
+                                </tr>`;
+                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 5: Projects -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h4>Step 5: Project Experience</h4>
+                    ${editLink(5)}
+                </div>
+                <div class="review-table-wrap">
+                    <table class="review-table">
+                        <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th></tr></thead>
+                        <tbody>
+                            ${Array.from(document.querySelectorAll('#projectContainerCat1 .project-card')).map(card => {
+                                const name = card.querySelector('[name="project_name_cat1[]"]')?.value;
+                                if (!name) return '';
+                                return `<tr>
+                                    <td>${name}</td>
+                                    <td>${card.querySelector('[name="project_client_cat1[]"]')?.value || '-'}</td>
+                                    <td>${card.querySelector('[name="project_location_cat1[]"]')?.value || '-'}</td>
+                                    <td>${card.querySelector('[name="project_year_cat1[]"]')?.value || '-'}</td>
+                                </tr>`;
+                            }).join('') || '<tr><td colspan="4" style="text-align:center; padding:12px; color:var(--ink-light);">No projects added.</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 6: Environmental Audit Reports -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h4>Step 6: Audit Reports</h4>
+                    ${editLink(6)}
+                </div>
+                <div class="review-dl">
+                    <div><dt>Report 1</dt><dd>${getFileStatus('audit_report')}</dd></div>
+                    <div><dt>Report 2</dt><dd>${getFileStatus('audit_report')}</dd></div>
+                </div>
+            </div>
+
+            <!-- Step 8: Training & Certification -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h4>Step 8: Training & Certification</h4>
+                    ${editLink(8)}
+                </div>
+                <div class="review-table-wrap">
+                    <table class="review-table">
+                        <thead><tr><th>Name</th><th>Institution</th><th>Year</th></tr></thead>
+                        <tbody>
+                            ${Array.from(document.querySelectorAll('#step-8 [name="training_name[]"]')).map((inp, i) => {
+                                if (!inp.value) return '';
+                                return `<tr>
+                                    <td>${inp.value}</td>
+                                    <td>${document.querySelectorAll('#step-8 [name="training_from[]"]')[i]?.value || '-'}</td>
+                                    <td>${document.querySelectorAll('#step-8 [name="training_year[]"]')[i]?.value || '-'}</td>
+                                </tr>`;
+                            }).join('') || '<tr><td colspan="3" style="text-align:center; padding:12px; color:var(--ink-light);">No records added.</td></tr>'}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 13: Payment Info -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h4>Step 13: Payment Details</h4>
+                    ${editLink(13)}
+                </div>
+                <div class="review-dl">
+                    <div><dt>Amount Paid</dt><dd>₹ ${getData('payment_amount')}</dd></div>
+                    <div><dt>Payment Date</dt><dd>${getData('payment_date')}</dd></div>
+                    <div><dt>UTR / Ref Number</dt><dd>${getData('payment_utr')}</dd></div>
+                    <div><dt>Receipt Proof</dt><dd>${getFileStatus('payment_receipt')}</dd></div>
+                </div>
+            </div>
+
+            <!-- Step 14: Declaration -->
+            <div class="review-section">
+                <div class="review-header">
+                    <h4>Step 14: Declaration</h4>
+                    ${editLink(14)}
+                </div>
+                <div class="review-dl">
+                    <div><dt>Signed By</dt><dd>${getData('decl_name')}</dd></div>
+                    <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
+                    <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
+                </div>
+            </div>
                     ${editLink(4)}
                 </div>
                 <div class="review-table-wrap">
@@ -2021,7 +2331,7 @@
                     <div><dt>Full Name</dt><dd>${getData('decl_name')}</dd></div>
                     <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
                     <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
-                    <div><dt>Signature</dt><dd>${getFileStatus('Any_other_doc')}</dd></div>
+                    <div><dt>Signature</dt><dd>${getFileStatus('signature_file')}</dd></div>
                 </div>
             </div>
         `;
@@ -2144,60 +2454,10 @@
             }
         });
 
-        // URGENT: Final Submit Button Click Handling
+        // Handle Final Submit Button Binding
         const submitBtn = document.getElementById("submitFinalApplicationBtn");
         if (submitBtn) {
-            submitBtn.addEventListener("click", async function () {
-                // 1. Mandatory Steps Integrity Check
-                for (let i = 1; i < totalSteps; i++) {
-                    if (!validateSection(i)) {
-                        currentStep = i;
-                        updateUI();
-                        showToast("Your application is incomplete. Please complete all mandatory sections first.", "error");
-                        return;
-                    }
-                }
-
-                // 2. Final Checklist Check (Step 15)
-                const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
-                if (Array.from(mandatoryCbs).some(cb => !cb.checked)) {
-                    showToast("Please confirm all mandatory documents are uploaded in the checklist.", "error");
-                    const err = document.getElementById('checklistError');
-                    if (err) err.style.display = 'block';
-                    return;
-                }
-
-                // 3. Loading State & UX
-                submitBtn.disabled = true;
-                submitBtn.innerText = "Submitting...";
-
-                // 4. Form Submission (Using AJAX /submit)
-                const form = document.getElementById("applicationForm");
-                const formData = new FormData(form);
-
-                try {
-                    const response = await fetch('/submit', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (response.ok) {
-                        // 5. Success UX - Show Confirmation Modal
-                        const modal = document.getElementById('successModal');
-                        if (modal) modal.classList.add('active');
-                    } else {
-                        const result = await response.json();
-                        showToast(result.message || "Submission failed. Please check for errors.", "error");
-                        submitBtn.disabled = false;
-                        submitBtn.innerText = "Submit Final Application";
-                    }
-                } catch (error) {
-                    console.error("Submission Error:", error);
-                    showToast("Something went wrong. Please try again or check your connection.", "error");
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Submit Final Application";
-                }
-            });
+            submitBtn.onclick = submitFinalApplication;
         }
 
         // Trigger Document Requirement Modal only after successful login/signup
@@ -2422,15 +2682,216 @@
     .modal-btns { width: 100%; flex-direction: column; }
     .modal-btns .btn { width: 100%; }
 }
-</style>
 
-<!-- Success Confirmation Modal (Submission) -->
-<div class="modal-overlay" id="successModal">
-    <div class="success-modal">
-        <div class="success-icon">✓</div>
+/* Premium Success Modal */
+.success-overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 10000;
+}
+.success-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+.success-card {
+    background: white; padding: 48px; border-radius: 32px; max-width: 500px; width: 90%;
+    text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.success-overlay.active .success-card { transform: translateY(0); }
+.success-icon-wrap {
+    width: 80px; height: 80px; background: #f0fdf9; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;
+    color: #0F9D9A; position: relative;
+}
+.success-card h2 { font-size: 24px; color: var(--ink); margin-bottom: 12px; font-weight: 800; }
+.success-card p { color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+.success-btn {
+    background: #0F9D9A; color: white; padding: 14px 32px; border-radius: 12px;
+    font-weight: 700; width: 100%; border: none; cursor: pointer; transition: all 0.2s;
+}
+.success-btn:hover { background: #0c807d; transform: translateY(-1px); }
+
+@@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- MODERN SaaS DASHBOARD STYLES --- */
+.dash-layout {
+    max-width: 1600px; /* Expanded for full-width feel */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 20px 0 80px; /* Removed side padding as parent wrap handles it */
+    animation: fadeIn 0.8s ease-out;
+}
+
+.dash-hero-banner {
+    background: linear-gradient(135deg, #0F9D9A 0%, #0a6b69 100%);
+    border-radius: 24px;
+    padding: 60px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(15, 157, 154, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dash-hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-text h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 12px; letter-spacing: -1px; }
+.hero-text p { font-size: 1.2rem; opacity: 0.9; font-weight: 500; margin: 0; }
+
+.status-badge-lg {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(12px);
+    padding: 12px 28px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 800; font-size: 1rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.pulse-dot {
+    width: 12px; height: 12px; background: #4ade80; border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    animation: pulse 2s infinite;
+}
+
+@@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.dash-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px; /* Slightly wider side panel for better balance */
+    gap: 40px; /* Increased gap for wide layout */
+    align-items: start;
+}
+
+.dash-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px; font-size: 1.3rem; font-weight: 850;
+    color: var(--ink);
+}
+
+.card-header svg { color: #0F9D9A; }
+
+/* Timeline Improvements */
+.timeline-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding: 20px 40px 0;
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 36px; left: 60px; right: 60px;
+    height: 4px; background: var(--bg);
+    z-index: 1;
+}
+
+.timeline-node {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px; position: relative; z-index: 2; flex: 1;
+}
+
+.node-circle {
+    width: 36px; height: 36px; background: white;
+    border: 4px solid var(--line); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: var(--muted); font-size: 0.85rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-node.completed .node-circle {
+    background: #0F9D9A; border-color: #0F9D9A; color: white;
+}
+
+.timeline-node.active .node-circle {
+    border-color: #0F9D9A; color: #0F9D9A;
+    background: #e6f6f5; transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(15, 157, 154, 0.3);
+}
+
+.node-label { font-size: 0.9rem; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.3; }
+.timeline-node.active .node-label { color: #0F9D9A; }
+
+/* Side Panel Modules */
+.stats-list { display: flex; flex-direction: column; gap: 16px; }
+.stat-item {
+    display: flex; flex-direction: column; gap: 4px; padding: 16px;
+    background: var(--bg); border-radius: 12px; border: 1px solid var(--line);
+}
+.stat-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 1rem; font-weight: 800; color: var(--ink); }
+
+.action-stack { display: flex; flex-direction: column; gap: 12px; }
+.btn-saas {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    background: white; border: 1px solid var(--line); border-radius: 14px;
+    font-weight: 700; color: var(--ink); transition: all 0.2s;
+    cursor: pointer; text-decoration: none;
+}
+.btn-saas:hover {
+    border-color: #0F9D9A; background: #f0fdfc; transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(15, 157, 154, 0.1);
+}
+.btn-saas i { font-size: 1.2rem; color: #0F9D9A; }
+
+.next-steps-grid { display: grid; gap: 20px; }
+.step-card {
+    display: flex; gap: 24px; padding: 24px;
+    background: #fcfdfd; border: 1px solid var(--line); border-radius: 16px;
+}
+.step-number {
+    width: 48px; height: 48px; background: #0F9D9A; color: white;
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 900; flex-shrink: 0;
+}
+.step-info h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
+.step-info p { font-size: 0.95rem; color: var(--muted); margin: 0; line-height: 1.6; }
+
+@@media (max-width: 1200px) {
+    .dash-main-grid { grid-template-columns: 1fr; }
+    .dash-hero-banner { padding: 40px; flex-direction: column; align-items: flex-start; gap: 24px; }
+    .hero-text h1 { font-size: 2.2rem; }
+}
+
+@@media (max-width: 768px) {
+    .timeline-container::before { display: none; }
+    .timeline-container { flex-direction: column; align-items: flex-start; padding: 0; gap: 32px; }
+    .timeline-node { flex-direction: row; width: 100%; border-left: 3px solid var(--bg); padding-left: 20px; align-items: center; }
+    .timeline-node.active { border-left-color: #0F9D9A; }
+}
+
+<!-- Success Confirmation Modal -->
+<div id="successOverlay" class="success-overlay">
+    <div class="success-card">
+        <div class="success-icon-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
         <h2>Application Submitted!</h2>
-        <p>Your application has been successfully submitted and is now under review. You will receive an email notification regarding the next steps.</p>
-        <button class="btn-success-modal" onclick="window.location.href='/'">Go to Dashboard</button>
+        <p>Your application for CEA RPL Certification has been successfully submitted. You can track your status on the dashboard.</p>
+        <button type="button" class="success-btn" onclick="window.location.reload()">Back to Dashboard</button>
     </div>
 </div>
 

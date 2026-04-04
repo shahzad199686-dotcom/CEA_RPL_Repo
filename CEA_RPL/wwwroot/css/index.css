@@ -41,7 +41,15 @@ body {
     gap: 40px;
     max-width: 1320px;
     margin: 0 auto;
-    padding: 124px 24px 120px; /* Increased top padding to prevent header overlay */
+    padding: 124px 24px 120px;
+    transition: all 0.3s ease;
+}
+
+.application-wrap.submitted-view {
+    grid-template-columns: 1fr;
+    max-width: 1600px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 @media (max-width: 1024px) {
