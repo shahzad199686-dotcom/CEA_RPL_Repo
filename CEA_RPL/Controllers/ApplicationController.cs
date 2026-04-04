@@ -66,6 +66,25 @@ public class ApplicationController : Controller
             return BadRequest(new { message = "You have already submitted an application." });
         }
 
+        // --- FILE VALIDATION ---
+        string fileError;
+        if (req.applicant_photo == null) return BadRequest(new { message = "Applicant photograph is required." });
+        if (!IsFileValid(req.applicant_photo, out fileError)) return BadRequest(new { message = fileError });
+
+        if (req.gov_id_upload == null) return BadRequest(new { message = "Government ID proof is required." });
+        if (!IsFileValid(req.gov_id_upload, out fileError)) return BadRequest(new { message = fileError });
+        if (req.other_enclosure != null && !IsFileValid(req.other_enclosure, out fileError)) return BadRequest(new { message = fileError });
+        if (req.payment_receipt != null && !IsFileValid(req.payment_receipt, out fileError)) return BadRequest(new { message = fileError });
+        if (req.Any_other_doc != null && req.Any_other_doc.Count > 0 && req.Any_other_doc[0] != null && !IsFileValid(req.Any_other_doc[0], out fileError)) return BadRequest(new { message = fileError });
+
+        if (req.edu_cert != null) foreach (var f in req.edu_cert) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.exp_proof != null) foreach (var f in req.exp_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.audit_report != null) foreach (var f in req.audit_report) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.training_proof != null) foreach (var f in req.training_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.membership_proof != null) foreach (var f in req.membership_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.paper_proof != null) foreach (var f in req.paper_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        // --- END FILE VALIDATION ---
+
 
         string? report1 = null;
         string? report2 = null;
@@ -89,8 +108,8 @@ public class ApplicationController : Controller
         if (req.Any_other_doc != null && req.Any_other_doc.Count > 0 && req.Any_other_doc[0] != null)
             signature = await _fileService.SaveFileAsync(req.Any_other_doc[0].OpenReadStream(), req.Any_other_doc[0].FileName);
 
-        var photoPath = await _fileService.SaveFileAsync(req.applicant_photo.OpenReadStream(), req.applicant_photo.FileName);
-        var govIdPath = await _fileService.SaveFileAsync(req.gov_id_upload.OpenReadStream(), req.gov_id_upload.FileName);
+        var photoPath = await _fileService.SaveFileAsync(req.applicant_photo!.OpenReadStream(), req.applicant_photo.FileName);
+        var govIdPath = await _fileService.SaveFileAsync(req.gov_id_upload!.OpenReadStream(), req.gov_id_upload.FileName);
 
         // --- MAPPING LOGIC (Symmetric for Submit & Draft) ---
         var applicant = existingApplicant ?? new Applicant { UserId = userId };
@@ -350,6 +369,22 @@ public class ApplicationController : Controller
         if (applicant != null && applicant.Status != "Draft")
             return BadRequest(new { message = "You have already submitted an application." });
 
+        // --- FILE VALIDATION ---
+        string fileError;
+        if (req.applicant_photo != null && !IsFileValid(req.applicant_photo, out fileError)) return BadRequest(new { message = fileError });
+        if (req.gov_id_upload != null && !IsFileValid(req.gov_id_upload, out fileError)) return BadRequest(new { message = fileError });
+        if (req.other_enclosure != null && !IsFileValid(req.other_enclosure, out fileError)) return BadRequest(new { message = fileError });
+        if (req.payment_receipt != null && !IsFileValid(req.payment_receipt, out fileError)) return BadRequest(new { message = fileError });
+        if (req.Any_other_doc != null && req.Any_other_doc.Count > 0 && req.Any_other_doc[0] != null && !IsFileValid(req.Any_other_doc[0], out fileError)) return BadRequest(new { message = fileError });
+
+        if (req.edu_cert != null) foreach (var f in req.edu_cert) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.exp_proof != null) foreach (var f in req.exp_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.audit_report != null) foreach (var f in req.audit_report) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.training_proof != null) foreach (var f in req.training_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.membership_proof != null) foreach (var f in req.membership_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        if (req.paper_proof != null) foreach (var f in req.paper_proof) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+        // --- END FILE VALIDATION ---
+
         if (applicant == null)
         {
             applicant = new Applicant { UserId = userId };
@@ -591,5 +626,43 @@ public class ApplicationController : Controller
                 utr = p.UtrNumber
             }).FirstOrDefault()
         });
+    }
+
+    private bool IsFileValid(IFormFile file, out string errorMessage)
+    {
+        errorMessage = "";
+        if (file == null || file.Length == 0) return true;
+
+        var fileName = file.FileName.ToLower();
+        var isImage = fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") || fileName.EndsWith(".png");
+        var isPdf = fileName.EndsWith(".pdf");
+
+        if (isImage)
+        {
+            if (file.Length > 2 * 1024 * 1024)
+            {
+                errorMessage = $"Image '{file.FileName}' exceeds 2MB limit.";
+                return false;
+            }
+        }
+        else if (isPdf)
+        {
+            if (file.Length > 10 * 1024 * 1024)
+            {
+                errorMessage = $"PDF '{file.FileName}' exceeds 10MB limit.";
+                return false;
+            }
+        }
+        else
+        {
+            // Default 10MB for other allowed types (like ZIP in other_enclosure)
+            if (file.Length > 10 * 1024 * 1024)
+            {
+                errorMessage = $"File '{file.FileName}' exceeds 10MB limit.";
+                return false;
+            }
+        }
+
+        return true;
     }
 }

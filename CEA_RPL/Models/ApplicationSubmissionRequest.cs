@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CEA_RPL.Models;
 
@@ -10,6 +11,8 @@ public class ApplicationSubmissionRequest
     public string parent_relation { get; set; } = string.Empty;
     public string? parent_name { get; set; }
     public string dob { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Gender is required")]
     public string gender { get; set; } = string.Empty;
     public string citizenship { get; set; } = string.Empty;
     public IFormFile applicant_photo { get; set; } = null!;

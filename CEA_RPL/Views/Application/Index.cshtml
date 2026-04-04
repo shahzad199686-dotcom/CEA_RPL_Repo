@@ -169,7 +169,7 @@
                                 <div class="preview-label-small">PROFILE PREVIEW</div>
                             </div>
 
-                            <input type="file" id="candidatePhotoInput" name="applicant_photo" accept=".jpg,.jpeg,.png" style="display:none;" />
+                            <input type="file" id="candidatePhotoInput" name="applicant_photo" accept=".jpg,.jpeg,.png" style="display:none;" onchange="validateFileUpload(this)" />
 
                             <div id="candidatePhotoUploadBox">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus" style="color: var(--accent);"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
@@ -244,8 +244,8 @@
                             <input name="dob" type="date" required />
                         </div>
                         <div class="col-4">
-                            <label>Gender</label>
-                            <select name="gender">
+                            <label>Gender <span class="req">*</span></label>
+                            <select name="gender" required>
                                 <option value="">Select</option>
                                 <option>Male</option>
                                 <option>Female</option>
@@ -290,7 +290,12 @@
                                 <option value="aadhaar">Aadhaar</option>
                                 <option value="pan">PAN</option>
                                 <option value="passport">Passport</option>
+                                <option value="other">Other (Please Specify)</option>
                             </select>
+                        </div>
+                        <div class="col-4" id="otherGovIdContainer" style="display: none;">
+                            <label>Specify ID Type <span class="req">*</span></label>
+                            <input type="text" id="otherGovIdType" name="other_gov_id_type" placeholder="Enter ID type" />
                         </div>
                         <div class="col-4">
                             <label id="govIdLabel">ID Number <span class="req">*</span></label>
@@ -298,8 +303,8 @@
                         </div>
                         <div class="col-4">
                             <label>Upload Selected ID Proof <span class="req">*</span></label>
-                            <input id="govIdUpload" name="gov_id_upload" type="file" accept=".jpg,.jpeg,.png,.pdf" required />
-                            <div class="identity-hint">JPG / PNG / PDF ≤ 2 MB.</div>
+                            <input id="govIdUpload" name="gov_id_upload" type="file" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
+                            <div class="identity-hint">Images (JPG, PNG) ≤ 2 MB | PDF ≤ 10 MB</div>
                         </div>
                     </div>
                 </div>
@@ -389,27 +394,14 @@
                                 <label class="edu-field-label">Degree</label>
                                 <select name="edu_degree[]" required>
                                     <option value="">Select</option>
-                                    <option>10th</option>
-                                    <option>12th</option>
-                                    <option>Diploma</option>
-                                    <option>Graduation</option>
-                                    <option>Post Graduation</option>
+                                    <option>Graduate</option>
+                                    <option>Post Graduate</option>
                                     <option>PhD</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="edu-field-label">Course</label>
-                                <select name="edu_discipline[]" required>
-                                    <option value="">Select</option>
-                                    <option>Science</option>
-                                    <option>Commerce</option>
-                                    <option>Arts</option>
-                                    <option>B.Tech</option>
-                                    <option>BCA</option>
-                                    <option>BBA</option>
-                                    <option>MBA</option>
-                                    <option>MCA</option>
-                                </select>
+                                <input type="text" name="edu_discipline[]" required placeholder="Enter your course (e.g., B.Tech, MBA, etc.)" />
                             </div>
                             <div>
                                 <label class="edu-field-label">Institution / University</label>
@@ -421,7 +413,8 @@
                             </div>
                             <div>
                                 <label class="edu-field-label">Certificate</label>
-                                <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required />
+                                <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
+                                <div class="file-validation-hint" style="font-size: 0.72rem; margin-top: 2px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
                             </div>
                         </div>
                     </div>
@@ -495,7 +488,8 @@
                                 </div>
                                 <div>
                                     <label class="field-label-premium">Certificate</label>
-                                    <input type="file" name="exp_proof[]" accept=".jpg,.jpeg,.png,.pdf" required />
+                                    <input type="file" name="exp_proof[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
+                                    <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
                                 </div>
                             </div>
 
@@ -564,8 +558,8 @@
                         <b style="font-weight: 600;">Upload 2 to 5 audit / study reports undertaken by the applicant in the applied category / categories. (Min. 2 – Max. 5)</b>
                     </div>
                     <div class="grid">
-                        <div class="col-6"><label>Report 1 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required /></div>
-                        <div class="col-6"><label>Report 2 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required /></div>
+                        <div class="col-6"><label>Report 1 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this)" /><div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF ONLY ≤ 10 MB</div></div>
+                        <div class="col-6"><label>Report 2 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this)" /><div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF ONLY ≤ 10 MB</div></div>
                     </div>
                 </div>
             </div>
@@ -603,7 +597,8 @@
                                     </div>
                                     <div>
                                         <label>Proof of Training</label>
-                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" />
+                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                     </div>
                                 </div>
                             </div>
@@ -642,7 +637,8 @@
                                     </div>
                                     <div>
                                         <label>Proof of Certificate</label>
-                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" />
+                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                     </div>
                                 </div>
                             </div>
@@ -708,7 +704,8 @@
                                 
                                 <div class="membership-file-wrap">
                                     <label>Proof of Membership</label>
-                                    <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" />
+                                    <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                 </div>
                             </div>
                         </div>
@@ -750,7 +747,8 @@
                                 </div>
                                 <div class="membership-file-wrap">
                                     <label>Upload Proof of Paper</label>
-                                    <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" />
+                                    <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                 </div>
                             </div>
                         </div>
@@ -789,8 +787,8 @@
                 <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2><span class="section-status">Pending</span></div>
                 <div class="section-content">
                     <label>Upload additional supporting documents (if any)</label>
-                    <input type="file" name="other_enclosure" accept=".pdf,.zip,.rar" />
-                    <span class="hint">PDF/ZIP/RAR, max 5MB</span>
+                    <input type="file" name="other_enclosure" accept=".pdf,.zip,.rar" onchange="validateFileUpload(this)" />
+                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF / ZIP ≤ 10 MB</div>
 
                     <div class="description-box-wrap">
                         <label>Description</label>
@@ -870,8 +868,8 @@
                         </div>
                         <div class="col-12" style="margin-top: 12px;">
                             <label>Upload Payment Receipt / Proof <span class="req">*</span></label>
-                            <input name="payment_receipt" id="payment_receipt" type="file" accept=".pdf,.jpg,.png" required onchange="validatePaymentStep()" />
-                            <span class="hint">Accepts PDF / JPG / PNG, Max 2MB.</span>
+                             <input name="payment_receipt" id="payment_receipt" type="file" accept=".pdf,.jpg,.png" required onchange="validateFileUpload(this); validatePaymentStep();" />
+                             <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">Image ≤ 2 MB | PDF ≤ 10 MB</div>
                         </div>
                     </div>
 
@@ -899,7 +897,11 @@
                         <div class="col-6"><label>Full Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type your full name" /></div>
                         <div class="col-6"><label>Place</label><input type="text" name="decl_place" placeholder="City" /></div>
                         <div class="col-6"><label>Date <span class="req">*</span></label><input type="date" name="decl_date" required /></div>
-                        <div class="col-6"><label>Signature File (Upload Image) <span class="req">*</span></label><input type="file" name="Any_other_doc" accept=".jpg,.jpeg,.png" required /></div>
+                        <div class="col-6">
+                            <label>Signature File (Upload Image) <span class="req">*</span></label>
+                            <input type="file" name="signature_file" accept=".jpg,.jpeg,.png" required onchange="validateFileUpload(this)" />
+                            <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">JPG / PNG ≤ 2 MB</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -991,7 +993,7 @@
         <h3>Resume Application?</h3>
         <p id="resumePromptText">We found an incomplete application from your last session. Would you like to continue where you left off or start a new application?</p>
         <div class="resume-actions">
-            <button type="button" class="btn btn-primary" onclick="confirmResume()">Resume Application</button>
+            <button type="button" id="btnResume" class="btn btn-primary" onclick="confirmResume()">Resume Application</button>
             <button type="button" class="btn btn-ghost" onclick="startNew()">Start New</button>
         </div>
     </div>
@@ -1002,6 +1004,24 @@
     let currentStep = 1;
     let maxReachedStep = 1; 
     const totalSteps = 15;
+
+    // Helper to set field value safely (used by Resume logic)
+    const setVal = (name, val) => {
+        if (val === null || val === undefined) return;
+        const form = document.getElementById('applicationForm');
+        if (!form) return;
+        const input = form.querySelector(`[name="${name}"]`);
+        if (input) {
+            if (input.type === 'checkbox') input.checked = !!val;
+            else if (input.type === 'radio') {
+                const radio = form.querySelector(`[name="${name}"][value="${val}"]`);
+                if (radio) radio.checked = true;
+            } else input.value = val;
+            
+            // Trigger change for fields with dynamic logic (like Gov ID)
+            input.dispatchEvent(new Event('change'));
+        }
+    };
     const stepNames = [
         "Applicant Details",
         "Category of Certification Applied For",
@@ -1449,220 +1469,215 @@
         } catch (e) { console.log('No draft found'); }
     }
 
-    function confirmResume() {
+    async function confirmResume() {
         if (!draftData) return;
         
-        // 1. Restore current step
-        currentStep = draftData.current_step || 1;
-        maxReachedStep = Math.max(maxReachedStep, currentStep);
+        const btn = document.getElementById('btnResume');
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Resuming...';
+
+        try {
+            // 1. Restore current step
+            currentStep = draftData.current_step || 1;
+            maxReachedStep = Math.max(maxReachedStep, currentStep);
+            
+            // 2. Populate basic fields
+            const form = document.getElementById('applicationForm');
         
-        // 2. Populate basic fields
-        const form = document.getElementById('applicationForm');
-        
-        // Helper to set field value safely
-        const setVal = (name, val) => {
-            if (val === null || val === undefined) return;
-            const input = form.querySelector(`[name="${name}"]`);
-            if (input) {
-                if (input.type === 'checkbox') input.checked = !!val;
-                else if (input.type === 'radio') {
-                    const radio = form.querySelector(`[name="${name}"][value="${val}"]`);
-                    if (radio) radio.checked = true;
-                } else input.value = val;
+        // Segregate restorations into try-catch blocks so one failure doesn't break everything
+        const safeRestore = (name, fn) => { try { fn(); } catch(e) { console.warn(`Restore failed for ${name}:`, e); } };
+
+        safeRestore('Basic Fields', () => {
+            setVal('full_name', draftData.full_name);
+            setVal('email', draftData.email);
+            setVal('mobile', draftData.mobile);
+            setVal('alt_mobile', draftData.alt_mobile);
+            setVal('gender', draftData.gender);
+            setVal('dob', draftData.dob);
+            setVal('parent_relation', draftData.parent_relation);
+            setVal('parent_name', draftData.parent_name);
+            setVal('citizenship', draftData.citizenship);
+            setVal('address_perm', draftData.address_perm);
+            setVal('address_corr', draftData.address_corr);
+            setVal('gov_id_type', draftData.gov_id_type);
+            setVal('gov_id_number', draftData.gov_id_number);
+        });
+
+        safeRestore('Categories', () => {
+            if (draftData.categories) {
+                document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
+                    cb.checked = draftData.categories.includes(cb.value);
+                });
             }
-        };
+        });
 
-        setVal('full_name', draftData.full_name);
-        setVal('email', draftData.email);
-        setVal('mobile', draftData.mobile);
-        setVal('alt_mobile', draftData.alt_mobile);
-        setVal('gender', draftData.gender);
-        setVal('dob', draftData.dob);
-        setVal('parent_relation', draftData.parent_relation);
-        setVal('parent_name', draftData.parent_name);
-        setVal('citizenship', draftData.citizenship);
-        setVal('address_perm', draftData.address_perm);
-        setVal('address_corr', draftData.address_corr);
-        setVal('gov_id_type', draftData.gov_id_type);
-        setVal('gov_id_number', draftData.gov_id_number);
-
-        // 3. Populate Categories (Multi-checkbox)
-        if (draftData.categories) {
-            document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
-                cb.checked = draftData.categories.includes(cb.value);
-            });
-        }
-
-        // 4. Restore Dynamic Collections (Education)
-        if (draftData.educations && draftData.educations.length > 0) {
-            const eduContainer = document.getElementById('educationContainer');
-            if (eduContainer) {
-                const existingRows = eduContainer.querySelectorAll('.education-row');
-                for (let i = existingRows.length; i < draftData.educations.length; i++) {
-                    addEducationRow();
+        safeRestore('Education', () => {
+            if (draftData.educations && draftData.educations.length > 0) {
+                const eduContainer = document.getElementById('educationContainer');
+                if (eduContainer) {
+                    const existingRows = eduContainer.querySelectorAll('.education-row');
+                    for (let i = existingRows.length; i < draftData.educations.length; i++) addEducationRow();
+                    const rows = eduContainer.querySelectorAll('.education-row');
+                    draftData.educations.forEach((edu, i) => {
+                        const row = rows[i];
+                        if (row) {
+                            row.querySelector('[name="edu_degree[]"]').value = edu.degree || "";
+                            row.querySelector('[name="edu_discipline[]"]').value = edu.discipline || "";
+                            row.querySelector('[name="edu_institution[]"]').value = edu.institution || "";
+                            row.querySelector('[name="edu_year[]"]').value = edu.year || "";
+                        }
+                    });
                 }
+            }
+        });
+
+        safeRestore('Experience', () => {
+            if (draftData.experiences && draftData.experiences.length > 0) {
+                const expContainer = document.getElementById('experienceContainer');
+                if (expContainer) {
+                    const existingCards = expContainer.querySelectorAll('.experience-card');
+                    for (let i = existingCards.length; i < draftData.experiences.length; i++) addExperienceRow();
+                    const cards = expContainer.querySelectorAll('.experience-card');
+                    draftData.experiences.forEach((exp, i) => {
+                        const card = cards[i];
+                        if (card) {
+                            card.querySelector('[name="exp_org[]"]').value = exp.org || "";
+                            card.querySelector('[name="exp_designation[]"]').value = exp.designation || "";
+                            card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
+                            const durationHidden = card.querySelector('.exp-duration-hidden');
+                            if (durationHidden) durationHidden.value = exp.duration || "";
+                        }
+                    });
+                }
+            }
+        });
+
+        safeRestore('Projects', () => {
+            if (draftData.projects && draftData.projects.length > 0) {
+                const projContainer = document.getElementById('projectContainerCat1');
+                if (projContainer) {
+                    const existing = projContainer.querySelectorAll('.project-card');
+                    for (let i = existing.length; i < draftData.projects.length; i++) addProjectRow();
+                    const cards = projContainer.querySelectorAll('.project-card');
+                    draftData.projects.forEach((proj, i) => {
+                        const card = cards[i];
+                        if (card) {
+                            card.querySelector('[name="project_name_cat1[]"]').value = proj.name || "";
+                            card.querySelector('[name="project_client_cat1[]"]').value = proj.client || "";
+                            card.querySelector('[name="project_location_cat1[]"]').value = proj.location || "";
+                            card.querySelector('[name="project_year_cat1[]"]').value = proj.year || "";
+                            card.querySelector('[name="project_role_cat1[]"]').value = proj.role || "";
+                        }
+                    });
+                }
+            }
+        });
+
+        safeRestore('Trainings', () => {
+            if (draftData.trainings && draftData.trainings.length > 0) {
+                const tCont = document.getElementById('trainingRowsContainer');
+                const cCont = document.getElementById('certificationRowsContainer');
                 
-                const rows = eduContainer.querySelectorAll('.education-row');
-                draftData.educations.forEach((edu, i) => {
+                // For simplicity, we fill existing and add to the first container if overflow.
+                // But Step 7 uses a shared name for two tables. We'll handle order.
+                const topicInputs = document.querySelectorAll('#step-7 [name="training_name[]"]');
+                const fromInputs = document.querySelectorAll('#step-7 [name="training_from[]"]');
+                const durInputs = document.querySelectorAll('#step-7 [name="training_duration[]"]');
+                const yearInputs = document.querySelectorAll('#step-7 [name="training_year[]"]');
+                
+                draftData.trainings.forEach((t, i) => {
+                    if (topicInputs[i]) {
+                        topicInputs[i].value = t.name || "";
+                        if (fromInputs[i]) fromInputs[i].value = t.from || "";
+                        if (durInputs[i]) durInputs[i].value = t.duration || "";
+                        if (yearInputs[i]) yearInputs[i].value = t.year || "";
+                    }
+                });
+            }
+        });
+
+        safeRestore('Memberships', () => {
+            if (draftData.memberships && draftData.memberships.length > 0) {
+                const container = document.getElementById('membershipContainer');
+                const existing = container.querySelectorAll('.membership-row');
+                for (let i = existing.length; i < draftData.memberships.length; i++) addMembershipRow();
+                const rows = container.querySelectorAll('.membership-row');
+                draftData.memberships.forEach((m, i) => {
                     const row = rows[i];
                     if (row) {
-                        row.querySelector('[name="edu_degree[]"]').value = edu.degree || "";
-                        row.querySelector('[name="edu_discipline[]"]').value = edu.discipline || "";
-                        row.querySelector('[name="edu_institution[]"]').value = edu.institution || "";
-                        row.querySelector('[name="edu_year[]"]').value = edu.year || "";
+                        row.querySelector('[name="membership_name[]"]').value = m.name || "";
+                        row.querySelector('[name="membership_from[]"]').value = m.from || "";
+                        row.querySelector('[name="membership_year[]"]').value = m.year || "";
+                        const dur = row.querySelector('.membership-duration-hidden');
+                        if (dur) dur.value = m.duration || "";
                     }
                 });
             }
-        }
+        });
 
-        // 5. Restore Professional Experience
-        if (draftData.experiences && draftData.experiences.length > 0) {
-            const expContainer = document.getElementById('experienceContainer');
-            if (expContainer) {
-                const existingCards = expContainer.querySelectorAll('.experience-card');
-                for (let i = existingCards.length; i < draftData.experiences.length; i++) {
-                    addExperienceRow();
-                }
-                const cards = expContainer.querySelectorAll('.experience-card');
-                draftData.experiences.forEach((exp, i) => {
-                    const card = cards[i];
-                    if (card) {
-                        card.querySelector('[name="exp_org[]"]').value = exp.org || "";
-                        card.querySelector('[name="exp_designation[]"]').value = exp.designation || "";
-                        card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
-                        // Duration is a combined hidden field, but we should also ideally split it back to Month/Year dropdowns if needed.
-                        // For now, we set the hidden field so it's ready for save.
-                        const durationHidden = card.querySelector('.exp-duration-hidden');
-                        if (durationHidden) durationHidden.value = exp.duration || "";
+        safeRestore('Awards', () => {
+             if (draftData.awards && draftData.awards.length > 0) {
+                const tbody = document.querySelector('#awardTable tbody');
+                const existing = tbody.querySelectorAll('tr');
+                for (let i = existing.length; i < draftData.awards.length; i++) addGenericRow('awardTable');
+                const rows = tbody.querySelectorAll('tr');
+                draftData.awards.forEach((a, i) => {
+                    const row = rows[i];
+                    if (row) {
+                        row.querySelector('[name="award_name[]"]').value = a.name || "";
+                        row.querySelector('[name="award_from[]"]').value = a.from || "";
+                        row.querySelector('[name="award_year[]"]').value = a.year || "";
                     }
                 });
             }
-        }
+        });
 
-        // 6. Restore Project Experience
-        if (draftData.projects && draftData.projects.length > 0) {
-            const projContainer = document.getElementById('projectContainerCat1');
-            if (projContainer) {
-                const existing = projContainer.querySelectorAll('.project-card');
-                for (let i = existing.length; i < draftData.projects.length; i++) {
-                    addProjectRow();
-                }
-                const cards = projContainer.querySelectorAll('.project-card');
-                draftData.projects.forEach((proj, i) => {
-                    const card = cards[i];
-                    if (card) {
-                        card.querySelector('[name="project_name_cat1[]"]').value = proj.name || "";
-                        card.querySelector('[name="project_client_cat1[]"]').value = proj.client || "";
-                        card.querySelector('[name="project_location_cat1[]"]').value = proj.location || "";
-                        card.querySelector('[name="project_year_cat1[]"]').value = proj.year || "";
-                        card.querySelector('[name="project_role_cat1[]"]').value = proj.role || "";
+        safeRestore('Software Skills', () => {
+            if (draftData.software_skills && draftData.software_skills.length > 0) {
+                const tbody = document.querySelector('#softwareTable tbody');
+                const existingRows = tbody.querySelectorAll('tr');
+                for (let i = existingRows.length; i < draftData.software_skills.length; i++) addGenericRow('softwareTable');
+                const rows = tbody.querySelectorAll('tr');
+                draftData.software_skills.forEach((skill, i) => {
+                    const row = rows[i];
+                    if (row) {
+                        row.querySelector('[name="software_skill[]"]').value = skill.skill || "";
+                        row.querySelector('[name="proficiency_level[]"]').value = skill.level || "";
                     }
                 });
             }
-        }
+        });
 
-        // 7. Restore Trainings & Certifications (Step 7)
-        if (draftData.trainings && draftData.trainings.length > 0) {
-            const allTrainingInputs = document.querySelectorAll('#step-7 [name="training_name[]"]');
-            // This is tricky because we have two containers. We'll just add rows to the first one for now if needed.
-            // Or better: restore to all matching inputs in order.
-            const topicInputs = document.querySelectorAll('#step-7 [name="training_name[]"]');
-            const fromInputs = document.querySelectorAll('#step-7 [name="training_from[]"]');
-            const durInputs = document.querySelectorAll('#step-7 [name="training_duration[]"]');
-            const yearInputs = document.querySelectorAll('#step-7 [name="training_year[]"]');
+        safeRestore('Payment', () => {
+            if (draftData.payment) {
+                setVal('payment_amount', draftData.payment.amount);
+                setVal('payment_date', draftData.payment.date);
+                setVal('payment_utr', draftData.payment.utr);
+                if (typeof calculateTotalFee === 'function') calculateTotalFee();
+            }
+        });
+
+        } catch(e) {
+            console.error('Critical error during resume:', e);
+            showToast("Resume encountered errors, but some data may have been restored.", "error");
+        } finally {
+            // ALWAYS hide the modal first to unblock the UI
+            const overlay = document.getElementById('resumeOverlay');
+            if (overlay) overlay.classList.add('hide');
             
-            draftData.trainings.forEach((t, i) => {
-                if (topicInputs[i]) {
-                    topicInputs[i].value = t.name || "";
-                    if (fromInputs[i]) fromInputs[i].value = t.from || "";
-                    if (durInputs[i]) durInputs[i].value = t.duration || "";
-                    if (yearInputs[i]) yearInputs[i].value = t.year || "";
-                }
-            });
-        }
+            // Re-enable button
+            btn.disabled = false;
+            btn.textContent = oldText;
 
-        // 8. Restore Memberships
-        if (draftData.memberships && draftData.memberships.length > 0) {
-            const container = document.getElementById('membershipContainer');
-            const existing = container.querySelectorAll('.membership-row');
-            for (let i = existing.length; i < draftData.memberships.length; i++) addMembershipRow();
-            const rows = container.querySelectorAll('.membership-row');
-            draftData.memberships.forEach((m, i) => {
-                const row = rows[i];
-                if (row) {
-                    row.querySelector('[name="membership_name[]"]').value = m.name || "";
-                    row.querySelector('[name="membership_from[]"]').value = m.from || "";
-                    row.querySelector('[name="membership_year[]"]').value = m.year || "";
-                    row.querySelector('.membership-duration-hidden').value = m.duration || "";
-                }
-            });
-        }
-
-        // 9. Restore Publications
-        if (draftData.papers && draftData.papers.length > 0) {
-            const container = document.getElementById('publicationContainer');
-            const existing = container.querySelectorAll('.publication-row');
-            for (let i = existing.length; i < draftData.papers.length; i++) addPublicationRow();
-            const rows = container.querySelectorAll('.publication-row');
-            draftData.papers.forEach((p, i) => {
-                const row = rows[i];
-                if (row) {
-                    row.querySelector('[name="paper_name[]"]').value = p.name || "";
-                    row.querySelector('[name="paper_place[]"]').value = p.place || "";
-                    row.querySelector('[name="paper_year[]"]').value = p.year || "";
-                    row.querySelector('[name="paper_role[]"]').value = p.role || "";
-                }
-            });
-        }
-
-        // 10. Restore Awards
-        if (draftData.awards && draftData.awards.length > 0) {
-            const table = document.getElementById('awardTable');
-            const tbody = table.querySelector('tbody');
-            const existing = tbody.querySelectorAll('tr');
-            for (let i = existing.length; i < draftData.awards.length; i++) addGenericRow('awardTable');
-            const rows = tbody.querySelectorAll('tr');
-            draftData.awards.forEach((a, i) => {
-                const row = rows[i];
-                if (row) {
-                    row.querySelector('[name="award_name[]"]').value = a.name || "";
-                    row.querySelector('[name="award_from[]"]').value = a.from || "";
-                    row.querySelector('[name="award_year[]"]').value = a.year || "";
-                }
-            });
-        }
-
-        // 11. Restore Software Skills
-        if (draftData.software_skills && draftData.software_skills.length > 0) {
-            const table = document.getElementById('softwareTable');
-            const tbody = table.querySelector('tbody');
-            const existingRows = tbody.querySelectorAll('tr');
-            for (let i = existingRows.length; i < draftData.software_skills.length; i++) {
-                addGenericRow('softwareTable');
+            // Safe UI updates
+            try {
+                updateUI();
+                showToast("Application restored from draft.", "success");
+            } catch(uiError) {
+                console.error('UI Update failed after resume:', uiError);
             }
-            
-            const rows = tbody.querySelectorAll('tr');
-            draftData.software_skills.forEach((skill, i) => {
-                const row = rows[i];
-                if (row) {
-                    row.querySelector('[name="software_skill[]"]').value = skill.skill || "";
-                    row.querySelector('[name="proficiency_level[]"]').value = skill.level || "";
-                }
-            });
         }
-
-        // 12. Restore Payment Info
-        if (draftData.payment) {
-            setVal('payment_amount', draftData.payment.amount);
-            setVal('payment_date', draftData.payment.date);
-            setVal('payment_utr', draftData.payment.utr);
-            calculateTotalFee(); // Trigger summary recalculation
-        }
-
-        // Finalize UI
-        updateUI();
-        document.getElementById('resumeOverlay').classList.add('hide');
-        showToast("Application restored from draft.", "success");
     }
 
     function startNew() {
@@ -2020,16 +2035,55 @@
         validateChecklistState();
     }
 
-    function validateChecklistState() {
-        const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
-        const submitBtn = document.getElementById('btnSubmitApp') || document.getElementById('submitFinalApplicationBtn');
-        const errorMsg = document.getElementById('checklistError');
-        
-        if (!mandatoryCbs.length || !submitBtn) return;
-        
-        const allChecked = Array.from(mandatoryCbs).every(cb => cb.checked);
-        submitBtn.disabled = !allChecked;
-        if (errorMsg) errorMsg.style.display = allChecked ? 'none' : 'block';
+    function validateFileUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const fileName = file.name.toLowerCase();
+        const fileSize = file.size;
+        const isImage = /\.(jpg|jpeg|png)$/.test(fileName);
+        const isPdf = /\.pdf$/.test(fileName);
+
+        let isValid = true;
+        let errorMsg = "";
+        let limitMsg = "";
+
+        if (isImage) {
+            if (fileSize > 2 * 1024 * 1024) {
+                isValid = false;
+                errorMsg = "Image must be less than 2 MB";
+            }
+            limitMsg = "Max size: 2 MB (Image)";
+        } else if (isPdf) {
+            if (fileSize > 10 * 1024 * 1024) {
+                isValid = false;
+                errorMsg = "PDF must be less than 10 MB";
+            }
+            limitMsg = "Max size: 10 MB (PDF)";
+        } else {
+            if (fileSize > 10 * 1024 * 1024) {
+                isValid = false;
+                errorMsg = "File must be less than 10 MB";
+            }
+            limitMsg = "Max size: 10 MB";
+        }
+
+        let hint = input.parentNode.querySelector('.file-validation-hint, .identity-hint');
+        if (!hint) {
+            hint = document.createElement('div');
+            hint.className = 'file-validation-hint';
+            hint.style.fontSize = '0.75rem';
+            hint.style.marginTop = '4px';
+            input.parentNode.appendChild(hint);
+        }
+
+        if (!isValid) {
+            showToast(errorMsg, "error");
+            input.value = "";
+            hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${errorMsg}</span>`;
+        } else {
+            hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ${limitMsg}</span>`;
+        }
     }
 
     function previewPhoto(event) {
@@ -2044,8 +2098,24 @@
 
     function toggleGovIdUpload() {
         const type = document.getElementById('govIdType')?.value;
+        const otherContainer = document.getElementById('otherGovIdContainer');
+        const otherInput = document.getElementById('otherGovIdType');
         const label = document.getElementById('govIdLabel');
-        if (label) label.textContent = (type === 'aadhaar' ? 'Aadhaar' : (type === 'pan' ? 'PAN' : 'Passport')) + ' Number *';
+        
+        if (otherContainer && otherInput) {
+            if (type === 'other') {
+                otherContainer.style.display = 'block';
+                otherInput.required = true;
+            } else {
+                otherContainer.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+            }
+        }
+        
+        if (label) {
+            label.textContent = (type === 'aadhaar' ? 'Aadhaar' : (type === 'pan' ? 'PAN' : (type === 'passport' ? 'Passport' : 'ID'))) + ' Number *';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
