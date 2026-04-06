@@ -650,41 +650,42 @@ public class ApplicationController : Controller
         bool check(string? val, bool isDesc) => IsMeaningfulText(val ?? "", isDesc);
         bool checkList(List<string>? list, bool isDesc) => list == null || list.All(x => IsMeaningfulText(x ?? "", isDesc));
 
-        if (!check(req.full_name, false)) errors.Add("Full Name");
+        if (!check(req.full_name, false)) errors.Add("Applicant Full Name");
         if (!check(req.parent_relation, false)) errors.Add("Parent Relation");
         if (!check(req.parent_name, false)) errors.Add("Parent Name");
         if (!check(req.other_gov_id_type, false)) errors.Add("Other Gov ID Type");
 
-        if (!checkList(req.edu_institution, false)) errors.Add("Education Institution");
-        if (!checkList(req.exp_org, false)) errors.Add("Experience Organization");
-        if (!checkList(req.exp_designation, false)) errors.Add("Experience Designation / Proof Type");
-        if (!checkList(req.exp_nature, true)) errors.Add("Experience Role Description");
-        if (!checkList(req.ref2_name, false)) errors.Add("Reference Name");
+        if (!checkList(req.edu_institution, false)) errors.Add("Education Institution Name");
+        if (!checkList(req.exp_org, false)) errors.Add("Professional Experience Organization Name");
+        if (!checkList(req.exp_designation, false)) errors.Add("Professional Experience Designation");
+        if (!checkList(req.exp_nature, true)) errors.Add("Professional Experience Role Description");
+        if (!checkList(req.ref2_name, false)) errors.Add("Professional Experience Reference Name");
         
-        if (!checkList(req.project_name_cat1, false)) errors.Add("Project Name");
-        if (!checkList(req.project_client_cat1, false)) errors.Add("Project Client");
-        if (!checkList(req.project_location_cat1, false)) errors.Add("Project Location");
-        if (!checkList(req.project_role_cat1, false)) errors.Add("Project Role");
+        if (!checkList(req.project_name_cat1, false)) errors.Add("Project Experience Title");
+        if (!checkList(req.project_client_cat1, false)) errors.Add("Project Experience Client name");
+        if (!checkList(req.project_location_cat1, false)) errors.Add("Project Experience Location");
+        if (!checkList(req.project_role_cat1, false)) errors.Add("Project Experience Role");
 
-        if (!checkList(req.training_name, false)) errors.Add("Training Name");
-        if (!checkList(req.training_from, false)) errors.Add("Training Institute");
+        if (!checkList(req.training_name, false)) errors.Add("Training or Certification Name");
+        if (!checkList(req.training_from, false)) errors.Add("Training Institute Name");
         
-        if (!checkList(req.membership_name, false)) errors.Add("Membership Name");
-        if (!checkList(req.membership_from, false)) errors.Add("Membership Institute");
+        if (!checkList(req.membership_name, false)) errors.Add("Professional Membership Name");
+        if (!checkList(req.membership_from, false)) errors.Add("Professional Membership Institute");
         
-        if (!checkList(req.paper_name, false)) errors.Add("Publication Title");
-        if (!checkList(req.paper_place, false)) errors.Add("Publication Place");
-        if (!checkList(req.paper_role, false)) errors.Add("Publication Role");
+        if (!checkList(req.paper_name, false)) errors.Add("Scientific Publication Title");
+        if (!checkList(req.paper_place, false)) errors.Add("Scientific Publication Place");
+        if (!checkList(req.paper_role, false)) errors.Add("Scientific Publication Role");
         
-        if (!checkList(req.award_name, false)) errors.Add("Award Name");
-        if (!checkList(req.award_from, false)) errors.Add("Award From");
+        if (!checkList(req.award_name, false)) errors.Add("Award or Recognition Title");
+        if (!checkList(req.award_from, false)) errors.Add("Award From or Authority Name");
 
-        if (!checkList(req.software_skill, false)) errors.Add("Software Skill");
+        if (!checkList(req.software_skill, false)) errors.Add("Software Skill Name");
 
-        if (!check(req.enclosure_desc, true)) errors.Add("Enclosure Description");
-        if (!check(req.decl_name, false)) errors.Add("Declaration Name");
-        if (!check(req.decl_place, false)) errors.Add("Declaration Place");
+        if (!check(req.enclosure_desc, true)) errors.Add("Other Enclosure Description");
+        if (!check(req.decl_name, false)) errors.Add("Declaration Signature Name");
+        if (!check(req.decl_place, false)) errors.Add("Declaration Place Name");
 
         return errors;
     }
+
 }

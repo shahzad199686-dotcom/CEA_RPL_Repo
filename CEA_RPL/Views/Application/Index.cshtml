@@ -1200,35 +1200,118 @@
     }
 
     const validationMetadata = {
-        'full_name': { label: 'Full Name', error: 'Please enter your full name as per government records.', example: 'Example: Rahul Sharma' },
-        'parent_relation': { label: 'Parent Relation', error: 'Please select your relationship with the parent/guardian.', example: 'Example: Father' },
-        'parent_name': { label: 'Parent Name', error: 'Please enter the name of your parent or guardian.', example: 'Example: Vijay Sharma' },
-        'email': { label: 'Email ID', error: 'Please enter a valid email address.', example: 'Example: rahul.sharma@email.com' },
-        'mobile': { label: 'Mobile Number', error: 'Please enter a valid 10-digit mobile number.', example: 'Example: 9876543210' },
-        'dob': { label: 'Date of Birth', error: 'Please select your date of birth.', example: 'Format: DD-MM-YYYY' },
-        'gender': { label: 'Gender', error: 'Please select your gender.', example: 'Example: Male' },
-        'citizenship': { label: 'Citizenship', error: 'Please select your citizenship.', example: 'Only Indian citizens are eligible' },
-        'address_perm': { label: 'Permanent Address', error: 'Please enter your complete permanent address.', example: 'Example: 123, Park Street, Kolkata, WB - 700016' },
-        'address_corr': { label: 'Correspondence Address', error: 'Please enter your correspondence address.', example: 'Example: Same as above' },
-        'gov_id_type': { label: 'ID Type', error: 'Please select a government-approved identity proof.', example: 'Example: Aadhaar Card' },
-        'gov_id_number': { label: 'ID Number', error: 'Please enter a valid identity document number.', example: 'Example: 1234 5678 9012' },
-        'gov_id_upload': { label: 'ID Proof Upload', error: 'Please upload a clear copy of your identity proof.', example: 'Max size: 2MB for Images, 10MB for PDF' },
-        'applicant_photo': { label: 'Photograph', error: 'Please upload a professional passport-size photograph.', example: 'Clear face, neutral background, max 2MB' },
-        'edu_degree[]': { label: 'Degree', error: 'Please enter the degree name.', example: 'Example: B.E. Environmental Engineering' },
-        'edu_discipline[]': { label: 'Discipline', error: 'Please enter the discipline or course name.', example: 'Example: Environmental Science' },
-        'edu_institution[]': { label: 'Institution', error: 'Please enter the full university or college name.', example: 'Example: IIT Delhi' },
-        'edu_year[]': { label: 'Passing Year', error: 'Please enter a valid passing year.', example: 'Example: 2018' },
-        'edu_cert[]': { label: 'Certificate', error: 'Please upload your degree certificate or provisional.', example: 'Max size: 10MB PDF/Image' },
-        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 8.5' },
-        'exp_org[]': { label: 'Organization', error: 'Please enter the organization name.', example: 'Example: Green Tech Solutons' },
-        'exp_designation[]': { label: 'Designation', error: 'Please enter your designation.', example: 'Example: Senior Auditor' },
-        'exp_nature[]': { label: 'Nature of Work', error: 'Please describe your key responsibilities.', example: 'Example: Leading environmental audits for industrial plants...' },
-        'exp_proof[]': { label: 'Experience Proof', error: 'Please upload service certificate or relieving letter.', example: 'Max size: 10MB PDF' },
-        'payment_utr': { label: 'UTR Number', error: 'Please enter the 12 or 22 digit UTR number.', example: 'Example: SBIN123456789012' },
-        'payment_date': { label: 'Payment Date', error: 'Please select the date the payment was made.', example: 'Should match the receipt' },
-        'payment_receipt': { label: 'Payment Receipt', error: 'Please upload the bank transaction confirmation.', example: 'Max size: 10MB PDF/JPG' },
-        'decl_name': { label: 'Applicant Name', error: 'Please enter your full name for the declaration.', example: 'Should match Applicant Details' }
+        'full_name': { label: 'Full Name', error: 'Please enter your full name as per government records.', example: 'Example: Rahul Sharma', keywords: ['Applicant Full Name', 'Full Name'] },
+        'parent_relation': { label: 'Parent Relation', error: 'Please select your relationship with the parent/guardian.', example: 'Example: Father', keywords: ['Parent Relation'] },
+        'parent_name': { label: 'Parent Name', error: 'Please enter the name of your parent or guardian.', example: 'Example: Vijay Sharma', keywords: ['Parent Name'] },
+        'email': { label: 'Email ID', error: 'Please enter a valid email address.', example: 'Example: rahul.sharma@email.com', keywords: ['Email'] },
+        'mobile': { label: 'Mobile Number', error: 'Please enter a valid 10-digit mobile number.', example: 'Example: 9876543210', keywords: ['Mobile Number'] },
+        'dob': { label: 'Date of Birth', error: 'Please select your date of birth.', example: 'Format: DD-MM-YYYY', keywords: ['Date of Birth'] },
+        'gender': { label: 'Gender', error: 'Please select your gender.', example: 'Example: Male', keywords: ['Gender'] },
+        'citizenship': { label: 'Citizenship', error: 'Please select your citizenship.', example: 'Only Indian citizens are eligible', keywords: ['Citizenship'] },
+        'address_perm': { label: 'Permanent Address', error: 'Please enter your complete permanent address.', example: 'Example: 123, Park Street, Kolkata, WB - 700016', keywords: ['Permanent Address'] },
+        'address_corr': { label: 'Correspondence Address', error: 'Please enter your correspondence address.', example: 'Example: Same as above', keywords: ['Correspondence Address'] },
+        'gov_id_type': { label: 'ID Type', error: 'Please select a government-approved identity proof.', example: 'Example: Aadhaar Card', keywords: ['ID Type'] },
+        'gov_id_number': { label: 'ID Number', error: 'Please enter a valid identity document number.', example: 'Example: 1234 5678 9012', keywords: ['ID Number'] },
+        'gov_id_upload': { label: 'ID Proof Upload', error: 'Please upload a clear copy of your identity proof.', example: 'Max size: 2MB for Images, 10MB for PDF', keywords: ['ID Proof', 'Government ID', 'gov_id_upload'] },
+        'applicant_photo': { label: 'Photograph', error: 'Please upload a professional passport-size photograph.', example: 'Clear face, neutral background, max 2MB', keywords: ['Photograph', 'photo', 'applicant_photo'] },
+        'other_gov_id_type': { keywords: ['Other Gov ID Type'] },
+        
+        'edu_degree[]': { label: 'Degree', error: 'Please enter the degree name.', example: 'Example: B.E. Environmental Engineering', keywords: ['Degree'] },
+        'edu_discipline[]': { label: 'Discipline', error: 'Please enter the discipline or course name.', example: 'Example: Environmental Science', keywords: ['Discipline'] },
+        'edu_institution[]': { label: 'Institution', error: 'Please enter the full university or college name.', example: 'Example: IIT Delhi', keywords: ['Education Institution Name', 'Education Institution'] },
+        'edu_year[]': { label: 'Passing Year', error: 'Please enter a valid passing year.', example: 'Example: 2018', keywords: ['Passing Year'] },
+        'edu_cert[]': { label: 'Certificate', error: 'Please upload your degree certificate or provisional.', example: 'Max size: 10MB PDF/Image', keywords: ['Certificate'] },
+        
+        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 8.5', keywords: ['Total Experience'] },
+        'exp_org[]': { label: 'Organization', error: 'Please enter the organization name.', example: 'Example: Green Tech Solutons', keywords: ['Professional Experience Organization Name', 'Experience Organization'] },
+        'exp_designation[]': { label: 'Designation', error: 'Please enter your designation.', example: 'Example: Senior Auditor', keywords: ['Professional Experience Designation', 'Experience Designation'] },
+        'exp_nature[]': { label: 'Nature of Work', error: 'Please describe your key responsibilities.', example: 'Example: Leading environmental audits for industrial plants...', keywords: ['Professional Experience Role Description', 'Experience Role Description'] },
+        'exp_proof[]': { label: 'Experience Proof', error: 'Please upload service certificate or relieving letter.', example: 'Max size: 10MB PDF', keywords: ['Experience Proof'] },
+        'ref2_name': { keywords: ['Professional Experience Reference Name', 'Reference Name'] },
+
+        'project_name_cat1[]': { keywords: ['Project Experience Title', 'Project Name'] },
+        'project_client_cat1[]': { keywords: ['Project Experience Client name', 'Project Client'] },
+        'project_location_cat1[]': { keywords: ['Project Experience Location', 'Project Location'] },
+        'project_role_cat1[]': { keywords: ['Project Experience Role', 'Project Role'] },
+        
+        'training_name[]': { keywords: ['Training or Certification Name', 'Training Name'] },
+        'training_from[]': { keywords: ['Training Institute Name', 'Training Institute'] },
+        
+        'membership_name[]': { keywords: ['Professional Membership Name', 'Membership Name'] },
+        'membership_from[]': { keywords: ['Professional Membership Institute', 'Membership Institute'] },
+        
+        'paper_name[]': { keywords: ['Scientific Publication Title', 'Publication Title'] },
+        'paper_place[]': { keywords: ['Scientific Publication Place', 'Publication Place'] },
+        'paper_role[]': { keywords: ['Scientific Publication Role', 'Publication Role'] },
+        
+        'award_name[]': { keywords: ['Award or Recognition Title', 'Award Name'] },
+        'award_from[]': { keywords: ['Award From or Authority Name', 'Award From'] },
+        
+        'software_skill[]': { keywords: ['Software Skill Name', 'Software Skill'] },
+        
+        'other_enclosure': { label: 'Supporting Document', error: 'Please upload the supporting document.', keywords: ['Other Enclosure'] },
+        'enclosure_desc': { label: 'Enclosure Description', error: 'Please enter a meaningful description.', example: 'Example: This document contains additional project certifications...', keywords: ['Other Enclosure Description', 'Enclosure Description'] },
+        
+        'payment_utr': { label: 'UTR Number', error: 'Please enter the 12 or 22 digit UTR number.', example: 'Example: SBIN123456789012', keywords: ['UTR Number', 'Duplicate UTR'] },
+        'payment_date': { label: 'Payment Date', error: 'Please select the date the payment was made.', example: 'Should match the receipt', keywords: ['Payment Date'] },
+        'payment_receipt': { label: 'Payment Receipt', error: 'Please upload the bank transaction confirmation.', example: 'Max size: 10MB PDF/JPG', keywords: ['Payment Receipt', 'receipt'] },
+        
+        'decl_name': { label: 'Applicant Name', error: 'Please enter your full name for the declaration.', example: 'Should match Applicant Details', keywords: ['Declaration Signature Name', 'Declaration Name'] },
+        'decl_place': { keywords: ['Declaration Place Name', 'Declaration Place'] },
+        'signature_file': { label: 'Signature File', error: 'Please upload your signature image.', keywords: ['Signature', 'signature_file'] }
     };
+
+    function handleServerValidation(message) {
+        if (!message) return;
+        
+        let foundMatch = false;
+        // Step mapping based on metadata and field names
+        const stepMap = {
+            'Applicant Details': 1, 'Full Name': 1, 'Parent': 1, 'Email': 1, 'Mobile': 1, 'DOB': 1, 'Address': 1, 'ID Proof': 1, 'Photograph': 1, 'Identity': 1,
+            'Certification': 2,
+            'Education': 3, 'Degree': 3, 'Institution': 3,
+            'Professional Experience': 4, 'Organization': 4, 'Designation': 4, 'Experience': 4,
+            'Project': 5,
+            'Scientific Publication': 9, 'Publication': 9,
+            'Award': 10,
+            'Software': 11,
+            'Other Enclosure': 12, 'Enclosure': 12,
+            'Payment': 13, 'UTR': 13, 'Receipt': 13,
+            'Declaration': 14, 'Signature': 14
+        };
+
+        // Scan validationMetadata for keywords in the message
+        for (const [fieldName, meta] of Object.entries(validationMetadata)) {
+            if (meta.keywords && meta.keywords.some(k => message.includes(k))) {
+                // Determine step
+                let targetStep = 0;
+                for (const [kw, step] of Object.entries(stepMap)) {
+                    if (message.includes(kw)) {
+                        targetStep = step;
+                        break;
+                    }
+                }
+
+                if (targetStep > 0) {
+                    currentStep = targetStep;
+                    updateUI();
+                }
+
+                // Find the field
+                const field = document.getElementsByName(fieldName)[0] || document.getElementById(fieldName);
+                if (field) {
+                    showFieldError(field, message);
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    foundMatch = true;
+                }
+                break;
+            }
+        }
+
+        if (!foundMatch) {
+            showToast(message, "error");
+        }
+    }
 
     function showFieldError(input, customMsg = null) {
         if (!input) return;
@@ -1236,6 +1319,13 @@
         input.classList.add('field-invalid');
         input.classList.add('field-error-pulse');
         
+        // For file inputs, also highlight the parent wrapper if it exists (like custom upload UI)
+        if (input.type === 'file') {
+            const wrapper = input.closest('.file-upload-wrapper') || input.parentElement;
+            wrapper.style.borderColor = '#c53030';
+            wrapper.style.backgroundColor = '#fff5f5';
+        }
+
         const name = input.name || input.id;
         const meta = validationMetadata[name] || {};
         const errorMsg = customMsg || meta.error || 'This field is required.';
@@ -1255,6 +1345,13 @@
         let container = input.parentElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
             container = input.closest('.category-card-v2') || input.parentElement;
+        } else if (input.type === 'file') {
+            // Place after the hint usually
+            const hint = container.querySelector('.file-validation-hint');
+            if (hint) {
+                 hint.insertAdjacentElement('afterend', guidance);
+                 return;
+            }
         }
         
         container.appendChild(guidance);
@@ -1265,6 +1362,13 @@
         input.classList.remove('field-invalid');
         input.classList.remove('field-error-pulse');
         
+        // Cleanup file input highlight
+        if (input.type === 'file') {
+            const wrapper = input.closest('.file-upload-wrapper') || input.parentElement;
+            wrapper.style.borderColor = '';
+            wrapper.style.backgroundColor = '';
+        }
+        
         let container = input.parentElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
             container = input.closest('.category-card-v2') || input.parentElement;
@@ -1274,8 +1378,8 @@
         if (existing) existing.remove();
 
         // Also clean up old-style errors
-        const oldMeaningful = container.querySelector('.meaningful-error');
-        if (oldMeaningful) oldMeaningful.remove();
+        const oldMeaningful = container.querySelectorAll('.meaningful-error');
+        oldMeaningful.forEach(el => el.remove());
         const oldAddress = container.querySelector('.address-error');
         if (oldAddress) oldAddress.remove();
     }
@@ -1284,7 +1388,8 @@
         const section = document.getElementById('step-' + step);
         if (!section) return true;
 
-        const inputs = section.querySelectorAll('[required], .required-group');
+        // Collect all inputs to validate: those with [required] AND those we want to check even if optional (like Step 12 desc)
+        const inputs = section.querySelectorAll('[required], .required-group, textarea[name="enclosure_desc"]');
         let firstInvalid = null;
         let valid = true;
 
@@ -1295,8 +1400,14 @@
             let isInvalid = false;
             let customMsg = null;
 
-            if (input.type === 'checkbox' || input.type === 'radio') {
-                // If it's a field name with [], check if at least one is checked if it's a group
+            // Optional Enclosure Desc Check: only check if user has typed something
+            if (input.name === 'enclosure_desc' && !input.hasAttribute('required')) {
+                if (input.value.trim() !== '' && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, true)) {
+                    isInvalid = true;
+                    customMsg = "Please enter a meaningful description for your enclosure.";
+                }
+            } else if (input.type === 'checkbox' || input.type === 'radio') {
+                // ... (rest of checkbox logic)
                 if (input.name.includes('[]')) {
                     const group = section.querySelectorAll(`input[name="${input.name}"]`);
                     const checkedCount = Array.from(group).filter(i => i.checked).length;
@@ -1306,7 +1417,8 @@
                 }
             } else {
                 if (!input.value || input.value.trim() === '') {
-                    isInvalid = true;
+                    // Only mark invalid if it's truly required
+                    if (input.hasAttribute('required')) isInvalid = true;
                 } else if (input.type === 'text' || input.tagName === 'TEXTAREA') {
                     const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
                     const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
@@ -1342,9 +1454,14 @@
                 valid = false;
                 showToast("Please select at least one certification category.", "error");
                 const gridElem = section.querySelector('.cat-container-v2');
-                if (!firstInvalid) firstInvalid = gridElem;
+                if (gridElem) {
+                    gridElem.classList.add('field-invalid');
+                    gridElem.classList.add('field-error-pulse');
+                    if (!firstInvalid) firstInvalid = gridElem;
+                }
             }
         }
+
 
         if (!valid) {
             showToast("Please correct the highlighted fields to proceed.", "error");
@@ -1695,16 +1812,7 @@
             } else {
                 console.error('Save Draft Server Rejection:', result.message);
                 if (statusEl) statusEl.textContent = 'Save failed (Validation Errors)';
-                
-                // Map backend errors if they exist in the message or structure
-                if (result.message && result.message.includes('detected in:')) {
-                    // The backend returns a string like "detected in: Full Name, Parent Name"
-                    // We can attempt to highlight these if we want, but field-level mapping is better.
-                    // Since backend was reverted to string, we just warn the user.
-                    showToast(result.message, "error");
-                } else {
-                    showToast(result.message || "Save failed due to validation errors.", "error");
-                }
+                handleServerValidation(result.message);
             }
 
         } catch (error) {
@@ -2049,34 +2157,11 @@
                     overlay.style.display = 'flex';
                     overlay.classList.add('active');
                 }
-                setTimeout(() => window.location.href = "/Auth/Dashboard", 3000);
+                setTimeout(() => window.location.href = "/Application/Index", 3000);
             } else {
-                showToast(result.message || "Submission rejected by server.", "error");
                 btn.disabled = false;
                 btn.textContent = oldText;
-                
-                // Map known backend error keywords to fields
-                const errorMapping = [
-                    { keywords: ["photograph", "photo"], step: 1, fieldName: "applicant_photo" },
-                    { keywords: ["Gov ID", "identity"], step: 1, fieldName: "gov_id_upload" },
-                    { keywords: ["Permanent Address"], step: 1, fieldName: "address_perm" },
-                    { keywords: ["Duplicate UTR", "payment_utr"], step: 13, fieldName: "payment_utr" },
-                    { keywords: ["receipt"], step: 13, fieldName: "payment_receipt" },
-                    { keywords: ["Signature"], step: 14, fieldName: "signature_file" }
-                ];
-
-                for (const map of errorMapping) {
-                    if (map.keywords.some(k => result.message && result.message.includes(k))) {
-                        currentStep = map.step;
-                        updateUI();
-                        const input = document.getElementsByName(map.fieldName)[0];
-                        if (input) {
-                            showFieldError(input, result.message);
-                            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                        break;
-                    }
-                }
+                handleServerValidation(result.message);
             }
         } catch (error) {
             console.error('Submission error:', error);
@@ -2596,7 +2681,7 @@
                          err.style.fontSize = '0.75rem';
                          err.style.marginTop = '4px';
                          err.style.fontWeight = '600';
-                         err.innerText = "⚠️ Address must be at least 3 characters.";
+                         err.innerText = "⚠️ Address must be at least 3 characters and contain valid symbols.";
                          this.parentNode.appendChild(err);
                      }
                 } else {
@@ -2748,7 +2833,7 @@
         </div>
         <h2>Application Submitted!</h2>
         <p>Your application for CEA RPL Certification has been successfully submitted. You can track your status on the dashboard.</p>
-        <button type="button" class="success-btn" onclick="window.location.reload()">Back to Dashboard</button>
+        <button type="button" class="success-btn" onclick="window.location.href='/Application/Index'">Back to Dashboard</button>
     </div>
 </div>
 
