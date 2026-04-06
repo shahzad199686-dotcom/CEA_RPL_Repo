@@ -2059,58 +2059,71 @@
         const summary = document.getElementById(isReadOnly ? 'readOnlySummary' : 'reviewSummary');
         if (!summary) return;
 
-        const getData = (name) => document.querySelector(`[name="${name}"]`)?.value || 'N/A';
+        const getData = (name) => document.querySelector(`[name="${name}"]`)?.value || 'Not provided';
         const getCheckboxes = (name) => {
             const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
             return checked.length > 0 ? checked.join(', ') : 'None selected';
         };
-        const getFileStatus = (name) => {
-            const input = document.querySelector(`input[name="${name}"]`);
-            // Check for actual files or if restoring from data (which we don't have file names for yet in JS)
+        
+        const getFileStatus = (nameOrEl) => {
+            const input = (typeof nameOrEl === 'string') ? document.querySelector(`input[name="${nameOrEl}"]`) : nameOrEl;
             const isUploaded = (input && input.files && input.files.length > 0);
             return isUploaded ? 
                 '<span style="color: var(--success); font-weight: 600;">✓ Uploaded</span>' : 
-                '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided / Saved</span>';
+                '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
         };
 
-        const editLink = (step) => isReadOnly ? '' : `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" class="edit-link">Edit</a>`;
+        const getMultiFileStatus = (name) => {
+            const inputs = document.querySelectorAll(`input[name="${name}"]`);
+            let count = 0;
+            inputs.forEach(input => { if (input.files && input.files.length > 0) count++; });
+            return count > 0 ? 
+                `<span style="color: var(--success); font-weight: 600;">✓ ${count} File(s) Uploaded</span>` : 
+                '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
+        };
 
-        let html = `
-            <!-- Step 1: Applicant Details -->
+        const editLink = (step) => isReadOnly ? '' : `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" class="edit-link">Edit Step ${step}</a>`;
+
+        let html = "";
+
+        // --- STEP 1: APPLICANT DETAILS ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
-                    <h4>Step 1: Applicant Information</h4>
+                    <h4>Step 1: Applicant Details</h4>
                     ${editLink(1)}
                 </div>
                 <div class="review-dl">
                     <div><dt>Full Name</dt><dd>${getData('title')} ${getData('full_name')}</dd></div>
                     <div><dt>Parent/Guardian</dt><dd>(${getData('parent_relation')}) ${getData('parent_name')}</dd></div>
-                    <div><dt>Date of Birth</dt><dd>${getData('dob')}</dd></div>
+                    <div><dt>Date of Birth</dt><dd>${getData('dob') || '-'}</dd></div>
                     <div><dt>Gender</dt><dd>${getData('gender')}</dd></div>
                     <div><dt>Citizenship</dt><dd>${getData('citizenship')}</dd></div>
-                    <div><dt>Email</dt><dd>${getData('email')}</dd></div>
-                    <div><dt>Mobile</dt><dd>${getData('mobile')} ${getData('alt_mobile') !== 'N/A' && getData('alt_mobile') ? '/ '+getData('alt_mobile') : ''}</dd></div>
-                    <div><dt>Gov ID Type</dt><dd>${getData('gov_id_type')}</dd></div>
+                    <div><dt>Email ID</dt><dd>${getData('email')}</dd></div>
+                    <div><dt>Mobile Number</dt><dd>${getData('mobile')} ${getData('alt_mobile') !== 'Not provided' ? ' / ' + getData('alt_mobile') : ''}</dd></div>
+                    <div><dt>Gov ID Type</dt><dd>${getData('gov_id_type') === 'other' ? getData('other_gov_id_type') : getData('gov_id_type')}</dd></div>
                     <div><dt>ID Number</dt><dd>${getData('gov_id_number')}</dd></div>
-                    <div><dt>ID Proof</dt><dd>${getFileStatus('gov_id_upload')}</dd></div>
+                    <div><dt>ID Proof Doc</dt><dd>${getFileStatus('gov_id_upload')}</dd></div>
                     <div><dt>Photograph</dt><dd>${getFileStatus('applicant_photo')}</dd></div>
                     <div style="grid-column: 1 / -1;"><dt>Permanent Address</dt><dd>${getData('address_perm')}</dd></div>
-                    <div style="grid-column: 1 / -1;"><dt>Correspondence Address</dt><dd>${getData('address_corr')}</dd></div>
+                    <div style="grid-column: 1 / -1;"><dt>Correspondence Address</dt><dd>${getData('address_corr') || 'Same as Permanent'}</dd></div>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 2: Category Selection -->
+        // --- STEP 2: CATEGORY OF CERTIFICATION APPLIED FOR ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
-                    <h4>Step 2: Category Selection</h4>
+                    <h4>Step 2: Category of Certification Applied For</h4>
                     ${editLink(2)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Certification Categories</dt><dd>${getCheckboxes('cert_category[]')}</dd></div>
+                    <div style="grid-column: 1 / -1;"><dt>Selected Categories</dt><dd>${getCheckboxes('cert_category[]')}</dd></div>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 3: Education Summary -->
+        // --- STEP 3: EDUCATIONAL QUALIFICATIONS ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 3: Educational Qualifications</h4>
@@ -2118,7 +2131,7 @@
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Degree</th><th>Discipline</th><th>Institution</th><th>Year</th><th>Doc</th></tr></thead>
+                        <thead><tr><th>Degree</th><th>Course</th><th>Institution</th><th>Year</th><th>Doc</th></tr></thead>
                         <tbody>
                             ${Array.from(document.querySelectorAll('#educationContainer .education-row')).map(row => {
                                 const deg = row.querySelector('[name="edu_degree[]"]')?.value;
@@ -2128,131 +2141,27 @@
                                     <td>${row.querySelector('[name="edu_discipline[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="edu_institution[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="edu_year[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus('edu_cert[]')}</td>
+                                    <td>${getFileStatus(row.querySelector('[name="edu_cert[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No education records added.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 4: Professional Experience -->
+        // --- STEP 4: PROFESSIONAL EXPERIENCE ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 4: Professional Experience</h4>
                     ${editLink(4)}
                 </div>
-                <div class="review-table-wrap">
-                    <table class="review-table">
-                        <thead><tr><th>Organization</th><th>Designation</th><th>Duration</th><th>Role</th><th>Doc</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#experienceContainer .experience-card')).map(card => {
-                                const org = card.querySelector('[name="exp_org[]"]')?.value;
-                                if (!org) return '';
-                                return `<tr>
-                                    <td>${org}</td>
-                                    <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="exp_nature[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus('exp_proof[]')}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Step 5: Projects -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 5: Project Experience</h4>
-                    ${editLink(5)}
+                <div class="review-dl" style="margin-bottom: 16px;">
+                    <div><dt>Total Experience</dt><dd>${getData('total_experience')} Years</dd></div>
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#projectContainerCat1 .project-card')).map(card => {
-                                const name = card.querySelector('[name="project_name_cat1[]"]')?.value;
-                                if (!name) return '';
-                                return `<tr>
-                                    <td>${name}</td>
-                                    <td>${card.querySelector('[name="project_client_cat1[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="project_location_cat1[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="project_year_cat1[]"]')?.value || '-'}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="4" style="text-align:center; padding:12px; color:var(--ink-light);">No projects added.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Step 6: Environmental Audit Reports -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 6: Audit Reports</h4>
-                    ${editLink(6)}
-                </div>
-                <div class="review-dl">
-                    <div><dt>Report 1</dt><dd>${getFileStatus('audit_report')}</dd></div>
-                    <div><dt>Report 2</dt><dd>${getFileStatus('audit_report')}</dd></div>
-                </div>
-            </div>
-
-            <!-- Step 8: Training & Certification -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 8: Training & Certification</h4>
-                    ${editLink(8)}
-                </div>
-                <div class="review-table-wrap">
-                    <table class="review-table">
-                        <thead><tr><th>Name</th><th>Institution</th><th>Year</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#step-8 [name="training_name[]"]')).map((inp, i) => {
-                                if (!inp.value) return '';
-                                return `<tr>
-                                    <td>${inp.value}</td>
-                                    <td>${document.querySelectorAll('#step-8 [name="training_from[]"]')[i]?.value || '-'}</td>
-                                    <td>${document.querySelectorAll('#step-8 [name="training_year[]"]')[i]?.value || '-'}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="3" style="text-align:center; padding:12px; color:var(--ink-light);">No records added.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Step 13: Payment Info -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 13: Payment Details</h4>
-                    ${editLink(13)}
-                </div>
-                <div class="review-dl">
-                    <div><dt>Amount Paid</dt><dd>₹ ${getData('payment_amount')}</dd></div>
-                    <div><dt>Payment Date</dt><dd>${getData('payment_date')}</dd></div>
-                    <div><dt>UTR / Ref Number</dt><dd>${getData('payment_utr')}</dd></div>
-                    <div><dt>Receipt Proof</dt><dd>${getFileStatus('payment_receipt')}</dd></div>
-                </div>
-            </div>
-
-            <!-- Step 14: Declaration -->
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 14: Declaration</h4>
-                    ${editLink(14)}
-                </div>
-                <div class="review-dl">
-                    <div><dt>Signed By</dt><dd>${getData('decl_name')}</dd></div>
-                    <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
-                    <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
-                </div>
-            </div>
-                    ${editLink(4)}
-                </div>
-                <div class="review-table-wrap">
-                    <table class="review-table">
-                        <thead><tr><th>Organization</th><th>Duration</th><th>Designation/Proof</th><th>Proof</th></tr></thead>
+                        <thead><tr><th>Organization</th><th>Duration</th><th>Designation / Proof Type</th><th>Proof</th></tr></thead>
                         <tbody>
                             ${Array.from(document.querySelectorAll('#experienceContainer .experience-card')).map(card => {
                                 const org = card.querySelector('[name="exp_org[]"]')?.value;
@@ -2261,21 +2170,24 @@
                                     <td>${org}</td>
                                     <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
                                     <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus('exp_proof[]')}</td>
+                                    <td>${getFileStatus(card.querySelector('[name="exp_proof[]"]'))}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="4" style="text-align:center; padding:12px; color:var(--ink-light);">No work experience added.</td></tr>'}
+                            }).join('') || '<tr><td colspan="4" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 5: Project Experience (Cat 1) -->
+        // --- STEP 5: PROJECT EXPERIENCE ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 5: Project Experience</h4>
                     ${editLink(5)}
                 </div>
-                <div class="review-table-wrap">
+                
+                <p style="font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">5.1 Category 1 Projects</p>
+                <div class="review-table-wrap" style="margin-bottom: 24px;">
                     <table class="review-table">
                         <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th><th>Role</th></tr></thead>
                         <tbody>
@@ -2289,31 +2201,39 @@
                                     <td>${card.querySelector('[name="project_year_cat1[]"]')?.value || '-'}</td>
                                     <td>${card.querySelector('[name="project_role_cat1[]"]')?.value || '-'}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No projects added.</td></tr>'}
+                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No Category 1 projects added.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- Step 6: Upload Reports -->
+                <div class="review-dl">
+                    <div><dt>5.2 Category 2 Projects</dt><dd>None provided</dd></div>
+                    <div><dt>5.3 Category 3 Projects</dt><dd>None provided</dd></div>
+                    <div><dt>5.4 Category 4 Projects</dt><dd>None provided</dd></div>
+                </div>
+            </div>`;
+
+        // --- STEP 6: UPLOAD REPORTS ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 6: Upload Reports</h4>
                     ${editLink(6)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Audit Reports Status</dt><dd>${getFileStatus('audit_report')}</dd></div>
+                    <div><dt>Applied Audit Reports</dt><dd>${getMultiFileStatus('audit_report')}</dd></div>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 7: Training & Certification -->
+        // --- STEP 7: DETAILS OF CERTIFICATION / TRAINING ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 7: Details of Certification / Training</h4>
                     ${editLink(7)}
                 </div>
-                <div class="review-table-wrap" style="margin-bottom: 12px;">
-                    <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 4px;">Training Records</p>
+                <div class="review-table-wrap" style="margin-bottom: 16px;">
+                    <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Training Details</p>
                     <table class="review-table">
                         <tbody>
                             ${Array.from(document.querySelectorAll('#trainingRowsContainer .step7-grid')).map(grid => {
@@ -2321,30 +2241,31 @@
                                 if (!name) return '';
                                 return `<tr>
                                     <td><strong>${name}</strong> from ${grid.querySelector('[name="training_from[]"]')?.value || '-'} (${grid.querySelector('[name="training_duration[]"]')?.value || '-'} days, ${grid.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 80px;">${getFileStatus('training_proof[]')}</td>
+                                    <td style="width: 100px;">${getFileStatus(grid.querySelector('[name="training_proof[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No training records.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
                 <div class="review-table-wrap">
-                    <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 4px;">Certification Records</p>
+                    <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Certification Details</p>
                     <table class="review-table">
                         <tbody>
                             ${Array.from(document.querySelectorAll('#certificationRowsContainer .step7-grid')).map(grid => {
                                 const name = grid.querySelector('[name="training_name[]"]')?.value;
                                 if (!name) return '';
                                 return `<tr>
-                                    <td><strong>${name}</strong> by ${grid.querySelector('[name="training_from[]"]')?.value || '-'} (${grid.querySelector('[name="training_duration[]"]')?.value || '-'}, ${grid.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 80px;">${getFileStatus('training_proof[]')}</td>
+                                    <td><strong>${name}</strong> by ${grid.querySelector('[name="training_from[]"]')?.value || '-'} (${grid.querySelector('[name="training_duration[]"]')?.value || 'Active'}, ${grid.querySelector('[name="training_year[]"]')?.value || '-'})</td>
+                                    <td style="width: 100px;">${getFileStatus(grid.querySelector('[name="training_proof[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No certification records.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 8: Membership -->
+        // --- STEP 8: MEMBERSHIP IN PROFESSIONAL BODIES ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 8: Membership in Professional Bodies</h4>
@@ -2362,15 +2283,16 @@
                                     <td>${row.querySelector('[name="membership_from[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('.membership-duration-hidden')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="membership_year[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus('membership_proof[]')}</td>
+                                    <td>${getFileStatus(row.querySelector('[name="membership_proof[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No memberships added.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 9: Publications -->
+        // --- STEP 9: PAPER PUBLISHED / PRESENTED ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 9: Paper Published / Presented</h4>
@@ -2378,7 +2300,7 @@
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Topic</th><th>Venue</th><th>Year</th><th>Link</th><th>Proof</th></tr></thead>
+                        <thead><tr><th>Topic</th><th>Venue / Journal</th><th>Year</th><th>Link</th><th>Proof</th></tr></thead>
                         <tbody>
                             ${Array.from(document.querySelectorAll('#publicationContainer .publication-row')).map(row => {
                                 const topic = row.querySelector('[name="paper_name[]"]')?.value;
@@ -2387,16 +2309,17 @@
                                     <td>${topic}</td>
                                     <td>${row.querySelector('[name="paper_place[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="paper_year[]"]')?.value || '-'}</td>
-                                    <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;">${row.querySelector('[name="paper_role[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus('paper_proof[]')}</td>
+                                    <td>${row.querySelector('[name="paper_role[]"]')?.value || '-'}</td>
+                                    <td>${getFileStatus(row.querySelector('[name="paper_proof[]"]'))}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No publications added.</td></tr>'}
+                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No papers added.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 10: Awards -->
+        // --- STEP 10: AWARDS / RECOGNITION ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 10: Awards / Recognition</h4>
@@ -2404,7 +2327,7 @@
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Award</th><th>By</th><th>Year</th></tr></thead>
+                        <thead><tr><th>Award/Recognition</th><th>By</th><th>Year</th></tr></thead>
                         <tbody>
                             ${Array.from(document.querySelectorAll('#awardTable tbody tr')).map(tr => {
                                 const award = tr.querySelector('[name="award_name[]"]')?.value;
@@ -2418,50 +2341,54 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 11: Software Skills -->
+        // --- STEP 11: SOFTWARE / TOOLS / APPLICATION SKILLS ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
-                    <h4>Step 11: Software Skills</h4>
+                    <h4>Step 11: Software / Tools / Application Skills</h4>
                     ${editLink(11)}
                 </div>
-                <ul style="margin: 0; padding: 0; list-style: none;">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                     ${Array.from(document.querySelectorAll('#softwareTable tbody tr')).map(tr => {
                         const skill = tr.querySelector('[name="software_skill[]"]')?.value;
                         if (!skill) return '';
-                        return `<li style="padding: 6px 12px; background: #f8fafc; border-radius: 6px; margin-bottom: 4px; display: inline-block; margin-right: 4px; font-size: 0.85rem;"><strong>${skill}</strong>: ${tr.querySelector('[name="proficiency_level[]"]')?.value || 'Basic'}</li>`;
+                        return `<span style="padding: 6px 12px; background: #f1f5f9; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">${skill} (${tr.querySelector('[name="proficiency_level[]"]')?.value || 'Basic'})</span>`;
                     }).join('') || '<p style="color:var(--ink-light); margin:0;">No special software skills listed.</p>'}
-                </ul>
-            </div>
+                </div>
+            </div>`;
 
-            <!-- Step 12: Other Enclosures -->
+        // --- STEP 12: OTHER RELEVANT ENCLOSURES ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 12: Other Relevant Enclosures</h4>
                     ${editLink(12)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Description</dt><dd>${document.getElementById('enclosure_desc')?.value || 'Not provided'}</dd></div>
+                    <div style="grid-column: 1 / -1;"><dt>Description</dt><dd>${document.getElementById('enclosure_desc')?.value || 'Not provided'}</dd></div>
                     <div><dt>File Proof</dt><dd>${getFileStatus('other_enclosure')}</dd></div>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 13: Payment Details -->
+        // --- STEP 13: PAYMENT DETAILS ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 13: Payment Details</h4>
                     ${editLink(13)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Amount</dt><dd>₹${getData('payment_amount')}</dd></div>
-                    <div><dt>Date</dt><dd>${getData('payment_date')}</dd></div>
-                    <div><dt>UTR No</dt><dd>${getData('payment_utr')}</dd></div>
-                    <div><dt>Receipt</dt><dd>${getFileStatus('payment_receipt')}</dd></div>
+                    <div><dt>Amount Paid</dt><dd>₹${getData('payment_amount')}</dd></div>
+                    <div><dt>Date of Payment</dt><dd>${getData('payment_date')}</dd></div>
+                    <div><dt>UTR / Ref Number</dt><dd>${getData('payment_utr')}</dd></div>
+                    <div><dt>Receipt Proof</dt><dd>${getFileStatus('payment_receipt')}</dd></div>
                 </div>
-            </div>
+            </div>`;
 
-            <!-- Step 14: Declaration -->
+        // --- STEP 14: DECLARATION BY APPLICANT ---
+        html += `
             <div class="review-section">
                 <div class="review-header">
                     <h4>Step 14: Declaration by Applicant</h4>
@@ -2471,12 +2398,12 @@
                     <div><dt>Full Name</dt><dd>${getData('decl_name')}</dd></div>
                     <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
                     <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
-                    <div><dt>Signature</dt><dd>${getFileStatus('signature_file')}</dd></div>
+                    <div><dt>Signature Doc</dt><dd>${getFileStatus('signature_file')}</dd></div>
                 </div>
-            </div>
-        `;
+            </div>`;
+
         summary.innerHTML = html;
-        validateChecklistState(); // Initial button state on review
+        validateChecklistState(); 
     }
 
     function clearChecklist() {
@@ -2736,7 +2663,9 @@
     function syncAddress() {
         const isChecked = document.getElementById('sameAddress').checked;
         if (isChecked) {
-            document.getElementById('address_corr').value = document.getElementById('address_perm').value;
+            const perm = document.getElementById('address_perm');
+            const corr = document.getElementById('address_corr');
+            if (perm && corr) corr.value = perm.value;
         }
     }
 
@@ -2754,350 +2683,14 @@
 
     function closeDocModal() {
         const modal = document.getElementById('docReqModal');
-        const hideForever = document.getElementById('chkHideForever').checked;
+        const hideForever = document.getElementById('chkHideForever')?.checked;
         if (hideForever) {
             localStorage.setItem('hideDocPopupForever', 'true');
         }
-        modal.classList.remove('active');
-    }
-
-    function closeDocModal() {
-        const modal = document.getElementById('docReqModal');
-        const hideForever = document.getElementById('chkHideForever').checked;
-        if (hideForever) {
-            localStorage.setItem('hideDocPopupForever', 'true');
-        }
-        modal.classList.remove('active');
+        if (modal) modal.classList.remove('active');
     }
 </script>
 
-<style>
-/* Step 2 Premium Category Selection Cards */
-.cat-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 24px;
-}
-
-.category-card {
-    display: block;
-    position: relative;
-    padding: 20px 24px;
-    background: #ffffff;
-    border: 1px solid #DCE7E5;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.category-card:hover {
-    border-color: #0F9D9A;
-    box-shadow: 0 6px 16px rgba(15,157,154,0.12);
-    transform: translateY(-2px);
-}
-
-.category-card:has(input:checked) {
-    border: 2px solid #0F9D9A;
-    background: #EAF8F7;
-    box-shadow: 0 8px 24px rgba(15,157,154,0.1);
-}
-
-.category-card input[type="checkbox"] {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    width: 22px;
-    height: 22px;
-    accent-color: #0F9D9A;
-    cursor: pointer;
-    z-index: 2;
-}
-
-/* Document Requirement Popup Modal Styles */
-#docReqModal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(15, 23, 42, 0.5);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-#docReqModal.active {
-    opacity: 1;
-    visibility: visible;
-}
-.doc-modal {
-    background: white;
-    width: 100%;
-    max-width: 600px;
-    border-radius: 24px;
-    padding: 40px;
-    position: relative;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
-    transform: scale(0.9);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-#docReqModal.active .doc-modal { transform: scale(1); }
-
-.modal-close-icon {
-    position: absolute; top: 20px; right: 20px;
-    background: none; border: none; font-size: 2rem;
-    color: var(--muted); cursor: pointer; line-height: 1;
-}
-
-.modal-header { text-align: center; margin-bottom: 30px; }
-.modal-icon-wrap { 
-    width: 64px; height: 64px; background: var(--bg); color: var(--accent);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px;
-}
-.modal-header h2 { font-size: 1.5rem; color: var(--ink); margin-bottom: 12px; }
-.modal-header p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin: 0; }
-
-.modal-scroll-area { max-height: 400px; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; }
-.req-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 24px; }
-.req-section h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 16px; font-weight: 800; border-bottom: 2px solid var(--line); padding-bottom: 8px; }
-.req-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: req-counter; }
-.req-list li { position: relative; padding-left: 28px; font-size: 0.95rem; color: var(--ink); line-height: 1.5; }
-.req-list li::before { 
-    content: counter(req-counter) ")";
-    counter-increment: req-counter;
-    position: absolute; left: 0; top: 0;
-    font-weight: 700; color: #0F9D9A;
-}
-.req-list li span { color: var(--muted); font-size: 0.85rem; display: block; margin-top: 2px; }
-.time-info-card {
-    background: #fff8e1; border: 1px solid #ffecb3; border-radius: 12px;
-    padding: 16px 20px; display: flex; gap: 15px; align-items: center;
-    color: #856404;
-}
-
-.modal-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    padding-top: 24px; border-top: 1px solid var(--line);
-}
-.noshow-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; }
-.modal-btns { display: flex; gap: 12px; }
-
-@@media (max-width: 640px) {
-    .doc-modal { border-radius: 0; height: 100vh; max-width: 100%; padding: 30px 20px; overflow-y: auto; }
-    .req-columns { grid-template-columns: 1fr; gap: 30px; }
-    .modal-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
-    .modal-btns { width: 100%; flex-direction: column; }
-    .modal-btns .btn { width: 100%; }
-}
-
-/* Premium Success Modal */
-.success-overlay {
-    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
-    display: none; align-items: center; justify-content: center; z-index: 10000;
-}
-.success-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-.success-card {
-    background: white; padding: 48px; border-radius: 32px; max-width: 500px; width: 90%;
-    text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-    transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.success-overlay.active .success-card { transform: translateY(0); }
-.success-icon-wrap {
-    width: 80px; height: 80px; background: #f0fdf9; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;
-    color: #0F9D9A; position: relative;
-}
-.success-card h2 { font-size: 24px; color: var(--ink); margin-bottom: 12px; font-weight: 800; }
-.success-card p { color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
-.success-btn {
-    background: #0F9D9A; color: white; padding: 14px 32px; border-radius: 12px;
-    font-weight: 700; width: 100%; border: none; cursor: pointer; transition: all 0.2s;
-}
-.success-btn:hover { background: #0c807d; transform: translateY(-1px); }
-
-@@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-/* --- MODERN SaaS DASHBOARD STYLES --- */
-.dash-layout {
-    max-width: 1600px; /* Expanded for full-width feel */
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    padding: 20px 0 80px; /* Removed side padding as parent wrap handles it */
-    animation: fadeIn 0.8s ease-out;
-}
-
-.dash-hero-banner {
-    background: linear-gradient(135deg, #0F9D9A 0%, #0a6b69 100%);
-    border-radius: 24px;
-    padding: 60px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(15, 157, 154, 0.25);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.dash-hero-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%; right: -10%;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
-.hero-text h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 12px; letter-spacing: -1px; }
-.hero-text p { font-size: 1.2rem; opacity: 0.9; font-weight: 500; margin: 0; }
-
-.status-badge-lg {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(12px);
-    padding: 12px 28px;
-    border-radius: 100px;
-    border: 1px solid rgba(255,255,255,0.3);
-    display: flex; align-items: center; gap: 12px;
-    font-weight: 800; font-size: 1rem;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.pulse-dot {
-    width: 12px; height: 12px; background: #4ade80; border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-    animation: pulse 2s infinite;
-}
-
-@@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-}
-
-.dash-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 400px; /* Slightly wider side panel for better balance */
-    gap: 40px; /* Increased gap for wide layout */
-    align-items: start;
-}
-
-.dash-card {
-    background: white;
-    border-radius: 20px;
-    padding: 32px;
-    border: 1px solid var(--line);
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-header {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 28px; font-size: 1.3rem; font-weight: 850;
-    color: var(--ink);
-}
-
-.card-header svg { color: #0F9D9A; }
-
-/* Timeline Improvements */
-.timeline-container {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    padding: 20px 40px 0;
-}
-
-.timeline-container::before {
-    content: '';
-    position: absolute;
-    top: 36px; left: 60px; right: 60px;
-    height: 4px; background: var(--bg);
-    z-index: 1;
-}
-
-.timeline-node {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 16px; position: relative; z-index: 2; flex: 1;
-}
-
-.node-circle {
-    width: 36px; height: 36px; background: white;
-    border: 4px solid var(--line); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; color: var(--muted); font-size: 0.85rem;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.timeline-node.completed .node-circle {
-    background: #0F9D9A; border-color: #0F9D9A; color: white;
-}
-
-.timeline-node.active .node-circle {
-    border-color: #0F9D9A; color: #0F9D9A;
-    background: #e6f6f5; transform: scale(1.2);
-    box-shadow: 0 0 20px rgba(15, 157, 154, 0.3);
-}
-
-.node-label { font-size: 0.9rem; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.3; }
-.timeline-node.active .node-label { color: #0F9D9A; }
-
-/* Side Panel Modules */
-.stats-list { display: flex; flex-direction: column; gap: 16px; }
-.stat-item {
-    display: flex; flex-direction: column; gap: 4px; padding: 16px;
-    background: var(--bg); border-radius: 12px; border: 1px solid var(--line);
-}
-.stat-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-value { font-size: 1rem; font-weight: 800; color: var(--ink); }
-
-.action-stack { display: flex; flex-direction: column; gap: 12px; }
-.btn-saas {
-    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
-    background: white; border: 1px solid var(--line); border-radius: 14px;
-    font-weight: 700; color: var(--ink); transition: all 0.2s;
-    cursor: pointer; text-decoration: none;
-}
-.btn-saas:hover {
-    border-color: #0F9D9A; background: #f0fdfc; transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(15, 157, 154, 0.1);
-}
-.btn-saas i { font-size: 1.2rem; color: #0F9D9A; }
-
-.next-steps-grid { display: grid; gap: 20px; }
-.step-card {
-    display: flex; gap: 24px; padding: 24px;
-    background: #fcfdfd; border: 1px solid var(--line); border-radius: 16px;
-}
-.step-number {
-    width: 48px; height: 48px; background: #0F9D9A; color: white;
-    border-radius: 14px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; font-weight: 900; flex-shrink: 0;
-}
-.step-info h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
-.step-info p { font-size: 0.95rem; color: var(--muted); margin: 0; line-height: 1.6; }
-
-@@media (max-width: 1200px) {
-    .dash-main-grid { grid-template-columns: 1fr; }
-    .dash-hero-banner { padding: 40px; flex-direction: column; align-items: flex-start; gap: 24px; }
-    .hero-text h1 { font-size: 2.2rem; }
-}
-
-@@media (max-width: 768px) {
-    .timeline-container::before { display: none; }
-    .timeline-container { flex-direction: column; align-items: flex-start; padding: 0; gap: 32px; }
-    .timeline-node { flex-direction: row; width: 100%; border-left: 3px solid var(--bg); padding-left: 20px; align-items: center; }
-    .timeline-node.active { border-left-color: #0F9D9A; }
-}
-
-</style>
 <!-- Success Confirmation Modal -->
 <div id="successOverlay" class="success-overlay">
     <div class="success-card">
