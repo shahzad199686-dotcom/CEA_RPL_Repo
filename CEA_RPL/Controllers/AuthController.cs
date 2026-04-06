@@ -67,8 +67,17 @@ public class AuthController : Controller
     [HttpPost("api/auth/signup")]
     public async Task<IActionResult> SignUpApi([FromForm] string firstName, [FromForm] string? middleName, [FromForm] string? lastName, [FromForm] string email, [FromForm] string mobile, [FromForm] string password)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            return BadRequest(new { message = "First name is required" });
+        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2 || !System.Text.RegularExpressions.Regex.IsMatch(firstName, "^[A-Za-z]+$"))
+            return BadRequest(new { message = "Validation failed: Please enter a valid first name" });
+
+        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < 2 || !System.Text.RegularExpressions.Regex.IsMatch(lastName, "^[A-Za-z]+$"))
+            return BadRequest(new { message = "Validation failed: Please enter a valid last name" });
+
+        if (string.IsNullOrWhiteSpace(email) || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email))
+            return BadRequest(new { message = "Validation failed: Please enter a valid email address" });
+
+        if (string.IsNullOrWhiteSpace(mobile) || !System.Text.RegularExpressions.Regex.IsMatch(mobile, "^[6-9][0-9]{9}$"))
+            return BadRequest(new { message = "Validation failed: Please enter a valid 10-digit mobile number" });
 
         var result = await _authService.RegisterUserAsync(firstName, middleName, lastName, email, mobile, password);
         if (!result.Success) 

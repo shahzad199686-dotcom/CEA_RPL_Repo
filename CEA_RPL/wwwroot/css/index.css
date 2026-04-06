@@ -341,7 +341,7 @@ body {
     grid-column: span 12;
 }
 
-.upload-dropzone, #candidatePhotoUploadBox {
+.upload-dropzone {
     flex: 1;
     height: 180px;
     background: var(--accent-light);
@@ -359,10 +359,61 @@ body {
     z-index: 10;
 }
 
-.upload-dropzone:hover, #candidatePhotoUploadBox:hover {
+.upload-dropzone:hover {
     background: #e6f6f4;
     border-color: var(--accent);
 }
+
+/* --- STEP 1 COMPACT PHOTO UPLOAD --- */
+.compact-upload {
+    flex: 1;
+    background: var(--bg);
+    border: 1px dashed var(--muted-light);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 10;
+}
+
+.compact-upload:hover {
+    background: #f0fdf9;
+    border-color: var(--accent);
+}
+
+.compact-upload.drag-over {
+    background: #e0f2f1;
+    border-color: var(--accent);
+    border-width: 2px;
+}
+
+.compact-upload .compact-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.compact-upload .compact-text {
+    flex: 1;
+    text-align: left;
+}
+
+.compact-upload .upload-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+.compact-upload .upload-subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
 
 .upload-dropzone input[type="file"] {
     position: absolute;
@@ -1846,4 +1897,80 @@ input[type="file"] {
 @media (max-width: 640px) {
     .resume-actions { flex-direction: column; }
     .save-status-text { display: none; }
+}
+
+/* --- STEP 2 CATEGORY SELECTION V2 --- */
+.cat-container-v2 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.category-card-v2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 24px;
+    height: auto; /* Overrides global label height constraint */
+    min-height: auto;
+}
+
+.category-card-v2:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    background: #fcfdfd;
+}
+
+.category-card-v2:has(input[type="checkbox"]:checked) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+}
+
+.cat-v2-content {
+    flex: 1;
+}
+
+.cat-v2-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.cat-v2-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cat-v2-action {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+.cat-v2-action input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    accent-color: var(--accent);
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .category-card-v2 {
+        padding: 16px;
+        gap: 16px;
+    }
 }

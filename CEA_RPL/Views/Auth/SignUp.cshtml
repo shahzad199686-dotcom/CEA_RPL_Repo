@@ -4,45 +4,45 @@
 
 <div class="auth-page-container" style="max-width: 480px; margin: 60px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
     <div style="text-align: center; margin-bottom: 35px;">
-        <h2 style="font-size: 2rem; color: #333; margin-bottom: 10px;">Create Access</h2>
-        <p style="color: #666;">Register to start your RPL application</p>
+        <h2 style="font-size: 2rem; color: #333; margin-bottom: 10px;">Sign Up</h2>
+        <p style="color: #666;">Create your account to begin your application</p>
     </div>
 
     <!-- SIGNUP FORM -->
     <div id="signupArea">
-        <form id="signupForm">
+        <form id="registerForm">
             <div style="margin-bottom: 20px;">
-                <label for="regFirstName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">First Name *</label>
-                <input id="regFirstName" name="firstName" type="text" placeholder="Enter first name" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <label for="firstName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">First Name *</label>
+                <input id="firstName" name="firstName" type="text" placeholder="Enter first name" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="regMiddleName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Middle Name</label>
-                <input id="regMiddleName" name="middleName" type="text" placeholder="Enter middle name" style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <label for="middleName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Middle Name</label>
+                <input id="middleName" name="middleName" type="text" placeholder="Enter middle name" style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="regLastName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Last Name</label>
-                <input id="regLastName" name="lastName" type="text" placeholder="Enter last name" style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <label for="lastName" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Last Name *</label>
+                <input id="lastName" name="lastName" type="text" placeholder="Enter last name" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="regEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email Address</label>
-                <input id="regEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <label for="email" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Email Address *</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="regMobile" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Mobile Number</label>
-                <input id="regMobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian number" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <label for="mobile" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Mobile Number *</label>
+                <input id="mobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit Indian number" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
             <div style="margin-bottom: 25px;">
-                <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Create Password</label>
+                <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Create Password *</label>
                 <input id="regPass" name="password" type="password" minlength="8" placeholder="Minimum 8 characters" required style="width: 100%; height: 56px; padding: 16px; border-radius: 14px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
             </div>
 
-            <button type="submit" id="btnContinue" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(14,165,165,0.2);">
-                Register & Verify
+            <button type="submit" id="btnContinue" disabled style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: not-allowed; opacity: 0.6; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(14,165,165,0.2);">
+                Sign Up
             </button>
         </form>
     </div>
@@ -69,16 +69,101 @@
 </div>
 
 <script>
-    const signupForm = document.getElementById('signupForm');
+    const registerForm = document.getElementById('registerForm');
     const signupArea = document.getElementById('signupArea');
     const otpArea = document.getElementById('otpArea');
     const authStatus = document.getElementById('authStatus');
 
-    signupForm.addEventListener('submit', async (e) => {
+    const rules = {
+        firstName: { regex: /^[A-Za-z]+$/, min: 2, msg: "Please enter a valid first name" },
+        lastName: { regex: /^[A-Za-z]+$/, min: 2, msg: "Please enter a valid last name" },
+        email: { regex: /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/, min: 3, msg: "Please enter a valid email address" },
+        mobile: { regex: /^[6-9][0-9]{9}$/, min: 10, msg: "Please enter a valid 10-digit mobile number", numeric: true }
+    };
+
+    const btnSubmit = document.getElementById('btnContinue');
+
+    function validateField(id, showError = true) {
+        const input = document.getElementById(id);
+        const rule = rules[id];
+        if (!input || !rule) return true;
+
+        if (rule.numeric) {
+            input.value = input.value.replace(/\D/g, ''); // Block non-digits
+        }
+
+        const val = input.value.trim();
+        let isValid = val.length >= rule.min && rule.regex.test(val);
+
+        let errElem = input.nextElementSibling;
+        if (!errElem || !errElem.classList.contains('input-error')) {
+            errElem = document.createElement('div');
+            errElem.className = 'input-error';
+            errElem.style.color = '#e53e3e';
+            errElem.style.fontSize = '0.8rem';
+            errElem.style.marginTop = '4px';
+            errElem.style.display = 'none';
+            input.parentNode.appendChild(errElem);
+        }
+
+        if (val === '') {
+            input.style.borderColor = '#f0f0f0';
+            errElem.style.display = 'none';
+            return false;
+        }
+
+        if (isValid) {
+            input.style.borderColor = '#2f855a'; // Success green
+            errElem.style.display = 'none';
+        } else if (showError) {
+            input.style.borderColor = '#e53e3e'; // Error red
+            errElem.innerText = rule.msg;
+            errElem.style.display = 'block';
+        }
+
+        return isValid;
+    }
+
+    function checkFormValidity() {
+        let allValid = true;
+        Object.keys(rules).forEach(id => {
+            if (!validateField(id, false)) allValid = false;
+        });
+
+        const pass = document.getElementById('regPass').value;
+        if (!pass || pass.length < 8) allValid = false;
+
+        btnSubmit.disabled = !allValid;
+        btnSubmit.style.opacity = allValid ? "1" : "0.6";
+        btnSubmit.style.cursor = allValid ? "pointer" : "not-allowed";
+        return allValid;
+    }
+
+    Object.keys(rules).forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => { validateField(id, true); checkFormValidity(); });
+        el.addEventListener('blur', () => { validateField(id, true); });
+    });
+    document.getElementById('regPass').addEventListener('input', checkFormValidity);
+
+    registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        let firstInvalid = null;
+        Object.keys(rules).forEach(id => {
+            if (!validateField(id, true) && !firstInvalid) {
+                firstInvalid = document.getElementById(id);
+            }
+        });
+
+        if (firstInvalid) {
+            firstInvalid.focus();
+            return;
+        }
+        
         showStatus('Creating account...', '#eee', '#666');
         
-        const formData = new FormData(signupForm);
+        const formData = new FormData(registerForm);
         try {
             const resp = await fetch('/api/auth/signup', {
                 method: 'POST',

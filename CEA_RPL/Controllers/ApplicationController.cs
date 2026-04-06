@@ -85,15 +85,17 @@ public class ApplicationController : Controller
         return View();
     }
 
-    [HttpPost("submit")]
+    [HttpPost]
     [Authorize]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit([FromForm] ApplicationSubmissionRequest req)
     {
         return await ProcessApplication(req, isFinalSubmit: true);
     }
 
-    [HttpPost("save-draft")]
+    [HttpPost]
     [Authorize]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> SaveDraft([FromForm] ApplicationSubmissionRequest req)
     {
         return await ProcessApplication(req, isFinalSubmit: false);
@@ -101,6 +103,8 @@ public class ApplicationController : Controller
 
     private async Task<IActionResult> ProcessApplication(ApplicationSubmissionRequest req, bool isFinalSubmit)
     {
+        if (req == null) return BadRequest(new { message = "Application data payload was empty or rejected by the server format validator." });
+
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString) || !int.TryParse(userIdString, out var userId))
             return Unauthorized();
@@ -110,12 +114,6 @@ public class ApplicationController : Controller
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return Unauthorized();
-
-            bool skipOtpCheck = _env.IsDevelopment();
-            if (isFinalSubmit && !skipOtpCheck && (!user.IsEmailVerified || !user.IsMobileVerified))
-            {
-                return BadRequest(new { message = "You must verify your email and mobile OTPs before submitting." });
-            }
 
             var applicant = await _context.Applicants
                 .Include(a => a.Educations)
@@ -141,6 +139,20 @@ public class ApplicationController : Controller
                 _context.Applicants.Add(applicant);
             }
 
+            // --- NUMBER VALIDATION ---
+            if (!string.IsNullOrWhiteSpace(req.total_experience))
+            {
+                if (double.TryParse(req.total_experience, out double expVal))
+                {
+                    if (expVal < 0) return BadRequest(new { message = "Total experience cannot be negative." });
+                    req.total_experience = Math.Floor(expVal).ToString();
+                }
+                else
+                {
+                    return BadRequest(new { message = "Invalid numeric format for total experience." });
+                }
+            }
+
             // --- FILE VALIDATION ---
             string fileError;
             if (isFinalSubmit)
@@ -162,6 +174,24 @@ public class ApplicationController : Controller
             foreach (var list in collectionsWithFiles)
             {
                 if (list != null) foreach (var f in list) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
+            }
+
+            // --- ADDRESS VALIDATION ---
+            var addressRegex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9\s,.\-/#]{3,}$");
+            if (isFinalSubmit && string.IsNullOrWhiteSpace(req.address_perm))
+                return BadRequest(new { message = "Permanent Address is required." });
+            
+            if (!string.IsNullOrWhiteSpace(req.address_perm) && !addressRegex.IsMatch(req.address_perm.Trim()))
+                return BadRequest(new { message = "Permanent Address must be at least 3 characters and contain valid symbols." });
+                
+            if (!string.IsNullOrWhiteSpace(req.address_corr) && !addressRegex.IsMatch(req.address_corr.Trim()))
+                return BadRequest(new { message = "Correspondence Address must be at least 3 characters and contain valid symbols." });
+
+            // --- MEANINGFUL TEXT VALIDATION ---
+            var meaningfulErrors = ValidateMeaningfulText(req);
+            if (meaningfulErrors.Count > 0)
+            {
+                return BadRequest(new { message = $"Meaningless or invalid text detected in: {string.Join(", ", meaningfulErrors)}. Please enter meaningful human-readable information." });
             }
 
             // --- DATA MAPPING ---
@@ -573,5 +603,88 @@ public class ApplicationController : Controller
         }
 
         return true;
+    }
+
+    private bool IsMeaningfulText(string input, bool isDescription = false)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return true;
+
+        string text = input.Trim();
+        if (text.Length < 2) return false;
+
+        // Smash identical characters (aaaaaa, xxxx)
+        if (System.Text.RegularExpressions.Regex.IsMatch(text, @"^(.)\1{3,}$")) return false;
+
+        // Known keyboard smashes and test words
+        string lower = text.ToLower();
+        if (System.Text.RegularExpressions.Regex.IsMatch(lower, @"^qwerty|^asdf|^zxcv|^test(\s+test)*$|^abc(\s+abc)*$")) return false;
+
+        // Repeated identical words
+        var words = lower.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length >= 3)
+        {
+            var unique = new HashSet<string>(words);
+            if (unique.Count == 1) return false;
+        }
+
+        // Desc specific rules
+        if (isDescription)
+        {
+            if (words.Length < 5) return false;
+            
+            int validWordsCount = 0;
+            foreach (var w in words) if (w.Length >= 3) validWordsCount++;
+            if (validWordsCount < 3) return false;
+
+            var unique = new HashSet<string>(words);
+            if (unique.Count < (double)words.Length / 2) return false;
+        }
+
+        return true;
+    }
+
+    private List<string> ValidateMeaningfulText(ApplicationSubmissionRequest req)
+    {
+        var errors = new List<string>();
+
+        bool check(string? val, bool isDesc) => IsMeaningfulText(val ?? "", isDesc);
+        bool checkList(List<string>? list, bool isDesc) => list == null || list.All(x => IsMeaningfulText(x ?? "", isDesc));
+
+        if (!check(req.full_name, false)) errors.Add("Full Name");
+        if (!check(req.parent_relation, false)) errors.Add("Parent Relation");
+        if (!check(req.parent_name, false)) errors.Add("Parent Name");
+        if (!check(req.other_gov_id_type, false)) errors.Add("Other Gov ID Type");
+
+        if (!checkList(req.edu_institution, false)) errors.Add("Education Institution");
+        if (!checkList(req.exp_org, false)) errors.Add("Experience Organization");
+        if (!checkList(req.exp_designation, false)) errors.Add("Experience Designation / Proof Type");
+        if (!checkList(req.exp_nature, true)) errors.Add("Experience Role Description");
+        if (!checkList(req.ref2_name, false)) errors.Add("Reference Name");
+        
+        if (!checkList(req.project_name_cat1, false)) errors.Add("Project Name");
+        if (!checkList(req.project_client_cat1, false)) errors.Add("Project Client");
+        if (!checkList(req.project_location_cat1, false)) errors.Add("Project Location");
+        if (!checkList(req.project_role_cat1, false)) errors.Add("Project Role");
+
+        if (!checkList(req.training_name, false)) errors.Add("Training Name");
+        if (!checkList(req.training_from, false)) errors.Add("Training Institute");
+        
+        if (!checkList(req.membership_name, false)) errors.Add("Membership Name");
+        if (!checkList(req.membership_from, false)) errors.Add("Membership Institute");
+        
+        if (!checkList(req.paper_name, false)) errors.Add("Publication Title");
+        if (!checkList(req.paper_place, false)) errors.Add("Publication Place");
+        if (!checkList(req.paper_role, false)) errors.Add("Publication Role");
+        
+        if (!checkList(req.award_name, false)) errors.Add("Award Name");
+        if (!checkList(req.award_from, false)) errors.Add("Award From");
+
+        if (!checkList(req.software_skill, false)) errors.Add("Software Skill");
+
+        if (!check(req.enclosure_desc, true)) errors.Add("Enclosure Description");
+        if (!check(req.decl_name, false)) errors.Add("Declaration Name");
+        if (!check(req.decl_place, false)) errors.Add("Declaration Place");
+
+        return errors;
     }
 }

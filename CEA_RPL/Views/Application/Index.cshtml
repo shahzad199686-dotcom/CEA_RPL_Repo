@@ -291,14 +291,16 @@
 
                             <input type="file" id="candidatePhotoInput" name="applicant_photo" accept=".jpg,.jpeg,.png" style="display:none;" onchange="validateFileUpload(this)" />
 
-                            <div id="candidatePhotoUploadBox">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-plus" style="color: var(--accent);"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                                <div class="upload-title">Upload Candidate Photograph</div>
-                                <div class="upload-subtitle" id="uploadSubtitle">Click to browse image (JPG, PNG)</div>
+                            <div id="candidatePhotoUploadBox" class="compact-upload">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="compact-icon"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                <div class="compact-text">
+                                    <div class="upload-title">Upload Candidate Photograph</div>
+                                    <div class="upload-subtitle" id="uploadSubtitle">Click to browse image (JPG, PNG) - Max 2MB</div>
+                                </div>
                                 
                                 <div class="photo-action-buttons" id="photoActions" style="display: none; position: relative; z-index: 20;">
-                                    <button type="button" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem; font-weight: 700;" onclick="document.getElementById('candidatePhotoInput').click()">Change Photo</button>
-                                    <button type="button" class="btn" style="padding: 10px 20px; font-size: 0.9rem; font-weight: 700; background: #fff; border: 1.5px solid var(--line); color: var(--warn);" onclick="removePhoto()">Remove</button>
+                                    <button type="button" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;" onclick="document.getElementById('candidatePhotoInput').click()">Change</button>
+                                    <button type="button" class="btn btn-ghost" style="padding: 8px 16px; font-size: 0.85rem; color: var(--warn);" onclick="removePhoto()">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -439,58 +441,44 @@
                         You may choose multiple categories. Certification fees apply per category.
                     </div>
 
-                    <div class="cat-container">
-                        <label class="category-card">
-                            <div class="cat-header">
-                                <span class="cat-title">Category 1: Environment Auditing / Assessment</span>
+                    <div class="cat-container-v2">
+                        <label class="category-card-v2">
+                            <div class="cat-v2-content">
+                                <div class="cat-v2-title">Category 1 Compliance or Verification Audit:</div>
+                                <p class="cat-v2-desc">The Environment (Protection) Act, 1986 and its amendments, Water (Prevention and Control of Pollution) Act, 1974, Air (Prevention and Control of Pollution) Act, 1981, Environment Protection Rules, EIA Notification 2006 (Principal rules) and amendments, Hazardous and other Wastes (Management & Transboundary Movement) Rules; E-Waste Rules; Solid Waste Management Rules; Bio-medical Waste Management Rules; Plastic Waste Management Rules; Battery Waste Management Rules; Construction and Demolition Waste Management Rules; Greenhouse Gases Emission Intensity Target Rules, 2025 and any other rules issued by MoEF&CC from time to time, Eco-mark Rules, 2024, Coastal Zone Regulation Notification 2019, The Green Credit Rules, 2023</p>
+                            </div>
+                            <div class="cat-v2-action">
                                 <input type="checkbox" name="cert_category[]" value="Category 1">
                             </div>
-                            <span class="cat-desc">Environmental compliance and regulatory audits</span>
-                            <div class="rule-tags">
-                                <span class="rule-tag">EPA Act 1986</span>
-                                <span class="rule-tag">Water Act 1974</span>
-                                <span class="rule-tag">Air Act 1981</span>
-                                <span class="rule-tag">Waste Rules</span>
-                                <span class="rule-tag">CRZ Rules</span>
-                                <span class="rule-tag">Eco-mark</span>
-                                <span class="rule-tag">Green Credit</span>
-                            </div>
                         </label>
 
-                        <label class="category-card">
-                            <div class="cat-header">
-                                <span class="cat-title">Category 2: Sustainability or ESG Audit</span>
+                        <label class="category-card-v2">
+                            <div class="cat-v2-content">
+                                <div class="cat-v2-title">Category 2 Verification or Assessment Audits:</div>
+                                <p class="cat-v2-desc">Securities and Exchange Board of India Act, 1992, Business Responsibility and Sustainability Reporting under SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015</p>
+                            </div>
+                            <div class="cat-v2-action">
                                 <input type="checkbox" name="cert_category[]" value="Category 2">
                             </div>
-                            <span class="cat-desc">ESG, sustainability, SEBI BRSR compliance</span>
-                            <div class="rule-tags">
-                                <span class="rule-tag">SEBI Act 1992</span>
-                                <span class="rule-tag">BRSR Reporting</span>
-                                <span class="rule-tag">Listing Regs 2015</span>
-                            </div>
                         </label>
 
-                        <label class="category-card">
-                            <div class="cat-header">
-                                <span class="cat-title">Category 3: Forest Conservation Audit</span>
+                        <label class="category-card-v2">
+                            <div class="cat-v2-content">
+                                <div class="cat-v2-title">Category 3 Compliance or Verification audits under Forest Conservation Act:</div>
+                                <p class="cat-v2-desc">The Forest Conservation Act 1980, Van Sanrakshan Evam Samvardhan Adhiniyam, 1980</p>
+                            </div>
+                            <div class="cat-v2-action">
                                 <input type="checkbox" name="cert_category[]" value="Category 3">
                             </div>
-                            <span class="cat-desc">Forest compliance and conservation assessment</span>
-                            <div class="rule-tags">
-                                <span class="rule-tag">Forest Act 1980</span>
-                                <span class="rule-tag">Van Sanrakshan Adhiniyam</span>
-                            </div>
                         </label>
 
-                        <label class="category-card">
-                            <div class="cat-header">
-                                <span class="cat-title">Category 4: Wildlife Protection Audit</span>
-                                <input type="checkbox" name="cert_category[]" value="Category 4">
+                        <label class="category-card-v2">
+                            <div class="cat-v2-content">
+                                <div class="cat-v2-title">Category 4 Compliance or Verification Audits under Wildlife Protection Act:</div>
+                                <p class="cat-v2-desc">The Wildlife (Protection) ACT, 1972 (amended in 2022), Rules notified under the act for the purposes of Section 49 M vide Gazette Notification dated 28th February 2024</p>
                             </div>
-                            <span class="cat-desc">Wildlife protection and compliance verification</span>
-                            <div class="rule-tags">
-                                <span class="rule-tag">Wildlife Protection Act 1972</span>
-                                <span class="rule-tag">Notified Rules</span>
+                            <div class="cat-v2-action">
+                                <input type="checkbox" name="cert_category[]" value="Category 4">
                             </div>
                         </label>
                     </div>
@@ -549,7 +537,9 @@
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
                             <label>Total Experience (Years) <span class="req">*</span></label>
-                            <input name="total_experience" type="number" step="0.1" required placeholder="e.g. 4" />
+                            <input name="total_experience" type="number" step="0.1" min="0" required placeholder="e.g. 4" 
+                                   onblur="if(this.value) { this.value = Math.floor(parseFloat(this.value)); }" />
+                            <div class="hint" style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">Only full years are considered (decimals will be rounded down)</div>
                         </div>
                     </div>
                     
@@ -597,14 +587,17 @@
                             <div class="experience-grid-2">
                                 <div>
                                     <label class="field-label-premium">Proof of Experience</label>
-                                    <select name="exp_designation[]" required>
+                                    <select name="exp_designation[]" required onchange="toggleOtherProof(this)">
                                         <option value="">Select Proof Type</option>
-                                        <option>Appointment Letter</option>
-                                        <option>Experience Letter</option>
-                                        <option>Relieving Letter</option>
-                                        <option>Salary Slip</option>
-                                        <option>Other</option>
+                                        <option value="Appointment Letter">Appointment Letter</option>
+                                        <option value="Experience Letter">Experience Letter</option>
+                                        <option value="Relieving Letter">Relieving Letter</option>
+                                        <option value="Other (Please specify)" class="other-opt">Other (Please specify)</option>
                                     </select>
+                                    <div class="other-proof-container" style="display: none; margin-top: 12px;">
+                                        <label class="field-label-premium" style="font-size: 0.82rem;">Please specify proof type</label>
+                                        <input type="text" class="other-proof-input" placeholder="Specify document type" oninput="updateOtherProofValue(this)" />
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="field-label-premium">Certificate</label>
@@ -652,13 +645,9 @@
                                 <div>
                                     <label>Role of Applicant</label>
                                     <select name="project_role_cat1[]">
-                                        <option value="">Select Role</option>
-                                        <option>Lead Auditor</option>
+                                        <option value="">Select</option>
+                                        <option>Team Lead</option>
                                         <option>Team Member</option>
-                                        <option>Consultant</option>
-                                        <option>Reviewer</option>
-                                        <option>Coordinator</option>
-                                        <option>Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -1237,7 +1226,55 @@
             if (input.type === 'checkbox' || input.type === 'radio') {
                 if (!input.checked) isInvalid = true;
             } else {
-                if (!input.value || input.value.trim() === '') isInvalid = true;
+                if (!input.value || input.value.trim() === '') {
+                    isInvalid = true;
+                } else if (input.type === 'text' || input.tagName === 'TEXTAREA') {
+                    // Check meaningful
+                    const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
+                    const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
+                    
+                    if (input.name === 'address_perm' || input.name === 'address_corr') {
+                        if (input.value.trim() !== '' && !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
+                            isInvalid = true;
+                            if (!input.parentNode.querySelector('.address-error')) {
+                                const err = document.createElement('div');
+                                err.className = 'address-error file-validation-hint';
+                                err.style.color = '#c53030';
+                                err.style.fontSize = '0.75rem';
+                                err.style.marginTop = '4px';
+                                err.style.fontWeight = '600';
+                                err.innerText = "⚠️ Address must be at least 3 characters.";
+                                input.parentNode.appendChild(err);
+                            }
+                        } else {
+                            if (input.parentNode.querySelector('.address-error')) {
+                                input.parentNode.querySelector('.address-error').remove();
+                            }
+                        }
+                    } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
+                        isInvalid = true;
+                        input.dataset.gibberishError = "true";
+                        
+                        // Prevent duplicate error additions natively
+                        if (!input.parentNode.querySelector('.meaningful-error')) {
+                            const err = document.createElement('div');
+                            err.className = 'meaningful-error file-validation-hint';
+                            err.style.color = '#c53030';
+                            err.style.fontSize = '0.75rem';
+                            err.style.marginTop = '4px';
+                            err.style.fontWeight = '600';
+                            err.innerText = "⚠️ " + (isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.");
+                            // Insert directly after input structurally
+                            input.parentNode.appendChild(err);
+                        }
+                    } else {
+                        input.dataset.gibberishError = "";
+                        // Remove error dynamically cleanly
+                        if (input.parentNode.querySelector('.meaningful-error')) {
+                            input.parentNode.querySelector('.meaningful-error').remove();
+                        }
+                    }
+                }
             }
 
             if (isInvalid) {
@@ -1340,7 +1377,43 @@
             }
         });
         
+        // Reset dynamic Other Proof options
+        newCard.querySelectorAll('.other-opt').forEach(opt => opt.value = 'Other (Please specify)');
+        newCard.querySelectorAll('.other-proof-container').forEach(c => {
+            c.style.display = 'none';
+            c.querySelector('.other-proof-input').removeAttribute('required');
+        });
+        
         container.appendChild(newCard);
+    }
+
+    function toggleOtherProof(selectElement) {
+        const wrapper = selectElement.parentElement;
+        const container = wrapper.querySelector('.other-proof-container');
+        const input = container.querySelector('.other-proof-input');
+        const otherOpt = selectElement.querySelector('.other-opt');
+        
+        if (selectElement.options[selectElement.selectedIndex].classList.contains('other-opt')) {
+            container.style.display = 'block';
+            input.setAttribute('required', 'required');
+            input.focus();
+        } else {
+            container.style.display = 'none';
+            input.removeAttribute('required');
+            input.value = '';
+            otherOpt.value = 'Other (Please specify)';
+        }
+    }
+
+    function updateOtherProofValue(inputElement) {
+        const wrapper = inputElement.parentElement.parentElement;
+        const select = wrapper.querySelector('select[name="exp_designation[]"]');
+        const otherOpt = select.querySelector('.other-opt');
+        if(inputElement.value.trim() !== '') {
+            otherOpt.value = inputElement.value.trim();
+        } else {
+            otherOpt.value = 'Other (Please specify)';
+        }
     }
 
     // Logic to sync combined duration for professional experience
@@ -1549,15 +1622,31 @@
         const formData = new FormData(document.getElementById('applicationForm'));
         formData.append('current_step', currentStep);
 
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
         try {
-            const response = await fetch('/save-draft', {
+            const response = await fetch('/Application/SaveDraft', {
                 method: 'POST',
+                headers: { 'X-CSRF-TOKEN': token },
                 body: formData
             });
-            const result = await response.json();
-            if (statusEl) {
-                statusEl.textContent = `Draft saved at ${result.savedAt}`;
-                setTimeout(() => { statusEl.style.opacity = '0.7'; }, 4000);
+            const textRaw = await response.text();
+            let result;
+            try {
+                result = JSON.parse(textRaw);
+            } catch(e) {
+                console.error("Non-JSON Server Error Output:", textRaw);
+                throw new Error("Invalid format returned by server.");
+            }
+
+            if (response.ok) {
+                if (statusEl) {
+                    statusEl.textContent = `Draft saved at ${result.savedAt || new Date().toLocaleTimeString()}`;
+                    setTimeout(() => { statusEl.style.opacity = '0.7'; }, 4000);
+                }
+            } else {
+                console.error('Save Draft Server Rejection:', result.message);
+                if (statusEl) statusEl.textContent = 'Save failed (Invalid Data)';
             }
         } catch (error) {
             console.error('Save draft failed:', error);
@@ -1844,55 +1933,106 @@
     });
 
     async function submitFinalApplication() {
+        console.log("[SUBMIT DEBUG] Submit button clicked. Starting validation...");
         // 1. Mandatory Steps Integrity Check (Scans all 14 steps for missing required fields)
         for (let i = 1; i < totalSteps; i++) {
             if (!validateSection(i)) {
+                console.warn(`[SUBMIT DEBUG] Validation failed at Step ${i}`);
                 currentStep = i;
                 updateUI();
-                showToast("Your application is incomplete. Please complete all mandatory sections first.", "error");
+                showToast(`Your application is incomplete at Step ${i}. Please complete all mandatory fields.`, "error");
                 return;
             }
         }
 
+        console.log("[SUBMIT DEBUG] All steps validated successfully. Checking mandatory confirmations...");
         // 2. Checklist confirmation check
         const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
         if (Array.from(mandatoryCbs).some(cb => !cb.checked)) {
+            console.warn("[SUBMIT DEBUG] Validation failed at Mandatory Checklist Checklist");
             showToast("Please confirm all mandatory documents are uploaded in the checklist (Step 15).", "error");
             document.getElementById('checklistError').style.display = 'block';
             return;
         }
 
-        if (!confirm("Are you sure you want to submit your application? No further changes can be made.")) return;
+        if (!confirm("Are you sure you want to submit your application? No further changes can be made.")) {
+             console.log("[SUBMIT DEBUG] User cancelled submit confirmation.");
+             return;
+        }
 
+        console.log("[SUBMIT DEBUG] Confirmation accepted. Locking UI and packing payload.");
         const btn = document.getElementById('submitFinalApplicationBtn');
         const oldText = btn.textContent;
         btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '0.7';
         btn.textContent = "Submitting...";
 
         try {
             const form = document.getElementById('applicationForm');
+            if (!form) {
+                 console.error("[SUBMIT DEBUG] Form 'applicationForm' not found in DOM!");
+                 showToast("Internal Error: Form missing.", "error");
+                 btn.disabled = false;
+                 btn.style.pointerEvents = 'auto';
+                 btn.style.opacity = '1';
+                 btn.textContent = oldText;
+                 return;
+            }
+            
             const formData = new FormData(form);
+            formData.append('isFinalSubmit', 'true');
+            formData.set('current_step', '15');
+            
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            console.log("[SUBMIT DEBUG] Payload packed successfully. Sending POST to /Application/Submit ...");
 
-            const response = await fetch('/submit', {
+            const response = await fetch('/Application/Submit', {
                 method: 'POST',
+                headers: { 'X-CSRF-TOKEN': token },
                 body: formData
             });
 
-            const result = await response.json();
+            console.log(`[SUBMIT DEBUG] Server responded with status: ${response.status}`);
+            const textRaw = await response.text();
+            let result;
+            try {
+                result = JSON.parse(textRaw);
+            } catch(e) {
+                console.error("[SUBMIT DEBUG] Server response crashed / generated HTML instead of JSON:", textRaw);
+                showToast("Server rejected submission format. Check console logs.", "error");
+                btn.disabled = false;
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
+                btn.textContent = oldText;
+                return;
+            }
+            console.log("[SUBMIT DEBUG] Server Response Data:", result);
 
             if (response.ok) {
                 // Show unified success overlay
-                document.getElementById('successOverlay').classList.add('active');
+                console.log("[SUBMIT DEBUG] Submit successful. Overlay activated.");
+                const overlay = document.getElementById('successOverlay');
+                overlay.style.display = 'flex';
+                overlay.classList.add('active');
+                setTimeout(() => {
+                     window.location.href = "/Auth/Dashboard"; // Adjust path as needed or fallback to root
+                }, 3000);
             } else {
                 // Surface specific backend error messages (e.g., OTP not verified)
-                showToast(result.message || "Submission failed. Please check all fields.", "error");
+                console.error("[SUBMIT DEBUG] Submit rejected by server:", result.message);
+                showToast(result.message || "Submission failed due to invalid data. Please check all fields.", "error");
                 btn.disabled = false;
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
                 btn.textContent = oldText;
             }
         } catch (error) {
-            console.error('Submission error:', error);
-            showToast("Networking error. Please try again.", "error");
+            console.error('[SUBMIT DEBUG] Networking/JS error executing submit:', error);
+            showToast("Connection failed or internal error occurred. See console logs.", "error");
             btn.disabled = false;
+            btn.style.pointerEvents = 'auto';
+            btn.style.opacity = '1';
             btn.textContent = oldText;
         }
     }
@@ -2431,6 +2571,67 @@
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
         
+        // Setup blur validation for meaningless text globally
+        document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+            const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
+            if (skipNames.includes(input.name)) return;
+            
+            input.addEventListener('blur', function() {
+                if (this.value && this.value.trim() !== '') {
+                    const isDesc = this.tagName === 'TEXTAREA' || this.name === 'enclosure_desc';
+                    if (typeof isMeaningfulText === 'function' && !isMeaningfulText(this.value, isDesc)) {
+                        this.style.borderColor = 'var(--warn)';
+                        if (!this.parentNode.querySelector('.meaningful-error')) {
+                            const err = document.createElement('div');
+                            err.className = 'meaningful-error file-validation-hint';
+                            err.style.color = '#c53030';
+                            err.style.fontSize = '0.75rem';
+                            err.style.marginTop = '4px';
+                            err.style.fontWeight = '600';
+                            err.innerText = "⚠️ " + (isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.");
+                            this.parentNode.appendChild(err);
+                        }
+                    } else {
+                        this.style.borderColor = '';
+                        if (this.parentNode.querySelector('.meaningful-error')) {
+                            this.parentNode.querySelector('.meaningful-error').remove();
+                        }
+                    }
+                } else if (!this.value || this.value.trim() === '') {
+                     // Empty values clear meaningful errors, standard 'required' logic applies natively
+                     this.style.borderColor = '';
+                     if (this.parentNode.querySelector('.meaningful-error')) {
+                          this.parentNode.querySelector('.meaningful-error').remove();
+                     }
+                }
+            });
+        });
+        
+        // Setup blur validation specifically for Address inputs
+        document.querySelectorAll('textarea[name="address_perm"], textarea[name="address_corr"]').forEach(input => {
+            input.addEventListener('blur', function() {
+                const val = this.value ? this.value.trim() : '';
+                if (val !== '' && !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(val)) {
+                     this.style.borderColor = 'var(--warn)';
+                     if (!this.parentNode.querySelector('.address-error')) {
+                         const err = document.createElement('div');
+                         err.className = 'address-error file-validation-hint';
+                         err.style.color = '#c53030';
+                         err.style.fontSize = '0.75rem';
+                         err.style.marginTop = '4px';
+                         err.style.fontWeight = '600';
+                         err.innerText = "⚠️ Address must be at least 3 characters.";
+                         this.parentNode.appendChild(err);
+                     }
+                } else {
+                     this.style.borderColor = '';
+                     if (this.parentNode.querySelector('.address-error')) {
+                         this.parentNode.querySelector('.address-error').remove();
+                     }
+                }
+            });
+        });
+        
         // Sidebar Navigation Handling
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', (e) => {
@@ -2616,6 +2817,16 @@
 
 /* Document Requirement Popup Modal Styles */
 #docReqModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 3000;
     opacity: 0;
     visibility: hidden;
@@ -2654,14 +2865,17 @@
 .modal-header p { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin: 0; }
 
 .modal-scroll-area { max-height: 400px; overflow-y: auto; margin-bottom: 30px; padding-right: 10px; }
-.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-.check-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 500; color: var(--ink); }
-.check-box { 
-    width: 20px; height: 20px; background: var(--accent-light); color: var(--accent);
-    border-radius: 4px; display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+.req-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 24px; }
+.req-section h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 16px; font-weight: 800; border-bottom: 2px solid var(--line); padding-bottom: 8px; }
+.req-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: req-counter; }
+.req-list li { position: relative; padding-left: 28px; font-size: 0.95rem; color: var(--ink); line-height: 1.5; }
+.req-list li::before { 
+    content: counter(req-counter) ")";
+    counter-increment: req-counter;
+    position: absolute; left: 0; top: 0;
+    font-weight: 700; color: #0F9D9A;
 }
-
+.req-list li span { color: var(--muted); font-size: 0.85rem; display: block; margin-top: 2px; }
 .time-info-card {
     background: #fff8e1; border: 1px solid #ffecb3; border-radius: 12px;
     padding: 16px 20px; display: flex; gap: 15px; align-items: center;
@@ -2677,7 +2891,7 @@
 
 @@media (max-width: 640px) {
     .doc-modal { border-radius: 0; height: 100vh; max-width: 100%; padding: 30px 20px; overflow-y: auto; }
-    .checklist-grid { grid-template-columns: 1fr; }
+    .req-columns { grid-template-columns: 1fr; gap: 30px; }
     .modal-footer { flex-direction: column; gap: 20px; align-items: flex-start; }
     .modal-btns { width: 100%; flex-direction: column; }
     .modal-btns .btn { width: 100%; }
@@ -2883,6 +3097,7 @@
     .timeline-node.active { border-left-color: #0F9D9A; }
 }
 
+</style>
 <!-- Success Confirmation Modal -->
 <div id="successOverlay" class="success-overlay">
     <div class="success-card">
@@ -2909,41 +3124,77 @@
         </div>
 
         <div class="modal-scroll-area">
-            <div class="checklist-grid">
-                <div class="check-item"><span class="check-box">✓</span> Recent Passport Size Photograph</div>
-                <div class="check-item"><span class="check-box">✓</span> Government ID / Citizenship Proof</div>
-                <div class="check-item"><span class="check-box">✓</span> Educational Certificates</div>
-                <div class="check-item"><span class="check-box">✓</span> Experience Certificates</div>
-                <div class="check-item"><span class="check-box">✓</span> Project / Audit Reports</div>
-                <div class="check-item"><span class="check-box">✓</span> Training / Certifications</div>
-                <div class="check-item"><span class="check-box">✓</span> Publications / Research Papers</div>
-                <div class="check-item"><span class="check-box">✓</span> Awards / Recognition</div>
-                <div class="check-item"><span class="check-box">✓</span> Payment Receipt / Transaction ID</div>
-                <div class="check-item"><span class="check-box">✓</span> Signed Declaration</div>
-            </div>
-
-            <div class="time-info-card">
-                <div class="time-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#856404" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div class="req-columns">
+                <div class="req-section">
+                    <h3>Mandatory Documents</h3>
+                    <ul class="req-list">
+                        <li>Degree Certificate(s)</li>
+                        <li>Government-approved Photo Identity Card</li>
+                        <li>Experience Certificates <span>(Subject to verification)</span></li>
+                        <li>Applicant's photograph and signature</li>
+                        <li>2 to 5 audit/study reports authored/co-authored by the applicant</li>
+                    </ul>
                 </div>
-                <div>
-                    <strong>Estimated Time: 20–30 Minutes</strong>
-                    <p style="margin: 4px 0 0; color: #856404; font-size: 0.85rem;">Keep all documents ready for smooth submission</p>
+                
+                <div class="req-section">
+                    <h3>Additional Documents</h3>
+                    <ul class="req-list">
+                        <li>Final year marksheet(s) of relevant degrees</li>
+                        <li>Details of certifications/training</li>
+                        <li>Membership in professional bodies</li>
+                        <li>Details of papers published/presented</li>
+                        <li>Awards/recognition</li>
+                        <li>Any other relevant enclosure</li>
+                    </ul>
                 </div>
             </div>
-        </div>
-
-        <div class="modal-footer">
-            <label class="noshow-label">
-                <input type="checkbox" id="chkHideForever"> Do not show this again
-            </label>
-            <div class="modal-btns">
-                <button class="btn btn-ghost" onclick="closeDocModal()">Close</button>
-                <button class="btn btn-primary" onclick="closeDocModal()">Continue to Application</button>
+            
+            <div class="modal-footer">
+                <label class="noshow-label">
+                    <input type="checkbox" id="chkHideForever">
+                    <span>Don't show this again</span>
+                </label>
+                <div class="modal-btns">
+                    <button class="btn btn-primary" onclick="closeDocModal()">Continue</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    function isMeaningfulText(val, isDesc = false) {
+        if (!val || val.trim() === '') return true; // emptiness validated by form layer securely
+        const text = val.trim();
+        if (text.length < 2) return false; // Hard threshold filter
+        
+        // Block pure redundant repeat characters (e.g. jjjjjjj, eeee)
+        if (/^(.)\1{3,}$/.test(text)) return false;
+        
+        // Trap known layout smashes & specific testing artifacts intelligently
+        const lower = text.toLowerCase();
+        if (/^qwerty|^asdf|^zxcv/.test(lower) || /^test(\s+test)*$/.test(lower) || /^abc(\s+abc)*$/.test(lower)) return false;
+        
+        // Word analysis algorithms to determine unique redundancy loops computationally
+        const words = lower.split(/\s+/).filter(w => w.length > 0);
+        if (words.length >= 3) {
+            const unique = new Set(words);
+            if (unique.size === 1) return false; // Aborts "test test test" definitively
+        }
+
+        // Expanded logic explicitly for descriptive text blocks (enclosures/nature of work)
+        if (isDesc) {
+            if (words.length < 5) return false;
+            let validWords = words.filter(w => w.length >= 3);
+            if (validWords.length < 3) return false;
+            
+            let uniqueWords = new Set(words);
+            if (uniqueWords.size < words.length / 2) return false;
+        }
+        
+        return true;
+    }
+</script>
 </body>
 </html>
+
