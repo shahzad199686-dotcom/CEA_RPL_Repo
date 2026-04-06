@@ -933,18 +933,6 @@
                             <div class="bank-item"><span class="bank-label">Mode</span><span class="bank-value">NEFT / RTGS / UPI</span></div>
                         </div>
 
-                        <!-- QR Code Section -->
-                        <div class="payment-qr-wrap">
-                            <div class="qr-code-placeholder">
-                                <!-- Using a generic QR placeholder image -->
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=cearpl@sbi&pn=CEA%20RPL%20Authority&am=0&cu=INR" alt="UPI QR Code" />
-                            </div>
-                            <div class="qr-info">
-                                <span class="payment-instruction-bold">Scan QR to pay via UPI</span>
-                                <div class="upi-id-box">cearpl@sbi</div>
-                                <p class="hint">After payment, please enter the UTR / Transaction ID below.</p>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Auto-Calculation Summary -->
@@ -1211,79 +1199,139 @@
         }
     }
 
+    const validationMetadata = {
+        'full_name': { label: 'Full Name', error: 'Please enter your full name as per government records.', example: 'Example: Rahul Sharma' },
+        'parent_relation': { label: 'Parent Relation', error: 'Please select your relationship with the parent/guardian.', example: 'Example: Father' },
+        'parent_name': { label: 'Parent Name', error: 'Please enter the name of your parent or guardian.', example: 'Example: Vijay Sharma' },
+        'email': { label: 'Email ID', error: 'Please enter a valid email address.', example: 'Example: rahul.sharma@email.com' },
+        'mobile': { label: 'Mobile Number', error: 'Please enter a valid 10-digit mobile number.', example: 'Example: 9876543210' },
+        'dob': { label: 'Date of Birth', error: 'Please select your date of birth.', example: 'Format: DD-MM-YYYY' },
+        'gender': { label: 'Gender', error: 'Please select your gender.', example: 'Example: Male' },
+        'citizenship': { label: 'Citizenship', error: 'Please select your citizenship.', example: 'Only Indian citizens are eligible' },
+        'address_perm': { label: 'Permanent Address', error: 'Please enter your complete permanent address.', example: 'Example: 123, Park Street, Kolkata, WB - 700016' },
+        'address_corr': { label: 'Correspondence Address', error: 'Please enter your correspondence address.', example: 'Example: Same as above' },
+        'gov_id_type': { label: 'ID Type', error: 'Please select a government-approved identity proof.', example: 'Example: Aadhaar Card' },
+        'gov_id_number': { label: 'ID Number', error: 'Please enter a valid identity document number.', example: 'Example: 1234 5678 9012' },
+        'gov_id_upload': { label: 'ID Proof Upload', error: 'Please upload a clear copy of your identity proof.', example: 'Max size: 2MB for Images, 10MB for PDF' },
+        'applicant_photo': { label: 'Photograph', error: 'Please upload a professional passport-size photograph.', example: 'Clear face, neutral background, max 2MB' },
+        'edu_degree[]': { label: 'Degree', error: 'Please enter the degree name.', example: 'Example: B.E. Environmental Engineering' },
+        'edu_discipline[]': { label: 'Discipline', error: 'Please enter the discipline or course name.', example: 'Example: Environmental Science' },
+        'edu_institution[]': { label: 'Institution', error: 'Please enter the full university or college name.', example: 'Example: IIT Delhi' },
+        'edu_year[]': { label: 'Passing Year', error: 'Please enter a valid passing year.', example: 'Example: 2018' },
+        'edu_cert[]': { label: 'Certificate', error: 'Please upload your degree certificate or provisional.', example: 'Max size: 10MB PDF/Image' },
+        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 8.5' },
+        'exp_org[]': { label: 'Organization', error: 'Please enter the organization name.', example: 'Example: Green Tech Solutons' },
+        'exp_designation[]': { label: 'Designation', error: 'Please enter your designation.', example: 'Example: Senior Auditor' },
+        'exp_nature[]': { label: 'Nature of Work', error: 'Please describe your key responsibilities.', example: 'Example: Leading environmental audits for industrial plants...' },
+        'exp_proof[]': { label: 'Experience Proof', error: 'Please upload service certificate or relieving letter.', example: 'Max size: 10MB PDF' },
+        'payment_utr': { label: 'UTR Number', error: 'Please enter the 12 or 22 digit UTR number.', example: 'Example: SBIN123456789012' },
+        'payment_date': { label: 'Payment Date', error: 'Please select the date the payment was made.', example: 'Should match the receipt' },
+        'payment_receipt': { label: 'Payment Receipt', error: 'Please upload the bank transaction confirmation.', example: 'Max size: 10MB PDF/JPG' },
+        'decl_name': { label: 'Applicant Name', error: 'Please enter your full name for the declaration.', example: 'Should match Applicant Details' }
+    };
+
+    function showFieldError(input, customMsg = null) {
+        if (!input) return;
+        
+        input.classList.add('field-invalid');
+        input.classList.add('field-error-pulse');
+        
+        const name = input.name || input.id;
+        const meta = validationMetadata[name] || {};
+        const errorMsg = customMsg || meta.error || 'This field is required.';
+        const example = meta.example || '';
+        
+        // Remove existing error logic
+        hideFieldError(input);
+        
+        const guidance = document.createElement('div');
+        guidance.className = 'error-guidance';
+        guidance.innerHTML = `
+            <span class="error-text">⚠️ ${errorMsg}</span>
+            ${example ? `<span class="example-text">${example}</span>` : ''}
+        `;
+        
+        // Find best place to insert
+        let container = input.parentElement;
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            container = input.closest('.category-card-v2') || input.parentElement;
+        }
+        
+        container.appendChild(guidance);
+    }
+
+    function hideFieldError(input) {
+        if (!input) return;
+        input.classList.remove('field-invalid');
+        input.classList.remove('field-error-pulse');
+        
+        let container = input.parentElement;
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            container = input.closest('.category-card-v2') || input.parentElement;
+        }
+        
+        const existing = container.querySelector('.error-guidance');
+        if (existing) existing.remove();
+
+        // Also clean up old-style errors
+        const oldMeaningful = container.querySelector('.meaningful-error');
+        if (oldMeaningful) oldMeaningful.remove();
+        const oldAddress = container.querySelector('.address-error');
+        if (oldAddress) oldAddress.remove();
+    }
+
     function validateSection(step) {
         const section = document.getElementById('step-' + step);
         if (!section) return true;
 
-        const inputs = section.querySelectorAll('[required]');
+        const inputs = section.querySelectorAll('[required], .required-group');
         let firstInvalid = null;
         let valid = true;
-        
-        section.querySelectorAll('.field-error-pulse').forEach(el => el.classList.remove('field-error-pulse'));
+
+        // Clear all previous errors in this section
+        section.querySelectorAll('input, select, textarea').forEach(input => hideFieldError(input));
 
         inputs.forEach(input => {
             let isInvalid = false;
+            let customMsg = null;
+
             if (input.type === 'checkbox' || input.type === 'radio') {
-                if (!input.checked) isInvalid = true;
+                // If it's a field name with [], check if at least one is checked if it's a group
+                if (input.name.includes('[]')) {
+                    const group = section.querySelectorAll(`input[name="${input.name}"]`);
+                    const checkedCount = Array.from(group).filter(i => i.checked).length;
+                    if (checkedCount === 0) isInvalid = true;
+                } else if (!input.checked) {
+                    isInvalid = true;
+                }
             } else {
                 if (!input.value || input.value.trim() === '') {
                     isInvalid = true;
                 } else if (input.type === 'text' || input.tagName === 'TEXTAREA') {
-                    // Check meaningful
                     const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
                     const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
                     
                     if (input.name === 'address_perm' || input.name === 'address_corr') {
-                        if (input.value.trim() !== '' && !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
+                        if (input.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
                             isInvalid = true;
-                            if (!input.parentNode.querySelector('.address-error')) {
-                                const err = document.createElement('div');
-                                err.className = 'address-error file-validation-hint';
-                                err.style.color = '#c53030';
-                                err.style.fontSize = '0.75rem';
-                                err.style.marginTop = '4px';
-                                err.style.fontWeight = '600';
-                                err.innerText = "⚠️ Address must be at least 3 characters.";
-                                input.parentNode.appendChild(err);
-                            }
-                        } else {
-                            if (input.parentNode.querySelector('.address-error')) {
-                                input.parentNode.querySelector('.address-error').remove();
-                            }
+                            customMsg = "Address must be at least 3 characters and contain valid symbols.";
+                        }
+                    } else if (input.name === 'mobile' || input.name === 'alt_mobile') {
+                        if (input.value.trim() !== '' && !/^[0-9]{10}$/.test(input.value.trim())) {
+                            isInvalid = true;
+                            customMsg = "Please enter a valid 10-digit mobile number.";
                         }
                     } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
                         isInvalid = true;
-                        input.dataset.gibberishError = "true";
-                        
-                        // Prevent duplicate error additions natively
-                        if (!input.parentNode.querySelector('.meaningful-error')) {
-                            const err = document.createElement('div');
-                            err.className = 'meaningful-error file-validation-hint';
-                            err.style.color = '#c53030';
-                            err.style.fontSize = '0.75rem';
-                            err.style.marginTop = '4px';
-                            err.style.fontWeight = '600';
-                            err.innerText = "⚠️ " + (isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.");
-                            // Insert directly after input structurally
-                            input.parentNode.appendChild(err);
-                        }
-                    } else {
-                        input.dataset.gibberishError = "";
-                        // Remove error dynamically cleanly
-                        if (input.parentNode.querySelector('.meaningful-error')) {
-                            input.parentNode.querySelector('.meaningful-error').remove();
-                        }
+                        customMsg = isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.";
                     }
                 }
             }
 
             if (isInvalid) {
                 valid = false;
-                input.style.borderColor = 'var(--warn)';
-                input.classList.add('field-error-pulse');
+                showFieldError(input, customMsg);
                 if (!firstInvalid) firstInvalid = input;
-            } else {
-                input.style.borderColor = '';
             }
         });
 
@@ -1293,14 +1341,13 @@
             if (categories.length === 0) {
                 valid = false;
                 showToast("Please select at least one certification category.", "error");
-                const gridElem = section.querySelector('.alert').nextElementSibling;
+                const gridElem = section.querySelector('.cat-container-v2');
                 if (!firstInvalid) firstInvalid = gridElem;
-                gridElem.classList.add('field-error-pulse');
             }
         }
 
         if (!valid) {
-            showToast("Required fields are missing. Please complete them to proceed.", "error");
+            showToast("Please correct the highlighted fields to proceed.", "error");
             if (firstInvalid) {
                 const rect = firstInvalid.getBoundingClientRect();
                 const absoluteTop = rect.top + window.pageYOffset;
@@ -1310,6 +1357,7 @@
         }
         return valid;
     }
+
 
     function nextStep() {
         if (!validateSection(currentStep)) return;
@@ -1646,8 +1694,19 @@
                 }
             } else {
                 console.error('Save Draft Server Rejection:', result.message);
-                if (statusEl) statusEl.textContent = 'Save failed (Invalid Data)';
+                if (statusEl) statusEl.textContent = 'Save failed (Validation Errors)';
+                
+                // Map backend errors if they exist in the message or structure
+                if (result.message && result.message.includes('detected in:')) {
+                    // The backend returns a string like "detected in: Full Name, Parent Name"
+                    // We can attempt to highlight these if we want, but field-level mapping is better.
+                    // Since backend was reverted to string, we just warn the user.
+                    showToast(result.message, "error");
+                } else {
+                    showToast(result.message || "Save failed due to validation errors.", "error");
+                }
             }
+
         } catch (error) {
             console.error('Save draft failed:', error);
             if (statusEl) statusEl.textContent = 'Save failed (Check Connection)';
@@ -1933,59 +1992,47 @@
     });
 
     async function submitFinalApplication() {
-        console.log("[SUBMIT DEBUG] Submit button clicked. Starting validation...");
-        // 1. Mandatory Steps Integrity Check (Scans all 14 steps for missing required fields)
-        for (let i = 1; i < totalSteps; i++) {
-            if (!validateSection(i)) {
-                console.warn(`[SUBMIT DEBUG] Validation failed at Step ${i}`);
+        // 1. Mandatory Step Validation
+        for(let i=1; i<totalSteps; i++) {
+            if(!validateSection(i)) {
                 currentStep = i;
                 updateUI();
-                showToast(`Your application is incomplete at Step ${i}. Please complete all mandatory fields.`, "error");
+                showToast(`Step ${i} has incomplete or invalid fields.`, "error");
                 return;
             }
         }
 
-        console.log("[SUBMIT DEBUG] All steps validated successfully. Checking mandatory confirmations...");
-        // 2. Checklist confirmation check
+        // 2. Checklist confirmation check (Step 15)
         const mandatoryCbs = document.querySelectorAll('.mandatory-cb');
-        if (Array.from(mandatoryCbs).some(cb => !cb.checked)) {
-            console.warn("[SUBMIT DEBUG] Validation failed at Mandatory Checklist Checklist");
-            showToast("Please confirm all mandatory documents are uploaded in the checklist (Step 15).", "error");
+        let checklistValid = true;
+        mandatoryCbs.forEach(cb => {
+            if (!cb.checked) {
+                checklistValid = false;
+                cb.parentElement.style.color = '#c53030';
+            } else {
+                cb.parentElement.style.color = '';
+            }
+        });
+
+        if (!checklistValid) {
+            showToast("Please confirm all mandatory documents in the checklist (Step 15).", "error");
             document.getElementById('checklistError').style.display = 'block';
             return;
         }
 
         if (!confirm("Are you sure you want to submit your application? No further changes can be made.")) {
-             console.log("[SUBMIT DEBUG] User cancelled submit confirmation.");
              return;
         }
 
-        console.log("[SUBMIT DEBUG] Confirmation accepted. Locking UI and packing payload.");
         const btn = document.getElementById('submitFinalApplicationBtn');
         const oldText = btn.textContent;
         btn.disabled = true;
-        btn.style.pointerEvents = 'none';
-        btn.style.opacity = '0.7';
-        btn.textContent = "Submitting...";
+        btn.innerHTML = '<span class="pulse-dot"></span> Submitting...';
 
         try {
             const form = document.getElementById('applicationForm');
-            if (!form) {
-                 console.error("[SUBMIT DEBUG] Form 'applicationForm' not found in DOM!");
-                 showToast("Internal Error: Form missing.", "error");
-                 btn.disabled = false;
-                 btn.style.pointerEvents = 'auto';
-                 btn.style.opacity = '1';
-                 btn.textContent = oldText;
-                 return;
-            }
-            
             const formData = new FormData(form);
-            formData.append('isFinalSubmit', 'true');
-            formData.set('current_step', '15');
-            
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
-            console.log("[SUBMIT DEBUG] Payload packed successfully. Sending POST to /Application/Submit ...");
 
             const response = await fetch('/Application/Submit', {
                 method: 'POST',
@@ -1993,46 +2040,48 @@
                 body: formData
             });
 
-            console.log(`[SUBMIT DEBUG] Server responded with status: ${response.status}`);
-            const textRaw = await response.text();
-            let result;
-            try {
-                result = JSON.parse(textRaw);
-            } catch(e) {
-                console.error("[SUBMIT DEBUG] Server response crashed / generated HTML instead of JSON:", textRaw);
-                showToast("Server rejected submission format. Check console logs.", "error");
-                btn.disabled = false;
-                btn.style.pointerEvents = 'auto';
-                btn.style.opacity = '1';
-                btn.textContent = oldText;
-                return;
-            }
-            console.log("[SUBMIT DEBUG] Server Response Data:", result);
+            const result = await response.json();
 
             if (response.ok) {
-                // Show unified success overlay
-                console.log("[SUBMIT DEBUG] Submit successful. Overlay activated.");
+                showToast(result.message, "success");
                 const overlay = document.getElementById('successOverlay');
-                overlay.style.display = 'flex';
-                overlay.classList.add('active');
-                setTimeout(() => {
-                     window.location.href = "/Auth/Dashboard"; // Adjust path as needed or fallback to root
-                }, 3000);
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                    overlay.classList.add('active');
+                }
+                setTimeout(() => window.location.href = "/Auth/Dashboard", 3000);
             } else {
-                // Surface specific backend error messages (e.g., OTP not verified)
-                console.error("[SUBMIT DEBUG] Submit rejected by server:", result.message);
-                showToast(result.message || "Submission failed due to invalid data. Please check all fields.", "error");
+                showToast(result.message || "Submission rejected by server.", "error");
                 btn.disabled = false;
-                btn.style.pointerEvents = 'auto';
-                btn.style.opacity = '1';
                 btn.textContent = oldText;
+                
+                // Map known backend error keywords to fields
+                const errorMapping = [
+                    { keywords: ["photograph", "photo"], step: 1, fieldName: "applicant_photo" },
+                    { keywords: ["Gov ID", "identity"], step: 1, fieldName: "gov_id_upload" },
+                    { keywords: ["Permanent Address"], step: 1, fieldName: "address_perm" },
+                    { keywords: ["Duplicate UTR", "payment_utr"], step: 13, fieldName: "payment_utr" },
+                    { keywords: ["receipt"], step: 13, fieldName: "payment_receipt" },
+                    { keywords: ["Signature"], step: 14, fieldName: "signature_file" }
+                ];
+
+                for (const map of errorMapping) {
+                    if (map.keywords.some(k => result.message && result.message.includes(k))) {
+                        currentStep = map.step;
+                        updateUI();
+                        const input = document.getElementsByName(map.fieldName)[0];
+                        if (input) {
+                            showFieldError(input, result.message);
+                            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        break;
+                    }
+                }
             }
         } catch (error) {
-            console.error('[SUBMIT DEBUG] Networking/JS error executing submit:', error);
-            showToast("Connection failed or internal error occurred. See console logs.", "error");
+            console.error('Submission error:', error);
+            showToast("An unexpected error occurred. Please try again.", "error");
             btn.disabled = false;
-            btn.style.pointerEvents = 'auto';
-            btn.style.opacity = '1';
             btn.textContent = oldText;
         }
     }
