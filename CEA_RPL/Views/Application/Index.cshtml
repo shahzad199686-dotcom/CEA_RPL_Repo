@@ -277,7 +277,7 @@
             
             <!-- STEP 1: APPLICANT DETAILS -->
             <div class="form-section active" id="step-1">
-                <div class="section-header"><h2>Step 1: Applicant Details</h2><span class="section-status">Active</span></div>
+                <div class="section-header"><h2>Step 1: Applicant Details</h2></div>
                 <div class="section-content">
                     <div class="grid">
                         <!-- PROFILE SECTION -->
@@ -326,7 +326,7 @@
                         </div>
 
                         <!-- ROW 2: FAMILY -->
-                        <div class="col-6">
+                        <div class="col-4">
                             <label>Parent / Guardian Relation <span class="req">*</span></label>
                             <select name="parent_relation" required>
                                 <option value="">Select relation</option>
@@ -335,7 +335,18 @@
                                 <option>Guardian</option>
                             </select>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
+                            <label>Mr. / Mrs.</label>
+                            <select name="parent_title">
+                                <option value="">Select</option>
+                                <option>Mr.</option>
+                                <option>Ms.</option>
+                                <option>Mrs.</option>
+                                <option>Dr.</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
                             <label>Parent / Guardian Name <span class="req">*</span></label>
                             <input name="parent_name" type="text" required placeholder="Enter selected parent / guardian name" />
                         </div>
@@ -398,7 +409,7 @@
                                     <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Same as Permanent</label>
                                 </div>
                             </div>
-                            <textarea name="address_corr" id="address_corr" placeholder="Leave blank if same as permanent" style="height: 140px;"></textarea>
+                            <textarea name="address_corr" id="address_corr" style="height: 140px;"></textarea>
                         </div>
 
                         <!-- IDENTITY DETAILS -->
@@ -434,7 +445,7 @@
 
             <!-- STEP 2: CATEGORY SELECTION -->
             <div class="form-section hide" id="step-2">
-                <div class="section-header"><h2>Step 2: Category of Certification Applied For</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 2: Category of Certification Applied For</h2></div>
                 <div class="section-content">
                     <div class="info-note-blue">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -487,7 +498,7 @@
 
             <!-- STEP 3: EDUCATIONAL QUALIFICATIONS -->
             <div class="form-section hide" id="step-3">
-                <div class="section-header"><h2>Step 3: Educational Qualifications</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 3: Educational Qualifications</h2></div>
                 <div class="section-content">
                     <div class="education-grid-header">
                         <div>Degree</div>
@@ -532,7 +543,7 @@
 
             <!-- STEP 4: PROFESSIONAL EXPERIENCE -->
             <div class="form-section hide" id="step-4">
-                <div class="section-header"><h2>Step 4: Professional Experience</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 4: Professional Experience</h2></div>
                 <div class="section-content">
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
@@ -620,7 +631,7 @@
 
             <!-- STEP 5: PROJECT EXPERIENCE (CAT 1) -->
             <div class="form-section hide" id="step-5">
-                <div class="section-header"><h2>Step 5: Project Experience</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 5: Project Experience</h2></div>
                 <div class="section-content">
                     <div class="project-container" id="projectContainerCat1">
                         <div class="project-card">
@@ -660,22 +671,81 @@
 
             <!-- STEP 6: UPLOAD REPORTS -->
             <div class="form-section hide" id="step-6">
-                <div class="section-header"><h2>Step 6: Upload Reports</h2><span class="section-status">Pending</span></div>
+                <div class="section-header">
+                    <h2>Step 6: Upload Reports</h2>
+                    
+                </div>
                 <div class="section-content">
-                    <div class="info-note-blue">
+                    <div class="info-note-blue" style="margin-bottom: 24px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                        <b style="font-weight: 600;">Upload 2 to 5 audit / study reports undertaken by the applicant in the applied category / categories. (Min. 2 – Max. 5)</b>
+                        <div style="flex: 1;">
+                            <b style="font-weight: 700; display: block; margin-bottom: 4px;">Upload your environmental audit / study reports.</b>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Please provide a minimum of 2 reports and a maximum of 5 reports in PDF format (Max 10MB each).</p>
+                        </div>
                     </div>
-                    <div class="grid">
-                        <div class="col-6"><label>Report 1 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this)" /><div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF ONLY ≤ 10 MB</div></div>
-                        <div class="col-6"><label>Report 2 <span class="req">*</span></label><input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this)" /><div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF ONLY ≤ 10 MB</div></div>
+
+                    <div id="reportGuidance" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div id="reportProgressDot" style="width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1;"></div>
+                            <span id="reportCountText" style="font-weight: 700; color: #475569; font-size: 0.9rem;">Requirement: 0 of 5 Reports Uploaded</span>
+                        </div>
+                        <span id="reportStatusBadge" style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: #fee2e2; color: #991b1b;">Minimum 2 Required</span>
                     </div>
+
+                    <div id="auditReportContainer" style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Report 1 & 2 (Always Visible) -->
+                        <div class="report-row active" data-index="1" style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 700;">Report 1 <span class="req">*</span></label>
+                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStats();" />
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                            </div>
+                        </div>
+
+                        <div class="report-row active" data-index="2" style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 700;">Report 2 <span class="req">*</span></label>
+                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStats();" />
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                            </div>
+                        </div>
+
+                        <!-- Optional Slots 3, 4, 5 (Hidden by default) -->
+                        <div class="report-row" data-index="3" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 3 (Optional)</label>
+                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                            </div>
+                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(3)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
+                        </div>
+
+                        <div class="report-row" data-index="4" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 4 (Optional)</label>
+                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                            </div>
+                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(4)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
+                        </div>
+
+                        <div class="report-row" data-index="5" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 5 (Optional)</label>
+                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                            </div>
+                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(5)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
+                        </div>
+                    </div>
+
+                    <button type="button" id="btnAddReport" class="btn btn-ghost" style="margin-top: 24px; padding: 12px 24px; width: 100%; border: 2px dashed #0F9D9A; color: #0F9D9A;" onclick="addAuditReport()">+ Add Another Report (Optional)</button>
                 </div>
             </div>
 
             <!-- STEP 7: TRAINING / CERTIFICATION -->
             <div class="form-section hide" id="step-7">
-                <div class="section-header"><h2>Step 7: Details of Certification / Training</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 7: Details of Certification / Training</h2></div>
                 <div class="section-content">
                     <div class="step7-section-container">
                         <!-- SECTION 1: TRAINING DETAILS -->
@@ -759,7 +829,7 @@
 
             <!-- STEP 8: MEMBERSHIP (LABLED AS 9 IN UI) -->
             <div class="form-section hide" id="step-8">
-                <div class="section-header"><h2>Step 8: Membership in Professional Bodies</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 8: Membership in Professional Bodies</h2></div>
                 <div class="section-content">
                     <div class="membership-header-grid">
                         <span>S.No</span>
@@ -826,7 +896,7 @@
 
             <!-- STEP 9: PUBLICATIONS -->
             <div class="form-section hide" id="step-9">
-                <div class="section-header"><h2>Step 9: Paper Published / Presented</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 9: Paper Published / Presented</h2></div>
                 <div class="section-content">
                     <div class="publication-header-grid">
                         <span>Topic of Paper</span>
@@ -869,7 +939,7 @@
 
             <!-- STEP 10: AWARDS -->
             <div class="form-section hide" id="step-10">
-                <div class="section-header"><h2>Step 10: Awards / Recognition</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 10: Awards / Recognition</h2></div>
                 <div class="section-content">
                     <table class="modern-table" id="awardTable">
                         <thead><tr><th>Award/Recognition</th><th>Awarded By</th><th>Year of Award</th></tr></thead>
@@ -881,7 +951,7 @@
 
             <!-- STEP 11: SOFTWARE SKILLS -->
             <div class="form-section hide" id="step-11">
-                <div class="section-header"><h2>Step 11: Software / Tools / Application Skills</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 11: Software / Tools / Application Skills</h2></div>
                 <div class="section-content">
                     <table class="modern-table" id="softwareTable">
                         <thead><tr><th>Software Skill</th><th>Proficiency</th></tr></thead>
@@ -893,7 +963,7 @@
 
             <!-- STEP 12: OTHER ENCLOSURES -->
             <div class="form-section hide" id="step-12">
-                <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2></div>
                 <div class="section-content">
                     <label>Upload additional supporting documents (if any)</label>
                     <input type="file" name="other_enclosure" accept=".pdf,.zip,.rar" onchange="validateFileUpload(this)" />
@@ -915,7 +985,7 @@
 
             <!-- STEP 13: PAYMENT DETAILS -->
             <div class="form-section hide" id="step-13">
-                <div class="section-header"><h2>Step 13: Payment Details</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 13: Payment Details</h2></div>
                 <div class="section-content">
                     
                     <!-- Bank Details Card -->
@@ -979,7 +1049,7 @@
 
             <!-- STEP 14: DECLARATION -->
             <div class="form-section hide" id="step-14">
-                <div class="section-header"><h2>Step 14: Declaration by Applicant</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 14: Declaration by Applicant</h2></div>
                 <div class="section-content">
                     <div class="declaration-statement" style="margin-bottom: 24px; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5;">
                         <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
@@ -1005,7 +1075,7 @@
 
             <!-- STEP 15: REVIEW & SUBMIT -->
             <div class="form-section hide" id="step-15">
-                <div class="section-header"><h2>Step 15: Review & Submit</h2><span class="section-status">Pending</span></div>
+                <div class="section-header"><h2>Step 15: Review & Submit</h2></div>
                 <div class="section-content">
                     <!-- 1. Real-time Review Summary -->
                     <div id="reviewSummary" class="review-grid">
@@ -1147,11 +1217,9 @@
             if (stepNum === currentStep) {
                 sec.classList.remove('hide');
                 sec.classList.add('active');
-                sec.querySelector('.section-status').textContent = 'Active';
             } else {
                 sec.classList.add('hide');
                 sec.classList.remove('active');
-                sec.querySelector('.section-status').textContent = (stepNum <= maxReachedStep) ? 'Completed' : 'Pending';
             }
         });
 
@@ -1448,6 +1516,24 @@
         });
 
         // Step 2 specific check
+        // Step 6 specific check: enforce min 2 reports
+        if (step === 6) {
+           const reports = section.querySelectorAll('input[name="audit_report"]');
+           let uploadCount = 0;
+           reports.forEach(inp => { if (inp.files && inp.files.length > 0) uploadCount++; });
+           if (uploadCount < 2) {
+               valid = false;
+               const guidance = document.getElementById('reportGuidance');
+               if (guidance) {
+                   guidance.classList.add('field-error-pulse');
+                   guidance.style.borderColor = '#c53030';
+                   guidance.style.background = '#fff5f5';
+                   if (!firstInvalid) firstInvalid = guidance;
+               }
+               showToast("Please upload at least 2 reports.", "error");
+           }
+        }
+
         if (step === 2) {
             const categories = section.querySelectorAll('input[name="cert_category[]"]:checked');
             if (categories.length === 0) {
@@ -1633,6 +1719,73 @@
         const newRow = firstRow.cloneNode(true);
         newRow.querySelectorAll('input, select').forEach(el => el.value = '');
         container.appendChild(newRow);
+    }
+
+    // --- STEP 6: AUDIT REPORTS LOGIC ---
+    let reportCount = 2; // Initial visible mandatory reports
+    function addAuditReport() {
+        if (reportCount >= 5) return;
+        reportCount++;
+        const row = document.querySelector(`.report-row[data-index="${reportCount}"]`);
+        if (row) {
+            row.style.display = 'grid';
+            row.classList.add('active');
+        }
+        if (reportCount === 5) {
+            const btn = document.getElementById('btnAddReport');
+            if (btn) btn.style.display = 'none';
+        }
+        updateReportStats();
+    }
+
+    function removeAuditReport(index) {
+        const row = document.querySelector(`.report-row[data-index="${index}"]`);
+        if (row) {
+            row.style.display = 'none';
+            row.classList.remove('active');
+            const input = row.querySelector('input[type="file"]');
+            if (input) {
+                input.value = '';
+                // Clear validation hints if any
+                const hint = row.querySelector('.file-validation-hint');
+                if (hint) hint.innerHTML = 'PDF ONLY ≤ 10 MB';
+            }
+            // Logic to keep slots contiguous or just hide any slot? 
+            // The simplest is just hide. But we should update reportCount if it was the last one.
+            if (index === reportCount) reportCount--;
+            
+            const btn = document.getElementById('btnAddReport');
+            if (btn) btn.style.display = 'block';
+            updateReportStats();
+        }
+    }
+
+    function updateReportStats() {
+        const inputs = document.querySelectorAll('input[name="audit_report"]');
+        let filled = 0;
+        inputs.forEach(inp => { if(inp.files && inp.files.length > 0) filled++; });
+
+        const countText = document.getElementById('reportCountText');
+        const dot = document.getElementById('reportProgressDot');
+        const badge = document.getElementById('reportStatusBadge');
+
+        if (countText) countText.innerText = `Requirement: ${filled} of 5 Reports Uploaded`;
+        
+        if (filled >= 2) {
+            if (dot) dot.style.background = '#10b981';
+            if (badge) {
+                badge.innerText = 'Requirement Met';
+                badge.style.background = '#dcfce7';
+                badge.style.color = '#166534';
+            }
+        } else {
+            if (dot) dot.style.background = '#f87171';
+            if (badge) {
+                badge.innerText = 'Minimum 2 Required';
+                badge.style.background = '#fee2e2';
+                badge.style.color = '#991b1b';
+            }
+        }
     }
 
     function toggleMembershipYears(select) {
