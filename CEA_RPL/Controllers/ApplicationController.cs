@@ -650,7 +650,7 @@ public class ApplicationController : Controller
         bool check(string? val, bool isDesc) => IsMeaningfulText(val ?? "", isDesc);
         bool checkList(List<string>? list, bool isDesc) => list == null || list.All(x => IsMeaningfulText(x ?? "", isDesc));
 
-        if (!check(req.full_name, false)) errors.Add("Applicant Full Name");
+        if (!check(req.full_name, false)) errors.Add("Candidate Name");
         if (!check(req.parent_relation, false)) errors.Add("Parent Relation");
         if (!check(req.parent_name, false)) errors.Add("Parent Name");
         if (!check(req.other_gov_id_type, false)) errors.Add("Other Gov ID Type");
@@ -682,7 +682,7 @@ public class ApplicationController : Controller
         if (!checkList(req.software_skill, false)) errors.Add("Software Skill Name");
 
         if (!check(req.enclosure_desc, true)) errors.Add("Other Enclosure Description");
-        if (!check(req.decl_name, false)) errors.Add("Declaration Signature Name");
+        if (!check(req.decl_name, false)) errors.Add("Candidate Name");
         if (!check(req.decl_place, false)) errors.Add("Declaration Place Name");
 
         return errors;

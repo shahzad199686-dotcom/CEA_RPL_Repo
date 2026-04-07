@@ -321,20 +321,11 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label>Full Name <span class="req">*</span></label>
-                            <input name="full_name" type="text" required placeholder="Enter your full name" />
+                            <label>Candidate Name <span class="req">*</span></label>
+                            <input name="full_name" type="text" required placeholder="Enter candidate name" />
                         </div>
 
                         <!-- ROW 2: FAMILY -->
-                        <div class="col-4">
-                            <label>Parent / Guardian Relation <span class="req">*</span></label>
-                            <select name="parent_relation" required>
-                                <option value="">Select relation</option>
-                                <option>Father</option>
-                                <option>Mother</option>
-                                <option>Guardian</option>
-                            </select>
-                        </div>
                         <div class="col-4">
                             <label>Mr. / Mrs.</label>
                             <select name="parent_title">
@@ -349,6 +340,15 @@
                         <div class="col-4">
                             <label>Parent / Guardian Name <span class="req">*</span></label>
                             <input name="parent_name" type="text" required placeholder="Enter selected parent / guardian name" />
+                        </div>
+                        <div class="col-4">
+                            <label>Parent / Guardian Relation <span class="req">*</span></label>
+                            <select name="parent_relation" required>
+                                <option value="">Select relation</option>
+                                <option>Father</option>
+                                <option>Mother</option>
+                                <option>Guardian</option>
+                            </select>
                         </div>
 
                         <!-- ROW 3: CONTACT -->
@@ -374,7 +374,8 @@
                         <!-- ROW 4: PROFILE -->
                         <div class="col-4">
                             <label>Date of Birth <span class="req">*</span></label>
-                            <input name="dob" type="date" required />
+                            <input id="dob" name="dob" type="date" required onchange="updateAgeEligibility()" />
+                            <div id="ageEligibilityFeedback" class="eligibility-feedback hide"></div>
                         </div>
                         <div class="col-4">
                             <label>Gender <span class="req">*</span></label>
@@ -548,9 +549,10 @@
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
                             <label>Total Experience (Years) <span class="req">*</span></label>
-                            <input name="total_experience" type="number" step="0.1" min="0" required placeholder="e.g. 4" 
-                                   onblur="if(this.value) { this.value = Math.floor(parseFloat(this.value)); }" />
-                            <div class="hint" style="font-size: 0.8rem; color: var(--muted); margin-top: 4px;">Only full years are considered (decimals will be rounded down)</div>
+                            <input id="total_experience" name="total_experience" type="number" step="0.1" min="0" required placeholder="Enter full years only (e.g. 10)" 
+                                   oninput="updateExperienceEligibility()" onblur="updateExperienceEligibility()" />
+                            <div id="experienceEligibilityFeedback" class="eligibility-feedback hide"></div>
+                            <div id="experienceHelperInfo" class="helper-info">Minimum required experience is based on your highest educational qualification.</div>
                         </div>
                     </div>
                     
@@ -1061,9 +1063,9 @@
                         </ul>
                     </div>
                     <div class="grid">
-                        <div class="col-6"><label>Full Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type your full name" /></div>
+                        <div class="col-6"><label>Candidate Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type candidate name" /></div>
                         <div class="col-6"><label>Place</label><input type="text" name="decl_place" placeholder="City" /></div>
-                        <div class="col-6"><label>Date <span class="req">*</span></label><input type="date" name="decl_date" required /></div>
+                        <div class="col-6"><label>Date <span class="req">*</span></label><input type="text" name="decl_date" id="declaration_date" required readonly style="background-color: #f8fafc; cursor: not-allowed; color: var(--muted);" /></div>
                         <div class="col-6">
                             <label>Signature File (Upload Image) <span class="req">*</span></label>
                             <input type="file" name="signature_file" accept=".jpg,.jpeg,.png" required onchange="validateFileUpload(this)" />
@@ -1265,10 +1267,18 @@
         if (activeSec) {
             window.scrollTo({ top: activeSec.offsetTop - 120, behavior: 'smooth' });
         }
+
+        // Refresh dynamic eligibility on UI update
+        if (typeof updateExperienceEligibility === 'function') {
+            updateExperienceEligibility();
+        }
+        if (typeof updateAgeEligibility === 'function') {
+            updateAgeEligibility();
+        }
     }
 
     const validationMetadata = {
-        'full_name': { label: 'Full Name', error: 'Please enter your full name as per government records.', example: 'Example: Rahul Sharma', keywords: ['Applicant Full Name', 'Full Name'] },
+        'full_name': { label: 'Candidate Name', error: 'Please enter candidate name as per government records.', example: 'Example: Rahul Sharma', keywords: ['Candidate Name', 'Full Name'] },
         'parent_relation': { label: 'Parent Relation', error: 'Please select your relationship with the parent/guardian.', example: 'Example: Father', keywords: ['Parent Relation'] },
         'parent_name': { label: 'Parent Name', error: 'Please enter the name of your parent or guardian.', example: 'Example: Vijay Sharma', keywords: ['Parent Name'] },
         'email': { label: 'Email ID', error: 'Please enter a valid email address.', example: 'Example: rahul.sharma@email.com', keywords: ['Email'] },
@@ -1290,7 +1300,7 @@
         'edu_year[]': { label: 'Passing Year', error: 'Please enter a valid passing year.', example: 'Example: 2018', keywords: ['Passing Year'] },
         'edu_cert[]': { label: 'Certificate', error: 'Please upload your degree certificate or provisional.', example: 'Max size: 10MB PDF/Image', keywords: ['Certificate'] },
         
-        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 8.5', keywords: ['Total Experience'] },
+        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 10', keywords: ['Total Experience'] },
         'exp_org[]': { label: 'Organization', error: 'Please enter the organization name.', example: 'Example: Green Tech Solutons', keywords: ['Professional Experience Organization Name', 'Experience Organization'] },
         'exp_designation[]': { label: 'Designation', error: 'Please enter your designation.', example: 'Example: Senior Auditor', keywords: ['Professional Experience Designation', 'Experience Designation'] },
         'exp_nature[]': { label: 'Nature of Work', error: 'Please describe your key responsibilities.', example: 'Example: Leading environmental audits for industrial plants...', keywords: ['Professional Experience Role Description', 'Experience Role Description'] },
@@ -1324,7 +1334,7 @@
         'payment_date': { label: 'Payment Date', error: 'Please select the date the payment was made.', example: 'Should match the receipt', keywords: ['Payment Date'] },
         'payment_receipt': { label: 'Payment Receipt', error: 'Please upload the bank transaction confirmation.', example: 'Max size: 10MB PDF/JPG', keywords: ['Payment Receipt', 'receipt'] },
         
-        'decl_name': { label: 'Applicant Name', error: 'Please enter your full name for the declaration.', example: 'Should match Applicant Details', keywords: ['Declaration Signature Name', 'Declaration Name'] },
+        'decl_name': { label: 'Candidate Name', error: 'Please enter candidate name for the declaration.', example: 'Should match Applicant Details', keywords: ['Declaration Signature Name', 'Declaration Name'] },
         'decl_place': { keywords: ['Declaration Place Name', 'Declaration Place'] },
         'signature_file': { label: 'Signature File', error: 'Please upload your signature image.', keywords: ['Signature', 'signature_file'] }
     };
@@ -1335,7 +1345,7 @@
         let foundMatch = false;
         // Step mapping based on metadata and field names
         const stepMap = {
-            'Applicant Details': 1, 'Full Name': 1, 'Parent': 1, 'Email': 1, 'Mobile': 1, 'DOB': 1, 'Address': 1, 'ID Proof': 1, 'Photograph': 1, 'Identity': 1,
+            'Applicant Details': 1, 'Candidate Name': 1, 'Parent': 1, 'Email': 1, 'Mobile': 1, 'DOB': 1, 'Address': 1, 'ID Proof': 1, 'Photograph': 1, 'Identity': 1,
             'Certification': 2,
             'Education': 3, 'Degree': 3, 'Institution': 3,
             'Professional Experience': 4, 'Organization': 4, 'Designation': 4, 'Experience': 4,
@@ -1534,6 +1544,24 @@
            }
         }
 
+        if (step === 1) {
+            const dobInput = document.getElementById('dob');
+            if (dobInput && dobInput.value) {
+                const dob = new Date(dobInput.value);
+                const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                if (age >= 70) {
+                    valid = false;
+                    showFieldError(dobInput, "Applicant must be below 70 years of age to be eligible.");
+                    if (!firstInvalid) firstInvalid = dobInput;
+                }
+            }
+        }
+
         if (step === 2) {
             const categories = section.querySelectorAll('input[name="cert_category[]"]:checked');
             if (categories.length === 0) {
@@ -1544,6 +1572,32 @@
                     gridElem.classList.add('field-invalid');
                     gridElem.classList.add('field-error-pulse');
                     if (!firstInvalid) firstInvalid = gridElem;
+                }
+            }
+        }
+
+        // Step 4 specific check: Dynamic Experience Requirement
+        if (step === 4) {
+            const expInput = document.getElementById('total_experience');
+            if (expInput) {
+                const highest = getHighestQualification();
+                const rawValue = expInput.value;
+                const roundedValue = roundExperience(rawValue);
+
+                let minRequired = 0;
+                let qLabel = "";
+                if (highest === 3) { minRequired = 8; qLabel = "PhD"; }
+                else if (highest === 2) { minRequired = 10; qLabel = "Post Graduate"; }
+                else if (highest === 1) { minRequired = 12; qLabel = "Graduate"; }
+
+                if (highest === 0) {
+                    valid = false;
+                    showToast("Please add educational qualification in Step 3 first.", "error");
+                    if (!firstInvalid) firstInvalid = expInput;
+                } else if (!rawValue || roundedValue < minRequired) {
+                    valid = false;
+                    showFieldError(expInput, `Minimum required experience for selected qualification (${qLabel}) is ${minRequired} years.`);
+                    if (!firstInvalid) firstInvalid = expInput;
                 }
             }
         }
@@ -1637,6 +1691,121 @@
         
         container.appendChild(newCard);
     }
+
+    // --- EXPERIENCE & QUALIFICATION DYNAMIC VALIDATION ---
+    function getHighestQualification() {
+        const selects = document.querySelectorAll('select[name="edu_degree[]"]');
+        let highest = 0; // 0: None, 1: Graduate, 2: Post Graduate, 3: PhD
+        
+        selects.forEach(s => {
+            const val = s.value;
+            if (val === "PhD") highest = Math.max(highest, 3);
+            else if (val === "Post Graduate") highest = Math.max(highest, 2);
+            else if (val === "Graduate") highest = Math.max(highest, 1);
+        });
+        return highest;
+    }
+
+    function roundExperience(val) {
+        if (!val || isNaN(val)) return 0;
+        const num = parseFloat(val);
+        const integerPart = Math.floor(num);
+        const decimalPart = num - integerPart;
+        
+        // Rule: Decimal <= 0.5 round DOWN, > 0.5 round UP
+        if (decimalPart <= 0.5) return integerPart;
+        else return integerPart + 1;
+    }
+
+    function updateExperienceEligibility() {
+        const expInput = document.getElementById('total_experience');
+        const feedback = document.getElementById('experienceEligibilityFeedback');
+        const helper = document.getElementById('experienceHelperInfo');
+        if (!expInput || !feedback || !helper) return;
+
+        const highest = getHighestQualification();
+        const rawValue = expInput.value;
+        const roundedValue = roundExperience(rawValue);
+
+        // Force integer display: If user enters a decimal, round it and update the field immediately
+        if (rawValue && rawValue.toString().includes('.')) {
+            expInput.value = roundedValue;
+        }
+
+        let minRequired = 0;
+        let qualificationLabel = "";
+
+        if (highest === 3) { minRequired = 8; qualificationLabel = "PhD"; }
+        else if (highest === 2) { minRequired = 10; qualificationLabel = "Post Graduate"; }
+        else if (highest === 1) { minRequired = 12; qualificationLabel = "Graduate"; }
+
+        // Update Helper Text
+        if (highest === 0) {
+            helper.innerHTML = '<span style="color: var(--warn); font-weight: 700;">⚠️ Please add educational qualification in Step 3 first</span>';
+            feedback.classList.add('hide');
+            return;
+        } else {
+            helper.innerHTML = `Minimum required: <strong>${minRequired} years</strong> (based on highest degree: <strong>${qualificationLabel}</strong>)`;
+        }
+
+        if (!rawValue) {
+            feedback.classList.add('hide');
+            return;
+        }
+
+        feedback.classList.remove('hide');
+        const isEligible = roundedValue >= minRequired;
+
+        if (isEligible) {
+            feedback.className = "eligibility-feedback eligible-success";
+            feedback.innerHTML = `✔ Eligible – Meets minimum requirement (${minRequired} years).`;
+            expInput.classList.remove('field-invalid');
+            hideFieldError(expInput);
+        } else {
+            feedback.className = "eligibility-feedback ineligible-error";
+            feedback.innerHTML = `❌ Not Eligible – Minimum required is ${minRequired} years for ${qualificationLabel}.`;
+            expInput.classList.add('field-invalid');
+        }
+    }
+
+    function updateAgeEligibility() {
+        const dobInput = document.getElementById('dob');
+        const feedback = document.getElementById('ageEligibilityFeedback');
+        if (!dobInput || !feedback) return;
+
+        const dobValue = dobInput.value;
+        if (!dobValue) {
+            feedback.classList.add('hide');
+            return;
+        }
+
+        const dob = new Date(dobValue);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        feedback.classList.remove('hide');
+        if (age >= 70) {
+            feedback.className = "eligibility-feedback ineligible-error";
+            feedback.innerHTML = `❌ Not Eligible – Applicant must be below 70 years of age to be eligible. Current age: ${age}`;
+            dobInput.classList.add('field-invalid');
+        } else {
+            feedback.className = "eligibility-feedback eligible-success";
+            feedback.innerHTML = `✔ Eligible – Age criteria met. Current age: ${age}`;
+            dobInput.classList.remove('field-invalid');
+            hideFieldError(dobInput);
+        }
+    }
+
+    // Event delegation for Step 3 Degree Selects
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'edu_degree[]') {
+            updateExperienceEligibility();
+        }
+    });
 
     function toggleOtherProof(selectElement) {
         const wrapper = selectElement.parentElement;
@@ -2381,7 +2550,7 @@
                     ${editLink(1)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Full Name</dt><dd>${getData('title')} ${getData('full_name')}</dd></div>
+                    <div><dt>Candidate Name</dt><dd>${getData('title')} ${getData('full_name')}</dd></div>
                     <div><dt>Parent/Guardian</dt><dd>(${getData('parent_relation')}) ${getData('parent_name')}</dd></div>
                     <div><dt>Date of Birth</dt><dd>${getData('dob') || '-'}</dd></div>
                     <div><dt>Gender</dt><dd>${getData('gender')}</dd></div>
@@ -2877,9 +3046,8 @@
 
         // Trigger Document Requirement Modal only after successful login/signup
         const shouldShow = localStorage.getItem('showDocPopup');
-        const hidePermanently = localStorage.getItem('hideDocPopupForever');
 
-        if (shouldShow === 'true' && hidePermanently !== 'true') {
+        if (shouldShow === 'true') {
             setTimeout(() => {
                 const docModal = document.getElementById('docReqModal');
                 if (docModal) {
@@ -2970,12 +3138,20 @@
 
     function closeDocModal() {
         const modal = document.getElementById('docReqModal');
-        const hideForever = document.getElementById('chkHideForever')?.checked;
-        if (hideForever) {
-            localStorage.setItem('hideDocPopupForever', 'true');
-        }
         if (modal) modal.classList.remove('active');
     }
+
+    // Auto-fill Declaration Date (dd-mm-yyyy)
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('declaration_date');
+        if (dateInput) {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            dateInput.value = `${day}-${month}-${year}`;
+        }
+    });
 </script>
 
 <!-- Success Confirmation Modal -->
@@ -3029,13 +3205,9 @@
                 </div>
             </div>
             
-            <div class="modal-footer">
-                <label class="noshow-label">
-                    <input type="checkbox" id="chkHideForever">
-                    <span>Don't show this again</span>
-                </label>
+            <div class="modal-footer" style="display: flex; justify-content: center; padding-top: 20px; border-top: 1px solid var(--line);">
                 <div class="modal-btns">
-                    <button class="btn btn-primary" onclick="closeDocModal()">Continue</button>
+                    <button class="btn btn-primary" onclick="closeDocModal()" style="padding: 12px 48px; border-radius: 10px;">Continue</button>
                 </div>
             </div>
         </div>
