@@ -53,7 +53,7 @@
                 }
                 @initials
             </div>
-            <span>Welcome, @displayName</span>
+            <span>Welcome, @(string.IsNullOrEmpty(displayName) ? "User" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(displayName.ToLower()))</span>
         </div>
         <div class="profile-dropdown">
             <a href="#" class="dropdown-item">My Profile</a>
@@ -322,7 +322,7 @@
                         </div>
                         <div class="col-6">
                             <label>Candidate Name <span class="req">*</span></label>
-                            <input name="full_name" type="text" required placeholder="Enter candidate name" />
+                            <input name="full_name" type="text" required placeholder="Enter Candidate Name" class="title-case-input" />
                         </div>
 
                         <!-- ROW 2: FAMILY -->
@@ -339,7 +339,7 @@
                         </div>
                         <div class="col-4">
                             <label>Parent / Guardian Name <span class="req">*</span></label>
-                            <input name="parent_name" type="text" required placeholder="Enter selected parent / guardian name" />
+                            <input name="parent_name" type="text" required placeholder="Enter Parent / Guardian Name" class="title-case-input" />
                         </div>
                         <div class="col-4">
                             <label>Parent / Guardian Relation <span class="req">*</span></label>
@@ -354,21 +354,21 @@
                         <!-- ROW 3: CONTACT -->
                         <div class="col-4">
                             <label>Email ID <span class="req">*</span></label>
-                            <input name="email" type="email" required placeholder="Enter your Email ID" 
+                            <input name="email" type="email" required placeholder="Enter Email ID" 
                                    value="@ViewBag.UserEmail" 
                                    @(string.IsNullOrEmpty(ViewBag.UserEmail) ? "" : "readonly")
                                    class="@(string.IsNullOrEmpty(ViewBag.UserEmail) ? "" : "prefilled-readonly")" />
                         </div>
                         <div class="col-4">
                             <label>Mobile Number (OTP Verification) <span class="req">*</span></label>
-                            <input name="mobile" type="text" inputmode="numeric" required placeholder="10-digit number" 
+                            <input name="mobile" type="text" inputmode="numeric" required placeholder="10-Digit Number" 
                                    value="@ViewBag.UserMobile" 
                                    @(string.IsNullOrEmpty(ViewBag.UserMobile) ? "" : "readonly")
                                    class="@(string.IsNullOrEmpty(ViewBag.UserMobile) ? "" : "prefilled-readonly")" />
                         </div>
                         <div class="col-4">
-                            <label>Alternative Contact Number</label>
-                            <input name="alt_mobile" type="text" inputmode="numeric" placeholder="Mobile number" />
+                            <label>Alternative Mobile Number</label>
+                            <input name="alt_mobile" type="text" inputmode="numeric" placeholder="Mobile Number" />
                         </div>
 
                         <!-- ROW 4: PROFILE -->
@@ -429,11 +429,11 @@
                         </div>
                         <div class="col-4" id="otherGovIdContainer" style="display: none;">
                             <label>Specify ID Type <span class="req">*</span></label>
-                            <input type="text" id="otherGovIdType" name="other_gov_id_type" placeholder="Enter ID type" />
+                            <input type="text" id="otherGovIdType" name="other_gov_id_type" placeholder="Enter ID Type" />
                         </div>
                         <div class="col-4">
                             <label id="govIdLabel">ID Number <span class="req">*</span></label>
-                            <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID number" />
+                            <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
                         </div>
                         <div class="col-4">
                             <label>Upload Selected ID Proof <span class="req">*</span></label>
@@ -521,7 +521,7 @@
                             </div>
                             <div>
                                 <label class="edu-field-label">Course</label>
-                                <input type="text" name="edu_discipline[]" required placeholder="Enter your course (e.g., B.Tech, MBA, etc.)" />
+                                <input type="text" name="edu_discipline[]" required placeholder="Enter Course (e.g., B.Tech, MBA, etc.)" />
                             </div>
                             <div>
                                 <label class="edu-field-label">Institution / University</label>
@@ -549,7 +549,7 @@
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
                             <label>Total Experience (Years) <span class="req">*</span></label>
-                            <input id="total_experience" name="total_experience" type="number" step="0.1" min="0" required placeholder="Enter full years only (e.g. 10)" 
+                            <input id="total_experience" name="total_experience" type="number" step="0.1" min="0" required placeholder="Enter Full Years Only (e.g. 10)" 
                                    oninput="updateExperienceEligibility()" onblur="updateExperienceEligibility()" />
                             <div id="experienceEligibilityFeedback" class="eligibility-feedback hide"></div>
                             <div id="experienceHelperInfo" class="helper-info">Minimum required experience is based on your highest educational qualification.</div>
@@ -609,7 +609,7 @@
                                     </select>
                                     <div class="other-proof-container" style="display: none; margin-top: 12px;">
                                         <label class="field-label-premium" style="font-size: 0.82rem;">Please specify proof type</label>
-                                        <input type="text" class="other-proof-input" placeholder="Specify document type" oninput="updateOtherProofValue(this)" />
+                                        <input type="text" class="other-proof-input" placeholder="Specify Document Type" oninput="updateOtherProofValue(this)" />
                                     </div>
                                 </div>
                                 <div>
@@ -621,7 +621,7 @@
 
                             <div>
                                 <label class="field-label-premium">Describe your work / role</label>
-                                <textarea name="exp_nature[]" class="exp-textarea" placeholder="Describe your role and responsibilities" required></textarea>
+                                <textarea name="exp_nature[]" class="exp-textarea" placeholder="Describe Your Role and Responsibilities" required></textarea>
                                 <div class="exp-helper">Describe your work in 200 words</div>
                             </div>
                         </div>
@@ -849,12 +849,12 @@
                                 
                                 <div>
                                     <label>Institution / Association / Body</label>
-                                    <input name="membership_name[]" placeholder="Enter institution name" />
+                                    <input name="membership_name[]" placeholder="Enter Institution Name" />
                                 </div>
                                 
                                 <div>
                                     <label>Position Held</label>
-                                    <input name="membership_from[]" placeholder="Enter position held" />
+                                    <input name="membership_from[]" placeholder="Enter Position Held" />
                                 </div>
                                 
                                 <div>
@@ -912,11 +912,11 @@
                             <div class="publication-grid-5">
                                 <div>
                                     <label>Topic of Paper</label>
-                                    <input name="paper_name[]" placeholder="Enter paper / publication title" />
+                                    <input name="paper_name[]" placeholder="Enter Paper / Publication Title" />
                                 </div>
                                 <div>
                                     <label>Journal / Conference / Workshop</label>
-                                    <input name="paper_place[]" placeholder="Enter journal or venue name" />
+                                    <input name="paper_place[]" placeholder="Enter Journal or Venue Name" />
                                 </div>
                                 <div>
                                     <label>Published Year</label>
@@ -924,7 +924,7 @@
                                 </div>
                                 <div>
                                     <label>Publication Link (If any)</label>
-                                    <input type="url" name="paper_role[]" placeholder="Paste link here" />
+                                    <input type="url" name="paper_role[]" placeholder="Paste Link Here" />
                                 </div>
                                 <div class="membership-file-wrap">
                                     <label>Upload Proof of Paper</label>
@@ -945,7 +945,7 @@
                 <div class="section-content">
                     <table class="modern-table" id="awardTable">
                         <thead><tr><th>Award/Recognition</th><th>Awarded By</th><th>Year of Award</th></tr></thead>
-                        <tbody><tr><td><input name="award_name[]" placeholder="Award / Recognition name" /></td><td><input name="award_from[]" placeholder="Enter awarding organization / institution name" /></td><td><input type="number" name="award_year[]" placeholder="Select award year" /></td></tr></tbody>
+                        <tbody><tr><td><input name="award_name[]" placeholder="Award / Recognition Name" /></td><td><input name="award_from[]" placeholder="Enter Awarding Organization / Institution Name" /></td><td><input type="number" name="award_year[]" placeholder="Select Award Year" /></td></tr></tbody>
                     </table>
                     <button type="button" class="btn btn-ghost" onclick="addGenericRow('awardTable')">+ Add Award</button>
                 </div>
@@ -974,7 +974,7 @@
                     <div class="description-box-wrap">
                         <label>Description</label>
                         <textarea class="description-box" id="enclosure_desc" name="enclosure_desc" 
-                                  placeholder="Describe the enclosure you uploaded (maximum 200 words)"
+                                  placeholder="Describe The Enclosure You Uploaded (Maximum 200 Words)"
                                   oninput="updateWordCount(this)"></textarea>
                         
                         <div class="word-counter-wrap">
@@ -1032,7 +1032,7 @@
                         </div>
                         <div class="col-4">
                             <label>UTR / Transaction ID <span class="req">*</span></label>
-                            <input name="payment_utr" id="payment_utr" type="text" required placeholder="e.g. SBIN..." oninput="validatePaymentStep()" />
+                            <input name="payment_utr" id="payment_utr" type="text" required placeholder="E.g. SBIN..." oninput="validatePaymentStep()" />
                             <span class="hint">UTR No. must match your bank transaction ID.</span>
                         </div>
                         <div class="col-12" style="margin-top: 12px;">
@@ -1063,7 +1063,7 @@
                         </ul>
                     </div>
                     <div class="grid">
-                        <div class="col-6"><label>Candidate Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type candidate name" /></div>
+                        <div class="col-6"><label>Candidate Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type Candidate Name" class="title-case-input" /></div>
                         <div class="col-6"><label>Place</label><input type="text" name="decl_place" placeholder="City" /></div>
                         <div class="col-6"><label>Date <span class="req">*</span></label><input type="text" name="decl_date" id="declaration_date" required readonly style="background-color: #f8fafc; cursor: not-allowed; color: var(--muted);" /></div>
                         <div class="col-6">
@@ -2515,7 +2515,16 @@
         const summary = document.getElementById(isReadOnly ? 'readOnlySummary' : 'reviewSummary');
         if (!summary) return;
 
-        const getData = (name) => document.querySelector(`[name="${name}"]`)?.value || 'Not provided';
+        const toTitleCase = (str) => {
+            if (!str || str === 'Not provided') return str;
+            return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        };
+
+        const getData = (name) => {
+            let val = document.querySelector(`[name="${name}"]`)?.value || 'Not provided';
+            if (['full_name', 'parent_name', 'decl_name'].includes(name)) return toTitleCase(val);
+            return val;
+        };
         const getCheckboxes = (name) => {
             const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
             return checked.length > 0 ? checked.join(', ') : 'None selected';
@@ -3151,6 +3160,18 @@
             const year = now.getFullYear();
             dateInput.value = `${day}-${month}-${year}`;
         }
+
+        // Title Case formatting for names
+        const nameInputs = document.querySelectorAll('.title-case-input');
+        nameInputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = this.value.toLowerCase().split(' ').map(word => {
+                        return word.charAt(0).toUpperCase() + word.slice(1);
+                    }).join(' ');
+                }
+            });
+        });
     });
 </script>
 
