@@ -15,27 +15,50 @@
     --l-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
-/* =========================
-   Modern Fixed Header
-   ========================= */
-.l-header {
+.l-header-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 80px;
-    background: var(--l-glass);
-    backdrop-filter: blur(12px);
     z-index: 2000;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.l-header-top {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.l-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.l-gov-logo {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+}
+
+.l-header-bottom {
+    background: #065f46; /* Strong Indian Government Green/Teal */
+    height: 60px;
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
 }
 
-.l-header.scrolled {
-    height: 70px;
-    box-shadow: var(--l-shadow);
+.l-header-wrapper.scrolled .l-header-top {
+    display: none; /* Hide logo strip on scroll to save space */
+}
+
+.l-header-wrapper.scrolled .l-header-bottom {
+    height: 70px; /* Refined height for scrolled state */
 }
 
 .l-container {
@@ -79,21 +102,21 @@
     display: flex;
     gap: 32px;
     align-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .l-nav-link {
     text-decoration: none;
-    color: var(--l-muted);
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
     font-size: 0.95rem;
-    transition: color 0.2s;
+    transition: all 0.2s;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
 }
 
 .l-nav-link:hover {
-    color: var(--l-primary);
+    color: white;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 .l-auth-group {
@@ -111,38 +134,35 @@
 
 .l-btn-dropdown {
     background: transparent;
-    border: 1.5px solid transparent;
-    color: var(--l-ink);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 20px;
-    border-radius: 12px;
-    height: 44px;
+    padding: 8px 20px;
+    border-radius: 8px;
+    height: 40px;
     white-space: nowrap;
     transition: all 0.2s;
 }
 
-/* Login Button Specific (Outline Effect) */
 .l-btn-dropdown:not(.l-btn-register):hover {
-    background: var(--l-accent);
-    border-color: var(--l-primary);
-    color: var(--l-primary);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
 }
 
 .l-btn-register {
-    background: var(--l-primary);
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(14, 165, 165, 0.2);
+    background: white;
+    color: #065f46 !important;
+    font-weight: 800;
 }
 
 .l-btn-register:hover {
-    background: var(--l-primary-dark);
+    background: #f8fafc;
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(14, 165, 165, 0.3);
 }
 
 .l-dropdown-menu {
@@ -186,7 +206,7 @@
 }
 
 .main-content {
-    padding-top: 80px;
+    padding-top: 160px; /* Accommodate two-layer header */
 }
 
 /* =========================
@@ -626,4 +646,186 @@
 /* Responsive Grid Fixes */
 @media (max-width: 1024px) {
     .l-doc-container, .l-eligibility-grid { grid-template-columns: 1fr; }
+}
+/* =========================
+   About the Framework Section
+   ========================= */
+.l-framework-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Vertical stack */
+    gap: 32px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.l-framework-card {
+    background: white;
+    padding: 40px;
+    border-radius: var(--l-radius-lg);
+    box-shadow: var(--l-shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid #f1f5f9;
+}
+
+.l-framework-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--l-shadow-lg);
+    border-color: var(--l-primary);
+}
+
+.l-framework-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--l-accent);
+    color: var(--l-primary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.l-framework-icon i {
+    width: 32px;
+    height: 32px;
+}
+
+.l-framework-card h4 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--l-ink);
+    margin-bottom: 16px;
+    line-height: 1.3;
+}
+
+.l-card-short {
+    font-size: 0.95rem;
+    color: var(--l-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.l-card-expandable {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.l-card-expandable.active {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.l-card-expandable ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.l-card-expandable li {
+    position: relative;
+    padding-left: 24px;
+    font-size: 0.9rem;
+    color: var(--l-muted);
+    line-height: 1.5;
+}
+
+.l-card-expandable li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--l-primary);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+.l-read-more-btn {
+    align-self: flex-start;
+    background: var(--l-accent);
+    color: var(--l-primary);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: auto; /* Pushes button to bottom of flex container */
+}
+
+.l-read-more-btn:hover {
+    background: var(--l-primary);
+    color: white;
+}
+
+.l-read-more-btn.active {
+    background: var(--l-ink);
+    color: white;
+}
+
+/* Responsive Grid Overrides Removed for Framework Section (Now consistently single column) */
+
+/* =========================
+   Expansion UI Enhancements
+   ========================= */
+.l-expand-inner {
+    padding-top: 24px;
+    margin-top: 20px;
+    border-top: 1.5px solid #f1f5f9;
+}
+
+.l-expand-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--l-ink);
+    margin-bottom: 24px;
+}
+
+.l-expand-section {
+    margin-bottom: 24px;
+}
+
+.l-expand-section:last-child {
+    margin-bottom: 0;
+}
+
+.l-expand-section h6 {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--l-primary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.l-expand-section h6::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #f1f5f9;
+}
+
+.l-expand-section p {
+    font-size: 0.95rem;
+    color: var(--l-muted);
+    line-height: 1.6;
+    margin: 0;
 }

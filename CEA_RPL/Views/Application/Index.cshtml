@@ -1680,15 +1680,26 @@
             if (dobInput && dobInput.value) {
                 const dob = new Date(dobInput.value);
                 const today = new Date();
-                let age = today.getFullYear() - dob.getFullYear();
-                const m = today.getMonth() - dob.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                    age--;
-                }
-                if (age >= 70) {
+                
+                if (dob >= today) {
                     valid = false;
-                    showFieldError(dobInput, "Applicant must be below 70 years of age to be eligible.");
+                    showFieldError(dobInput, "Please select a valid Date of Birth.");
                     if (!firstInvalid) firstInvalid = dobInput;
+                } else {
+                    let age = today.getFullYear() - dob.getFullYear();
+                    const m = today.getMonth() - dob.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                        age--;
+                    }
+                    if (age < 18) {
+                        valid = false;
+                        showFieldError(dobInput, "Applicant must be at least 18 years old.");
+                        if (!firstInvalid) firstInvalid = dobInput;
+                    } else if (age >= 70) {
+                        valid = false;
+                        showFieldError(dobInput, "Applicant must be below 70 years of age to be eligible.");
+                        if (!firstInvalid) firstInvalid = dobInput;
+                    }
                 }
             }
         }
@@ -1912,6 +1923,16 @@
 
         const dob = new Date(dobValue);
         const today = new Date();
+        
+        // Block today's date or future dates specifically
+        if (dob >= today) {
+            feedback.classList.remove('hide');
+            feedback.className = "eligibility-feedback ineligible-error";
+            feedback.innerHTML = `❌ Please select a valid Date of Birth.`;
+            dobInput.classList.add('field-invalid');
+            return;
+        }
+
         let age = today.getFullYear() - dob.getFullYear();
         const m = today.getMonth() - dob.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
@@ -1919,13 +1940,17 @@
         }
 
         feedback.classList.remove('hide');
-        if (age >= 70) {
+        if (age < 18) {
             feedback.className = "eligibility-feedback ineligible-error";
-            feedback.innerHTML = `❌ Not Eligible – Applicant must be below 70 years of age to be eligible. Current age: ${age}`;
+            feedback.innerHTML = `❌ Not Eligible – Applicant must be at least 18 years old.`;
+            dobInput.classList.add('field-invalid');
+        } else if (age >= 70) {
+            feedback.className = "eligibility-feedback ineligible-error";
+            feedback.innerHTML = `❌ Not Eligible – Applicant must be below 70 years of age.`;
             dobInput.classList.add('field-invalid');
         } else {
             feedback.className = "eligibility-feedback eligible-success";
-            feedback.innerHTML = `✔ Eligible – Age criteria met. Current age: ${age}`;
+            feedback.innerHTML = `✔ Eligible – Minimum age criteria met.`;
             dobInput.classList.remove('field-invalid');
             hideFieldError(dobInput);
         }
@@ -3137,6 +3162,17 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
+        
+        // --- DOB LIMIT FIX ---
+        const dobInput = document.getElementById('dob');
+        if (dobInput) {
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            const yyyy = maxDate.getFullYear();
+            const mm = String(maxDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(maxDate.getDate()).padStart(2, '0');
+            dobInput.setAttribute('max', `${yyyy}-${mm}-${dd}`);
+        }
         
         // Setup blur validation for meaningless text globally
         document.querySelectorAll('input[type="text"], textarea').forEach(input => {

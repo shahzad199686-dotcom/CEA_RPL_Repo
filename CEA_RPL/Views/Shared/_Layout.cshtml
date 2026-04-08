@@ -10,88 +10,95 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <header class="l-header" id="mainHeader">
-        <div class="l-container l-navbar-container">
-            <a class="l-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <div class="l-brand-icon">C</div>
-                <span>CEA RPL</span>
-            </a>
-            
-            <nav class="l-nav d-none d-lg-flex">
-                <a href="/#home" class="l-nav-link">Home</a>
-                <a href="/#process" class="l-nav-link">Process</a>
-                <a href="/#docs" class="l-nav-link">Documents</a>
-                <a href="/#eligibility" class="l-nav-link">Eligibility</a>
-                <a href="/#about" class="l-nav-link">About</a>
-                <a href="/#faq" class="l-nav-link">FAQ</a>
-            </nav>
-
-            <div class="l-auth-group d-none d-lg-flex">
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <div class="l-dropdown">
-                        <button class="l-btn-dropdown">
-                            <i data-lucide="user" style="width: 18px; height: 18px;"></i>
-                            <span>Account</span>
-                            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-                        </button>
-                        <div class="l-dropdown-menu">
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a class="l-dropdown-item" href="/Admin/Dashboard">
-                                    <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i> Admin Dashboard
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="l-dropdown-item" asp-controller="Application" asp-action="Index">
-                                    <i data-lucide="file-text" style="width: 16px; height: 16px;"></i> My Application
-                                </a>
-                            }
-                            <hr style="margin: 4px 8px; border-top: 1px solid #eee;">
-                            <a class="l-dropdown-item text-danger" asp-controller="Auth" asp-action="Logout">
-                                <i data-lucide="log-out" style="width: 16px; height: 16px;"></i> Logout
-                            </a>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <!-- Login Dropdown -->
-                    <div class="l-dropdown">
-                        <button class="l-btn-dropdown">
-                            <span>Login</span>
-                            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-                        </button>
-                        <div class="l-dropdown-menu">
-                            <a class="l-dropdown-item" asp-controller="Auth" asp-action="CandidateLogin">
-                                <i data-lucide="user" style="width: 16px; height: 16px;"></i> Candidate Login
-                            </a>
-                            <a class="l-dropdown-item" asp-controller="Auth" asp-action="AdminLogin">
-                                <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i> Admin Login
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Sign In Dropdown -->
-                    <div class="l-dropdown">
-                        <button class="l-btn-dropdown l-btn-register">
-                            <span>Sign In</span>
-                            <i data-lucide="chevron-up" style="width: 14px; height: 14px; transform: rotate(180deg);"></i>
-                        </button>
-                        <div class="l-dropdown-menu">
-                            <a class="l-dropdown-item" asp-controller="Auth" asp-action="CandidateRegister">
-                                <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Register as Candidate
-                            </a>
-                        </div>
-                    </div>
-                }
+    <header class="l-header-wrapper" id="mainHeader">
+        <!-- Top Logo Strip -->
+        <div class="l-header-top">
+            <div class="l-container l-logo-container">
+                <img src="/images/moef_logo.png" alt="MoEF&CC" class="l-gov-logo">
+                <img src="/images/eada_logo.png" alt="EADA" class="l-gov-logo">
+                <img src="/images/npc_logo.png" alt="NPC" class="l-gov-logo">
             </div>
+        </div>
 
-            <!-- Mobile Menu Toggle -->
-            <button class="d-lg-none btn btn-ghost p-2" onclick="toggleMobileMenu()">
-                <i data-lucide="menu" id="menuIcon"></i>
-            </button>
+        <!-- Navigation Bar -->
+        <div class="l-header-bottom">
+            <div class="l-container l-navbar-container">
+                <nav class="l-nav d-none d-lg-flex">
+                    <a href="/#home" class="l-nav-link">Home</a>
+                    <a href="/#process" class="l-nav-link">Process</a>
+                    <a href="/#docs" class="l-nav-link">Documents</a>
+                    <a href="/#eligibility" class="l-nav-link">Eligibility</a>
+                    <a href="/#about" class="l-nav-link">About</a>
+                    <a href="/#faq" class="l-nav-link">FAQ</a>
+                </nav>
+
+                <div class="l-auth-group d-none d-lg-flex">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="l-dropdown">
+                            <button class="l-btn-dropdown">
+                                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                                <span>Account</span>
+                                <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <div class="l-dropdown-menu">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="l-dropdown-item" href="/Admin/Dashboard">
+                                        <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i> Admin Dashboard
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="l-dropdown-item" asp-controller="Application" asp-action="Index">
+                                        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i> My Application
+                                    </a>
+                                }
+                                <hr style="margin: 4px 8px; border-top: 1px solid #eee;">
+                                <a class="l-dropdown-item text-danger" asp-controller="Auth" asp-action="Logout">
+                                    <i data-lucide="log-out" style="width: 16px; height: 16px;"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Login Dropdown -->
+                        <div class="l-dropdown">
+                            <button class="l-btn-dropdown">
+                                <span>Login</span>
+                                <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <div class="l-dropdown-menu">
+                                <a class="l-dropdown-item" asp-controller="Auth" asp-action="CandidateLogin">
+                                    <i data-lucide="user" style="width: 16px; height: 16px;"></i> Candidate Login
+                                </a>
+                                <a class="l-dropdown-item" asp-controller="Auth" asp-action="AdminLogin">
+                                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i> Admin Login
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Sign In Dropdown -->
+                        <div class="l-dropdown">
+                            <button class="l-btn-dropdown l-btn-register">
+                                <span>Sign In</span>
+                                <i data-lucide="chevron-up" style="width: 14px; height: 14px; transform: rotate(180deg);"></i>
+                            </button>
+                            <div class="l-dropdown-menu">
+                                <a class="l-dropdown-item" asp-controller="Auth" asp-action="CandidateRegister">
+                                    <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Register as Candidate
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="d-lg-none btn btn-link p-2 text-white" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" id="menuIcon"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Mobile Menu Overlay -->
@@ -118,7 +125,6 @@
                     }
                 </div>
              </div>
-        </div>
         </div>
     </header>
 

@@ -172,13 +172,159 @@
     </div>
 </section>
 
-<!-- ABOUT SECTION -->
-<section class="l-section" id="about">
+<!-- ABOUT THE FRAMEWORK SECTION -->
+<section class="l-section" id="about" style="background: white;">
     <div class="l-container">
-        <h2 class="l-section-title">About the CEA RPL Portal</h2>
-        <p class="l-section-sub" style="max-width: 800px;">
-            This portal enables eligible professionals to apply for Certification of Environmental Auditors through the Recognition of Prior Learning (RPL) process under the Environment Audit Rules, 2025. It is designed to provide a structured, transparent, and user-friendly application experience.
-        </p>
+        <h2 class="l-section-title">About</h2>
+        <p class="l-section-sub">This portal operates under the Environment Audit Rules, 2025 to ensure transparent, standardized, and efficient environmental auditing in India.</p>
+        
+        <div class="l-framework-grid">
+            <!-- EADA Card -->
+            <div class="l-framework-card">
+                <div class="l-framework-icon"><i data-lucide="shield-check"></i></div>
+                <h4>Environment Audit Designated Agency (EADA)</h4>
+                <p class="l-card-short">Established under the Environment Audit Rules, 2025 by the MoEF&CC, it manages and regulates the environmental audit framework in India.</p>
+                
+                <div class="l-card-expandable" id="expand-eada">
+                    <div class="l-expand-inner">
+                        <div class="l-expand-section">
+                            <h6>Overview</h6>
+                            <p>The Environment Audit Designated Agency (EADA) is established under the Environment Audit Rules, 2025 by the Ministry of Environment, Forest and Climate Change (MoEF&CC). It is responsible for managing the environmental audit framework in India.</p>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Legal Framework</h6>
+                            <ul>
+                                <li>Environment (Protection) Act, 1986</li>
+                                <li>Water (Prevention and Control of Pollution) Act, 1974</li>
+                                <li>Air (Prevention and Control of Pollution) Act, 1981</li>
+                                <li>Van (Sanrakshan Evam Samvardhan) Adhiniyam, 1980</li>
+                                <li>Wild Life (Protection) Act, 1972</li>
+                                <li>Related environmental rules and approvals (EC, CTE, CTO)</li>
+                            </ul>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Key Responsibilities</h6>
+                            <ul>
+                                <li>Define eligibility criteria for CEA and REA</li>
+                                <li>Develop certification and screening processes</li>
+                                <li>Manage registration, renewal, suspension, and cancellation</li>
+                                <li>Monitor auditor performance</li>
+                                <li>Issue directions and take disciplinary action</li>
+                                <li>Conduct training programmes and workshops</li>
+                                <li>Define guidelines and standards</li>
+                                <li>Maintain public register of auditors</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <button class="l-read-more-btn" id="btn-eada" onclick="toggleExpand('eada')">Read More</button>
+            </div>
+
+            <!-- NPC Card -->
+            <div class="l-framework-card">
+                <div class="l-framework-icon"><i data-lucide="building"></i></div>
+                <h4>National Productivity Council (NPC)</h4>
+                <p class="l-card-short">An autonomous organization established in 1958 under DPIIT, Ministry of Commerce and Industry, Government of India.</p>
+                
+                <div class="l-card-expandable" id="expand-npc">
+                    <div class="l-expand-inner">
+                        <div class="l-expand-section">
+                            <h6>Overview</h6>
+                            <p>The National Productivity Council (NPC), established in 1958, is an autonomous organisation under the Department for Promotion of Industry and Internal Trade (DPIIT), Ministry of Commerce and Industry, Government of India.</p>
+                            <p>It was set up as a multipartite, non-profit organisation with equal representation from employers' and workers' organisations, the Government, and technical/professional institutions.</p>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Mission & Leadership</h6>
+                            <ul>
+                                <li>Mission: Develop, disseminate, and apply knowledge and experience in productivity</li>
+                                <li>Promote productivity consciousness and improvement</li>
+                                <li>President: Union Minister of Commerce and Industry</li>
+                                <li>Chairman of Governing Body: Secretary, DPIIT</li>
+                            </ul>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Services & Areas of Work</h6>
+                            <p class="mb-2">NPC provides consultancy and training services to Government and public and private sector organisations in various areas:</p>
+                            <ul>
+                                <li>Industrial Engineering</li>
+                                <li>Agri-Business</li>
+                                <li>Economic Services</li>
+                                <li>Quality Management</li>
+                                <li>Human Resource Management</li>
+                                <li>Information Technology</li>
+                                <li>Technology Management</li>
+                                <li>Energy Management</li>
+                                <li>Environmental Management</li>
+                            </ul>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>International & National Presence</h6>
+                            <ul>
+                                <li>Constituent of the Tokyo-based Asian Productivity Organisation (APO)</li>
+                                <li>Government of India is a founding member of APO</li>
+                                <li>Operates through 13 regional offices</li>
+                                <li>Has one training institute</li>
+                                <li>Headquarters located in New Delhi</li>
+                                <li>Supported by 24+ Local Productivity Councils across the country</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <button class="l-read-more-btn" id="btn-npc" onclick="toggleExpand('npc')">Read More</button>
+            </div>
+
+            <!-- CEA Card -->
+            <div class="l-framework-card">
+                <div class="l-framework-icon"><i data-lucide="user-check"></i></div>
+                <h4>Certified Environment Auditor (CEA)</h4>
+                <p class="l-card-short">An individual certified by EADA to conduct environmental audits under the Environment Audit Rules, 2025.</p>
+                
+                <div class="l-card-expandable" id="expand-cea">
+                    <div class="l-expand-inner">
+                        <div class="l-expand-section">
+                            <h6>Overview</h6>
+                            <p>A Certified Environment Auditor (CEA) is an individual certified by the Environment Audit Designated Agency (EADA) to conduct environmental audits under the Environment Audit Rules, 2025.</p>
+                            <p>It also includes performing functions as prescribed by the Central Government from time to time.</p>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Certification Modes</h6>
+                            <ul>
+                                <li>
+                                    <strong>Recognition of Prior Learning (RPL)</strong>
+                                    <br>• Certification based on prior experience and expertise
+                                    <br>• Available for a limited period as defined by the Central Government
+                                </li>
+                                <li>
+                                    <strong>National Certification Examination (NCE)</strong>
+                                    <br>• Structured examination process
+                                    <br>• Used to assess eligibility for certification
+                                </li>
+                            </ul>
+                            <p class="mt-2" style="font-size: 0.85rem; font-style: italic; color: var(--l-muted);">
+                                Eligibility criteria for both modes are defined in official government guidelines.
+                            </p>
+                        </div>
+
+                        <div class="l-expand-section">
+                            <h6>Validity & Renewal</h6>
+                            <ul>
+                                <li>Certification validity: 5 years</li>
+                                <li>Can be revoked earlier if required</li>
+                                <li>Renewable based on government guidelines</li>
+                                <li>Renewal subject to meeting specified criteria</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <button class="l-read-more-btn" id="btn-cea" onclick="toggleExpand('cea')">Read More</button>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -286,6 +432,38 @@
     function closeRoleModal() {
         document.getElementById('roleModal').style.display = 'none';
         document.body.style.overflow = 'auto';
+    }
+
+    // --- FRAMEWORK EXPAND LOGIC ---
+    function toggleExpand(id) {
+        const ids = ['eada', 'npc', 'cea'];
+        const content = document.getElementById('expand-' + id);
+        const btn = document.getElementById('btn-' + id);
+        const isClosing = content.classList.contains('active');
+
+        // Close all other panels first
+        ids.forEach(otherId => {
+            if (otherId !== id) {
+                const otherContent = document.getElementById('expand-' + otherId);
+                const otherBtn = document.getElementById('btn-' + otherId);
+                if (otherContent) otherContent.classList.remove('active');
+                if (otherBtn) {
+                    otherBtn.classList.remove('active');
+                    otherBtn.textContent = 'Read More';
+                }
+            }
+        });
+
+        // Toggle the current panel
+        if (isClosing) {
+            content.classList.remove('active');
+            btn.classList.remove('active');
+            btn.textContent = 'Read More';
+        } else {
+            content.classList.add('active');
+            btn.classList.add('active');
+            btn.textContent = 'Read Less';
+        }
     }
 
     // Smooth anchor scroll
