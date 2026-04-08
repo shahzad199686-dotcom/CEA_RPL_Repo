@@ -397,20 +397,141 @@
                         <!-- ADDRESS DETAILS -->
                         <div class="form-section-label">Address Details</div>
 
-                        <!-- ROW 5: ADDRESS -->
+                        <!-- PERMANENT ADDRESS -->
                         <div class="col-6">
-                            <label>Permanent Address <span class="req">*</span></label>
-                            <textarea name="address_perm" id="address_perm" required placeholder="Include City, State, ZIP" oninput="syncAddress()" style="height: 140px;"></textarea>
+                            <label>City <span class="req">*</span></label>
+                            <select id="city_perm" class="address-select-field" required onchange="syncAddress()">
+                                <option value="">Select City</option>
+                                <option>Mumbai</option>
+                                <option>Delhi</option>
+                                <option>Bengaluru</option>
+                                <option>Hyderabad</option>
+                                <option>Ahmedabad</option>
+                                <option>Chennai</option>
+                                <option>Kolkata</option>
+                                <option>Surat</option>
+                                <option>Pune</option>
+                                <option>Jaipur</option>
+                                <option>Lucknow</option>
+                                <option>Kanpur</option>
+                                <option>Nagpur</option>
+                                <option>Indore</option>
+                                <option>Thane</option>
+                                <option>Bhopal</option>
+                                <option>Visakhapatnam</option>
+                                <option>Pimpri-Chinchwad</option>
+                                <option>Patna</option>
+                                <option>Vadodara</option>
+                                <option>Ghaziabad</option>
+                                <option>Ludhiana</option>
+                                <option>Agra</option>
+                                <option>Nashik</option>
+                                <option>Faridabad</option>
+                                <option>Meerut</option>
+                                <option>Rajkot</option>
+                                <option>Kalyan-Dombivli</option>
+                                <option>Vasai-Virar</option>
+                                <option>Varanasi</option>
+                                <option>Srinagar</option>
+                                <option>Aurangabad</option>
+                                <option>Dhanbad</option>
+                                <option>Amritsar</option>
+                                <option>Navi Mumbai</option>
+                                <option>Allahabad</option>
+                                <option>Ranchi</option>
+                                <option>Howrah</option>
+                                <option>Coimbatore</option>
+                                <option>Jabalpur</option>
+                                <option>Gwalior</option>
+                                <option>Vijayawada</option>
+                                <option>Jodhpur</option>
+                                <option>Madurai</option>
+                                <option>Raipur</option>
+                                <option>Kota</option>
+                                <option>Guwahati</option>
+                                <option>Chandigarh</option>
+                                <option>Solapur</option>
+                            </select>
                         </div>
                         <div class="col-6">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                <label style="margin: 0;">Correspondence Address</label>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="checkbox" id="sameAddress" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);" onchange="toggleAddressSync()">
-                                    <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Same as Permanent</label>
-                                </div>
+                            <label>Pincode <span class="req">*</span></label>
+                            <input type="text" id="pincode_perm" class="address-input-field" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,''); syncAddress();" />
+                        </div>
+                        <div class="col-12">
+                            <label>Permanent Address <span class="req">*</span></label>
+                            <textarea name="address_perm" id="address_perm" required placeholder="Flat No, Building, Street, Area" oninput="syncAddress()" style="height: 100px;"></textarea>
+                        </div>
+
+                        <!-- CORRESPONDENCE ADDRESS -->
+                        <div class="col-6">
+                            <label>Correspondence City <span class="req">*</span></label>
+                            <select id="city_corr" class="address-select-field" required>
+                                <option value="">Select City</option>
+                                <option>Mumbai</option>
+                                <option>Delhi</option>
+                                <option>Bengaluru</option>
+                                <option>Hyderabad</option>
+                                <option>Ahmedabad</option>
+                                <option>Chennai</option>
+                                <option>Kolkata</option>
+                                <option>Surat</option>
+                                <option>Pune</option>
+                                <option>Jaipur</option>
+                                <option>Lucknow</option>
+                                <option>Kanpur</option>
+                                <option>Nagpur</option>
+                                <option>Indore</option>
+                                <option>Thane</option>
+                                <option>Bhopal</option>
+                                <option>Visakhapatnam</option>
+                                <option>Pimpri-Chinchwad</option>
+                                <option>Patna</option>
+                                <option>Vadodara</option>
+                                <option>Ghaziabad</option>
+                                <option>Ludhiana</option>
+                                <option>Agra</option>
+                                <option>Nashik</option>
+                                <option>Faridabad</option>
+                                <option>Meerut</option>
+                                <option>Rajkot</option>
+                                <option>Kalyan-Dombivli</option>
+                                <option>Vasai-Virar</option>
+                                <option>Varanasi</option>
+                                <option>Srinagar</option>
+                                <option>Aurangabad</option>
+                                <option>Dhanbad</option>
+                                <option>Amritsar</option>
+                                <option>Navi Mumbai</option>
+                                <option>Allahabad</option>
+                                <option>Ranchi</option>
+                                <option>Howrah</option>
+                                <option>Coimbatore</option>
+                                <option>Jabalpur</option>
+                                <option>Gwalior</option>
+                                <option>Vijayawada</option>
+                                <option>Jodhpur</option>
+                                <option>Madurai</option>
+                                <option>Raipur</option>
+                                <option>Kota</option>
+                                <option>Guwahati</option>
+                                <option>Chandigarh</option>
+                                <option>Solapur</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>Correspondence Pincode <span class="req">*</span></label>
+                            <input type="text" id="pincode_corr" class="address-input-field" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        </div>
+                        <div class="col-12">
+                            <label>Correspondence Address</label>
+                            <textarea name="address_corr" id="address_corr" placeholder="Flat No, Building, Street, Area" style="height: 100px;"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
+                                <input type="checkbox" id="sameAddress" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);" onchange="toggleAddressSync()">
+                                <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Same as Permanent</label>
                             </div>
-                            <textarea name="address_corr" id="address_corr" style="height: 140px;"></textarea>
                         </div>
 
                         <!-- IDENTITY DETAILS -->
@@ -1502,9 +1623,19 @@
                     const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
                     
                     if (input.name === 'address_perm' || input.name === 'address_corr') {
-                        if (input.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
+                        const prefix = input.name === 'address_perm' ? 'perm' : 'corr';
+                        const cityField = document.getElementById(`city_${prefix}`);
+                        const pinField = document.getElementById(`pincode_${prefix}`);
+                        
+                        if (cityField && !cityField.value) {
                             isInvalid = true;
-                            customMsg = "Address must be at least 3 characters and contain valid symbols.";
+                            customMsg = "Please select a city.";
+                        } else if (pinField && (!/^[0-9]{6}$/.test(pinField.value))) {
+                            isInvalid = true;
+                            customMsg = "Pincode must be exactly 6 digits.";
+                        } else if (input.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
+                            isInvalid = true;
+                            customMsg = "Street address must be at least 3 characters.";
                         }
                     } else if (input.name === 'mobile' || input.name === 'alt_mobile') {
                         if (input.value.trim() !== '' && !/^[0-9]{10}$/.test(input.value.trim())) {
@@ -2106,7 +2237,21 @@
             saveBtn.textContent = 'Saving...';
         }
 
+        // Prepare structured address strings
+        const permAddr = document.getElementById('address_perm');
+        const corrAddr = document.getElementById('address_corr');
+        const oldPermVal = permAddr.value;
+        const oldCorrVal = corrAddr.value;
+
+        permAddr.value = formatStructuredAddress(oldPermVal, document.getElementById('city_perm').value, document.getElementById('pincode_perm').value);
+        corrAddr.value = formatStructuredAddress(oldCorrVal, document.getElementById('city_corr').value, document.getElementById('pincode_corr').value);
+
         const formData = new FormData(document.getElementById('applicationForm'));
+        
+        // Restore UI values
+        permAddr.value = oldPermVal;
+        corrAddr.value = oldCorrVal;
+
         formData.append('current_step', currentStep);
 
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
@@ -2197,8 +2342,15 @@
             setVal('parent_relation', draftData.parent_relation);
             setVal('parent_name', draftData.parent_name);
             setVal('citizenship', draftData.citizenship);
-            setVal('address_perm', draftData.address_perm);
-            setVal('address_corr', draftData.address_corr);
+            const permParts = parseStructuredAddress(draftData.address_perm);
+            setVal('city_perm', permParts.city);
+            setVal('pincode_perm', permParts.pincode);
+            setVal('address_perm', permParts.street);
+
+            const corrParts = parseStructuredAddress(draftData.address_corr);
+            setVal('city_corr', corrParts.city);
+            setVal('pincode_corr', corrParts.pincode);
+            setVal('address_corr', corrParts.street);
             setVal('gov_id_type', draftData.gov_id_type);
             setVal('other_gov_id_type', draftData.other_gov_id_type);
             setVal('gov_id_number', draftData.gov_id_number);
@@ -2461,7 +2613,22 @@
 
         try {
             const form = document.getElementById('applicationForm');
+            
+            // Prepare structured address strings
+            const permAddr = document.getElementById('address_perm');
+            const corrAddr = document.getElementById('address_corr');
+            const oldPermVal = permAddr.value;
+            const oldCorrVal = corrAddr.value;
+
+            permAddr.value = formatStructuredAddress(oldPermVal, document.getElementById('city_perm').value, document.getElementById('pincode_perm').value);
+            corrAddr.value = formatStructuredAddress(oldCorrVal, document.getElementById('city_corr').value, document.getElementById('pincode_corr').value);
+
             const formData = new FormData(form);
+            
+            // Restore UI values
+            permAddr.value = oldPermVal;
+            corrAddr.value = oldCorrVal;
+
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
 
             const response = await fetch('/Application/Submit', {
@@ -2547,6 +2714,14 @@
                 '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
         };
 
+        const getFullAddress = (prefix) => {
+            const street = document.getElementById(`address_${prefix}`)?.value || '';
+            const city = document.getElementById(`city_${prefix}`)?.value || '';
+            const pin = document.getElementById(`pincode_${prefix}`)?.value || '';
+            if (!city && !pin) return street || 'Not provided';
+            return `${street}, ${city} - ${pin}`;
+        };
+
         const editLink = (step) => isReadOnly ? '' : `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" class="edit-link">Edit Step ${step}</a>`;
 
         let html = "";
@@ -2570,8 +2745,8 @@
                     <div><dt>ID Number</dt><dd>${getData('gov_id_number')}</dd></div>
                     <div><dt>ID Proof Doc</dt><dd>${getFileStatus('gov_id_upload')}</dd></div>
                     <div><dt>Photograph</dt><dd>${getFileStatus('applicant_photo')}</dd></div>
-                    <div style="grid-column: 1 / -1;"><dt>Permanent Address</dt><dd>${getData('address_perm')}</dd></div>
-                    <div style="grid-column: 1 / -1;"><dt>Correspondence Address</dt><dd>${getData('address_corr') || 'Same as Permanent'}</dd></div>
+                    <div style="grid-column: 1 / -1;"><dt>Permanent Address</dt><dd>${getFullAddress('perm')}</dd></div>
+                    <div style="grid-column: 1 / -1;"><dt>Correspondence Address</dt><dd>${document.getElementById('sameAddress')?.checked ? 'Same as Permanent' : getFullAddress('corr')}</dd></div>
                 </div>
             </div>`;
 
@@ -3106,21 +3281,58 @@
         }
     });
 
+    function formatStructuredAddress(street, city, pincode) {
+        if (!city && !pincode) return street;
+        return `${street}, City - ${city}, Pincode - ${pincode}`;
+    }
+
+    function parseStructuredAddress(fullAddr) {
+        if (!fullAddr) return { street: '', city: '', pincode: '' };
+        
+        // Try to match our specific format: "Street, City - XYZ, Pincode - 123456"
+        const pincodeMatch = fullAddr.match(/, Pincode - ([0-9]{6})$/);
+        const cityMatch = fullAddr.match(/, City - ([^,]+), Pincode - [0-9]{6}$/);
+        
+        let street = fullAddr;
+        let city = cityMatch ? cityMatch[1].trim() : '';
+        let pincode = pincodeMatch ? pincodeMatch[1].trim() : '';
+        
+        if (cityMatch) {
+            street = fullAddr.split(', City - ')[0];
+        } else if (pincodeMatch) {
+            street = fullAddr.split(', Pincode - ')[0];
+        }
+        
+        return { street: street.trim(), city, pincode };
+    }
+
     function toggleAddressSync() {
         const isChecked = document.getElementById('sameAddress').checked;
         const corr = document.getElementById('address_corr');
         const perm = document.getElementById('address_perm');
+        const cityCorr = document.getElementById('city_corr');
+        const cityPerm = document.getElementById('city_perm');
+        const pinCorr = document.getElementById('pincode_corr');
+        const pinPerm = document.getElementById('pincode_perm');
         
         if (isChecked) {
-            corr.value = perm.value;
-            corr.readOnly = true;
-            corr.style.background = 'var(--bg)';
-            corr.style.cursor = 'not-allowed';
+            if (cityCorr) { cityCorr.value = cityPerm.value; cityCorr.disabled = true; }
+            if (pinCorr) { pinCorr.value = pinPerm.value; pinCorr.readOnly = true; pinCorr.style.background = 'var(--bg)'; }
+            if (corr) {
+                corr.value = perm.value;
+                corr.readOnly = true;
+                corr.style.background = 'var(--bg)';
+                corr.style.cursor = 'not-allowed';
+            }
         } else {
-            corr.value = '';
-            corr.readOnly = false;
-            corr.style.background = '#fff';
-            corr.style.cursor = 'text';
+            if (cityCorr) { cityCorr.value = ''; cityCorr.disabled = false; }
+            if (pinCorr) { pinCorr.value = ''; pinCorr.readOnly = false; pinCorr.style.background = '#fff'; }
+            if (corr) {
+                corr.value = '';
+                corr.readOnly = false;
+                corr.style.background = '#fff';
+                corr.style.cursor = 'text';
+            }
         }
     }
 
@@ -3129,7 +3341,14 @@
         if (isChecked) {
             const perm = document.getElementById('address_perm');
             const corr = document.getElementById('address_corr');
+            const cityPerm = document.getElementById('city_perm');
+            const cityCorr = document.getElementById('city_corr');
+            const pinPerm = document.getElementById('pincode_perm');
+            const pinCorr = document.getElementById('pincode_corr');
+
             if (perm && corr) corr.value = perm.value;
+            if (cityPerm && cityCorr) cityCorr.value = cityPerm.value;
+            if (pinPerm && pinCorr) pinCorr.value = pinPerm.value;
         }
     }
 
