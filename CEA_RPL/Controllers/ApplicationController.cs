@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CEA_RPL.Controllers;
 
+[Authorize(Roles = "Candidate")]
 public class ApplicationController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -22,7 +23,6 @@ public class ApplicationController : Controller
         _env = env;
     }
 
-    [Authorize]
     public async Task<IActionResult> Index()
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

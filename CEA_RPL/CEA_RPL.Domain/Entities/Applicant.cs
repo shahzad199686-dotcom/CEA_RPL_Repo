@@ -24,6 +24,10 @@ public class Applicant : BaseEntity
     public int CurrentStep { get; set; } = 1;
     public DateTime? LastSavedAt { get; set; }
     public DateTime? SubmittedAt { get; set; }
+
+    // Finance/Payment Verification
+    public string? PaymentStatus { get; set; } = "Pending"; // Pending, Verified, NotVerified
+    public string? FinanceRemarks { get; set; }
     
     // Photo & IDs
     public string? PhotoPath { get; set; }

@@ -25,6 +25,7 @@ public class AuthController : Controller
         if (User.Identity?.IsAuthenticated == true)
         {
             if (User.IsInRole("Admin")) return RedirectToAction("Dashboard", "Admin");
+            if (User.IsInRole("Finance")) return RedirectToAction("Dashboard", "Finance");
             return RedirectToAction("Index", "Application");
         }
         return View();
@@ -110,7 +111,7 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/verifyotp")]
-    public async Task<IActionResult> VerifyOtp([FromForm] string email, [FromForm] string? emailOtp)
+    public async Task<IActionResult> VerifyOtp([FromForm] string email, [FromForm] string? emailOtp, [FromForm] string? requiredRole)
     {
         if (string.IsNullOrEmpty(emailOtp))
         {
@@ -127,6 +128,11 @@ public class AuthController : Controller
         var user = await _authService.GetUserByEmailAsync(email);
         if (user != null)
         {
+            if (!string.IsNullOrEmpty(requiredRole) && user.Role != requiredRole)
+            {
+                return Unauthorized(new { message = $"This account is not authorized for {requiredRole} login." });
+            }
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -147,10 +153,15 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/signin")]
-    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string password)
+    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string password, [FromForm] string? requiredRole)
     {
         var user = await _authService.GetUserByEmailAsync(email);
         if (user == null) return Unauthorized(new { message = "Invalid credentials." });
+
+        if (!string.IsNullOrEmpty(requiredRole) && user.Role != requiredRole)
+        {
+            return Unauthorized(new { message = $"This account is not authorized for {requiredRole} login." });
+        }
 
         var valid = await _authService.ValidatePasswordAsync(user, password);
         if (!valid) return Unauthorized(new { message = "Invalid credentials." });

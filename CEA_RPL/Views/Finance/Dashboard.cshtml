@@ -1,0 +1,246 @@
+@model IEnumerable<CEA_RPL.Domain.Entities.Applicant>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Finance Dashboard";
+}
+
+<div class="dashboard-content">
+    <!-- PAGE HERO -->
+    <div class="welcome-hero" style="margin-bottom: 32px;">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="mb-1">Finance Dashboard</h1>
+                <p class="text-muted mb-0">Verify candidate payments and update payment status.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-primary-light rounded-4 text-primary">
+                        <i data-lucide="layers" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-bold uppercase">Total Payments</div>
+                        <div class="fs-3 fw-bold">@ViewBag.TotalPayments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-warning-light rounded-4 text-warning">
+                        <i data-lucide="clock" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-bold uppercase">Pending Verification</div>
+                        <div class="fs-3 fw-bold">@ViewBag.PendingCount</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-success-light rounded-4 text-success">
+                        <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-bold uppercase">Verified</div>
+                        <div class="fs-3 fw-bold">@ViewBag.VerifiedCount</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-danger-light rounded-4 text-danger">
+                        <i data-lucide="alert-circle" style="width: 24px; height: 24px;"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small fw-bold uppercase">Not Verified</div>
+                        <div class="fs-3 fw-bold">@ViewBag.NotVerifiedCount</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT TABLE -->
+    <div class="card border-0 shadow-sm" style="border-radius: 24px; overflow: hidden;">
+        <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Payment Verification Queue</h5>
+            <div class="d-flex gap-2">
+                <div class="search-box">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="financeSearch" class="form-control" placeholder="Search Application or UTR...">
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead class="bg-light text-muted small fw-bold">
+                        <tr>
+                            <th class="ps-4">App ID</th>
+                            <th>Candidate</th>
+                            <th>Payment Details</th>
+                            <th>Evidence</th>
+                            <th>Status</th>
+                            <th class="pe-4 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in Model)
+                        {
+                            var pay = app.PaymentDetails.LastOrDefault();
+                            <tr>
+                                <td class="ps-4 fw-bold">#@app.Id</td>
+                                <td>
+                                    <div class="fw-bold">@app.FullName</div>
+                                    <div class="text-muted small">@app.Email</div>
+                                </td>
+                                <td>
+                                    @if (pay != null)
+                                    {
+                                        <div class="fw-bold" style="color: var(--a-primary);">₹ @pay.Amount.ToString("N0")</div>
+                                        <div class="small">UTR: <span class="text-primary fw-bold">@pay.UtrNumber</span></div>
+                                        <div class="small text-muted">@pay.PaymentDate.ToString("dd MMM yyyy")</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger small">Data Missing</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (pay?.ReceiptPath != null)
+                                    {
+                                        <a href="@pay.ReceiptPath" target="_blank" class="btn btn-sm btn-outline-info rounded-pill px-3">
+                                            <i data-lucide="file-text" class="me-1" style="width: 14px; height: 14px;"></i> Receipt
+                                        </a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (app.PaymentStatus == "Verified")
+                                    {
+                                        <span class="status-chip st-approved">Verified</span>
+                                    }
+                                    else if (app.PaymentStatus == "NotVerified")
+                                    {
+                                        <span class="status-chip st-rejected">Not Verified</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-chip st-submitted">Pending</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <button class="btn btn-icon-verify me-1" onclick="handleVerification(@app.Id, 'verify')" title="Verify Payment">
+                                        <i data-lucide="check" style="width: 18px; height: 18px;"></i>
+                                    </button>
+                                    <button class="btn btn-icon-reject" onclick="handleVerification(@app.Id, 'reject')" title="Mark Not Verified">
+                                        <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Remarks -->
+<div class="modal fade" id="remarksModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 20px;">
+            <div class="modal-header border-0 p-4 pb-0">
+                <h5 class="modal-title fw-bold">Payment Verification Finalization</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p id="modalMainText" class="mb-3"></p>
+                <div class="mb-0">
+                    <label class="form-label fw-bold small text-muted">Internal Remarks (Optional)</label>
+                    <textarea id="financeRemarks" class="form-control border-2" rows="3" style="border-radius: 12px;" placeholder="Enter details e.g. 'UTR Verified', 'Amount mismatch'..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmVerification" class="btn btn-primary rounded-pill px-4 fw-bold">Confirm Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentAppId = null;
+        let currentAction = null;
+        const remarksModal = new bootstrap.Modal(document.getElementById('remarksModal'));
+
+        function handleVerification(id, action) {
+            currentAppId = id;
+            currentAction = action;
+            const text = action === 'verify' 
+                ? 'Are you sure you want to mark this payment as <b>VERIFIED</b>?' 
+                : 'Are you sure you want to mark this payment as <b>NOT VERIFIED</b>?';
+            document.getElementById('modalMainText').innerHTML = text;
+            document.getElementById('financeRemarks').value = '';
+            remarksModal.show();
+        }
+
+        document.getElementById('confirmVerification').addEventListener('click', async () => {
+            const remarks = document.getElementById('financeRemarks').value;
+            const formData = new FormData();
+            formData.append('id', currentAppId);
+            formData.append('action', currentAction);
+            formData.append('remarks', remarks);
+
+            try {
+                const resp = await fetch('/api/finance/verify', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (resp.ok) {
+                    location.reload();
+                } else {
+                    alert('Action failed. Please try again.');
+                }
+            } catch (err) {
+                alert('Server error.');
+            }
+        });
+
+        // Simple search logic
+        document.getElementById('financeSearch').addEventListener('keyup', function() {
+            const val = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(val) ? '' : 'none';
+            });
+        });
+    </script>
+}
+
+<style>
+    .btn-icon-verify { background: #ecfdf5; color: #10b981; border: none; padding: 8px; border-radius: 10px; transition: 0.2s; }
+    .btn-icon-verify:hover { background: #10b981; color: white; transform: translateY(-2px); }
+    .btn-icon-reject { background: #fef2f2; color: #ef4444; border: none; padding: 8px; border-radius: 10px; transition: 0.2s; }
+    .btn-icon-reject:hover { background: #ef4444; color: white; transform: translateY(-2px); }
+    .search-box { position: relative; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; color: #94a3b8; pointer-events: none; }
+    .search-box input { padding-left: 36px; border-radius: 12px; border: 1.5px solid #f1f5f9; min-width: 280px; }
+    .search-box input:focus { border-color: var(--a-primary); box-shadow: none; }
+    .uppercase { letter-spacing: 0.5px; }
+    .bg-primary-light { background: rgba(14,165,165,0.08); }
+    .bg-warning-light { background: rgba(245,158,11,0.08); }
+    .bg-success-light { background: rgba(16,185,129,0.08); }
+    .bg-danger-light { background: rgba(239,68,68,0.08); }
+</style>

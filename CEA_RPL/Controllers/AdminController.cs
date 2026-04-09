@@ -61,6 +61,12 @@ public class AdminController : Controller
         var applicant = await _context.Applicants.FindAsync(id);
         if (applicant == null) return NotFound();
 
+        // Safety Check: Admin cannot approve if Finance has not verified payment
+        if (status == "Approved" && applicant.PaymentStatus != "Verified")
+        {
+            return BadRequest(new { message = "Cannot approve application. Awaiting Finance Payment Verification." });
+        }
+
         applicant.Status = status;
         applicant.AdminFeedback = feedback;
         

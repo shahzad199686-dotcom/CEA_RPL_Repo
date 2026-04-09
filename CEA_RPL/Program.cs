@@ -61,6 +61,17 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // Database Patch: Add missing Finance columns if they don't exist
+    try
+    {
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'PaymentStatus') ALTER TABLE Applicants ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'FinanceRemarks') ALTER TABLE Applicants ADD FinanceRemarks NVARCHAR(MAX);");
+        
+        // Data Patch: Ensure existing NULLs are set to 'Pending'
+        context.Database.ExecuteSqlRaw("UPDATE Applicants SET PaymentStatus = 'Pending' WHERE PaymentStatus IS NULL;");
+    }
+    catch { /* Ignore errors if already patched or schema locked */ }
     
     if (!context.Users.Any(u => u.Email == "admin@cearpl.gov.in"))
     {
@@ -74,6 +85,21 @@ using (var scope = app.Services.CreateScope())
             Role = "Admin"
         };
         context.Users.Add(admin);
+        context.SaveChanges();
+    }
+
+    if (!context.Users.Any(u => u.Email == "finance@cearpl.gov.in"))
+    {
+        var finance = new User
+        {
+            Email = "finance@cearpl.gov.in",
+            Mobile = "8888888888",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Finance@123"),
+            IsEmailVerified = true,
+            IsMobileVerified = true,
+            Role = "Finance"
+        };
+        context.Users.Add(finance);
         context.SaveChanges();
     }
 }

@@ -10,18 +10,19 @@
 
     <!-- LOGIN FORM -->
     <div id="loginArea">
-        <form id="loginForm" method="POST">
+        <form id="candidateLoginForm" method="POST">
+            <input type="hidden" name="requiredRole" value="Candidate" />
             <div style="margin-bottom: 20px;">
-                <label for="authEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--l-ink);">Email Address</label>
-                <input id="authEmail" name="email" type="email" placeholder="you@example.com" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
+                <label for="candidateEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--l-ink);">Email Address</label>
+                <input id="candidateEmail" name="candidate_email" type="email" placeholder="you@example.com" required autocomplete="section-candidate username" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
             </div>
 
             <div style="margin-bottom: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="authPass" style="font-weight: 600; font-size: 0.9rem; margin: 0; color: var(--l-ink);">Password</label>
+                    <label for="candidatePass" style="font-weight: 600; font-size: 0.9rem; margin: 0; color: var(--l-ink);">Password</label>
                     <a asp-action="ForgotPassword" style="color: var(--l-primary); font-size: 0.85rem; text-decoration: none; font-weight: 700; transition: color 0.2s;">Forgot?</a>
                 </div>
-                <input id="authPass" name="password" type="password" placeholder="••••••••" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
+                <input id="candidatePass" name="candidate_password" type="password" placeholder="••••••••" required autocomplete="section-candidate current-password" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
             </div>
 
             <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14,165,165,0.2);">
@@ -56,7 +57,7 @@
 </div>
 
 <script>
-    const loginForm = document.getElementById('loginForm');
+    const loginForm = document.getElementById('candidateLoginForm');
     const loginArea = document.getElementById('loginArea');
     const otpArea = document.getElementById('otpArea');
     const authStatus = document.getElementById('authStatus');
@@ -65,16 +66,20 @@
         e.preventDefault();
         showStatus('Verifying credentials...', '#eee', '#666');
         
-        const formData = new FormData(loginForm);
+        const payload = new FormData();
+        payload.append('email', loginForm.elements['candidate_email'].value);
+        payload.append('password', loginForm.elements['candidate_password'].value);
+        payload.append('requiredRole', 'Candidate');
+
         try {
             const resp = await fetch('/api/auth/signin', {
                 method: 'POST',
-                body: formData
+                body: payload
             });
             const data = await resp.json();
             
             if (resp.ok) {
-                document.getElementById('confirmedEmail').innerText = formData.get('email');
+                document.getElementById('confirmedEmail').innerText = loginForm.elements['candidate_email'].value;
                 loginArea.style.display = 'none';
                 otpArea.style.display = 'block';
                 showStatus(data.message, '#e6f6f6', '#0ea5a5');
@@ -95,6 +100,7 @@
         const formData = new FormData();
         formData.append('email', email);
         formData.append('emailOtp', otp);
+        formData.append('requiredRole', 'Candidate');
 
         try {
             const resp = await fetch('/api/auth/verifyotp', {

@@ -12,29 +12,41 @@
 </head>
 <body class="admin-layout">
     <header class="admin-header">
-        <a class="admin-brand" asp-controller="Admin" asp-action="Dashboard">
+        <a class="admin-brand" asp-controller="@(User.IsInRole("Finance") ? "Finance" : "Admin")" asp-action="Dashboard">
             <div class="admin-logo-box">C</div>
             <div class="admin-portal-name">
-                CEA RPL <span class="admin-badge">Admin</span>
+                CEA RPL <span class="admin-badge">@(User.IsInRole("Finance") ? "Finance" : "Admin")</span>
             </div>
         </a>
 
         <nav class="admin-nav d-none d-lg-flex">
-            <a asp-controller="Admin" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
-                <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i> Dashboard
-            </a>
-            <a asp-controller="Admin" asp-action="Applications" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
-                <i data-lucide="users" style="width: 18px; height: 18px;"></i> Applications
-            </a>
-            <a asp-controller="Admin" asp-action="Documents" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Documents" ? "active" : "")">
-                <i data-lucide="file-text" style="width: 18px; height: 18px;"></i> Documents
-            </a>
-            <a asp-controller="Admin" asp-action="Reports" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
-                <i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> Reports
-            </a>
-            <a asp-controller="Admin" asp-action="Help" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Help" ? "active" : "")">
-                <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i> Help
-            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i> Dashboard
+                </a>
+                <a asp-controller="Admin" asp-action="Applications" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
+                    <i data-lucide="users" style="width: 18px; height: 18px;"></i> Applications
+                </a>
+                <a asp-controller="Admin" asp-action="Documents" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Documents" ? "active" : "")">
+                    <i data-lucide="file-text" style="width: 18px; height: 18px;"></i> Documents
+                </a>
+                <a asp-controller="Admin" asp-action="Reports" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
+                    <i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> Reports
+                </a>
+                <a asp-controller="Admin" asp-action="Help" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Help" ? "active" : "")">
+                    <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i> Help
+                </a>
+            }
+            else if (User.IsInRole("Finance"))
+            {
+                <a asp-controller="Finance" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i> Dashboard
+                </a>
+                <a asp-controller="Finance" asp-action="Dashboard" class="nav-item">
+                    <i data-lucide="banknote" style="width: 18px; height: 18px;"></i> Payments
+                </a>
+            }
         </nav>
 
         <div class="admin-nav-actions">
@@ -47,10 +59,10 @@
             <!-- Profile Group -->
             <div class="admin-profile">
                 <div class="admin-info d-none d-md-block">
-                    <span class="admin-name">Administrator</span>
-                    <span class="admin-email">admin@cearpl.gov.in</span>
+                    <span class="admin-name">@(User.IsInRole("Finance") ? "Finance Officer" : "Administrator")</span>
+                    <span class="admin-email">@(User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value)</span>
                 </div>
-                <div class="admin-avatar ms-2">AD</div>
+                <div class="admin-avatar ms-2">@(User.IsInRole("Finance") ? "FN" : "AD")</div>
                 <a asp-controller="Auth" asp-action="Logout" class="logout-btn ms-3" title="Sign Out">
                     <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
                 </a>

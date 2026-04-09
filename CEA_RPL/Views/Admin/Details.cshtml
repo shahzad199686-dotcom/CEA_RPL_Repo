@@ -206,7 +206,17 @@
                             <thead class="text-muted small fw-bold"><tr><th class="ps-3">Transaction UTR</th><th>Amount</th><th>Status</th><th class="pe-3">Date</th></tr></thead>
                             <tbody>
                                 @foreach(var pay in Model.PaymentDetails) {
-                                    <tr><td class="ps-3 fw-bold text-primary">@pay.UtrNumber</td><td class="fw-bold">₹ @pay.Amount</td><td><span class="status-chip st-approved" style="font-size: 0.65rem; padding: 4px 12px;">Verified</span></td><td class="pe-3 text-muted fw-bold">@pay.PaymentDate.ToString("dd MMM yyyy")</td></tr>
+                                    var stClass = Model.PaymentStatus switch {
+                                        "Verified" => "st-approved",
+                                        "NotVerified" => "st-rejected",
+                                        _ => "st-submitted"
+                                    };
+                                    <tr>
+                                        <td class="ps-3 fw-bold text-primary">@pay.UtrNumber</td>
+                                        <td class="fw-bold">₹ @pay.Amount.ToString("N0")</td>
+                                        <td><span class="status-chip @stClass" style="font-size: 0.65rem; padding: 4px 12px;">@Model.PaymentStatus</span></td>
+                                        <td class="pe-3 text-muted fw-bold">@pay.PaymentDate.ToString("dd MMM yyyy")</td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -229,10 +239,18 @@
                             <label class="form-label fw-bold text-muted small uppercase">Final Disposition</label>
                             <select name="status" id="statusSelect" class="status-select w-100" style="padding: 12px 15px;">
                                 <option value="UnderReview" selected="@(Model.Status == "UnderReview")">Mark Under Review</option>
-                                <option value="Approved" selected="@(Model.Status == "Approved")">Approve Application</option>
+                                <option value="Approved" selected="@(Model.Status == "Approved")" disabled="@(Model.PaymentStatus != "Verified")">
+                                    Approve Application @(Model.PaymentStatus != "Verified" ? "(Awaiting Finance Verification)" : "")
+                                </option>
                                 <option value="Rejected" selected="@(Model.Status == "Rejected")">Reject Application</option>
                                 <option value="Feedback Pending" selected="@(Model.Status == "Feedback Pending")">Request Changes / Feedback</option>
                             </select>
+                            @if(Model.PaymentStatus != "Verified") {
+                                <div class="alert alert-warning mt-2 d-flex align-items-center gap-2" style="font-size: 0.75rem; border-radius: 10px; border: none; background: #fff8eb;">
+                                    <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+                                    <span>Approval is locked until <b class="text-dark">Finance</b> verifies payment.</span>
+                                </div>
+                            }
                         </div>
 
                         <div class="mb-4">
@@ -275,7 +293,7 @@
                     feedbackDiv.style.display = 'block';
                     setTimeout(() => window.location.href = '/Admin/Dashboard', 1500);
                 } else {
-                    feedbackDiv.innerHTML = `<span class="text-danger">✕ Failed to update.</span>`;
+                    feedbackDiv.innerHTML = `<span class="text-danger">✕ ${result.message || 'Failed to update.'}</span>`;
                     feedbackDiv.style.backgroundColor = '#fef2f2';
                     feedbackDiv.style.display = 'block';
                 }

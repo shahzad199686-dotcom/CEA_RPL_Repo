@@ -3,32 +3,60 @@
 }
 
 <div class="auth-page-container" style="max-width: 480px; margin: 60px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
+    <!-- ROLE TOGGLE -->
+    <div style="display: flex; background: #f1f5f9; padding: 6px; border-radius: 14px; margin-bottom: 30px; gap: 4px;">
+        <button type="button" id="tabAdmin" class="role-tab active" onclick="switchRole('Admin')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;">Administrator</button>
+        <button type="button" id="tabFinance" class="role-tab" onclick="switchRole('Finance')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b;">Finance</button>
+    </div>
+
     <div style="text-align: center; margin-bottom: 35px;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #f0f7f7; color: #0ea5a5; border-radius: 16px; margin-bottom: 20px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div id="roleIcon" style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #f0f7f7; color: #0ea5a5; border-radius: 16px; margin-bottom: 20px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="adminIcon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="financeIcon" style="display: none;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        <h2 style="font-size: 1.8rem; color: #333; margin-bottom: 10px; font-weight: 800;">Administrator Login</h2>
-        <p style="color: #666;">Secure access to manage the CEA RPL portal</p>
+        <h2 id="loginTitle" style="font-size: 1.8rem; color: #333; margin-bottom: 10px; font-weight: 800;">Administrator Login</h2>
+        <p id="loginSubtitle" style="color: #666;">Secure access to manage the CEA RPL portal</p>
     </div>
 
     <!-- LOGIN FORM -->
     <div id="loginArea">
-        <form id="loginForm" method="POST">
-            <div style="margin-bottom: 20px;">
-                <label for="authEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Admin Email</label>
-                <input id="authEmail" name="email" type="email" placeholder="admin@cearpl.gov.in" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+        <form id="adminLoginForm" method="POST">
+            <input type="hidden" name="requiredRole" id="requiredRole" value="Admin" />
+            
+            <!-- ADMIN FIELDS -->
+            <div id="adminFields">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Admin Email</label>
+                    <input id="adminEmail" name="admin_email" type="email" autocomplete="section-admin username" placeholder="admin@cearpl.gov.in" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin: 0;">Password</label>
+                    </div>
+                    <input id="adminPass" name="admin_password" type="password" autocomplete="section-admin current-password" placeholder="••••••••" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                </div>
             </div>
 
-            <div style="margin-bottom: 25px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="authPass" style="font-weight: 600; font-size: 0.9rem; margin: 0;">Password</label>
-                    <a href="#" style="color: #0ea5a5; font-size: 0.85rem; text-decoration: none; font-weight: 500;">Forgot Password?</a>
+            <!-- FINANCE FIELDS -->
+            <div id="financeFields" style="display: none;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Finance Email</label>
+                    <input id="financeEmail" name="finance_email" type="email" autocomplete="section-finance username" placeholder="finance@cearpl.gov.in" disabled required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
                 </div>
-                <input id="authPass" name="password" type="password" placeholder="••••••••" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <div style="margin-bottom: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin: 0;">Password</label>
+                    </div>
+                    <input id="financePass" name="finance_password" type="password" autocomplete="section-finance current-password" placeholder="••••••••" disabled required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                <a href="#" style="color: #0ea5a5; font-size: 0.85rem; text-decoration: none; font-weight: 500;">Forgot Password?</a>
             </div>
 
             <button type="submit" id="btnContinue" style="width: 100%; background: #333; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
-                Sign In to Admin Portal
+                Sign In to Portal
             </button>
         </form>
     </div>
@@ -59,28 +87,81 @@
 </div>
 
 <script>
-    const loginForm = document.getElementById('loginForm');
+    function switchRole(role) {
+        const isAdmin = role === 'Admin';
+        document.getElementById('requiredRole').value = role;
+        
+        // Update Tabs
+        const tAdmin = document.getElementById('tabAdmin');
+        const tFinance = document.getElementById('tabFinance');
+        if (isAdmin) {
+            tAdmin.classList.add('active');
+            tAdmin.style.background = '#333';
+            tAdmin.style.color = 'white';
+            tFinance.classList.remove('active');
+            tFinance.style.background = 'transparent';
+            tFinance.style.color = '#64748b';
+        } else {
+            tFinance.classList.add('active');
+            tFinance.style.background = '#333';
+            tFinance.style.color = 'white';
+            tAdmin.classList.remove('active');
+            tAdmin.style.background = 'transparent';
+            tAdmin.style.color = '#64748b';
+        }
+
+        // Toggle Fields
+        const adminFields = document.getElementById('adminFields');
+        const financeFields = document.getElementById('financeFields');
+        
+        adminFields.style.display = isAdmin ? 'block' : 'none';
+        financeFields.style.display = isAdmin ? 'none' : 'block';
+
+        // Disable inactive fields to avoid browser confusion and FormData pollution
+        const adminInputs = adminFields.querySelectorAll('input');
+        const financeInputs = financeFields.querySelectorAll('input');
+        
+        adminInputs.forEach(input => input.disabled = !isAdmin);
+        financeInputs.forEach(input => input.disabled = isAdmin);
+
+        // Update UI Text
+        document.getElementById('loginTitle').innerText = isAdmin ? 'Administrator Login' : 'Finance Login';
+        document.getElementById('loginSubtitle').innerText = isAdmin ? 'Secure access to manage the CEA RPL portal' : 'Sign in to verify candidate payments and receipts';
+        document.getElementById('adminIcon').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('financeIcon').style.display = isAdmin ? 'none' : 'block';
+    }
+
+    const loginForm = document.getElementById('adminLoginForm');
     const loginArea = document.getElementById('loginArea');
     const otpArea = document.getElementById('otpArea');
     const authStatus = document.getElementById('authStatus');
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        showStatus('Verifying Admin credentials...', '#eee', '#666');
+        const role = document.getElementById('requiredRole').value;
+        showStatus(`Verifying ${role} credentials...`, '#eee', '#666');
         
-        const formData = new FormData(loginForm);
+        const prefix = role.toLowerCase();
+        const email = loginForm.elements[`${prefix}_email`].value;
+        const password = loginForm.elements[`${prefix}_password`].value;
+
+        const payload = new FormData();
+        payload.append('email', email);
+        payload.append('password', password);
+        payload.append('requiredRole', role);
+
         try {
             const resp = await fetch('/api/auth/signin', {
                 method: 'POST',
-                body: formData
+                body: payload
             });
             const data = await resp.json();
             
             if (resp.ok) {
-                document.getElementById('confirmedEmail').innerText = formData.get('email');
+                document.getElementById('confirmedEmail').innerText = email;
                 loginArea.style.display = 'none';
                 otpArea.style.display = 'block';
-                showStatus('Administrative access confirmed. Check your email for OTP.', '#f0f7f7', '#0ea5a5');
+                showStatus(`${role} access confirmed. Check your email for OTP.`, '#f0f7f7', '#0ea5a5');
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
             }
@@ -92,12 +173,14 @@
     document.getElementById('btnVerify').addEventListener('click', async () => {
         const otp = document.getElementById('emailOtp').value;
         const email = document.getElementById('confirmedEmail').innerText;
+        const role = document.getElementById('requiredRole').value;
         
         if (!otp || otp.length < 6) return alert('Enter 6-digit OTP');
 
         const formData = new FormData();
         formData.append('email', email);
         formData.append('emailOtp', otp);
+        formData.append('requiredRole', role);
 
         try {
             const resp = await fetch('/api/auth/verifyotp', {
@@ -107,9 +190,12 @@
             const data = await resp.json();
 
             if (resp.ok) {
-                showStatus('Success! Redirecting to Admin Dashboard...', '#f0f7f7', '#0ea5a5');
+                showStatus(`Success! Redirecting to ${role} Dashboard...`, '#f0f7f7', '#0ea5a5');
                 
-                const redirectUrl = data.role === 'Admin' ? '/Admin/Dashboard' : '/Application/Index';
+                let redirectUrl = '/Application/Index';
+                if (data.role === 'Admin') redirectUrl = '/Admin/Dashboard';
+                else if (data.role === 'Finance') redirectUrl = '/Finance/Dashboard';
+
                 setTimeout(() => window.location.href = redirectUrl, 1000);
             } else {
                 showStatus(data.message, '#fff5f5', '#e53e3e');
@@ -118,6 +204,9 @@
             showStatus('Verification failed.', '#fff5f5', '#e53e3e');
         }
     });
+
+    // Initialize UI
+    switchRole('Admin');
 
     function showStatus(msg, bg, color) {
         authStatus.innerText = msg;
