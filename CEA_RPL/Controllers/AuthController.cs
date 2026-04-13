@@ -68,10 +68,10 @@ public class AuthController : Controller
     [HttpPost("api/auth/signup")]
     public async Task<IActionResult> SignUpApi([FromForm] string firstName, [FromForm] string? middleName, [FromForm] string? lastName, [FromForm] string email, [FromForm] string mobile, [FromForm] string password)
     {
-        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2 || !System.Text.RegularExpressions.Regex.IsMatch(firstName, "^[A-Za-z]+$"))
+        if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2)
             return BadRequest(new { message = "Validation failed: Please enter a valid first name" });
 
-        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < 2 || !System.Text.RegularExpressions.Regex.IsMatch(lastName, "^[A-Za-z]+$"))
+        if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < 2)
             return BadRequest(new { message = "Validation failed: Please enter a valid last name" });
 
         if (string.IsNullOrWhiteSpace(email) || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email))
@@ -80,20 +80,37 @@ public class AuthController : Controller
         if (string.IsNullOrWhiteSpace(mobile) || !System.Text.RegularExpressions.Regex.IsMatch(mobile, "^[6-9][0-9]{9}$"))
             return BadRequest(new { message = "Validation failed: Please enter a valid 10-digit mobile number" });
 
+        if (!IsValidPassword(password))
+            return BadRequest(new { message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character." });
+
+        // IMPORTANT: Verify that the email was previously verified via OTP
+        var isVerified = await _otpService.VerifyOtpAsync(email, "CHECK_VERIFIED");
+        if (!isVerified) 
+            return BadRequest(new { message = "Please verify your email address via OTP before completing registration." });
+
         var result = await _authService.RegisterUserAsync(firstName, middleName, lastName, email, mobile, password);
         if (!result.Success) 
             return BadRequest(new { message = result.ErrorMessage });
 
-        // Trigger OTP
-        string warning = "";
-        try {
-            var otp = await _otpService.GenerateOtpAsync(email);
-            await _otpSender.SendEmailOtpAsync(email, otp);
-        } catch {
-            warning = " (Note: SMTP failed to send email. Use dummy code '123456' for testing).";
+        // Update user's verification status once created
+        await _authService.UpdateVerificationStatusAsync(email, true, true);
+
+        // Sign in automatically after registration
+        var user = result.User;
+        if (user != null)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.MobilePhone, user.Mobile),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
         }
 
-        return Ok(new { message = "Registration successful." + warning, requiresVerification = true, email = email });
+        return Ok(new { message = "Account created and verified successfully.", redirect = "/Application/Index" });
     }
 
     [HttpPost("api/auth/sendotp")]
@@ -101,12 +118,16 @@ public class AuthController : Controller
     {
         if (string.IsNullOrEmpty(email)) return BadRequest(new { message = "Email missing." });
 
+        // Cooldown check (60 seconds)
+        var canSend = await _otpService.VerifyOtpAsync(email, "CHECK_COOLDOWN");
+        if (!canSend) return BadRequest(new { message = "Please wait before requesting a new OTP." });
+        
         try {
             var otp = await _otpService.GenerateOtpAsync(email);
             await _otpSender.SendEmailOtpAsync(email, otp);
-            return Ok(new { message = "OTP sent." });
-        } catch {
-            return Ok(new { message = "OTP generated (but SMTP failed). Use dummy code '123456' for testing." });
+            return Ok(new { message = "OTP sent to your email." });
+        } catch (Exception ex) {
+            return Ok(new { message = "OTP generated but email delivery failed. For testing, use code: 123456" });
         }
     }
 
@@ -121,17 +142,17 @@ public class AuthController : Controller
         var emailValid = await _otpService.VerifyOtpAsync(email, emailOtp);
         if (!emailValid) return BadRequest(new { message = "Invalid or expired OTP." });
         
-        // Update status in DB
-        await _authService.UpdateVerificationStatusAsync(email, true, true);
-
-        // Grant Cookie now that verification is complete
         var user = await _authService.GetUserByEmailAsync(email);
+        
+        // If user exists (Login flow), sign them in
         if (user != null)
         {
             if (!string.IsNullOrEmpty(requiredRole) && user.Role != requiredRole)
             {
                 return Unauthorized(new { message = $"This account is not authorized for {requiredRole} login." });
             }
+
+            await _authService.UpdateVerificationStatusAsync(email, true, true);
 
             var claims = new List<Claim>
             {
@@ -142,14 +163,13 @@ public class AuthController : Controller
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
             
-            return Ok(new { message = "OTP Verified and signed in.", role = user.Role });
+            return Ok(new { message = "Verification successful.", role = user.Role });
         }
 
-        return BadRequest(new { message = "User not found." });
+        // If user doesn't exist (SignUp flow), just confirm verification
+        return Ok(new { message = "Email verified! You can now complete your profile registration." });
     }
 
     [HttpPost("api/auth/signin")]
@@ -199,6 +219,9 @@ public class AuthController : Controller
     [HttpPost("api/auth/reset-password")]
     public async Task<IActionResult> ResetPassword([FromForm] string email, [FromForm] string otp, [FromForm] string newPassword)
     {
+        if (!IsValidPassword(newPassword))
+            return BadRequest(new { message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character." });
+
         var isValid = await _otpService.VerifyOtpAsync(email, otp);
         if (!isValid) return BadRequest(new { message = "Invalid or expired OTP." });
 
@@ -223,5 +246,11 @@ public class AuthController : Controller
             });
         }
         return Ok(new { authenticated = false });
+    }
+
+    private bool IsValidPassword(string password)
+    {
+        if (string.IsNullOrEmpty(password) || password.Length < 8) return false;
+        return System.Text.RegularExpressions.Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
     }
 }

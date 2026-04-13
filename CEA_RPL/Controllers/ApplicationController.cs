@@ -34,7 +34,8 @@ public class ApplicationController : Controller
 
             if (user != null)
             {
-                ViewBag.UserName = user.Applicant?.FullName ?? user.Email;
+                var fullNameFromUser = $"{user.FirstName} {user.MiddleName} {user.LastName}".Replace("  ", " ").Trim();
+                ViewBag.UserName = user.Applicant?.FullName ?? (string.IsNullOrEmpty(fullNameFromUser) ? user.Email : fullNameFromUser);
                 ViewBag.ApplicationStatus = user.Applicant?.Status;
                 ViewBag.AdminFeedback = user.Applicant?.AdminFeedback;
                 ViewBag.LastSavedAt = user.Applicant?.LastSavedAt?.ToString("f");

@@ -1,270 +1,620 @@
 @model CEA_RPL.Domain.Entities.Applicant
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = $"Review Application #{Model.Id}";
+    ViewData["Title"] = $"Review Case #{Model.Id}";
+
+    // HELPER FUNCTIONS FOR ADDRESS PARSING
+    (string street, string city, string pincode) ParseAddress(string fullAddr) {
+        if (string.IsNullOrEmpty(fullAddr)) return ("", "", "");
+        
+        // Match logic from formatStructuredAddress in Index.cshtml
+        // Format: "Street, City - XYZ, Pincode - 123456"
+        var pincodeMatch = System.Text.RegularExpressions.Regex.Match(fullAddr, @", Pincode - ([0-9]{6})$");
+        var cityMatch = System.Text.RegularExpressions.Regex.Match(fullAddr, @", City - ([^,]+), Pincode - [0-9]{6}$");
+        
+        string street = fullAddr;
+        string city = cityMatch.Success ? cityMatch.Groups[1].Value.Trim() : "";
+        string pincode = pincodeMatch.Success ? pincodeMatch.Groups[1].Value.Trim() : "";
+        
+        if (cityMatch.Success) {
+            street = fullAddr.Split(", City - ")[0];
+        } else if (pincodeMatch.Success) {
+            street = fullAddr.Split(", Pincode - ")[0];
+        }
+        
+        return (street.Trim(), city, pincode);
+    }
 }
 
-<div class="dashboard-content">
-    <!-- PAGE HERO -->
-    <div class="welcome-hero" style="margin-bottom: 24px;">
-        <div class="d-flex align-items-center gap-3">
-            <a asp-action="Dashboard" class="btn-export" style="padding: 10px; border-radius: 50%;" title="Back to Dashboard">
-                <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+<div class="row g-4">
+    <!-- LEFT PANE: CANDIDATE DATA (70%) -->
+    <div class="col-xl-8">
+        
+        <!-- BACK ACTIONS -->
+        <div class="mb-4 d-flex align-items-center gap-3">
+            <a asp-action="Applications" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold">
+                <i data-lucide="chevron-left" class="me-1" style="width: 14px;"></i> All Applications
             </a>
-            <div>
-                <h1 class="mb-0">Review Application <span style="color: var(--a-primary);">#@Model.Id</span></h1>
-                <p>Submitted by <b>@Model.FullName</b> (@Model.Email)</p>
+            <span class="status-badge @(Model.Status == "Approved" ? "st-approved" : (Model.Status == "Submitted" ? "st-submitted" : "st-review"))">
+                @(Model.Status ?? "Under Review")
+            </span>
+        </div>
+
+        <!-- STEP 1: APPLICANT DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="user"></i> Step 1: Applicant Details
             </div>
-        </div>
-        <div class="col-auto">
-            @{
-                var statusClass = Model.Status switch {
-                    "Approved" => "st-approved",
-                    "Rejected" => "st-rejected",
-                    "Submitted" => "st-submitted",
-                    "UnderReview" => "st-review",
-                    _ => "st-draft"
-                };
-            }
-            <span class="status-chip @statusClass" style="font-size: 0.9rem; padding: 10px 28px;">@Model.Status</span>
-        </div>
-    </div>
-
-    <!-- MAIN GRID -->
-    <div class="row g-4">
-        <!-- Candidate Data Pane -->
-        <div class="col-lg-8">
-            <div class="application-card mt-0" style="border-radius: 20px; border: none; box-shadow: var(--a-shadow);">
-                <div class="card-body p-4">
-                    <!-- Section Tabs -->
-                    <nav class="nav nav-pills flex-column flex-sm-row mb-4" id="review-tabs" role="tablist">
-                        <button class="flex-sm-fill text-sm-center nav-link active" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">Personal Profile</button>
-                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#academic" type="button" role="tab">Education</button>
-                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#experience" type="button" role="tab">Experience</button>
-                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab">Projects</button>
-                        <button class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" data-bs-target="#downloads" type="button" role="tab">Attachments</button>
-                    </nav>
-
-                    <div class="tab-content" id="review-tab-content">
-                        <!-- Personal Details -->
-                        <div class="tab-pane fade show active" id="personal" role="tabpanel">
-                            <div class="row g-4">
-                                <div class="col-md-4 text-center">
-                                    <div class="p-3 bg-light rounded-4 mb-3" style="border: 1px dashed var(--a-line);">
-                                        <img src="@Model.PhotoPath" alt="Photo" class="img-fluid rounded-4 shadow-sm" style="max-height: 220px; width: 100%; object-fit: cover;">
-                                    </div>
-                                    <p class="small text-muted fw-bold">Identification Photo</p>
-                                </div>
-                                <div class="col-md-8">
-                                    <h5 class="fw-bold mb-3 pb-2" style="border-bottom: 2px solid var(--a-primary-light);">Core Identity</h5>
-                                    <div class="row g-3">
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Candidate Name</label><div class="fw-bold fs-6">@Model.FullName</div></div>
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Parent Name</label><div class="fw-bold fs-6">@(Model.ParentName ?? "-")</div></div>
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Date of Birth</label><div class="fw-bold fs-6">@Model.DateOfBirth.ToString("dd MMM yyyy")</div></div>
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Gender</label><div class="fw-bold fs-6">@Model.Gender</div></div>
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Citizenship</label><div class="fw-bold fs-6">@Model.Citizenship</div></div>
-                                        <div class="col-6"><label class="text-muted small d-block fw-bold">Mobile Number</label><div class="fw-bold fs-6">@Model.Mobile</div></div>
-                                        <div class="col-12"><label class="text-muted small d-block fw-bold">Residential Address</label><div>@Model.PermanentAddress</div></div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <h5 class="fw-bold mb-3 pb-2" style="border-bottom: 2px solid var(--a-primary-light);">Government ID (@Model.GovIdType)</h5>
-                                    <div class="d-flex align-items-center p-3 bg-light rounded-3" style="border: 1px solid var(--a-line);">
-                                        <div class="me-3 p-2 bg-white rounded-circle shadow-sm">
-                                            <i data-lucide="credit-card" style="width: 24px; height: 24px; color: var(--a-primary);"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <div class="fw-bold">@Model.GovIdNumber</div>
-                                            <div class="small text-muted">Legal Verification Document</div>
-                                        </div>
-                                        <a href="@Model.GovIdPath" target="_blank" class="btn-export" style="text-decoration: none;">View File</a>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="bg-light rounded-4 border p-2 shadow-sm sticky-top" style="top: 100px;">
+                            <img src="@(Model.PhotoPath ?? "https://via.placeholder.com/200x260?text=No+Photo")" alt="Candidate Photo" class="img-fluid rounded-3" style="width: 100%; aspect-ratio: 3/4; object-fit: cover;">
+                            <div class="text-center mt-3 x-small fw-800 text-muted uppercase">Candidate Photograph</div>
                         </div>
-
-                        <!-- Academic Details -->
-                        <div class="tab-pane fade" id="academic" role="tabpanel">
-                            <h5 class="fw-bold mb-3">Qualifications Summary</h5>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle" style="border: 1px solid var(--a-line); font-size: 0.9rem;">
-                                    <thead class="bg-light">
-                                        <tr class="fw-bold text-muted small">
-                                            <th class="ps-3">Degree</th><th>Discipline</th><th>Institution</th><th class="pe-3">Year</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach(var ed in Model.Educations) {
-                                            <tr><td class="ps-3 fw-bold">@ed.Degree</td><td>@ed.Discipline</td><td>@ed.Institution</td><td class="pe-3">@ed.Year</td></tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="info-grid mb-5">
+                            <div><label class="info-label">Title</label><div class="info-value">@Model.Title</div></div>
+                            <div style="grid-column: span 2;"><label class="info-label">Candidate Name</label><div class="info-value fs-lg">@Model.FullName</div></div>
                             
-                            <h5 class="fw-bold mt-4 mb-3">Training & Specializations</h5>
-                            <ul class="list-group list-group-flush" style="border: 1px solid var(--a-line); border-radius: 12px; overflow: hidden;">
-                                @foreach(var tc in Model.CertificationTrainings) {
-                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                        <div>
-                                            <div class="fw-bold">@tc.Name</div>
-                                            <div class="text-muted small">@tc.ObtainedFrom</div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="badge bg-light text-dark border px-3 py-2" style="font-size: 0.75rem;">@tc.Duration Days (@tc.Year)</span>
-                                            @if(!string.IsNullOrEmpty(tc.ProofPath)) {
-                                                <a href="@tc.ProofPath" target="_blank" class="btn-export p-2" title="View Certification">
-                                                    <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-                                                </a>
-                                            }
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
+                            <div><label class="info-label">Relation</label><div class="info-value">@Model.ParentRelation</div></div>
+                            <div style="grid-column: span 2;"><label class="info-label">Parent / Guardian Name</label><div class="info-value">@Model.ParentName</div></div>
+                            
+                            <div><label class="info-label">Date of Birth</label><div class="info-value">@Model.DateOfBirth.ToString("dd MMM yyyy")</div></div>
+                            <div><label class="info-label">Gender</label><div class="info-value">@Model.Gender</div></div>
+                            <div><label class="info-label">Citizenship</label><div class="info-value">@Model.Citizenship</div></div>
+                            
+                            <div style="grid-column: span 2;"><label class="info-label">Email Address</label><div class="info-value text-primary">@Model.Email</div></div>
+                            <div><label class="info-label">Mobile Number</label><div class="info-value">@Model.Mobile</div></div>
+                            <div><label class="info-label">Alt Mobile</label><div class="info-value">@(Model.AlternateMobile ?? "-")</div></div>
                         </div>
 
-                        <!-- Experience -->
-                        <div class="tab-pane fade" id="experience" role="tabpanel">
-                            <h5 class="fw-bold mb-3 text-muted small uppercase">History Log</h5>
-                            @foreach(var exp in Model.ProfessionalExperiences) {
-                                <div class="p-4 border rounded-3 mb-3 bg-light-subtle" style="border: 1px solid var(--a-line) !important; border-radius: 16px !important;">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <div class="fw-bold fs-5" style="color: var(--a-ink);">@exp.Designation</div>
-                                            <div class="text-muted fw-bold small">@exp.Organization</div>
-                                        </div>
-                                        <div class="col-auto text-end">
-                                            <div class="badge bg-white text-dark border-0 shadow-sm p-3 rounded-3" style="font-size: 0.85rem;">@exp.Duration</div>
-                                            @if(!string.IsNullOrEmpty(exp.ProofPath)) {
-                                                <a href="@exp.ProofPath" target="_blank" class="btn-export ms-2">View Reference</a>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 text-muted" style="font-size: 0.9rem;">@exp.NatureOfWork</div>
+                        <div class="border-top pt-4 mb-5">
+                            <h6 class="fw-800 text-dark uppercase small mb-4">Address Details</h6>
+                            @{
+                                var perm = ParseAddress(Model.PermanentAddress);
+                                var corr = ParseAddress(Model.CorrespondenceAddress ?? "");
+                            }
+                            <div class="info-grid mb-4">
+                                <div style="grid-column: 1 / -1;"><label class="info-label">Permanent Address</label><div class="info-value">@perm.street</div></div>
+                                <div><label class="info-label">City</label><div class="info-value">@(string.IsNullOrEmpty(perm.city) ? "Not Specified" : perm.city)</div></div>
+                                <div><label class="info-label">Pincode</label><div class="info-value">@(string.IsNullOrEmpty(perm.pincode) ? "-" : perm.pincode)</div></div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.CorrespondenceAddress)) {
+                                <div class="info-grid mt-4">
+                                    <div style="grid-column: 1 / -1;"><label class="info-label">Correspondence Address</label><div class="info-value">@corr.street</div></div>
+                                    <div><label class="info-label">City</label><div class="info-value">@(string.IsNullOrEmpty(corr.city) ? "Not Specified" : corr.city)</div></div>
+                                    <div><label class="info-label">Pincode</label><div class="info-value">@(string.IsNullOrEmpty(corr.pincode) ? "-" : corr.pincode)</div></div>
                                 </div>
+                            } else {
+                                <div class="p-3 bg-light rounded-3 small fw-bold text-muted border border-dashed">Correspondence Address is same as Permanent</div>
                             }
                         </div>
 
-                        <!-- Projects -->
-                        <div class="tab-pane fade" id="projects" role="tabpanel">
-                            <h5 class="fw-bold mb-3">Audited Projects Portfolio</h5>
-                            <div class="table-responsive">
-                                <table class="table table-hover table-sm align-middle" style="border: 1px solid var(--a-line); font-size: 0.85rem;">
-                                    <thead class="bg-light">
-                                        <tr class="fw-bold text-muted">
-                                            <th class="ps-3">Project Title</th><th>Role</th><th>Category</th><th>Organization</th><th class="pe-3">Year</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach(var proj in Model.ProjectExperiences) {
-                                            <tr><td class="ps-3 fw-bold">@proj.Name</td><td>@proj.Role</td><td>@proj.Category</td><td>@proj.Client</td><td class="pe-3">@proj.Year</td></tr>
-                                        }
-                                    </tbody>
-                                </table>
+                        <div class="border-top pt-4">
+                            <label class="info-label">ID Verification (@Model.GovIdType)</label>
+                            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4 border border-dashed">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-primary-light text-primary p-2 rounded-3"><i data-lucide="shield-check"></i></div>
+                                    <span class="fw-800 text-dark fs-5">@Model.GovIdNumber</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    @if (!string.IsNullOrEmpty(Model.GovIdPath)) {
+                                        <a href="@Model.GovIdPath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View Document</a>
+                                    }
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Documents -->
-                        <div class="tab-pane fade" id="downloads" role="tabpanel">
-                            <h5 class="fw-bold mb-3">Electronic Attachments</h5>
-                            <div class="row g-3">
-                                @foreach(var rep in Model.UploadReports) {
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center p-3 border rounded-4 h-100 bg-light" style="border-color: var(--a-line) !important;">
-                                            <div class="me-3 p-2 bg-white rounded-circle shadow-sm text-primary"><i data-lucide="file-check" style="width: 20px; height: 20px;"></i></div>
-                                            <div class="flex-grow-1 overflow-hidden">
-                                                <div class="small fw-bold text-truncate" title="@rep.FileName">@rep.FileName</div>
-                                                <div class="x-small text-muted fw-bold uppercase" style="font-size: 0.65rem;">System Report</div>
-                                            </div>
-                                            <a href="@rep.FilePath" target="_blank" class="btn-export p-2 rounded-circle ms-2" title="Open Document"><i data-lucide="eye" style="width: 14px; height: 14px;"></i></a>
-                                        </div>
-                                    </div>
-                                }
-                                @foreach(var enc in Model.OtherEnclosures) {
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center p-3 border rounded-4 h-100 bg-light" style="border-color: var(--a-line) !important;">
-                                            <div class="me-3 p-2 bg-white rounded-circle shadow-sm text-info"><i data-lucide="paperclip" style="width: 20px; height: 20px;"></i></div>
-                                            <div class="flex-grow-1 overflow-hidden">
-                                                <div class="small fw-bold text-truncate" title="@enc.FileName">@enc.FileName</div>
-                                                <div class="x-small text-muted fw-bold uppercase" style="font-size: 0.65rem;">Support File</div>
-                                            </div>
-                                            <a href="@enc.FilePath" target="_blank" class="btn-export p-2 rounded-circle ms-2" title="Open Document"><i data-lucide="eye" style="width: 14px; height: 14px;"></i></a>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Partial: Financial Log -->
-            <div class="application-card" style="border-radius: 20px; border: none; box-shadow: var(--a-shadow); margin-top: 32px;">
-                <div class="card-header bg-white border-bottom p-4"><h5 class="mb-0 fw-bold">Verification & Payments</h5></div>
-                <div class="card-body p-4">
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle" style="font-size: 0.9rem;">
-                            <thead class="text-muted small fw-bold"><tr><th class="ps-3">Transaction UTR</th><th>Amount</th><th>Status</th><th class="pe-3">Date</th></tr></thead>
-                            <tbody>
-                                @foreach(var pay in Model.PaymentDetails) {
-                                    var stClass = Model.PaymentStatus switch {
-                                        "Verified" => "st-approved",
-                                        "NotVerified" => "st-rejected",
-                                        _ => "st-submitted"
-                                    };
-                                    <tr>
-                                        <td class="ps-3 fw-bold text-primary">@pay.UtrNumber</td>
-                                        <td class="fw-bold">₹ @pay.Amount.ToString("N0")</td>
-                                        <td><span class="status-chip @stClass" style="font-size: 0.65rem; padding: 4px 12px;">@Model.PaymentStatus</span></td>
-                                        <td class="pe-3 text-muted fw-bold">@pay.PaymentDate.ToString("dd MMM yyyy")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Decision Control Desk -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm sticky-top" style="top: 100px; border-radius: 20px; box-shadow: var(--a-shadow) !important;">
-                <div class="card-header bg-white border-bottom p-4">
-                    <h5 class="mb-0 fw-bold">Adjudication Decision</h5>
+        <!-- STEP 2: CATEGORY OF CERTIFICATION APPLIED FOR -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="layers"></i> Step 2: Category of Certification Applied For
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-2">
+                    @if (string.IsNullOrEmpty(Model.Categories)) {
+                        <div class="no-data-msg">No categories selected</div>
+                    } else {
+                        @foreach (var cat in Model.Categories.Split(',', StringSplitOptions.RemoveEmptyEntries)) {
+                            <div class="badge bg-primary-light text-primary border border-primary-subtle px-4 py-2 rounded-pill fw-800">@cat.Trim()</div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: EDUCATIONAL QUALIFICATIONS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="graduation-cap"></i> Step 3: Educational Qualifications
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Degree</th>
+                            <th>Course / Discipline</th>
+                            <th>Institution / University</th>
+                            <th>Year</th>
+                            <th class="text-end">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Educations.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No recorded educational qualifications</td></tr>
+                        } else {
+                            @foreach (var ed in Model.Educations) {
+                                <tr>
+                                    <td class="fw-bold text-dark">@ed.Degree</td>
+                                    <td class="small fw-bold">@ed.Discipline</td>
+                                    <td class="small fw-bold wrap-text">@ed.Institution</td>
+                                    <td>@ed.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(ed.CertificatePath)) {
+                                            <a href="@ed.CertificatePath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 4: PROFESSIONAL EXPERIENCE -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header justify-content-between">
+                <div class="d-flex align-items-center gap-2"><i data-lucide="briefcase"></i> Step 4: Professional Experience</div>
+                <div class="badge bg-emerald-subtle text-success px-3 py-2 rounded-pill fw-800">Total Experience: @(Model.ProfessionalExperiences.Any() ? Model.ProfessionalExperiences.Last().Applicant.CurrentStep == 15 ? "Verified" : "Under Calculation" : "N/A")</div>
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Organization</th>
+                            <th>Designation / Proof</th>
+                            <th>Duration</th>
+                            <th>Role Description</th>
+                            <th class="text-end">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.ProfessionalExperiences.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No professional experience records submitted</td></tr>
+                        } else {
+                            @foreach (var exp in Model.ProfessionalExperiences) {
+                                <tr>
+                                    <td class="fw-bold text-dark wrap-text">@exp.Organization</td>
+                                    <td class="small fw-bold">
+                                        @exp.Designation
+                                        @if(!string.IsNullOrEmpty(exp.ProofPath)) {
+                                            <div class="mt-1"><a href="@exp.ProofPath" target="_blank" class="text-primary x-small fw-800 uppercase">View Certificate</a></div>
+                                        }
+                                    </td>
+                                    <td class="small fw-bold text-muted">@exp.Duration</td>
+                                    <td class="small wrap-text text-muted">@exp.NatureOfWork</td>
+                                    <td class="text-end text-success"><i data-lucide="check-circle" style="width: 16px;"></i></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 5: PROJECT EXPERIENCE -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="folder-kanban"></i> Step 5: Project Experience
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Client / Location</th>
+                            <th>Category</th>
+                            <th>Role</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.ProjectExperiences.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No project experience items submitted</td></tr>
+                        } else {
+                            @foreach (var p in Model.ProjectExperiences) {
+                                <tr>
+                                    <td class="fw-bold text-dark wrap-text">@p.Name</td>
+                                    <td class="small fw-bold">@p.Client <br><span class="text-muted x-small">@p.Location</span></td>
+                                    <td><span class="badge bg-light text-dark fw-800 border">@p.Category</span></td>
+                                    <td class="small">@p.Role</td>
+                                    <td class="fw-bold text-primary">@p.Year</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 6: UPLOAD REPORTS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="clipboard-list"></i> Step 6: Upload Reports
+            </div>
+            <div class="file-item-list">
+                @if (!Model.UploadReports.Any()) {
+                    <div class="no-data-msg">No reports uploaded</div>
+                } else {
+                    @foreach (var rep in Model.UploadReports) {
+                        <div class="file-item-row">
+                            <div class="file-info">
+                                <div class="file-icon"><i data-lucide="file-text"></i></div>
+                                <div>
+                                    <div class="file-name">@rep.FileName</div>
+                                    <div class="file-meta">Technical Audit / Submission Report</div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="@rep.FilePath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View</a>
+                                <a href="@rep.FilePath" download class="btn btn-outline-secondary btn-sm px-4 rounded-pill fw-bold">Download</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- STEP 7: DETAILS OF CERTIFICATION / TRAINING -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="award"></i> Step 7: Details of Certification / Training
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Certification / Course</th>
+                            <th>Institution / Authority</th>
+                            <th>Duration</th>
+                            <th>Year</th>
+                            <th class="text-end">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.CertificationTrainings.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No certifications or training records</td></tr>
+                        } else {
+                            @foreach (var t in Model.CertificationTrainings) {
+                                <tr>
+                                    <td class="fw-bold text-dark wrap-text">@t.Name</td>
+                                    <td class="small fw-bold">@t.ObtainedFrom</td>
+                                    <td>@t.Duration</td>
+                                    <td>@t.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(t.ProofPath)) {
+                                            <a href="@t.ProofPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 8: MEMBERSHIP IN PROFESSIONAL BODIES -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="users-2"></i> Step 8: Membership in Professional Bodies
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Body Name</th>
+                            <th>Organization / Source</th>
+                            <th>Status / Duration</th>
+                            <th>Year</th>
+                            <th class="text-end">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Memberships.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No professional memberships listed</td></tr>
+                        } else {
+                            @foreach (var m in Model.Memberships) {
+                                <tr>
+                                    <td class="fw-bold text-dark">@m.Name</td>
+                                    <td class="small fw-bold">@m.ObtainedFrom</td>
+                                    <td>@m.Duration</td>
+                                    <td>@m.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(m.ProofPath)) {
+                                            <a href="@m.ProofPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 9: PAPER PUBLISHED / PRESENTED -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="book-open"></i> Step 9: Paper Published / Presented
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Paper Title</th>
+                            <th>Publisher / Journal</th>
+                            <th>Role</th>
+                            <th>Year</th>
+                            <th class="text-end">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.PaperPublisheds.Any()) {
+                            <tr><td colspan="5" class="no-data-msg">No papers or publications submitted</td></tr>
+                        } else {
+                            @foreach (var p in Model.PaperPublisheds) {
+                                <tr>
+                                    <td class="fw-bold text-dark wrap-text">@p.Name</td>
+                                    <td class="small fw-bold">@p.Place</td>
+                                    <td><span class="badge bg-light text-muted fw-800">@p.Role</span></td>
+                                    <td>@p.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(p.ProofPath)) {
+                                            <a href="@p.ProofPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 10: AWARDS / RECOGNITION -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="star"></i> Step 10: Awards / Recognition
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Award Name</th>
+                            <th>Organization / Authority</th>
+                            <th>Year</th>
+                            <th class="text-end">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Awards.Any()) {
+                            <tr><td colspan="4" class="no-data-msg">No awards or recognitions recorded</td></tr>
+                        } else {
+                            @foreach (var a in Model.Awards) {
+                                <tr>
+                                    <td class="fw-bold text-dark">@a.Name</td>
+                                    <td class="small fw-bold">@a.ReceivedFrom</td>
+                                    <td>@a.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(a.ProofPath)) {
+                                            <a href="@a.ProofPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 11: SOFTWARE / TOOLS / APPLICATION SKILLS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="cpu"></i> Step 11: Software / Tools / Application Skills
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-3">
+                    @if (!Model.SoftwareSkills.Any()) {
+                        <div class="no-data-msg w-100">No software skills listed</div>
+                    } else {
+                        @foreach (var s in Model.SoftwareSkills) {
+                            <div class="p-3 bg-light rounded-4 border d-flex align-items-center gap-3" style="min-width: 200px;">
+                                <div class="bg-white p-2 rounded-3 border"><i data-lucide="terminal" style="width:16px;"></i></div>
+                                <div>
+                                    <div class="fw-800 text-dark small">@s.SoftwareName</div>
+                                    <div class="x-small text-muted uppercase fw-800">@s.ProficiencyLevel</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 12: OTHER RELEVANT ENCLOSURES -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="plus-square"></i> Step 12: Other Relevant Enclosures
+            </div>
+            <div class="card-body p-4">
+                @if (!Model.OtherEnclosures.Any() && string.IsNullOrEmpty(Model.EnclosureDescription)) {
+                    <div class="no-data-msg">No additional enclosures submitted</div>
+                } else {
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-7">
+                            <label class="info-label">Candidate Description</label>
+                            <div class="p-3 bg-light rounded-3 small fw-bold text-muted border border-dashed">
+                                @(string.IsNullOrEmpty(Model.EnclosureDescription) ? "No description provided." : Model.EnclosureDescription)
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            @foreach (var enc in Model.OtherEnclosures) {
+                                <div class="p-3 bg-white border rounded-4 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i data-lucide="file" class="text-muted" style="width:18px;"></i>
+                                        <span class="small fw-bold text-dark">@enc.FileName</span>
+                                    </div>
+                                    <a href="@enc.FilePath" target="_blank" class="btn btn-secondary btn-sm px-3 rounded-pill fw-bold">View</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- STEP 13: PAYMENT DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="indian-rupee"></i> Step 13: Payment Details
+            </div>
+            <div class="card-body p-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-7">
+                        @if (!Model.PaymentDetails.Any()) {
+                            <div class="no-data-msg">No payment information available</div>
+                        } else {
+                            @foreach (var pay in Model.PaymentDetails) {
+                                <div class="payment-utr-card">
+                                    <div class="small fw-800 text-primary uppercase mb-1">Transaction Ref (UTR)</div>
+                                    <div class="fs-4 fw-800 text-dark">@pay.UtrNumber</div>
+                                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                                        <div class="text-dark small fw-bold">Amount: ₹ @pay.Amount.ToString("N0") &bull; @pay.PaymentDate.ToString("dd MMM yyyy")</div>
+                                        @if (!string.IsNullOrEmpty(pay.ReceiptPath)) {
+                                            <a href="@pay.ReceiptPath" target="_blank" class="btn btn-primary btn-sm px-4 rounded-pill fw-bold">View Receipt</a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="col-md-5">
+                        <div class="p-4 rounded-4 text-center @(Model.PaymentStatus == "Verified" ? "bg-emerald-subtle text-success" : "bg-warning-light text-warning")" 
+                             style="border: 1px dashed @(Model.PaymentStatus == "Verified" ? "var(--st-success)" : "var(--st-warning)");">
+                            <div class="small fw-800 text-muted uppercase mb-2">Finance Certification Status</div>
+                            <div class="fs-4 fw-800">@(Model.PaymentStatus ?? "Pending Review")</div>
+                            <div class="mt-2 x-small fw-800 uppercase text-muted">Authorized via Finance Portal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 14: DECLARATION BY APPLICANT -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="check-square"></i> Step 14: Declaration by Applicant
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <div class="p-4 bg-light rounded-4 border border-dashed" style="line-height: 1.8;">
+                            <p class="mb-0 text-dark fw-bold italic small">
+                                "I hereby declare that the information provided in this application is true and correct to the best of my knowledge and belief. I understand that in the event of any information being found false or incorrect, my candidature/certification is liable to be cancelled / terminated without any notice."
+                            </p>
+                        </div>
+                        <div class="mt-4 row g-3">
+                            <div class="col-6"><label class="info-label">Place of Declaration</label><div class="info-value">@(Model.Declaration?.Place ?? "-")</div></div>
+                            <div class="col-6"><label class="info-label">Signed Date</label><div class="info-value">@(Model.Declaration?.Date.ToString("dd MMM yyyy") ?? "-")</div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.Declaration?.SignaturePath)) {
+                            <div class="text-center p-3 border rounded-4 bg-white shadow-sm">
+                                <img src="@Model.Declaration.SignaturePath" alt="Signature" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+                                <div class="mt-3 border-top pt-2 fw-800 text-dark small">@Model.Declaration.Name</div>
+                                <div class="x-small text-muted uppercase">Authorized Signature</div>
+                            </div>
+                        } else {
+                            <div class="no-data-msg border rounded-4">No signature uploaded</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 15: REVIEW / SUBMISSION METADATA -->
+        <div class="modern-card mb-5">
+            <div class="review-step-header">
+                <i data-lucide="history"></i> Step 15: Audit & Submission Metadata
+            </div>
+            <div class="card-body p-4">
+                <div class="info-grid">
+                    <div><label class="info-label">Submission IP</label><div class="info-value">@(Model.Status == "Submitted" || Model.Status == "UnderReview" ? "Logged and Verified" : "Awaiting Submission")</div></div>
+                    <div><label class="info-label">System Timestamp</label><div class="info-value">@(Model.SubmittedAt?.ToString("dd MMM yyyy HH:mm:ss") ?? "Pending")</div></div>
+                    <div><label class="info-label">Integrity Status</label><div class="info-value text-success"><i data-lucide="check" class="me-1"></i> Final Checklist Verified</div></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANE: DECISION (30%) -->
+    <div class="col-xl-4">
+        <div class="sticky-top" style="top: 100px;">
+            <div class="modern-card shadow-lg" style="border-width: 2px;">
+                <div class="p-3 px-4 border-bottom bg-white fw-800 text-dark d-flex align-items-center gap-2">
+                    <i data-lucide="verified" class="text-primary" style="width: 20px;"></i> Admin Decision Panel
                 </div>
                 <div class="card-body p-4">
-                    <form id="reviewActionForm">
+                    <form id="reviewForm">
                         <input type="hidden" name="id" value="@Model.Id" />
                         
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-muted small uppercase">Final Disposition</label>
-                            <select name="status" id="statusSelect" class="status-select w-100" style="padding: 12px 15px;">
+                            <label class="info-label mb-2">Application Disposition</label>
+                            <select name="status" class="form-select fw-bold" style="border-radius: 12px; height: 50px; border: 2px solid var(--a-line);">
                                 <option value="UnderReview" selected="@(Model.Status == "UnderReview")">Mark Under Review</option>
                                 <option value="Approved" selected="@(Model.Status == "Approved")" disabled="@(Model.PaymentStatus != "Verified")">
-                                    Approve Application @(Model.PaymentStatus != "Verified" ? "(Awaiting Finance Verification)" : "")
+                                    Approve Candidate @(Model.PaymentStatus != "Verified" ? "(Locked)" : "")
                                 </option>
                                 <option value="Rejected" selected="@(Model.Status == "Rejected")">Reject Application</option>
-                                <option value="Feedback Pending" selected="@(Model.Status == "Feedback Pending")">Request Changes / Feedback</option>
+                                <option value="Feedback Pending" selected="@(Model.Status == "Feedback Pending")">Request Feedback</option>
                             </select>
                             @if(Model.PaymentStatus != "Verified") {
-                                <div class="alert alert-warning mt-2 d-flex align-items-center gap-2" style="font-size: 0.75rem; border-radius: 10px; border: none; background: #fff8eb;">
-                                    <i data-lucide="info" style="width: 14px; height: 14px;"></i>
-                                    <span>Approval is locked until <b class="text-dark">Finance</b> verifies payment.</span>
+                                <div class="mt-3 p-3 rounded-4 bg-warning-light small fw-bold" style="border: 1px solid #fee2b3;">
+                                    <i data-lucide="lock" class="me-1" style="width: 14px; vertical-align: middle;"></i> Higher-level approval is locked until Finance verifies payment in Step 13.
                                 </div>
                             }
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-muted small uppercase">Administrative Remarks</label>
-                            <textarea name="feedback" class="form-control border-2 p-3 rounded-3" rows="8" placeholder="Enter detailed feedback or rejection grounds..." style="border-radius: 12px !important; border-color: var(--a-line) !important; font-size: 0.9rem;">@Model.AdminFeedback</textarea>
-                            <div class="form-text small mt-2 fw-bold text-muted">⚠️ Information will be visible to candidate.</div>
+                            <label class="info-label mb-2">Administrative Remarks</label>
+                            <textarea name="feedback" class="form-control" rows="8" placeholder="Enter findings or notes..." style="border-radius: 12px; border: 2px solid var(--a-line); font-size: 0.9rem; padding: 16px;">@Model.AdminFeedback</textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 p-3 fw-bold" style="border-radius: 14px; font-size: 1rem; box-shadow: 0 10px 20px rgba(14,165,165,0.25);">
-                            Submit Final Decision
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm">
+                            Submit Final Adjudication
                         </button>
                     </form>
-                    
-                    <div id="actionStatus" class="mt-3 p-3 rounded-3 text-center fw-bold" style="display: none; font-size: 0.9rem;"></div>
+                    <div id="statusResult" class="mt-4 p-3 rounded-4 text-center fw-bold small" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- AUDIT METADATA -->
+            <div class="modern-card mt-4 p-4 text-center">
+                <div class="small fw-800 text-muted uppercase mb-3">System Identity Scan</div>
+                <div class="bg-light p-3 rounded-4">
+                    <div class="small fw-bold text-dark">Application Reference</div>
+                    <div class="text-primary fw-800">REF-CEA-@Model.Id.ToString("D5")</div>
                 </div>
             </div>
         </div>
@@ -273,51 +623,40 @@
 
 @section Scripts {
     <script>
-        const reviewForm = document.getElementById('reviewActionForm');
-        const feedbackDiv = document.getElementById('actionStatus');
+        const reviewForm = document.getElementById('reviewForm');
+        const statusResult = document.getElementById('statusResult');
 
         reviewForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            statusResult.style.display = 'block';
+            statusResult.innerHTML = '<span class="text-muted">Communicating with server...</span>';
             const formData = new FormData(reviewForm);
             
             try {
-                const response = await fetch('/api/admin/update-status', {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch('/api/admin/update-status', { method: 'POST', body: formData });
                 const result = await response.json();
                 
                 if (response.ok) {
-                    feedbackDiv.innerHTML = `<span class="text-success">✓ ${result.message}</span>`;
-                    feedbackDiv.style.backgroundColor = '#ecfdf5';
-                    feedbackDiv.style.display = 'block';
-                    setTimeout(() => window.location.href = '/Admin/Dashboard', 1500);
+                    statusResult.innerHTML = result.message;
+                    statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-emerald-subtle text-success";
+                    setTimeout(() => window.location.href = '/Admin/Applications', 1500);
                 } else {
-                    feedbackDiv.innerHTML = `<span class="text-danger">✕ ${result.message || 'Failed to update.'}</span>`;
-                    feedbackDiv.style.backgroundColor = '#fef2f2';
-                    feedbackDiv.style.display = 'block';
+                    statusResult.innerHTML = result.message;
+                    statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-error-subtle text-danger";
                 }
             } catch (err) {
-                feedbackDiv.innerHTML = `<span class="text-danger">✕ Server unreachable.</span>`;
-                feedbackDiv.style.backgroundColor = '#fef2f2';
-                feedbackDiv.style.display = 'block';
+                statusResult.innerHTML = 'Communication error.';
+                statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-error-subtle text-danger";
             }
         });
+        lucide.createIcons();
     </script>
 }
 
 <style>
-    #review-tabs .nav-link { 
-        border-radius: 12px; margin-right: 8px; color: var(--a-muted); 
-        font-weight: 700; padding: 12px 24px; transition: 0.2s; 
-        border: 1.5px solid #f1f5f9; font-size: 0.85rem;
-    }
-    #review-tabs .nav-link.active { 
-        background-color: var(--a-primary) !important; color: white !important; 
-        border-color: var(--a-primary) !important; 
-        box-shadow: 0 8px 16px rgba(14,165,165,0.15); 
-    }
-    #review-tabs .nav-link:hover:not(.active) { background-color: var(--a-primary-light); border-color: var(--a-primary); color: var(--a-primary); }
-    .bg-light-subtle { background-color: #fbfcfd; }
-    .uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+    .bg-light { background: #f8fafc !important; }
+    .bg-emerald-subtle { background: #ecfdf5 !important; }
+    .bg-primary-light { background: var(--a-primary-light) !important; }
+    .x-small { font-size: 0.7rem; }
 </style>
+

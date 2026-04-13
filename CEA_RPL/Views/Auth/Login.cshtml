@@ -44,8 +44,13 @@
             Verify & Sign In
         </button>
 
-        <div style="text-align: center; margin-top: 20px;">
-            <button id="btnResend" style="background: none; border: none; color: #0ea5a5; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Resend OTP</button>
+        <div style="text-align: center; margin-top: 25px;">
+            <button id="btnResend" style="background: none; border: none; color: #0ea5a5; font-weight: 700; cursor: pointer; font-size: 0.95rem; opacity: 1; transition: opacity 0.2s;">
+                Resend Verification Code
+            </button>
+            <div id="cooldownTimer" style="font-size: 0.8rem; color: #718096; margin-top: 8px; display: none;">
+                Resend available in <span id="seconds">60</span>s
+            </div>
         </div>
     </div>
 
@@ -61,6 +66,8 @@
     const loginArea = document.getElementById('loginArea');
     const otpArea = document.getElementById('otpArea');
     const authStatus = document.getElementById('authStatus');
+    const btnResend = document.getElementById('btnResend');
+    let cooldown = 0;
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -83,6 +90,7 @@
                 loginArea.style.display = 'none';
                 otpArea.style.display = 'block';
                 showStatus(data.message, '#e6f6f6', '#0ea5a5');
+                startCooldown(); // Start on first entry
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
             }
@@ -122,6 +130,49 @@
             showStatus('Verification failed.', '#fff5f5', '#e53e3e');
         }
     });
+
+    // RESEND LOGIC
+    btnResend.addEventListener('click', async () => {
+        if (cooldown > 0) return;
+        const email = document.getElementById('confirmedEmail').innerText;
+        
+        btnResend.disabled = true;
+        btnResend.style.opacity = '0.5';
+
+        const formData = new FormData();
+        formData.append('email', email);
+
+        try {
+            const resp = await fetch('/api/auth/sendotp', { method: 'POST', body: formData });
+            const data = await resp.json();
+            showStatus(data.message, resp.ok ? '#e6f6f6' : '#fff5f5', resp.ok ? '#0ea5a5' : '#e53e3e');
+            if (resp.ok) startCooldown();
+            else btnResend.disabled = false;
+        } catch (err) {
+            showStatus('Failed to resend.', '#fff5f5', '#e53e3e');
+            btnResend.disabled = false;
+        }
+    });
+
+    function startCooldown() {
+        cooldown = 60;
+        document.getElementById('cooldownTimer').style.display = 'block';
+        btnResend.disabled = true;
+        btnResend.style.opacity = '0.5';
+        btnResend.style.cursor = 'not-allowed';
+        
+        const timer = setInterval(() => {
+            cooldown--;
+            document.getElementById('seconds').innerText = cooldown;
+            if (cooldown <= 0) {
+                clearInterval(timer);
+                document.getElementById('cooldownTimer').style.display = 'none';
+                btnResend.disabled = false;
+                btnResend.style.opacity = '1';
+                btnResend.style.cursor = 'pointer';
+            }
+        }, 1000);
+    }
 
     function showStatus(msg, bg, color) {
         authStatus.innerText = msg;

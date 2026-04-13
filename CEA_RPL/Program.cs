@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOtpService, DbOtpService>();
 builder.Services.AddScoped<IOtpSender, SmtpOtpSender>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IFileService, LocalFileService>();
 
 // Cookie Authentication
@@ -68,6 +69,16 @@ using (var scope = app.Services.CreateScope())
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'PaymentStatus') ALTER TABLE Applicants ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'FinanceRemarks') ALTER TABLE Applicants ADD FinanceRemarks NVARCHAR(MAX);");
         
+        // OTP Schema Patch
+        context.Database.ExecuteSqlRaw(@"
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('OtpRecords') AND name = 'IsVerified')
+            BEGIN
+                IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('OtpRecords') AND name = 'IsUsed')
+                    EXEC sp_rename 'OtpRecords.IsUsed', 'IsVerified', 'COLUMN';
+                ELSE
+                    ALTER TABLE OtpRecords ADD IsVerified BIT NOT NULL DEFAULT 0;
+            END");
+
         // Data Patch: Ensure existing NULLs are set to 'Pending'
         context.Database.ExecuteSqlRaw("UPDATE Applicants SET PaymentStatus = 'Pending' WHERE PaymentStatus IS NULL;");
     }

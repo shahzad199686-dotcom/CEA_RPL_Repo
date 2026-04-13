@@ -10,84 +10,105 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="admin-layout">
-    <header class="admin-header">
-        <a class="admin-brand" asp-controller="@(User.IsInRole("Finance") ? "Finance" : "Admin")" asp-action="Dashboard">
-            <div class="admin-logo-box">C</div>
-            <div class="admin-portal-name">
-                CEA RPL <span class="admin-badge">@(User.IsInRole("Finance") ? "Finance" : "Admin")</span>
+<body>
+    <div class="admin-layout-wrapper">
+        <!-- FIXED LEFT SIDEBAR -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-brand">
+                <img src="~/images/eada_logo.png" alt="EADA Logo" class="sidebar-logo">
+                <span style="font-weight: 800; font-size: 1.1rem; color: var(--a-ink);">CEA RPL <span class="badge" style="background: #f1f5f9; color: #94a3b8; font-size: 0.6rem; vertical-align: middle;">ADMIN</span></span>
             </div>
-        </a>
 
-        <nav class="admin-nav d-none d-lg-flex">
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-controller="Admin" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
-                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i> Dashboard
+            <div class="sidebar-nav">
+                <span class="nav-group-label">Main Dashboard</span>
+                <a asp-controller="Admin" asp-action="Dashboard" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i data-lucide="layout-grid"></i> <span>Dashboard</span>
                 </a>
-                <a asp-controller="Admin" asp-action="Applications" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
-                    <i data-lucide="users" style="width: 18px; height: 18px;"></i> Applications
-                </a>
-                <a asp-controller="Admin" asp-action="Documents" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Documents" ? "active" : "")">
-                    <i data-lucide="file-text" style="width: 18px; height: 18px;"></i> Documents
-                </a>
-                <a asp-controller="Admin" asp-action="Reports" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
-                    <i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i> Reports
-                </a>
-                <a asp-controller="Admin" asp-action="Help" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Help" ? "active" : "")">
-                    <i data-lucide="help-circle" style="width: 18px; height: 18px;"></i> Help
-                </a>
-            }
-            else if (User.IsInRole("Finance"))
-            {
-                <a asp-controller="Finance" asp-action="Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
-                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i> Dashboard
-                </a>
-                <a asp-controller="Finance" asp-action="Dashboard" class="nav-item">
-                    <i data-lucide="banknote" style="width: 18px; height: 18px;"></i> Payments
-                </a>
-            }
-        </nav>
 
-        <div class="admin-nav-actions">
-            <!-- Notifications -->
-            <button class="btn btn-link text-muted p-0 me-2" style="position: relative; border:none; box-shadow:none;">
-                <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
-                <span style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: #ef4444; border: 2px solid white; border-radius: 50%;"></span>
-            </button>
+                <span class="nav-group-label" style="margin-top: 24px;">Management</span>
+                <a asp-controller="Admin" asp-action="Applications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
+                    <i data-lucide="users-2"></i> <span>Applications</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Documents" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Documents" ? "active" : "")">
+                    <i data-lucide="folder-kanban"></i> <span>Documents</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Reports" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
+                    <i data-lucide="bar-chart-big"></i> <span>Reports</span>
+                </a>
 
-            <!-- Profile Group -->
-            <div class="admin-profile">
-                <div class="admin-info d-none d-md-block">
-                    <span class="admin-name">@(User.IsInRole("Finance") ? "Finance Officer" : "Administrator")</span>
-                    <span class="admin-email">@(User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value)</span>
+                <span class="nav-group-label" style="margin-top: 24px;">System</span>
+                <a asp-controller="Admin" asp-action="Help" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Help" ? "active" : "")">
+                    <i data-lucide="help-circle"></i> <span>Help Center</span>
+                </a>
+                <a asp-controller="Auth" asp-action="Logout" class="sidebar-nav-item" style="margin-top: auto; color: #ef4444;">
+                    <i data-lucide="log-out" style="color: #ef4444;"></i> <span>Log Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN PANE -->
+        <main class="admin-main-pane">
+            <!-- SIMPLIFIED TOP HEADER -->
+            <header class="admin-top-header">
+                <div class="header-left">
+                    <button id="sidebarToggle" class="btn btn-link p-0 d-lg-none" style="color: var(--a-ink);">
+                        <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+                    </button>
+                    <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
-                <div class="admin-avatar ms-2">@(User.IsInRole("Finance") ? "FN" : "AD")</div>
-                <a asp-controller="Auth" asp-action="Logout" class="logout-btn ms-3" title="Sign Out">
-                    <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
-                </a>
-            </div>
-        </div>
-    </header>
 
-    <main class="admin-main">
-        @RenderBody()
-    </main>
+                <div class="header-right">
+                    <button class="btn btn-link text-muted p-0" style="position: relative;">
+                        <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                        <span style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--st-error); border: 2px solid white; border-radius: 50%;"></span>
+                    </button>
 
-    <footer class="admin-footer" style="padding: 24px 40px; border-top: 1px solid var(--a-line); background: white; font-size: 0.8rem; color: var(--a-muted); opacity: 0.8;">
-        <div class="admin-container-limit d-flex justify-content-between align-items-center" style="padding: 0;">
-            <div>&copy; 2026 CEA RPL Portal &bull; <span class="fw-bold">Administrative System</span></div>
-            <div class="d-flex gap-4">
-                <a href="/#home" class="text-muted text-decoration-none hover-teal">View Portal</a>
-                <a href="#" class="text-muted text-decoration-none hover-teal">Support Center</a>
-                <a href="#" class="text-muted text-decoration-none hover-teal">Documentation</a>
+                    <div class="header-profile-group">
+                        <div class="text-end d-none d-md-block" style="line-height: 1.2;">
+                            <div style="font-weight: 700; font-size: 0.85rem; color: var(--a-ink);">Administrator</div>
+                            <div style="font-size: 0.7rem; color: var(--a-muted);">admin@cearpl.gov.in</div>
+                        </div>
+                        <div class="header-avatar">AD</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="admin-page-content">
+                @RenderBody()
             </div>
-        </div>
-    </footer>
+
+            <!-- FOOTER -->
+            <footer class="p-4 px-5 border-top d-flex justify-content-between align-items-center" style="background: white; font-size: 0.8rem; color: var(--a-muted);">
+                <div>&copy; 2026 <b>CEA RPL Portal</b> &bull; Central Electricity Authority</div>
+                <div class="d-flex gap-4">
+                    <a href="/#home" class="text-muted text-decoration-none fw-bold">Main Portal</a>
+                    <a href="#" class="text-muted text-decoration-none fw-bold">Technical Support</a>
+                </div>
+            </footer>
+        </main>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // SIDBAR TOGGLE LOGIC
+        const sidebar = document.getElementById('adminSidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        
+        if(toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-open');
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if(window.innerWidth <= 768 && !sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
         lucide.createIcons();
     </script>
     @await RenderSectionAsync("Scripts", required: false)

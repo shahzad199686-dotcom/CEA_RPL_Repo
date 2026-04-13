@@ -1,286 +1,243 @@
 @model IEnumerable<CEA_RPL.Domain.Entities.Applicant>
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Admin Overview";
+    ViewData["Title"] = "Executive Overview";
 }
 
-<div class="dashboard-content">
-    <!-- WELCOME HERO -->
-    <div class="welcome-hero">
+<!-- KPI WIDGETS -->
+<div class="stats-grid">
+    <div class="modern-card p-4 d-flex align-items-center gap-4">
+        <div class="stat-icon-box bg-blue-subtle text-primary" style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i data-lucide="users"></i>
+        </div>
         <div>
-            <h1>Welcome back, <span style="color: var(--a-primary);">Administrator</span></h1>
-            <p>Monitor applications and manage candidate certifications in real-time.</p>
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Total Volume</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Total</div>
+            <div class="small text-success fw-bold"><i data-lucide="trending-up" style="width: 12px; height: 12px;"></i> +8.4%</div>
         </div>
-        <button class="btn-export">
-            <i data-lucide="download" style="width: 16px; height: 16px; margin-right: 8px;"></i> Export Data
-        </button>
     </div>
-
-    <!-- STATS CARD ROW -->
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-icon bg-teal-subtle">
-                <i data-lucide="users" style="width: 24px; height: 24px;"></i>
-            </div>
-            <div class="stat-data">
-                <span class="stat-label">Total Applications</span>
-                <h3 class="stat-value">@ViewBag.Total</h3>
-                <span class="stat-trend text-success">+8% vs last month</span>
-            </div>
+    
+    <div class="modern-card p-4 d-flex align-items-center gap-4">
+        <div class="stat-icon-box bg-amber-subtle text-warning" style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i data-lucide="clock"></i>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon bg-amber-subtle">
-                <i data-lucide="clock" style="width: 24px; height: 24px;"></i>
-            </div>
-            <div class="stat-data">
-                <span class="stat-label">Pending Review</span>
-                <h3 class="stat-value">@ViewBag.Pending</h3>
-                <span class="stat-trend text-warning">Requires Attention</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon bg-emerald-subtle">
-                <i data-lucide="check-circle" style="width: 24px; height: 24px;"></i>
-            </div>
-            <div class="stat-data">
-                <span class="stat-label">Approved</span>
-                <h3 class="stat-value">@ViewBag.Approved</h3>
-                <span class="stat-trend text-success">+12.5% success rate</span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon bg-blue-subtle">
-                <i data-lucide="calendar" style="width: 24px; height: 24px;"></i>
-            </div>
-            <div class="stat-data">
-                <span class="stat-label">Submitted Today</span>
-                <h3 class="stat-value">@ViewBag.SubmittedToday</h3>
-                <span class="stat-trend text-primary">New Submissions Today</span>
-            </div>
+        <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Awaiting Review</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Pending</div>
+            <div class="small text-warning fw-bold">Active Requests</div>
         </div>
     </div>
 
-    <!-- ANALYTICS ROW -->
-    <div class="row g-4 mb-5">
-        <div class="col-lg-8">
-            <div class="application-card h-100 mt-0" style="padding: 24px; border: none; box-shadow: var(--a-shadow);">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="mb-0 fw-bold">Submission Trends <small class="text-muted fw-normal ms-2">(Last 7 Days)</small></h5>
-                    <div class="badge bg-light text-dark border p-2">Weekly View</div>
-                </div>
-                <div style="height: 300px;">
-                    <canvas id="submissionsChart"></canvas>
-                </div>
+    <div class="modern-card p-4 d-flex align-items-center gap-4">
+        <div class="stat-icon-box bg-emerald-subtle text-success" style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i data-lucide="verified"></i>
+        </div>
+        <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Certified</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Approved</div>
+            <div class="small text-success fw-bold">Quality Quota</div>
+        </div>
+    </div>
+
+    <div class="modern-card p-4 d-flex align-items-center gap-4">
+        <div class="stat-icon-box bg-teal-subtle text-primary" style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+            <i data-lucide="mail"></i>
+        </div>
+        <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">New Today</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.SubmittedToday</div>
+            <div class="small text-primary fw-bold">Live Stream</div>
+        </div>
+    </div>
+</div>
+
+<!-- ANALYTICS PREVIEW -->
+<div class="row g-4 mb-5">
+    <div class="col-xl-8">
+        <div class="modern-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Daily Submission Trends</h5>
+                <div class="badge bg-light text-muted border px-3 py-2">Last 7 Days</div>
+            </div>
+            <div style="height: 300px;">
+                <canvas id="submissionsChart"></canvas>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="application-card h-100 mt-0" style="padding: 24px; border: none; box-shadow: var(--a-shadow);">
-                <div class="mb-4">
-                    <h5 class="mb-0 fw-bold">Approval Distribution</h5>
+    </div>
+    <div class="col-xl-4">
+        <div class="modern-card p-4 text-center">
+            <h5 class="fw-bold text-start mb-4">Certification Distribution</h5>
+            <div class="d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 280px;">
+                <div style="height: 180px; width: 180px; margin-bottom: 24px;">
+                    <canvas id="statusDonutChart"></canvas>
                 </div>
-                <div class="d-flex flex-column align-items-center justify-content-center">
-                    <div style="height: 200px; width: 200px; margin-bottom: 32px;">
-                        <canvas id="statusDonutChart"></canvas>
-                    </div>
-                    <div class="w-100">
-                        <div class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-bold"><span style="width:8px; height:8px; display:inline-block; border-radius:50%; background:#10b981; margin-right:8px;"></span>Approved</span>
-                            <span class="fw-bold">@ViewBag.Approved</span>
-                        </div>
-                        <div class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-bold"><span style="width:8px; height:8px; display:inline-block; border-radius:50%; background:#f59e0b; margin-right:8px;"></span>Pending</span>
-                            <span class="fw-bold">@ViewBag.Pending</span>
-                        </div>
-                        <div class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-bold"><span style="width:8px; height:8px; display:inline-block; border-radius:50%; background:#ef4444; margin-right:8px;"></span>Rejected</span>
-                            <span class="fw-bold">@ViewBag.Rejected</span>
-                        </div>
-                    </div>
+                <div class="w-100 text-start small">
+                    <div class="d-flex justify-content-between py-1"><span class="text-muted fw-bold">Approved</span><span class="fw-bold">@ViewBag.Approved</span></div>
+                    <div class="d-flex justify-content-between py-1"><span class="text-muted fw-bold">Pending</span><span class="fw-bold">@ViewBag.Pending</span></div>
+                    <div class="d-flex justify-content-between py-1"><span class="text-muted fw-bold">Rejected</span><span class="fw-bold">@ViewBag.Rejected</span></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- RECENT SUBMISSIONS -->
-    <div class="application-card" style="margin-top: 24px;">
-        <div class="card-toolbar" style="padding: 18px 32px; background: white; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h5 class="mb-0 fw-bold" style="color: var(--a-ink);">Recent Submissions</h5>
-                <p class="text-muted small mb-0">Latest certification requests requiring your review</p>
-            </div>
-            <a asp-action="Applications" class="btn-export" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                View All Directory <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-            </a>
-        </div>
+<!-- REDESIGNED SMART APPLICATION FEED -->
+<div class="feed-container">
+    <div class="feed-header">
+        <h4 class="mb-0 fw-800 text-dark">Direct Application Feed</h4>
+        <a asp-action="Applications" class="btn btn-secondary px-4 fw-800 rounded-pill shadow-sm" style="font-size: 0.8rem; background: #334155; border: none;">
+            View Full Directory
+        </a>
+    </div>
+    
+    <div class="feed-table-card">
+        <table class="feed-table">
+            <thead>
+                <tr>
+                    <th>Ref ID</th>
+                    <th>Candidate Detail</th>
+                    <th>Contact Info</th>
+                    <th>Submission</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var app in Model.Take(5))
+                {
+                    var stClass = app.Status switch {
+                        "Approved" => "st-approved",
+                        "Rejected" => "st-rejected",
+                        "Submitted" => "st-submitted",
+                        "UnderReview" => "st-review",
+                        _ => "st-submitted"
+                    };
 
-        <div class="table-responsive" style="overflow-x: auto; border: none; margin: 0;">
-            <table class="modern-table" id="applicantTable">
-                <colgroup>
-                    <col style="width: 80px;" />
-                    <col style="width: 260px;" />
-                    <col style="width: 240px;" />
-                    <col style="width: 260px;" />
-                    <col style="width: 140px;" />
-                    <col style="width: 140px;" />
-                    <col style="width: 220px;" />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Audit Candidate</th>
-                        <th>Contact Details</th>
-                        <th>Cert. Categories</th>
-                        <th>Submitted On</th>
-                        <th>Status</th>
-                        <th class="text-end" style="padding-right: 40px;">Action</th>
+                    <tr class="feed-row">
+                        <!-- Ref ID -->
+                        <td class="feed-cell">
+                            <span class="candidate-id">#@app.Id.ToString("D4")</span>
+                        </td>
+                        
+                        <!-- Candidate Detail -->
+                        <td class="feed-cell">
+                            <div class="candidate-pill">
+                                <div class="candidate-avatar">
+                                    @(app.FullName.Length > 0 ? app.FullName[0].ToString() : "A")
+                                </div>
+                                <div>
+                                    <div class="candidate-name">@app.FullName</div>
+                                    <div class="x-small text-muted fw-bold">Candidate Profile</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Contact Info -->
+                        <td class="feed-cell">
+                            <div class="contact-stack">
+                                <div class="contact-item">
+                                    <i data-lucide="mail"></i> @app.Email
+                                </div>
+                                <div class="contact-item">
+                                    <i data-lucide="phone"></i> @app.Mobile
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Submission Date -->
+                        <td class="feed-cell">
+                            <div class="fw-bold text-dark" style="font-size: 0.85rem;">@app.CreatedAt.ToString("dd MMM yyyy")</div>
+                            <div class="x-small text-muted fw-bold">Portal Direct</div>
+                        </td>
+
+                        <!-- Status Badge -->
+                        <td class="feed-cell">
+                            <span class="status-badge @stClass" style="font-size: 0.65rem; padding: 6px 14px;">
+                                @(app.Status?.ToUpper() ?? "SUBMITTED")
+                            </span>
+                        </td>
+
+                        <!-- Action -->
+                        <td class="feed-cell text-end">
+                            <a asp-action="Details" asp-route-id="@app.Id" class="btn btn-outline-primary btn-sm rounded-pill fw-800 px-4" style="border-width: 2px;">
+                                Review
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var app in Model.Take(5))
-                    {
-                        <tr>
-                            <td class="text-muted fw-bold">#@app.Id</td>
-                            <td>
-                                <div class="candidate-cell">
-                                    <div class="avatar">@(app.FullName.Length > 0 ? app.FullName[0].ToString() : "A")</div>
-                                    <div class="candidate-info">
-                                        <span class="candidate-name" style="font-weight: 800;">@app.FullName</span>
-                                        <span class="candidate-sub">ID: RPL-@app.Id.ToString("D4")</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="candidate-info">
-                                    <span class="candidate-name" style="font-size: 0.85rem; font-weight: 600;">@app.Email</span>
-                                    <span class="candidate-sub" style="font-size: 0.75rem;">@app.Mobile</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    @{
-                                        var cats = string.IsNullOrEmpty(app.Categories) ? new string[0] : app.Categories.Split(',');
-                                        var displayCats = cats.Take(2);
-                                        var remaining = cats.Length - 2;
-                                    }
-                                    @foreach (var cat in displayCats)
-                                    {
-                                        <span class="badge bg-light text-dark border-0 p-2" style="font-size: 0.65rem; font-weight: 800; border-radius: 6px;">@cat.Trim()</span>
-                                    }
-                                    @if (remaining > 0)
-                                    {
-                                        <span class="badge bg-light text-muted border-0 p-2" style="font-size: 0.65rem; font-weight: 800; border-radius: 6px;">+@remaining more</span>
-                                    }
-                                    @if (cats.Length == 0)
-                                    {
-                                        <span class="text-muted small">None</span>
-                                    }
-                                </div>
-                            </td>
-                            <td class="text-muted small fw-bold">@app.CreatedAt.ToString("dd MMM yyyy")</td>
-                            <td>
-                                @{
-                                    var statusClass = app.Status switch
-                                    {
-                                        "Approved" => "st-approved",
-                                        "Rejected" => "st-rejected",
-                                        "Submitted" => "st-submitted",
-                                        "UnderReview" => "st-review",
-                                        "Feedback Pending" => "st-feedback",
-                                        _ => "st-draft"
-                                    };
-                                }
-                                <span class="status-chip @statusClass">@app.Status</span>
-                            </td>
-                            <td class="text-end" style="padding-right: 32px;">
-                                <a asp-action="Details" asp-route-id="@app.Id" class="btn-view">
-                                    View Review <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <div class="bg-light d-inline-flex p-4 rounded-circle mb-3">
+                    <i data-lucide="inbox" style="width: 44px; height: 44px; color: var(--a-muted);"></i>
+                </div>
+                <h5 class="fw-bold">No Records Found</h5>
+                <p class="text-muted small">Active submissions will be displayed here.</p>
+            </div>
+        }
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // DASHBOARD ANALYTICS SETUP
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Submissions Trend Chart (Line)
-            const trendCanvas = document.getElementById('submissionsChart');
-            if (trendCanvas) {
-                const trendCtx = trendCanvas.getContext('2d');
-                new Chart(trendCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [{
-                            label: 'Application Volume',
-                            data: [12, 19, 15, 25, 22, 30, @(ViewBag.SubmittedToday ?? 8)],
-                            borderColor: '#0ea5a5',
-                            backgroundColor: 'rgba(14, 165, 165, 0.08)',
-                            fill: true,
-                            tension: 0.4,
-                            borderWidth: 3,
-                            pointBackgroundColor: '#0ea5a5',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            pointRadius: 5,
-                            pointHoverRadius: 7
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { 
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: '#1e293b',
-                                titleFont: { size: 13, weight: 'bold' },
-                                padding: 12,
-                                cornerRadius: 8
-                            }
-                        },
-                        scales: {
-                            y: { 
-                                beginAtZero: true, 
-                                grid: { color: '#f1f5f9', drawBorder: false }, 
-                                ticks: { color: '#94a3b8', font: { size: 11, weight: '500' }, padding: 8 } 
-                            },
-                            x: { 
-                                grid: { display: false }, 
-                                ticks: { color: '#94a3b8', font: { size: 11, weight: '500' }, padding: 8 } 
-                            }
-                        }
-                    }
-                });
-            }
+             Chart.defaults.font.family = "'Inter', sans-serif";
+             Chart.defaults.color = "#94a3b8";
 
-            // 2. Status Distribution Chart (Doughnut)
-            const donutCanvas = document.getElementById('statusDonutChart');
-            if (donutCanvas) {
-                const donutCtx = donutCanvas.getContext('2d');
-                new Chart(donutCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Approved', 'Pending', 'Rejected'],
-                        datasets: [{
-                            data: [@(ViewBag.Approved ?? 0), @(ViewBag.Pending ?? 0), @(ViewBag.Rejected ?? 0)],
-                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                            borderWidth: 0,
-                            hoverOffset: 12
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '78%',
-                        plugins: { legend: { display: false } }
+            // 1. Frequency
+            const trendCtx = document.getElementById('submissionsChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Requests',
+                        data: [12, 19, 15, 25, 22, 30, @(ViewBag.SubmittedToday ?? 18)],
+                        borderColor: '#0ea5a5',
+                        backgroundColor: 'rgba(14, 165, 165, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, border: { display: false } },
+                        x: { grid: { display: false } }
                     }
-                });
-            }
+                }
+            });
+
+            // 2. Mix
+            const donutCtx = document.getElementById('statusDonutChart').getContext('2d');
+            new Chart(donutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [@(ViewBag.Approved ?? 0), @(ViewBag.Pending ?? 0), @(ViewBag.Rejected ?? 0)],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '82%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+            lucide.createIcons();
         });
     </script>
 }

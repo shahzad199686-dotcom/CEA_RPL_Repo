@@ -22,18 +22,18 @@ public class DbOtpService : IOtpService
         var random = new Random();
         var otp = random.Next(100000, 999999).ToString();
         
-        // Invalidate previous unused OTPs for this contact
+        // Invalidate previous unverified OTPs for this contact
         var existing = await _context.OtpRecords
-            .Where(o => o.ContactKey == contactKey && !o.IsUsed)
+            .Where(o => o.ContactKey == contactKey && !o.IsVerified)
             .ToListAsync();
-        foreach (var old in existing) old.IsUsed = true;
+        foreach (var old in existing) old.IsVerified = true; // Mark as invalidated
 
         var record = new Domain.Entities.OtpRecord
         {
             ContactKey = contactKey,
             OtpCode = otp,
-            ExpiryTime = DateTime.UtcNow.AddMinutes(5), // 5 minutes as requested
-            IsUsed = false
+            ExpiryTime = DateTime.UtcNow.AddMinutes(5),
+            IsVerified = false
         };
 
         _context.OtpRecords.Add(record);
@@ -43,17 +43,36 @@ public class DbOtpService : IOtpService
 
     public async Task<bool> VerifyOtpAsync(string contactKey, string otp)
     {
-        // Dummy code for testing: 123456
+        // Special check for cooldown (returns true if allowed to send again)
+        if (otp == "CHECK_COOLDOWN")
+        {
+            var last = await _context.OtpRecords
+                .Where(o => o.ContactKey == contactKey)
+                .OrderByDescending(o => o.CreatedAt)
+                .FirstOrDefaultAsync();
+            
+            if (last == null) return true;
+            return (DateTime.UtcNow - last.CreatedAt).TotalSeconds > 60;
+        }
+
+        // Special check for registration flow (has this email been verified recently?)
+        if (otp == "CHECK_VERIFIED")
+        {
+            return await _context.OtpRecords
+                .AnyAsync(o => o.ContactKey == contactKey && o.IsVerified && o.ExpiryTime > DateTime.UtcNow.AddMinutes(-10));
+        }
+
+        // Global dummy code for development
         if (otp == "123456") return true;
 
         var record = await _context.OtpRecords
-            .Where(o => o.ContactKey == contactKey && o.OtpCode == otp && !o.IsUsed && o.ExpiryTime > DateTime.UtcNow)
-            .OrderByDescending(o => o.ExpiryTime)
+            .Where(o => o.ContactKey == contactKey && o.OtpCode == otp && !o.IsVerified && o.ExpiryTime > DateTime.UtcNow)
+            .OrderByDescending(o => o.CreatedAt)
             .FirstOrDefaultAsync();
 
         if (record != null)
         {
-            record.IsUsed = true;
+            record.IsVerified = true;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -63,12 +82,12 @@ public class DbOtpService : IOtpService
 
 public class SmtpOtpSender : IOtpSender
 {
-    private readonly IConfiguration _config;
+    private readonly IEmailService _emailService;
     private readonly ILogger<SmtpOtpSender> _logger;
 
-    public SmtpOtpSender(IConfiguration config, ILogger<SmtpOtpSender> logger)
+    public SmtpOtpSender(IEmailService emailService, ILogger<SmtpOtpSender> logger)
     {
-        _config = config;
+        _emailService = emailService;
         _logger = logger;
     }
 
@@ -76,39 +95,23 @@ public class SmtpOtpSender : IOtpSender
     {
         try
         {
-            var server = _config["EmailSettings:SmtpServer"];
-            var port = int.Parse(_config["EmailSettings:SmtpPort"] ?? "587");
-            var user = _config["EmailSettings:SmtpUsername"];
-            var pass = _config["EmailSettings:SmtpPassword"];
+            var subject = "CEA RPL Portal - OTP Verification";
+            var body = $@"Your OTP is: {otp}
+This OTP is valid for 5 minutes. Do not share it with anyone.";
 
-            using var client = new SmtpClient(server, port)
-            {
-                Credentials = new NetworkCredential(user, pass),
-                EnableSsl = true
-            };
-
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(user!),
-                Subject = "Your OTP Code",
-                Body = $"Your OTP is: {otp}. Valid for 5 minutes.",
-                IsBodyHtml = false
-            };
-            mailMessage.To.Add(email);
-
-            await client.SendMailAsync(mailMessage);
+            await _emailService.SendEmailAsync(email, subject, body);
             _logger.LogInformation($"OTP email sent successfully to {email}");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to send OTP email to {email}");
-            throw; // Re-throw so the controller knows it failed
+            throw;
         }
     }
 
     public Task SendSmsOtpAsync(string mobile, string otp)
     {
-        _logger.LogWarning("SMS OTP requested but functionality has been removed.");
+        _logger.LogWarning("SMS OTP requested but functionality is disabled.");
         return Task.CompletedTask;
     }
 }

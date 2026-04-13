@@ -14,9 +14,17 @@
         <!-- Top Logo Strip -->
         <div class="l-header-top">
             <div class="l-container l-logo-container">
-                <img src="/images/moef_logo.png" alt="MoEF&CC" class="l-gov-logo">
-                <img src="/images/eada_logo.png" alt="EADA" class="l-gov-logo">
-                <img src="/images/npc_logo.png" alt="NPC" class="l-gov-logo">
+                <div class="l-logo-group left">
+                    <img src="/images/satyamev_jayate.png" alt="Satyamev Jayate" class="l-gov-logo">
+                    <img src="/images/moef_logo.png" alt="MoEF&CC" class="l-gov-logo">
+                </div>
+                <div class="l-logo-group center">
+                    <img src="/images/swachh_bharat.png" alt="Swachh Bharat" class="l-gov-logo">
+                </div>
+                <div class="l-logo-group right">
+                    <img src="/images/eada_logo.png" alt="EADA" class="l-gov-logo">
+                    <img src="/images/npc_logo.png" alt="NPC" class="l-gov-logo">
+                </div>
             </div>
         </div>
 
@@ -25,11 +33,11 @@
             <div class="l-container l-navbar-container">
                 <nav class="l-nav d-none d-lg-flex">
                     <a href="/#home" class="l-nav-link">Home</a>
-                    <a href="/#process" class="l-nav-link">Process</a>
-                    <a href="/#docs" class="l-nav-link">Documents</a>
-                    <a href="/#eligibility" class="l-nav-link">Eligibility</a>
                     <a href="/#about" class="l-nav-link">About</a>
-                    <a href="/#faq" class="l-nav-link">FAQ</a>
+                    <a href="/#eligibility" class="l-nav-link">Eligibility</a>
+                    <a href="/#process" class="l-nav-link">Process</a>
+                    <a href="/#docs" class="l-nav-link">Document Required</a>
+                    <a href="/#faq" class="l-nav-link">FAQ'S</a>
                 </nav>
 
                 <div class="l-auth-group d-none d-lg-flex">
@@ -79,10 +87,10 @@
                             </div>
                         </div>
 
-                        <!-- Sign In Dropdown -->
+                        <!-- Sign Up Dropdown -->
                         <div class="l-dropdown">
                             <button class="l-btn-dropdown l-btn-register">
-                                <span>Sign In</span>
+                                <span>Sign Up</span>
                                 <i data-lucide="chevron-up" style="width: 14px; height: 14px; transform: rotate(180deg);"></i>
                             </button>
                             <div class="l-dropdown-menu">
@@ -106,11 +114,11 @@
              <div class="p-4 pt-5">
                 <nav class="d-flex flex-column gap-4 mb-5">
                     <a href="/#home" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Home</a>
-                    <a href="/#process" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Process</a>
-                    <a href="/#docs" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Documents</a>
-                    <a href="/#eligibility" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Eligibility</a>
                     <a href="/#about" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">About</a>
-                    <a href="/#faq" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">FAQ</a>
+                    <a href="/#eligibility" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Eligibility</a>
+                    <a href="/#process" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Process</a>
+                    <a href="/#docs" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Document Required</a>
+                    <a href="/#faq" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">FAQ'S</a>
                 </nav>
                 <div class="d-flex flex-column gap-3">
                     @if (User.Identity?.IsAuthenticated == true)

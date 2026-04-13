@@ -28,25 +28,60 @@
 
 .l-header-top {
     background: white;
-    padding: 15px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #f1f5f9;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
 }
 
 .l-logo-container {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 40px;
+    gap: 30px;
+    width: 100%;
 }
 
+.l-logo-group {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.l-logo-group.left { justify-content: flex-start; }
+.l-logo-group.right { justify-content: flex-end; }
+.l-logo-group.center { justify-content: center; }
+
 .l-gov-logo {
-    height: 70px;
+    height: 85px; /* Increased size */
     width: auto;
     object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.l-gov-logo:hover {
+    transform: scale(1.05);
+}
+
+@@media (max-width: 1024px) {
+    .l-gov-logo { height: 60px; }
+    .l-logo-container { gap: 15px; }
+    .l-logo-group { gap: 15px; }
+}
+
+@@media (max-width: 768px) {
+    .l-logo-container { 
+        display: flex; 
+        flex-wrap: wrap; 
+        justify-content: center; 
+        gap: 20px; 
+    }
+    .l-gov-logo { height: 50px; }
 }
 
 .l-header-bottom {
-    background: #065f46; /* Strong Indian Government Green/Teal */
+    background: #0ea5a5; /* Updated Brand Teal */
     height: 60px;
     display: flex;
     align-items: center;
@@ -156,7 +191,7 @@
 
 .l-btn-register {
     background: white;
-    color: #065f46 !important;
+    color: #0ea5a5 !important;
     font-weight: 800;
 }
 
@@ -229,10 +264,47 @@
 }
 
 /* =========================
+   Notice Bar
+   ========================= */
+.l-notice-bar {
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 10px 0;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+    z-index: 100;
+}
+
+.l-notice-content {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.l-notice-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: l-scroll-notice 25s linear infinite;
+    color: var(--l-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.l-notice-bar:hover .l-notice-text {
+    animation-play-state: paused;
+}
+
+@keyframes l-scroll-notice {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* =========================
    Hero Redesign
    ========================= */
 .l-hero {
-    padding: 160px 20px 100px;
+    padding: 0 20px 100px;
     text-align: center;
     background: radial-gradient(circle at top right, #f0fdfa 0%, #ffffff 50%, #f0f9ff 100%);
     position: relative;
