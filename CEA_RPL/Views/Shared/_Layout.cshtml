@@ -11,25 +11,63 @@
 </head>
 <body>
     <header class="l-header-wrapper" id="mainHeader">
-        <!-- Top Logo Strip -->
-        <div class="l-header-top">
-            <div class="l-container l-logo-container">
-                <div class="l-logo-group left">
-                    <img src="/images/satyamev_jayate.png" alt="Satyamev Jayate" class="l-gov-logo">
-                    <img src="/images/moef_logo.png" alt="MoEF&CC" class="l-gov-logo">
-                </div>
-                <div class="l-logo-group center">
-                    <img src="/images/swachh_bharat.png" alt="Swachh Bharat" class="l-gov-logo">
-                </div>
-                <div class="l-logo-group right">
-                    <img src="/images/eada_logo.png" alt="EADA" class="l-gov-logo">
-                    <img src="/images/npc_logo.png" alt="NPC" class="l-gov-logo">
+        <!-- 1. Top Strip -->
+        <div class="l-header-top-strip">
+            <div class="l-container">
+                <div class="l-top-strip-content">
+                    <div class="l-top-strip-left">
+                        <span style="font-size: 1.1rem; filter: grayscale(0.2);">🇮🇳</span>
+                        <span class="ms-1">भारत सरकार | Government of India</span>
+                    </div>
+                    <div class="l-top-strip-right">
+                        <div class="l-acc-controls d-none d-md-flex">
+                            <span class="l-acc-btn">A-</span>
+                            <span class="l-acc-btn">A</span>
+                            <span class="l-acc-btn">A+</span>
+                        </div>
+                        <div class="l-lang-dropdown d-flex align-items-center gap-1">
+                            <span class="fw-bold">EN</span> 
+                            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Bar -->
-        <div class="l-header-bottom">
+        <!-- 2. Main Branding Header -->
+        <div class="l-header-branding">
+            <div class="l-container">
+                <div class="l-branding-container">
+                    <!-- Left: EADA Identity -->
+                    <div class="l-brand-main">
+                        <img src="/images/eada_logo.png" alt="EADA" class="l-brand-logo">
+                        <div class="l-brand-title-group d-none d-lg-flex">
+                            <span class="l-brand-hindi">ई. ए. डी. ए.</span>
+                            <span class="l-brand-english">EADA</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Center: Ministry Info -->
+                    <div class="l-ministry-group d-none d-md-flex">
+                        <img src="/images/moef_logo.png" alt="MoEFCC" class="l-brand-logo">
+                        <div class="l-ministry-text d-none d-xl-block">
+                            <div class="l-ministry-hindi">पर्यावरण, वन और जलवायु परिवर्तन मंत्रालय</div>
+                            <div class="l-ministry-english">Ministry of Environment, Forest and Climate Change</div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Partners & Emblem -->
+                    <div class="l-partner-logos">
+                        <img src="/images/npc_logo.png" alt="NPC" class="l-partner-logo d-none d-sm-block">
+                        <img src="/images/swachh_bharat.png" alt="Swachh Bharat" class="l-partner-logo d-none d-md-block">
+                        <img src="/images/satyamev_jayate.png" alt="Satyamev Jayate" class="l-partner-logo emblem">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Navigation Bar Strip -->
+        <div class="l-header-nav-strip">
             <div class="l-container l-navbar-container">
                 <nav class="l-nav d-none d-lg-flex">
                     <a href="/#home" class="l-nav-link">Home</a>
@@ -108,6 +146,7 @@
                 </button>
             </div>
         </div>
+
 
         <!-- Mobile Menu Overlay -->
         <div class="mobile-menu-overlay d-lg-none" id="mobileMenu">

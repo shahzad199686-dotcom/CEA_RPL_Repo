@@ -41,6 +41,8 @@ public class ApplicationSubmissionRequest
 
     // Professional Experience
     public string total_experience { get; set; } = string.Empty;
+    public List<string>? sector_experience { get; set; }
+    public List<string>? subject_expertise { get; set; }
     public List<string>? exp_org { get; set; }
     public List<string>? exp_designation { get; set; }
     public List<string>? exp_duration { get; set; }

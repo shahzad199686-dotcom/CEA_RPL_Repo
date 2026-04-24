@@ -2,18 +2,19 @@
    Landing Page Design System
    ========================= */
 :root {
-    --l-primary: #0ea5a5;
-    --l-primary-dark: #088383;
-    --l-accent: #f0f9f9;
-    --l-ink: #0f172a;
+    --l-primary: #004832; /* Dark Government Green */
+    --l-primary-light: #006648;
+    --l-accent: #f0f9f4;
+    --l-ink: #1e293b;
     --l-muted: #64748b;
     --l-white: #ffffff;
-    --l-glass: rgba(255, 255, 255, 0.85);
+    --l-glass: rgba(255, 255, 255, 0.95);
     --l-radius-lg: 24px;
-    --l-radius-md: 16px;
-    --l-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    --l-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --l-radius-md: 12px;
+    --l-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --l-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
 }
+
 
 .l-header-wrapper {
     position: fixed;
@@ -22,79 +23,156 @@
     right: 0;
     z-index: 2000;
     background: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
 }
 
-.l-header-top {
+/* 1. Top Strip */
+.l-header-top-strip {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 6px 0;
+    font-size: 0.75rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.l-top-strip-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.l-top-strip-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.l-top-strip-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.l-acc-controls {
+    display: flex;
+    gap: 12px;
+    border-right: 1px solid #cbd5e1;
+    padding-right: 20px;
+}
+
+.l-acc-btn {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.l-acc-btn:hover { color: var(--l-primary); }
+
+/* 2. Main Branding Header */
+.l-header-branding {
     background: white;
-    padding: 12px 0;
-    border-bottom: 1px solid #f1f5f9;
-    min-height: 110px;
+    padding: 15px 0;
+}
+
+.l-branding-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.l-brand-main {
     display: flex;
     align-items: center;
+    gap: 15px;
+    flex: 1;
 }
 
-.l-logo-container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 30px;
-    width: 100%;
-}
-
-.l-logo-group {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-.l-logo-group.left { justify-content: flex-start; }
-.l-logo-group.right { justify-content: flex-end; }
-.l-logo-group.center { justify-content: center; }
-
-.l-gov-logo {
-    height: 85px; /* Increased size */
+.l-brand-logo {
+    height: 70px;
     width: auto;
     object-fit: contain;
-    transition: transform 0.2s ease;
 }
 
-.l-gov-logo:hover {
-    transform: scale(1.05);
+.l-brand-title-group {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #e2e8f0;
+    padding-left: 15px;
 }
 
-@@media (max-width: 1024px) {
-    .l-gov-logo { height: 60px; }
-    .l-logo-container { gap: 15px; }
-    .l-logo-group { gap: 15px; }
+.l-brand-hindi {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--l-ink);
+    line-height: 1.2;
 }
 
-@@media (max-width: 768px) {
-    .l-logo-container { 
-        display: flex; 
-        flex-wrap: wrap; 
-        justify-content: center; 
-        gap: 20px; 
-    }
-    .l-gov-logo { height: 50px; }
+.l-brand-english {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--l-primary);
+    line-height: 1.2;
 }
 
-.l-header-bottom {
-    background: #0ea5a5; /* Updated Brand Teal */
-    height: 60px;
+.l-ministry-group {
     display: flex;
     align-items: center;
-    transition: all 0.3s ease;
+    gap: 15px;
+    flex: 2;
+    justify-content: center;
 }
 
-.l-header-wrapper.scrolled .l-header-top {
-    display: none; /* Hide logo strip on scroll to save space */
+.l-ministry-text {
+    text-align: left;
 }
 
-.l-header-wrapper.scrolled .l-header-bottom {
-    height: 70px; /* Refined height for scrolled state */
+.l-ministry-hindi {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #334155;
+    line-height: 1.2;
 }
+
+.l-ministry-english {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--l-primary);
+    line-height: 1.2;
+}
+
+.l-partner-logos {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.l-partner-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.l-partner-logo.emblem {
+    height: 65px;
+}
+
+/* 3. Navigation Bar Strip */
+.l-header-nav-strip {
+    background: var(--l-primary);
+    height: 54px;
+    display: flex;
+    align-items: center;
+}
+
+.l-header-wrapper.scrolled {
+    transform: translateY(-130px); /* Hide top strips (30+100) on scroll */
+}
+
+
 
 .l-container {
     max-width: 1400px;
@@ -141,22 +219,22 @@
 
 .l-nav-link {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     transition: all 0.2s;
-    padding: 8px 0;
-    border-bottom: 2px solid transparent;
+    padding: 15px 0;
+    border-bottom: 3px solid transparent;
 }
 
 .l-nav-link:hover {
     color: white;
-    border-bottom-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.6);
 }
 
 .l-auth-group {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     align-items: center;
     flex-shrink: 0;
 }
@@ -168,51 +246,52 @@
 }
 
 .l-btn-dropdown {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 20px;
-    border-radius: 8px;
-    height: 40px;
+    gap: 8px;
+    padding: 0 18px;
+    border-radius: 6px;
+    height: 36px;
     white-space: nowrap;
     transition: all 0.2s;
 }
 
 .l-btn-dropdown:not(.l-btn-register):hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: white;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .l-btn-register {
     background: white;
-    color: #0ea5a5 !important;
-    font-weight: 800;
+    color: var(--l-primary) !important;
+    font-weight: 700;
+    border: none;
 }
 
 .l-btn-register:hover {
     background: #f8fafc;
-    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .l-dropdown-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 5px);
     right: 0;
     background: white;
-    border-radius: var(--l-radius-md);
+    border-radius: 8px;
     box-shadow: var(--l-shadow-lg);
-    min-width: 220px;
-    padding: 8px;
+    min-width: 200px;
+    padding: 6px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s ease;
     z-index: 2001;
 }
 
@@ -225,24 +304,25 @@
 .l-dropdown-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: 10px;
+    padding: 10px 14px;
     text-decoration: none;
     color: var(--l-ink);
     font-weight: 600;
-    font-size: 0.9rem;
-    border-radius: 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
     transition: background 0.2s;
 }
 
 .l-dropdown-item:hover {
-    background: var(--l-accent);
+    background: #f1f5f9;
     color: var(--l-primary);
 }
 
 .main-content {
-    padding-top: 160px; /* Accommodate two-layer header */
+    padding-top: 170px; /* Adjusted for 3-layer header */
 }
+
 
 /* =========================
    Auth Pages Layout
@@ -507,7 +587,7 @@
    ========================= */
 .mobile-menu-overlay {
     position: fixed;
-    top: 80px;
+    top: 54px; /* Align with navbar strip height when top parts are hidden or relative */
     left: 0;
     right: 0;
     bottom: 0;
@@ -517,6 +597,7 @@
     animation: slideInLeft 0.3s forwards;
     overflow-y: auto;
 }
+
 
 .mobile-menu-overlay.active {
     display: block;
@@ -529,24 +610,43 @@
 
 /* Responsive Overrides */
 @media (max-width: 1200px) {
-    .l-nav { gap: 20px; font-size: 0.9rem; }
+    .l-nav { gap: 15px; }
+    .l-brand-english { font-size: 1rem; }
+    .l-brand-hindi { font-size: 0.9rem; }
+    .l-ministry-english { font-size: 0.9rem; }
+    .l-ministry-hindi { font-size: 0.85rem; }
 }
 
 @media (max-width: 1024px) {
-    .l-header .l-nav { display: none; }
-    .l-header .l-auth-group { display: none; }
-    .l-nav { position: static; transform: none; }
+    .l-nav { display: none; }
+    .l-auth-group { display: none; }
+    .l-header-branding { padding: 10px 0; }
+    .l-brand-logo { height: 55px; }
+    .l-partner-logo { height: 45px; }
+    .l-partner-logo.emblem { height: 50px; }
     .l-hero-title { font-size: 3rem; }
     .l-step-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: 40px; }
     .l-step-grid::before { display: none; }
+    .main-content { padding-top: 150px; }
 }
 
 @media (max-width: 768px) {
+    .l-header-top-strip { display: none; } /* Hide top strip on mobile */
+    .l-header-branding { padding: 8px 0; }
+    .l-brand-logo { height: 45px; }
+    .l-partner-logos { gap: 10px; }
+    .l-partner-logo { height: 35px; }
+    .l-partner-logo.emblem { height: 40px; }
+    .l-header-nav-strip { height: 48px; }
+    .mobile-menu-overlay { top: 108px; } /* Branding (60) + Nav (48) */
+    .main-content { padding-top: 108px; }
+
     .l-step-grid { grid-template-columns: 1fr; }
     .l-role-grid { grid-template-columns: 1fr; }
-    .l-hero-title { font-size: 2.5rem; }
-    .l-header { padding: 0 20px; }
+    .l-hero-title { font-size: 2.2rem; }
+    .l-section-title { font-size: 2rem; }
 }
+
 /* =========================
    Eligibility & Info Sections
    ========================= */

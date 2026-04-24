@@ -196,7 +196,7 @@ body {
     border: 1px solid var(--line);
     margin-top: 24px; /* Breathing room below top progress bar */
     margin-bottom: 32px;
-    overflow: hidden;
+    overflow: visible; /* Prevent clipping of dropdowns */
     box-shadow: var(--shadow);
     transition: all 0.3s ease;
     position: relative;
@@ -2377,3 +2377,228 @@ input[type="file"] {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* =========================
+   Custom Multi-Select Component
+   ========================= */
+.l-multi-select {
+    position: relative;
+    width: 100%;
+}
+
+.l-ms-control {
+    width: 100%;
+    min-height: 52px;
+    padding: 8px 12px;
+    padding-right: 40px; /* Space for chevron */
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--line);
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.l-ms-control:focus-within, .l-ms-control.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.l-ms-placeholder {
+    color: var(--muted);
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+
+.l-ms-chevron {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    transition: transform 0.2s;
+}
+
+.l-ms-control.active .l-ms-chevron {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.l-ms-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.l-ms-chip {
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(15, 157, 154, 0.15);
+}
+
+.l-ms-chip-remove {
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.l-ms-chip-remove:hover {
+    opacity: 1;
+}
+
+.l-ms-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+.l-ms-dropdown.show {
+    display: flex;
+}
+
+.l-ms-search-container {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.l-ms-search-inner {
+    width: 100%;
+    height: 38px !important;
+    border: 1.5px solid var(--line) !important;
+    border-radius: 8px !important;
+    padding: 0 12px !important;
+    font-size: 0.9rem !important;
+    box-shadow: none !important;
+}
+
+.l-ms-search-inner:focus {
+    border-color: var(--accent) !important;
+}
+
+.l-ms-options-list {
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px 0;
+}
+
+.l-ms-option {
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+}
+
+.l-ms-option:hover {
+    background: var(--bg);
+}
+
+.l-ms-checkbox-wrap {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.l-ms-option.selected .l-ms-checkbox-wrap {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.l-ms-checkmark {
+    color: #fff;
+    display: none;
+}
+
+.l-ms-option.selected .l-ms-checkmark {
+    display: block;
+}
+
+.l-ms-option-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.l-ms-option-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.l-ms-option-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+.l-ms-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8fafc !important;
+}
+
+.l-ms-limit-msg {
+    color: var(--warn);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 10px 16px;
+    background: #fff5f5;
+    border-top: 1px solid #fed7d7;
+    display: none;
+}
+
+.l-ms-limit-msg.show {
+    display: block;
+}
+
+/* Scrollbar styling for dropdown */
+.l-ms-options-list::-webkit-scrollbar {
+    width: 6px;
+}
+.l-ms-options-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.l-ms-options-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.l-ms-options-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+

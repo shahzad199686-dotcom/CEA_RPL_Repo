@@ -212,6 +212,8 @@ public class ApplicationController : Controller
             applicant.OtherGovIdType = req.other_gov_id_type;
             applicant.GovIdNumber = req.gov_id_number ?? "";
             applicant.Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty;
+            applicant.ProfessionalExperienceSectors = req.sector_experience != null ? string.Join(", ", req.sector_experience) : string.Empty;
+            applicant.TechnicalSubjectExpertise = req.subject_expertise != null ? string.Join(", ", req.subject_expertise) : string.Empty;
             applicant.EnclosureDescription = req.enclosure_desc;
             
             applicant.LastSavedAt = DateTime.Now;

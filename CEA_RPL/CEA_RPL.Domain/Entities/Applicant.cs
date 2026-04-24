@@ -40,6 +40,8 @@ public class Applicant : BaseEntity
     public string Categories { get; set; } = string.Empty; // Comma separated Category 1, Category 2 etc.
     
     public string? EnclosureDescription { get; set; }
+    public string? ProfessionalExperienceSectors { get; set; }
+    public string? TechnicalSubjectExpertise { get; set; }
     
     // Navigation Properties
     public virtual Declaration? Declaration { get; set; } = null!;

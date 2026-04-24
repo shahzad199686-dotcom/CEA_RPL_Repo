@@ -68,6 +68,8 @@ using (var scope = app.Services.CreateScope())
     {
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'PaymentStatus') ALTER TABLE Applicants ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'FinanceRemarks') ALTER TABLE Applicants ADD FinanceRemarks NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'ProfessionalExperienceSectors') ALTER TABLE Applicants ADD ProfessionalExperienceSectors NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TechnicalSubjectExpertise') ALTER TABLE Applicants ADD TechnicalSubjectExpertise NVARCHAR(MAX);");
         
         // OTP Schema Patch
         context.Database.ExecuteSqlRaw(@"
