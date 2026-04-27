@@ -71,18 +71,19 @@
 
 /* 2. Main Branding Header */
 .l-header-branding {
-    background: white;
+    background: #f8fafc; /* Light grey/white as per reference */
     padding: 15px 0;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .l-branding-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
 }
 
-.l-brand-main {
+.l-brand-group {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -90,46 +91,75 @@
 }
 
 .l-brand-logo {
-    height: 70px;
+    height: 65px;
     width: auto;
     object-fit: contain;
 }
 
-.l-brand-title-group {
+.l-brand-text {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid #e2e8f0;
-    padding-left: 15px;
-}
-
-.l-brand-hindi {
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--l-ink);
-    line-height: 1.2;
-}
-
-.l-brand-english {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--l-primary);
-    line-height: 1.2;
-}
-
-.l-ministry-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex: 2;
     justify-content: center;
 }
 
-.l-ministry-text {
+/* Specific Group Styles */
+.l-brand-eada {
+    justify-content: flex-start;
+}
+
+.l-brand-eada .l-brand-text {
+    border-left: 2px solid #004832;
+    padding-left: 15px;
+}
+
+.l-brand-ministry {
+    flex: 2;
+    justify-content: center;
     text-align: left;
 }
 
+.l-brand-partners {
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.l-life-placeholder {
+    border: 1px solid #e2e8f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+    background: white;
+    min-width: 60px;
+}
+
+.l-partner-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.l-partner-logo.emblem {
+    height: 60px;
+}
+
+/* Typography for Branding */
+.l-brand-hindi {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.l-brand-english {
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #004832;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
 .l-ministry-hindi {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: #334155;
     line-height: 1.2;
@@ -137,35 +167,90 @@
 
 .l-ministry-english {
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--l-primary);
+    font-weight: 700;
+    color: #004832;
     line-height: 1.2;
-}
-
-.l-partner-logos {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex: 1;
-    justify-content: flex-end;
-}
-
-.l-partner-logo {
-    height: 60px;
-    width: auto;
-    object-fit: contain;
-}
-
-.l-partner-logo.emblem {
-    height: 65px;
 }
 
 /* 3. Navigation Bar Strip */
 .l-header-nav-strip {
-    background: var(--l-primary);
+    background: #004832;
     height: 54px;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.l-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.l-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 100%;
+}
+
+.l-nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0 18px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.l-nav-link:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.l-nav-link.active {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+/* 4. Latest Update Strip */
+.l-update-strip {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+    display: flex;
+    align-items: center;
+}
+
+.l-update-label {
+    background: #fef3c7; /* Light yellow */
+    color: #92400e;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 0 20px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    border-right: 1px solid #fde68a;
+}
+
+.l-update-content {
+    flex: 1;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+.l-update-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
 }
 
 .l-header-wrapper.scrolled {
@@ -610,41 +695,75 @@
 
 /* Responsive Overrides */
 @media (max-width: 1200px) {
-    .l-nav { gap: 15px; }
-    .l-brand-english { font-size: 1rem; }
-    .l-brand-hindi { font-size: 0.9rem; }
-    .l-ministry-english { font-size: 0.9rem; }
-    .l-ministry-hindi { font-size: 0.85rem; }
+    .l-nav { gap: 0; }
+    .l-nav-link { padding: 0 12px; font-size: 0.9rem; }
+    .l-brand-english { font-size: 1.2rem; }
+    .l-brand-hindi { font-size: 1rem; }
+    .l-brand-logo { height: 55px; }
 }
 
 @media (max-width: 1024px) {
-    .l-nav { display: none; }
-    .l-auth-group { display: none; }
-    .l-header-branding { padding: 10px 0; }
-    .l-brand-logo { height: 55px; }
-    .l-partner-logo { height: 45px; }
-    .l-partner-logo.emblem { height: 50px; }
-    .l-hero-title { font-size: 3rem; }
-    .l-step-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: 40px; }
-    .l-step-grid::before { display: none; }
-    .main-content { padding-top: 150px; }
+    .l-nav, .l-auth-group { display: none; }
+    .l-header-branding { padding: 12px 0; }
+    .l-branding-container { gap: 15px; }
+    .l-brand-logo { height: 45px; }
+    .l-partner-logo { height: 35px; }
+    .l-partner-logo.emblem { height: 40px; }
+    .l-brand-english { font-size: 1rem; }
+    .l-brand-hindi { font-size: 0.85rem; }
+    .main-content { padding-top: 180px; }
 }
 
 @media (max-width: 768px) {
-    .l-header-top-strip { display: none; } /* Hide top strip on mobile */
-    .l-header-branding { padding: 8px 0; }
-    .l-brand-logo { height: 45px; }
-    .l-partner-logos { gap: 10px; }
+    .l-header-top-strip { display: none; }
+    .l-header-branding { padding: 20px 0; }
+    
+    .l-branding-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .l-brand-group {
+        flex: none;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .l-brand-eada .l-brand-text {
+        border-left: none;
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .l-brand-logo { height: 50px; }
+    
+    .l-brand-partners {
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
     .l-partner-logo { height: 35px; }
     .l-partner-logo.emblem { height: 40px; }
-    .l-header-nav-strip { height: 48px; }
-    .mobile-menu-overlay { top: 108px; } /* Branding (60) + Nav (48) */
-    .main-content { padding-top: 108px; }
+    .l-life-placeholder { min-width: 50px; padding: 2px 6px; }
 
-    .l-step-grid { grid-template-columns: 1fr; }
-    .l-role-grid { grid-template-columns: 1fr; }
+    .l-header-nav-strip { height: 48px; }
+    .l-update-strip { height: auto; padding: 5px 0; }
+    .l-update-label { height: 32px; padding: 0 10px; font-size: 0.75rem; border-radius: 4px; border: none; }
+    .l-update-content { padding: 5px 15px; }
+    
+    .main-content { padding-top: 260px; } 
+
     .l-hero-title { font-size: 2.2rem; }
     .l-section-title { font-size: 2rem; }
+}
+
+@media (max-width: 480px) {
+    .main-content { padding-top: 340px; }
+    .l-brand-logo { height: 45px; }
 }
 
 /* =========================
