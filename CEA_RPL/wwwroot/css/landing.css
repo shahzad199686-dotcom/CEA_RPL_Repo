@@ -71,8 +71,8 @@
 
 /* 2. Main Branding Header */
 .l-header-branding {
-    background: #f8fafc; /* Light grey/white as per reference */
-    padding: 15px 0;
+    background: #f8fafc;
+    padding: 12px 24px; /* Added container padding as requested */
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -80,20 +80,49 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
+    width: 100%;
+    max-width: 100%; /* Spans full width of parent padding */
+}
+
+.l-brand-left {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Space between groups */
+}
+
+.l-brand-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Consistent gap between logos */
 }
 
 .l-brand-group {
     display: flex;
     align-items: center;
     gap: 15px;
-    flex: 1;
+}
+
+.l-brand-separator {
+    width: 1px;
+    height: 40px;
+    background: #ccc;
+    margin: 0 5px;
 }
 
 .l-brand-logo {
-    height: 65px;
+    height: 60px; /* EADA and MoEFCC can be slightly larger but balanced */
     width: auto;
     object-fit: contain;
+}
+
+.l-partner-logo {
+    height: 48px; /* Visual height matched with LiFE logo */
+    width: auto;
+    object-fit: contain;
+}
+
+.l-partner-logo.emblem {
+    height: 52px; /* Satyamev Jayate often needs a bit more height to look visually equal */
 }
 
 .l-brand-text {
@@ -102,72 +131,42 @@
     justify-content: center;
 }
 
-/* Specific Group Styles */
-.l-brand-eada {
-    justify-content: flex-start;
-}
-
+/* Specific Group Adjustments */
 .l-brand-eada .l-brand-text {
-    border-left: 2px solid #004832;
-    padding-left: 15px;
+    border-left: none; /* Removed old divider in favor of the new separator */
+    padding-left: 0;
 }
 
 .l-brand-ministry {
-    flex: 2;
-    justify-content: center;
     text-align: left;
-}
-
-.l-brand-partners {
-    justify-content: flex-end;
-    gap: 20px;
-}
-
-.l-life-placeholder {
-    border: 1px solid #e2e8f0;
-    padding: 4px 8px;
-    border-radius: 4px;
-    text-align: center;
-    background: white;
-    min-width: 60px;
-}
-
-.l-partner-logo {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-}
-
-.l-partner-logo.emblem {
-    height: 60px;
 }
 
 /* Typography for Branding */
 .l-brand-hindi {
     font-weight: 800;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: #1e293b;
     line-height: 1.1;
 }
 
 .l-brand-english {
     font-weight: 900;
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     color: #004832;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
 }
 
 .l-ministry-hindi {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
     color: #334155;
     line-height: 1.2;
 }
 
 .l-ministry-english {
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 800;
     color: #004832;
     line-height: 1.2;
 }
@@ -221,36 +220,60 @@
 
 /* 4. Latest Update Strip */
 .l-update-strip {
-    background: white;
+    background: #f5f5f5; /* Full width light grey background */
     border-bottom: 1px solid #e2e8f0;
-    height: 42px;
+    width: 100%;
     display: flex;
-    align-items: center;
+    align-items: stretch;
+    min-height: 40px;
+    margin: 0;
+    padding: 0;
 }
 
 .l-update-label {
-    background: #fef3c7; /* Light yellow */
-    color: #92400e;
+    background: #f3e2a9; /* Exact EADA yellow */
+    color: #854d0e;
     font-weight: 800;
     font-size: 0.85rem;
-    padding: 0 20px;
-    height: 42px;
+    padding: 0 25px;
     display: flex;
     align-items: center;
     white-space: nowrap;
-    border-right: 1px solid #fde68a;
+    flex-shrink: 0;
 }
 
 .l-update-content {
     flex: 1;
-    padding: 0 20px;
-    overflow: hidden;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
 }
 
 .l-update-text {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: #475569;
+}
+
+@media (max-width: 768px) {
+    .l-update-strip .l-container {
+        height: auto;
+        min-height: 40px;
+    }
+    
+    .l-update-label {
+        padding: 0 15px;
+        font-size: 0.75rem;
+    }
+    
+    .l-update-content {
+        padding: 8px 15px;
+    }
+    
+    .l-update-text {
+        font-size: 0.85rem;
+        white-space: normal;
+    }
 }
 
 .l-header-wrapper.scrolled {
@@ -405,7 +428,7 @@
 }
 
 .main-content {
-    padding-top: 170px; /* Adjusted for 3-layer header */
+    padding-top: 223px; /* Exact sum of all header strips (30 + 95 + 54 + 44) */
 }
 
 
@@ -470,6 +493,7 @@
    ========================= */
 .l-hero {
     padding: 0 20px 100px;
+    margin-top: 0; /* Ensure it sits tightly against the header */
     text-align: center;
     background: radial-gradient(circle at top right, #f0fdfa 0%, #ffffff 50%, #f0f9ff 100%);
     position: relative;
@@ -711,7 +735,7 @@
     .l-partner-logo.emblem { height: 40px; }
     .l-brand-english { font-size: 1rem; }
     .l-brand-hindi { font-size: 0.85rem; }
-    .main-content { padding-top: 180px; }
+    .main-content { padding-top: 180px; } /* Recalculated for tablet header */
 }
 
 @media (max-width: 768px) {
@@ -723,12 +747,20 @@
         gap: 20px;
     }
 
+    .l-brand-left, .l-brand-right {
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .l-brand-separator { display: none; }
+
     .l-brand-group {
         flex: none;
         width: 100%;
         justify-content: center;
-        flex-direction: column;
-        gap: 8px;
+        flex-direction: row;
+        gap: 15px;
     }
 
     .l-brand-eada .l-brand-text {
@@ -739,30 +771,29 @@
 
     .l-brand-logo { height: 50px; }
     
-    .l-brand-partners {
+    .l-brand-right {
         flex-direction: row;
         justify-content: center;
         gap: 15px;
         flex-wrap: wrap;
     }
     
-    .l-partner-logo { height: 35px; }
+    .l-partner-logo { height: 36px; }
     .l-partner-logo.emblem { height: 40px; }
-    .l-life-placeholder { min-width: 50px; padding: 2px 6px; }
 
     .l-header-nav-strip { height: 48px; }
     .l-update-strip { height: auto; padding: 5px 0; }
     .l-update-label { height: 32px; padding: 0 10px; font-size: 0.75rem; border-radius: 4px; border: none; }
     .l-update-content { padding: 5px 15px; }
     
-    .main-content { padding-top: 260px; } 
+    .main-content { padding-top: 290px; } /* Recalculated for stacked mobile header (~288px) */
 
     .l-hero-title { font-size: 2.2rem; }
     .l-section-title { font-size: 2rem; }
 }
 
 @media (max-width: 480px) {
-    .main-content { padding-top: 340px; }
+    .main-content { padding-top: 360px; }
     .l-brand-logo { height: 45px; }
 }
 
