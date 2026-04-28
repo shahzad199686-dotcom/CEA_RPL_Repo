@@ -1,0 +1,108 @@
+@{
+    ViewData["Title"] = "About - CEA RPL";
+}
+
+<div class="l-about-page-section">
+    <div class="l-about-container">
+        <!-- 1. About EADA -->
+        <div class="l-about-content-block" id="eada" style="display: none;">
+            <h1 class="l-about-heading">About Environment Audit Designated Agency</h1>
+            <p class="l-about-paragraph">
+                The Environment Audit Designated Agency (EADA) has been established under the Environment Audit Rules, 2025, notified by the Ministry of Environment, Forest and Climate Change (MoEF&CC). It is responsible for the overall management of the environmental audit framework in India.
+            </p>
+            <p class="l-about-paragraph">
+                The framework is designed to strengthen compliance with major environmental legislations, including the Environment (Protection) Act, 1986; Water (Prevention and Control of Pollution) Act, 1974; Air (Prevention and Control of Pollution) Act, 1981; Van (Sanrakshan Evam Samvardhan) Adhiniyam, 1980; and the Wild Life (Protection) Act, 1972; and rules framed thereunder. It also supports compliance with regulatory approvals such as Environmental Clearance (EC), Consent to Establish (CTE), and Consent to Operate (CTO).
+            </p>
+
+            <h2 class="l-about-subheading">Key Responsibilities of EADA</h2>
+            <ul class="l-about-list">
+                <li class="l-about-list-item">Undertaking environment audits of projects, activities, or processes governed by applicable environmental laws and regulations;</li>
+                <li class="l-about-list-item">Conducting sampling and analysis of emissions, effluents, wastes, and evaluating the effectiveness of pollution control and waste management systems installed;</li>
+                <li class="l-about-list-item">Reporting any violations or non-compliance of applicable environmental regulations related to the project, process, or activity;</li>
+                <li class="l-about-list-item">Computing environmental compensation for non-compliance and violations, wherever required by the competent authority;</li>
+                <li class="l-about-list-item">Preparing and submitting environmental audit reports in accordance with extant regulations and guidelines;</li>
+                <li class="l-about-list-item">Carrying out verification activities related to the Green Credit Registry established under Rule 10 of the Green Credit Rules, 2023, as a designated agency if authorized;</li>
+                <li class="l-about-list-item">Undertaking environmental audits assigned by the Central Pollution Control Board, State Pollution Control Board, or Pollution Control Committee, including under Extended Producer Responsibility (EPR) framework;</li>
+                <li class="l-about-list-item">Undertaking environmental audits under the Ecomark Rules, 2024 as assigned by the competent authority;</li>
+                <li class="l-about-list-item">Conducting audits under Environment Impact Assessment (EIA) Notification, 2006 and Coastal Regulation Zone (CRZ) Notifications, 2011 & 2019;</li>
+                <li class="l-about-list-item">Undertaking environmental audits assigned by project proponents under applicable environmental laws, rules, regulations, and notifications;</li>
+                <li class="l-about-list-item">Verifying self-compliance reports submitted by projects to ensure adherence to environmental standards and conditions;</li>
+                <li class="l-about-list-item">Performing any other functions as directed by the Central Government from time to time.</li>
+            </ul>
+        </div>
+
+        <!-- 2. About CEA -->
+        <div class="l-about-content-block" id="cea" style="display: none;">
+            <h1 class="l-about-heading">Certified Environment Auditor (CEA)</h1>
+            <p class="l-about-paragraph">
+                A Certified Environment Auditor (CEA) is an individual certified by the Environment Audit Designated Agency (EADA) to conduct environmental audits under the Environment Audit Rules, 2025. It also includes performing functions as prescribed by the Central Government from time to time.
+            </p>
+
+            <h2 class="l-about-subheading">Certification Modes</h2>
+            <div class="mb-4">
+                <p class="l-about-paragraph"><strong>Recognition of Prior Learning (RPL):</strong> Certification based on prior experience and expertise. Available for a limited period as defined by the Central Government.</p>
+                <p class="l-about-paragraph"><strong>National Certification Examination (NCE):</strong> Structured examination process used to assess eligibility for certification.</p>
+            </div>
+
+            <h2 class="l-about-subheading">Validity & Renewal</h2>
+            <ul class="l-about-list">
+                <li class="l-about-list-item">Certification validity: 5 years</li>
+                <li class="l-about-list-item">Can be revoked earlier if required</li>
+                <li class="l-about-list-item">Renewable based on government guidelines</li>
+                <li class="l-about-list-item">Renewal subject to meeting specified criteria</li>
+            </ul>
+        </div>
+
+        <!-- 3. About NPC -->
+        <div class="l-about-content-block" id="npc" style="display: none;">
+            <h1 class="l-about-heading">National Productivity Council (NPC)</h1>
+            <p class="l-about-paragraph">
+                The National Productivity Council (NPC), established in 1958, is an autonomous organisation under the Department for Promotion of Industry and Internal Trade (DPIIT), Ministry of Commerce and Industry, Government of India. It was set up as a multipartite, non-profit organisation with equal representation from employers' and workers' organisations, the Government, and technical/professional institutions.
+            </p>
+            <p class="l-about-paragraph">
+                NPC's mission is to develop, disseminate, and apply knowledge and experience in productivity, promoting productivity consciousness and improvement. The President of NPC is the Union Minister of Commerce and Industry, and the Chairman of the Governing Body is the Secretary, DPIIT.
+            </p>
+
+            <h2 class="l-about-subheading">Services & Areas of Work</h2>
+            <ul class="l-about-list">
+                <li class="l-about-list-item">Industrial Engineering & Agri-Business</li>
+                <li class="l-about-list-item">Economic Services & Quality Management</li>
+                <li class="l-about-list-item">Human Resource Management & IT</li>
+                <li class="l-about-list-item">Technology & Energy Management</li>
+                <li class="l-about-list-item">Environmental Management</li>
+            </ul>
+
+            <h2 class="l-about-subheading">Presence</h2>
+            <p class="l-about-paragraph">
+                NPC is a constituent of the Tokyo-based Asian Productivity Organisation (APO). It operates through 13 regional offices, one training institute, and its headquarters in New Delhi, supported by over 24 Local Productivity Councils.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateAboutView() {
+        const hash = window.location.hash.substring(1) || 'cea'; // Default to CEA
+        const sections = ['cea', 'npc', 'eada'];
+        
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (id === hash) {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+        });
+
+        // Optional: Update title if needed, but keeping it simple for now
+    }
+
+    window.addEventListener('hashchange', updateAboutView);
+    window.addEventListener('DOMContentLoaded', updateAboutView);
+    
+    // Execute immediately in case DOMContentLoaded already fired
+    updateAboutView();
+</script>
+
