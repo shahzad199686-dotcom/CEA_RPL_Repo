@@ -9,14 +9,15 @@
 <div class="l-hero">
     <div class="l-container">
         <div class="l-hero-content">
+            <div class="l-badge">APPLICATION PORTAL — EADA</div>
             <h1 class="l-hero-title">Certification of <span>Environmental Auditors</span></h1>
-            <p class="l-hero-sub" style="font-size: 1.25rem;">
+            <p class="l-hero-sub">
                 Welcome to the application portal for Certification of Environmental Auditors (CEA) through Recognition of Prior Learning (RPL) under the <a href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/sep/doc202593627401.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--l-primary); text-decoration: underline; white-space: nowrap;">Environment Audit Rules, 2025.</a>
             </p>
             
-            <p class="text-muted fw-bold mb-5" style="font-size: 1rem;">
+            <div class="l-hero-info-box">
                 Applicants are advised to carefully review the guidelines before proceeding with the application.
-            </p>
+            </div>
 
             <div class="l-hero-actions">
                 <a href="javascript:void(0)" class="l-cta-btn" onclick="openRoleModal()">
@@ -32,12 +33,14 @@
 </div>
 
 <!-- QUICK LINKS PREVIEW (Optional but adds structure) -->
-<section class="l-section l-quick-links-section" style="background: white;">
+<section class="l-section l-quick-links-section">
     <div class="l-container">
         <div class="row g-4 text-center">
             <div class="col-lg-4 col-md-6">
                 <div class="l-quick-link-card">
-                    <i data-lucide="info" class="l-quick-link-icon"></i>
+                    <div class="l-quick-link-icon-wrapper">
+                        <i data-lucide="info" class="l-quick-link-icon"></i>
+                    </div>
                     <h4 class="l-quick-link-title">About Program</h4>
                     <p class="l-quick-link-text">Learn about the CEA, EADA, and the framework.</p>
                     <a asp-action="About" class="l-text-link">Learn More <i data-lucide="arrow-right"></i></a>
@@ -45,7 +48,9 @@
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="l-quick-link-card">
-                    <i data-lucide="check-circle" class="l-quick-link-icon"></i>
+                    <div class="l-quick-link-icon-wrapper">
+                        <i data-lucide="check-circle" class="l-quick-link-icon"></i>
+                    </div>
                     <h4 class="l-quick-link-title">Eligibility</h4>
                     <p class="l-quick-link-text">Check if you meet the professional criteria.</p>
                     <a asp-action="Eligibility" class="l-text-link">View Criteria <i data-lucide="arrow-right"></i></a>
@@ -53,7 +58,9 @@
             </div>
             <div class="col-lg-4 col-md-12">
                 <div class="l-quick-link-card">
-                    <i data-lucide="file-text" class="l-quick-link-icon"></i>
+                    <div class="l-quick-link-icon-wrapper">
+                        <i data-lucide="file-text" class="l-quick-link-icon"></i>
+                    </div>
                     <h4 class="l-quick-link-title">Process</h4>
                     <p class="l-quick-link-text">Understand the steps to apply successfully.</p>
                     <a asp-action="Process" class="l-text-link">See Steps <i data-lucide="arrow-right"></i></a>

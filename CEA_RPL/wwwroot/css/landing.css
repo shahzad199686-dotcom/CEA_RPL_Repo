@@ -11,24 +11,49 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: var(--l-bg);
+    color: var(--l-ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Watermark */
+body::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background-image: url('/images/eada_logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .main-content {
     flex: 1;
+    position: relative;
+    z-index: 1;
 }
 
 :root {
-    --l-primary: #004832; /* Dark Government Green */
-    --l-primary-light: #006648;
-    --l-accent: #f0f9f4;
-    --l-ink: #1e293b;
-    --l-muted: #64748b;
+    --l-primary: #0f4d3f; /* Deep Green */
+    --l-primary-light: #166b57;
+    --l-secondary: #e6f2ee; /* Soft Green */
+    --l-accent: #d4a017; /* Gold */
+    --l-bg: #f7faf8; /* Very light background */
+    --l-ink: #1f2937;
+    --l-muted: #4b5563;
     --l-white: #ffffff;
     --l-glass: rgba(255, 255, 255, 0.95);
-    --l-radius-lg: 24px;
-    --l-radius-md: 12px;
-    --l-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    --l-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
+    --l-radius-lg: 14px;
+    --l-radius-md: 10px;
+    --l-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    --l-shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 /* Quick Links Section (Home Page Preview) */
@@ -38,28 +63,44 @@ body {
 
 .l-quick-link-card {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 24px;
+    border: 1px solid transparent;
+    border-radius: var(--l-radius-lg);
+    padding: 32px 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--l-shadow);
 }
 
 .l-quick-link-card:hover {
-    border-color: #d1d5db;
-    transform: translateY(-2px);
+    transform: translateY(-6px);
+    box-shadow: var(--l-shadow-hover);
+    border-color: var(--l-secondary);
+}
+
+.l-quick-link-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background: var(--l-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: transform 0.3s ease;
+}
+
+.l-quick-link-card:hover .l-quick-link-icon-wrapper {
+    transform: scale(1.1);
 }
 
 .l-quick-link-icon {
     width: 32px;
     height: 32px;
-    color: #0b5d3b; /* EADA Dark Green */
-    margin-bottom: 16px;
+    color: var(--l-primary);
 }
 
 .l-quick-link-title {
@@ -276,7 +317,7 @@ body {
 .l-nav {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 32px;
     height: 100%;
 }
 
@@ -285,21 +326,42 @@ body {
     text-decoration: none;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 0 18px;
+    padding: 0 4px;
     height: 100%;
     display: flex;
     align-items: center;
-    transition: all 0.2s;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.l-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    left: 4px;
+    width: 0%;
+    height: 2px;
+    background: #fcd34d; /* light yellow */
+    transition: width 0.3s ease;
+    border-radius: 2px;
 }
 
 .l-nav-link:hover {
-    background: rgba(0, 0, 0, 0.2);
     color: white;
+    background: transparent;
+}
+
+.l-nav-link:hover::after {
+    width: calc(100% - 8px);
 }
 
 .l-nav-link.active {
-    background: rgba(0, 0, 0, 0.3);
+    background: transparent;
     color: white;
+}
+
+.l-nav-link.active::after {
+    width: calc(100% - 8px);
 }
 
 /* 4. Latest Update Strip */
@@ -403,26 +465,7 @@ body {
     font-size: 1.4rem;
 }
 
-.l-nav {
-    display: flex;
-    gap: 32px;
-    align-items: center;
-}
-
-.l-nav-link {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    padding: 15px 0;
-    border-bottom: 3px solid transparent;
-}
-
-.l-nav-link:hover {
-    color: white;
-    border-bottom-color: rgba(255, 255, 255, 0.6);
-}
+/* Removed duplicate nav definition to rely on the main strip styles */
 
 .l-auth-group {
     display: flex;
@@ -447,28 +490,33 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0 18px;
-    border-radius: 6px;
-    height: 36px;
+    padding: 0 20px;
+    border-radius: 50px;
+    height: 38px;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: var(--l-shadow);
 }
 
 .l-btn-dropdown:not(.l-btn-register):hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: var(--l-shadow-hover);
 }
 
 .l-btn-register {
-    background: white;
-    color: var(--l-primary) !important;
+    background: var(--l-accent);
+    color: #854d0e !important;
     font-weight: 700;
     border: none;
 }
 
 .l-btn-register:hover {
-    background: #f8fafc;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #eab308;
+    color: #713f12 !important;
+    transform: translateY(-1px);
+    box-shadow: var(--l-shadow-hover);
 }
 
 .l-dropdown-menu {
@@ -476,13 +524,14 @@ body {
     top: 100%;
     left: 0;
     background: #FFFFFF;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    min-width: 180px;
-    padding: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    min-width: auto;
+    width: max-content;
+    padding: 8px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
+    transform: translateY(8px);
     transition: all 180ms ease;
     z-index: 2001;
 }
@@ -495,23 +544,30 @@ body {
 
 .l-dropdown-item {
     display: block;
-    padding: 10px 20px;
+    padding: 8px 16px;
     text-decoration: none;
-    color: #1F2937;
+    color: var(--l-ink);
     font-weight: 500;
     font-size: 0.95rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    margin-bottom: 2px;
+}
+
+.l-dropdown-item:last-child {
+    margin-bottom: 0;
 }
 
 .l-dropdown-item:hover {
-    background: #F3F4F6;
-    color: #0B5D3B;
+    background: var(--l-secondary);
+    color: var(--l-primary);
 }
 
 /* About Page Specific Styles (EADA Design) */
 .l-about-page-section {
     padding-top: 40px;
-    background: white;
+    padding-bottom: 60px;
+    background: var(--l-bg);
 }
 
 .l-about-container {
@@ -546,8 +602,11 @@ body {
 
 .l-about-content-block {
     margin-bottom: 48px;
-    border-left: 3px solid #0B5D3B;
-    padding-left: 24px;
+    border-left: 4px solid var(--l-accent);
+    padding: 40px;
+    background: white;
+    border-radius: var(--l-radius-lg);
+    box-shadow: var(--l-shadow);
 }
 
 .l-about-list {
@@ -638,10 +697,15 @@ body {
    Hero Redesign
    ========================= */
 .l-hero {
-    padding: 0 20px 100px;
-    margin-top: 0; /* Ensure it sits tightly against the header */
+    padding: 120px 20px 100px;
+    margin-top: 0;
     text-align: center;
-    background: radial-gradient(circle at top right, #f0fdfa 0%, #ffffff 50%, #f0f9ff 100%);
+    background-image: 
+        linear-gradient(rgba(247, 250, 248, 0.9), rgba(247, 250, 248, 0.9)),
+        linear-gradient(to right, rgba(15, 77, 63, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 77, 63, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    background-position: center top;
     position: relative;
     overflow: hidden;
 }
@@ -654,22 +718,23 @@ body {
 }
 
 .l-badge {
-    background: #ccfbf1;
-    color: #115e59;
-    padding: 8px 20px;
+    background: var(--l-secondary);
+    color: var(--l-primary);
+    padding: 8px 24px;
     border-radius: 100px;
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     display: inline-block;
     margin-bottom: 24px;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    box-shadow: var(--l-shadow);
 }
 
 .l-hero-title {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.15;
     color: var(--l-ink);
     margin-bottom: 24px;
     letter-spacing: -0.02em;
@@ -677,34 +742,71 @@ body {
 
 .l-hero-title span {
     color: var(--l-primary);
+    position: relative;
+    display: inline-block;
+}
+
+.l-hero-title span::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--l-accent);
+    z-index: -1;
+    border-radius: 4px;
+    opacity: 0.8;
 }
 
 .l-hero-sub {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     color: var(--l-muted);
-    max-width: 700px;
-    margin: 0 auto 48px;
-    line-height: 1.6;
+    max-width: 750px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+
+.l-hero-info-box {
+    background: #fdfcee; /* light yellow/green */
+    border: 1px solid #fde047;
+    color: #854d0e;
+    padding: 16px 24px;
+    border-radius: var(--l-radius-md);
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom: 48px;
+    box-shadow: var(--l-shadow);
 }
 
 .l-cta-btn {
     padding: 20px 48px;
     font-size: 1.25rem;
     font-weight: 800;
-    border-radius: 20px;
+    border-radius: 100px;
     background: var(--l-primary);
     color: white;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 20px 40px rgba(14, 165, 165, 0.25);
-    transition: all 0.3s;
+    box-shadow: 0 20px 40px rgba(15, 77, 63, 0.25);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .l-cta-btn:hover {
     transform: translateY(-4px);
-    box-shadow: 0 25px 50px rgba(14, 165, 165, 0.35);
+    box-shadow: 0 25px 50px rgba(15, 77, 63, 0.35);
+    background: var(--l-primary-light);
+    color: white;
+}
+
+.l-cta-btn i {
+    transition: transform 0.3s ease;
+}
+
+.l-cta-btn:hover i {
+    transform: translateX(4px);
 }
 
 /* =========================
@@ -784,6 +886,20 @@ body {
 .l-section-title { font-size: 2.75rem; font-weight: 800; color: var(--l-ink); margin-bottom: 16px; }
 .l-section-sub { font-size: 1.15rem; color: var(--l-muted); margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
+.l-page-header {
+    text-align: left;
+    margin-bottom: 40px;
+}
+.l-page-header .l-section-title {
+    border-left: 4px solid var(--l-accent);
+    padding-left: 16px;
+    margin-bottom: 12px;
+}
+.l-page-header .l-section-sub {
+    margin-left: 0;
+    max-width: 100%;
+}
+
 .l-step-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -841,11 +957,11 @@ body {
    6. Footer Styles (Exact EADA Design)
    ========================= */
 .l-footer {
-    background-color: #0E5A3A; /* Exact EADA Green */
-    color: #E6F4EF;
+    background-color: var(--l-primary);
+    color: var(--l-secondary);
     padding: 50px 0 30px;
-    font-family: 'Inter', sans-serif;
-    border-top: 4px solid #F59E0B; /* Signature EADA Gold/Orange Border */
+    font-family: 'Inter', system-ui, sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 0;
 }
 
@@ -904,10 +1020,11 @@ body {
 }
 
 .l-footer-map-container {
-    border-radius: 8px;
+    border-radius: var(--l-radius-md);
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
     height: 140px;
+    box-shadow: var(--l-shadow);
 }
 
 .l-footer-map-container iframe {
@@ -1167,11 +1284,18 @@ body {
 
 .l-faq-item {
     background: white;
-    border: 1.5px solid #e2e8f0;
-    border-radius: var(--l-radius-md);
+    border: 1.5px solid transparent;
+    border-radius: 12px;
     margin-bottom: 16px;
     overflow: hidden;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--l-shadow);
+}
+
+.l-faq-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--l-shadow-hover);
+    border-color: var(--l-secondary);
 }
 
 .l-faq-header {
@@ -1181,26 +1305,27 @@ body {
     align-items: center;
     cursor: pointer;
     user-select: none;
-    transition: background 0.2s;
+    transition: background 0.3s ease;
 }
 
-.l-faq-header:hover { background: var(--l-accent); }
+.l-faq-header:hover { background: transparent; }
 .l-faq-title { font-weight: 700; color: var(--l-ink); font-size: 1.1rem; }
 .l-faq-icon { transition: transform 0.3s; color: var(--l-muted); }
 
 .l-faq-content {
     max-height: 0;
     overflow: hidden;
-    transition: all 0.3s ease-out;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0 32px;
     color: var(--l-muted);
     font-size: 0.95rem;
-    line-height: 1.6;
+    line-height: 1.7;
+    opacity: 0;
 }
 
-.l-faq-item.active { border-color: var(--l-primary); box-shadow: var(--l-shadow); }
+.l-faq-item.active { border-color: var(--l-primary); box-shadow: var(--l-shadow-hover); }
 .l-faq-item.active .l-faq-icon { transform: rotate(180deg); color: var(--l-primary); }
-.l-faq-item.active .l-faq-content { max-height: 400px; padding-bottom: 24px; }
+.l-faq-item.active .l-faq-content { max-height: 600px; padding-bottom: 24px; opacity: 1; }
 
 /* Responsive Grid Fixes */
 @media (max-width: 1024px) {
