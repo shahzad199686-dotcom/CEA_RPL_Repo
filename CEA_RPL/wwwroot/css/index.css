@@ -35,35 +35,157 @@ body {
     line-height: 1.5;
 }
 
-.application-wrap {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px 24px 120px;
+.form-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
     position: relative;
     z-index: 1;
-    transition: all 0.3s ease;
     box-sizing: border-box;
+    padding-top: 200px; /* Space for sticky header + steppers */
+    padding-bottom: 120px;
 }
 
-.application-wrap.submitted-view {
-    grid-template-columns: 1fr;
+.form-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-@media (max-width: 1023px) {
-    .application-wrap {
-        padding: 20px 24px 120px;
-    }
+.form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
-@media (max-width: 768px) {
-    .application-wrap {
-        padding: 20px 16px 120px;
-    }
+.form-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f0fdfa;
+    color: #0f766e;
+    border-radius: 8px;
+}
+
+.form-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.form-card-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-left: 8px;
+    font-weight: 400;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.form-group label .req {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background: #fff;
+    transition: all 0.2s;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+.photo-section {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.profile-preview-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-preview-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-preview-box span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.upload-dropzone {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-dropzone:hover {
+    border-color: #0f766e;
+    background: #f0fdfa;
 }
 
 /* =========================
@@ -2766,3 +2888,48 @@ input[type="file"] {
     background: #94a3b8;
 }
 
+
+/* =========================
+   Mobile Overrides
+========================= */
+@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 16px;
+        padding-top: 240px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+
+    .photo-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .action-bar {
+        padding: 8px 0;
+    }
+
+    .action-inner {
+        flex-direction: row !important;
+        gap: 8px !important;
+        padding: 8px 12px !important;
+    }
+
+    .action-inner button {
+        flex: 1;
+        font-size: 13px !important;
+        padding: 10px 4px !important;
+    }
+}
