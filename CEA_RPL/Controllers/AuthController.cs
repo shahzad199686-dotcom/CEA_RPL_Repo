@@ -126,7 +126,7 @@ public class AuthController : Controller
             var otp = await _otpService.GenerateOtpAsync(email);
             await _otpSender.SendEmailOtpAsync(email, otp);
             return Ok(new { message = "OTP sent to your email." });
-        } catch (Exception ex) {
+        } catch (Exception) {
             return Ok(new { message = "OTP generated but email delivery failed. For testing, use code: 123456" });
         }
     }

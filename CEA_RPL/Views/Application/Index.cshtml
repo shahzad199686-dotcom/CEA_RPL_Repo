@@ -29,9 +29,12 @@
         }
     </div>
     <div class="progress-bar-wrap">
-        <div class="progress-bar">
-            <div class="progress-bar-fill" id="progressBarFill" style="width: @(isSubmitted ? "100%" : "6.67%");"></div>
-        </div>
+        @if (!isSubmitted)
+        {
+            <div id="subStepIndicator" class="sub-step-replacement">
+                <!-- Dynamically populated by JS -->
+            </div>
+        }
     </div>
     <div class="profile-section">
         <div class="profile-trigger">
@@ -64,11 +67,37 @@
     </div>
 </header>
 
+@if (!isSubmitted)
+{
+<div class="stepper-full-width">
+    <!-- Top Government Stepper -->
+    <div class="gov-stepper-container" id="govStepper">
+        <div class="stepper-phase active" id="phase-A">
+            <div class="phase-icon">A</div>
+            <div class="phase-text" style="text-align: center;">Personal & Identity<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 1-4</small></div>
+        </div>
+        <div class="stepper-phase" id="phase-B">
+            <div class="phase-icon">B</div>
+            <div class="phase-text" style="text-align: center;">Qualifications<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 5-8</small></div>
+        </div>
+        <div class="stepper-phase" id="phase-C">
+            <div class="phase-icon">C</div>
+            <div class="phase-text" style="text-align: center;">Experience & Projects<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 9-12</small></div>
+        </div>
+        <div class="stepper-phase" id="phase-D">
+            <div class="phase-icon">D</div>
+            <div class="phase-text" style="text-align: center;">Documents & Review<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 13-15</small></div>
+        </div>
+    </div>
+
+</div>
+}
+
 <div class="application-wrap @(isSubmitted ? "submitted-view" : "")">
     <!-- Sidebar Navigation -->
     @if (!isSubmitted)
     {
-    <aside class="sidebar-nav" id="sidebarNav">
+    <aside class="sidebar-nav hidden-sidebar" id="sidebarNav">
         <a href="#step-1" class="nav-item active" data-step="1"><span class="nav-num">01</span><span class="nav-text">Applicant Details</span></a>
         <a href="#step-2" class="nav-item locked" data-step="2"><span class="nav-num">02</span><span class="nav-text">Category of Certification Applied For</span></a>
         <a href="#step-3" class="nav-item locked" data-step="3"><span class="nav-num">03</span><span class="nav-text">Educational Qualifications</span></a>
@@ -276,12 +305,28 @@
             @Html.AntiForgeryToken()
             
             <!-- STEP 1: APPLICANT DETAILS -->
-            <div class="form-section active" id="step-1">
-                <div class="section-header"><h2>Step 1: Applicant Details</h2></div>
-                <div class="section-content">
-                    <div class="grid">
-                        <!-- PROFILE SECTION -->
-                        <div class="profile-upload-row">
+            <div class="form-section active" id="step-1" style="background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 0;">
+                <div style="margin-bottom: 24px;">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Phase A • Step 1 of 15</div>
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--ink); margin: 0 0 8px 0;">Applicant Details</h2>
+                    <p style="color: var(--muted); margin: 0;">Fill in your personal information exactly as it appears on your government-issued identity proof.</p>
+                </div>
+                
+                <div class="section-content" style="padding: 0;">
+                    
+                    <!-- CARD A: CANDIDATE PHOTOGRAPH -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="form-card-title">Candidate Photograph</h3>
+                                <div class="form-card-subtitle">Recent passport - size photo • JPG or PNG • Max 2 MB</div>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="profile-upload-row" style="margin-bottom: 0;">
                             <div class="profile-preview-wrapper">
                                 <div class="profile-preview-large">
                                     <img id="profilePreviewImage" src="https://via.placeholder.com/150?text=Profile" alt="Profile Preview"  />
@@ -304,14 +349,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="photoError" class="error-msg" style="display: none; grid-column: span 12; margin-top: -32px; margin-bottom: 24px; text-align: center;"></div>
+                        <div id="photoError" class="error-msg" style="display: none; margin-top: 16px; text-align: center;"></div>
+                        </div>
+                    </div>
 
-                        <!-- PERSONAL DETAILS -->
-                        <div class="form-section-label">Personal Details</div>
-
-                        <!-- ROW 1: IDENTITY -->
-                        <div class="col-6">
-                            <label>Mr. / Mrs.</label>
+                    <!-- CARD B: PERSONAL DETAILS -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="form-card-title">Personal Details</h3>
+                                <div class="form-card-subtitle">All fields marked * are mandatory</div>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="grid">
+                                <!-- NAME SECTION -->
+                                <div class="form-card-group-title">Name</div>
+                                <div class="col-4">
+                                    <label>Title <span class="req">*</span></label>
                             <select name="title">
                                 <option value="">Select</option>
                                 <option>Mr.</option>
@@ -320,14 +378,15 @@
                                 <option>Dr.</option>
                             </select>
                         </div>
-                        <div class="col-6">
-                            <label>Candidate Name <span class="req">*</span></label>
-                            <input name="full_name" type="text" required placeholder="Enter Candidate Name" class="title-case-input" />
-                        </div>
+                                <div class="col-8">
+                                    <label>Candidate Full Name <span class="req">*</span></label>
+                                    <input name="full_name" type="text" required placeholder="Enter Candidate Name" class="title-case-input" />
+                                </div>
 
-                        <!-- ROW 2: FAMILY -->
-                        <div class="col-4">
-                            <label>Mr. / Mrs.</label>
+                                <!-- PARENT / GUARDIAN SECTION -->
+                                <div class="form-card-group-title" style="margin-top: 8px;">Parent / Guardian</div>
+                                <div class="col-4">
+                                    <label>Title <span class="req">*</span></label>
                             <select name="parent_title">
                                 <option value="">Select</option>
                                 <option>Mr.</option>
@@ -351,9 +410,10 @@
                             </select>
                         </div>
 
-                        <!-- ROW 3: CONTACT -->
-                        <div class="col-4">
-                            <label>Email ID <span class="req">*</span></label>
+                                <!-- CONTACT SECTION -->
+                                <div class="form-card-group-title" style="margin-top: 8px;">Contact Information</div>
+                                <div class="col-4">
+                                    <label>Email ID <span class="req">*</span></label>
                             <input name="email" type="email" required placeholder="Enter Email ID" 
                                    value="@ViewBag.UserEmail" 
                                    @(string.IsNullOrEmpty(ViewBag.UserEmail) ? "" : "readonly")
@@ -371,9 +431,10 @@
                             <input name="alt_mobile" type="text" inputmode="numeric" placeholder="Mobile Number" />
                         </div>
 
-                        <!-- ROW 4: PROFILE -->
-                        <div class="col-4">
-                            <label>Date of Birth <span class="req">*</span></label>
+                                <!-- DEMOGRAPHICS SECTION -->
+                                <div class="form-card-group-title" style="margin-top: 8px;">Demographics</div>
+                                <div class="col-4">
+                                    <label>Date of Birth <span class="req">*</span></label>
                             <input id="dob" name="dob" type="date" required onchange="updateAgeEligibility()" />
                             <div id="ageEligibilityFeedback" class="eligibility-feedback hide"></div>
                         </div>
@@ -394,12 +455,27 @@
                             </select>
                         </div>
 
-                        <!-- ADDRESS DETAILS -->
-                        <div class="form-section-label">Address Details</div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- PERMANENT ADDRESS -->
-                        <div class="col-6">
-                            <label>City <span class="req">*</span></label>
+                    <!-- CARD C: ADDRESS DETAILS -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="form-card-title">Address Details</h3>
+                                <div class="form-card-subtitle">Permanent and correspondence address</div>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="grid">
+                                <!-- PERMANENT ADDRESS -->
+                                <div class="form-card-group-title">Permanent Address</div>
+                                <div class="col-6">
+                                    <label>City <span class="req">*</span></label>
                             <select id="city_perm" class="address-select-field" required onchange="syncAddress()">
                                 <option value="">Select City</option>
                                 <option>Mumbai</option>
@@ -462,9 +538,17 @@
                             <textarea name="address_perm" id="address_perm" required placeholder="Flat No, Building, Street, Area" oninput="syncAddress()" style="height: 100px;"></textarea>
                         </div>
 
-                        <!-- CORRESPONDENCE ADDRESS -->
-                        <div class="col-6">
-                            <label>Correspondence City <span class="req">*</span></label>
+                                <div class="col-12" style="margin-bottom: 8px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" id="sameAddress" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);" onchange="toggleAddressSync()">
+                                        <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Correspondence address same as permanent address</label>
+                                    </div>
+                                </div>
+
+                                <!-- CORRESPONDENCE ADDRESS -->
+                                <div class="form-card-group-title">Correspondence Address</div>
+                                <div class="col-6">
+                                    <label>City <span class="req">*</span></label>
                             <select id="city_corr" class="address-select-field" required>
                                 <option value="">Select City</option>
                                 <option>Mumbai</option>
@@ -518,28 +602,34 @@
                                 <option>Solapur</option>
                             </select>
                         </div>
-                        <div class="col-6">
-                            <label>Correspondence Pincode <span class="req">*</span></label>
-                            <input type="text" id="pincode_corr" class="address-input-field" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                                <div class="col-6">
+                                    <label>Pin Code <span class="req">*</span></label>
+                                    <input type="text" id="pincode_corr" class="address-input-field" required placeholder="6-digit PIN code" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                         </div>
                         <div class="col-12">
                             <label>Correspondence Address</label>
                             <textarea name="address_corr" id="address_corr" placeholder="Flat No, Building, Street, Area" style="height: 100px;"></textarea>
                         </div>
 
-                        <div class="col-12">
-                            <div style="display: flex; align-items: center; gap: 8px; margin-top: -8px;">
-                                <input type="checkbox" id="sameAddress" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--accent);" onchange="toggleAddressSync()">
-                                <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.85rem; font-weight: 500;">Same as Permanent</label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- IDENTITY DETAILS -->
-                        <div class="form-section-label">Identity Details</div>
-
-                        <!-- ROW 6: ID PROOF -->
-                        <div class="col-4">
-                            <label>Government Photo ID Type <span class="req">*</span></label>
+                    <!-- CARD D: IDENTITY DETAILS -->
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="form-card-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="form-card-title">Identity Details</h3>
+                                <div class="form-card-subtitle">Government-issued photo ID for verification</div>
+                            </div>
+                        </div>
+                        <div class="form-card-body">
+                            <div class="grid" style="align-items: flex-end;">
+                                <div class="col-4">
+                                    <label>ID Type <span class="req">*</span></label>
                             <select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()">
                                 <option value="">Select</option>
                                 <option value="aadhaar">Aadhaar</option>
@@ -548,18 +638,29 @@
                                 <option value="other">Other (Please Specify)</option>
                             </select>
                         </div>
-                        <div class="col-4" id="otherGovIdContainer" style="display: none;">
-                            <label>Specify ID Type <span class="req">*</span></label>
-                            <input type="text" id="otherGovIdType" name="other_gov_id_type" placeholder="Enter ID Type" />
-                        </div>
-                        <div class="col-4">
-                            <label id="govIdLabel">ID Number <span class="req">*</span></label>
-                            <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
-                        </div>
-                        <div class="col-4">
-                            <label>Upload Selected ID Proof <span class="req">*</span></label>
-                            <input id="govIdUpload" name="gov_id_upload" type="file" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                            <div class="identity-hint">Images (JPG, PNG) ≤ 2 MB | PDF ≤ 10 MB</div>
+                                <div class="col-4" id="otherGovIdContainer" style="display: none;">
+                                    <label>Specify ID Type <span class="req">*</span></label>
+                                    <input type="text" id="otherGovIdType" name="other_gov_id_type" placeholder="Enter ID Type" />
+                                </div>
+                                <div class="col-4">
+                                    <label id="govIdLabel">Aadhaar Number <span class="req">*</span></label>
+                                    <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
+                                </div>
+                                <div class="col-4">
+                                    <label>Upload ID Proof <span class="req">*</span></label>
+                                </div>
+                                <div class="col-12" style="margin-top: -12px;">
+                                    <div class="compact-upload">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="compact-icon" style="color: var(--muted);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                        <div class="compact-text">
+                                            <div class="upload-title" style="font-size: 0.9rem; margin:0;">Upload Aadhaar Card (front & back)</div>
+                                            <div class="upload-subtitle" style="font-size: 0.75rem;">JPG, PNG ≤ 2 MB  ·  PDF ≤ 10 MB</div>
+                                        </div>
+                                        <input id="govIdUpload" name="gov_id_upload" type="file" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10;" />
+                                        <button type="button" class="btn" style="background: var(--ink); color: #fff; padding: 8px 16px; font-size: 0.85rem; z-index: 5; pointer-events: none;">Browse File</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1312,7 +1413,7 @@
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
             <button type="button" id="btnSaveDraft" class="btn btn-ghost" onclick="saveDraft()">Save Draft</button>
-            <button type="button" id="btnNext" class="btn btn-primary" onclick="nextStep()">Next Section</button>
+            <button type="button" id="btnNext" class="btn btn-primary" onclick="nextStep()" style="background: #0F9D9A; color: white; border: none; box-shadow: 0 4px 12px rgba(15,157,154,0.3); border-radius: 8px;">Next Section</button>
         </div>
     </div>
 </div>
@@ -1376,6 +1477,43 @@
     function updateUI() {
         // Force sequential redirect if user tries to bypass
         if (currentStep > maxReachedStep + 1) currentStep = maxReachedStep + 1;
+
+        // Update Gov Stepper Phases
+        document.querySelectorAll('.stepper-phase').forEach(phase => phase.classList.remove('active', 'completed'));
+        if (currentStep >= 1 && currentStep <= 4) document.getElementById('phase-A')?.classList.add('active');
+        if (currentStep > 4) document.getElementById('phase-A')?.classList.add('completed');
+        if (currentStep >= 5 && currentStep <= 8) document.getElementById('phase-B')?.classList.add('active');
+        if (currentStep > 8) document.getElementById('phase-B')?.classList.add('completed');
+        if (currentStep >= 9 && currentStep <= 12) document.getElementById('phase-C')?.classList.add('active');
+        if (currentStep > 12) document.getElementById('phase-C')?.classList.add('completed');
+        if (currentStep >= 13 && currentStep <= 15) document.getElementById('phase-D')?.classList.add('active');
+
+        // Update Sub-Step Indicator
+        let groupName = "";
+        let stepInGroup = 0;
+        let totalInGroup = 0;
+        if (currentStep >= 1 && currentStep <= 4) {
+            groupName = "Personal & Identity";
+            stepInGroup = currentStep;
+            totalInGroup = 4;
+        } else if (currentStep >= 5 && currentStep <= 8) {
+            groupName = "Qualifications";
+            stepInGroup = currentStep - 4;
+            totalInGroup = 4;
+        } else if (currentStep >= 9 && currentStep <= 12) {
+            groupName = "Experience & Projects";
+            stepInGroup = currentStep - 8;
+            totalInGroup = 4;
+        } else if (currentStep >= 13 && currentStep <= 15) {
+            groupName = "Documents & Review";
+            stepInGroup = currentStep - 12;
+            totalInGroup = 3;
+        }
+        
+        const subStepIndicator = document.getElementById('subStepIndicator');
+        if (subStepIndicator) {
+            subStepIndicator.innerHTML = `<span style="color: var(--accent);">${groupName}</span> <span style="opacity: 0.6; margin: 0 8px;">•</span> Step ${stepInGroup} of ${totalInGroup}`;
+        }
 
         // Toggle Sections
         document.querySelectorAll('.form-section').forEach((sec, idx) => {
@@ -2621,7 +2759,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const isSubmitted = @(isSubmitted ? "true" : "false");
+        const isSubmitted = @isSubmitted.ToString().ToLower();
         
         if (isSubmitted) {
             // Submitted Mode: Fetch data and show read-only summary
@@ -3576,7 +3714,7 @@
         return true;
     }
 </script>
-</body>
+
 <script>
     // --- MULTI-SELECT LOGIC ---
     const msData = {
@@ -3764,4 +3902,5 @@
 
     document.addEventListener('DOMContentLoaded', initMultiSelects);
 </script>
-
+</body>
+</html>
