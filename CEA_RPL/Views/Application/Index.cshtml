@@ -1,6 +1,20 @@
 @{ 
     Layout = null; 
     bool isSubmitted = ViewBag.ApplicationStatus != null && ViewBag.ApplicationStatus != "Draft";
+    
+    var displayName = ViewBag.UserName as string ?? "User";
+    var initials = "";
+    if (!string.IsNullOrEmpty(displayName))
+    {
+        var words = displayName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length >= 2) {
+            initials = (words[0][0].ToString() + words[1][0].ToString()).ToUpper();
+        } else if (words[0].Length >= 2) {
+            initials = words[0].Substring(0, 2).ToUpper();
+        } else {
+            initials = words[0][0].ToString().ToUpper();
+        }
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -15,83 +29,65 @@
 
 <div id="toast-container"></div>
 
-<!-- Top Progress Header -->
-<header class="top-progress">
-    <div class="progress-info">
-        <h3>Application Progress</h3>
-        @if (isSubmitted)
-        {
-            <p>Application View: <span id="currentStepName">Submitted Dashboard</span></p>
-        }
-        else
-        {
-            <p>Step <span id="currentStepDisplay">1</span> of 15: <span id="currentStepName">Applicant Details</span></p>
-        }
-    </div>
-    <div class="progress-bar-wrap">
-        @if (!isSubmitted)
-        {
-            <div id="subStepIndicator" class="sub-step-replacement">
+<!-- Sticky Header & Stepper Wrapper -->
+<div class="header-wrapper">
+    <header class="header-bar">
+        <div class="header-left">
+            <h3>Certification Application Portal</h3>
+            <p>Ministry of Environment</p>
+        </div>
+        <div class="header-right">
+            @if (!isSubmitted)
+            {
+                <div class="draft-status" id="draftStatus">
+                    <div class="status-dot"></div>
+                    <span>Draft saved</span>
+                </div>
+            }
+            <div class="profile-box">
+                <div class="profile-name">@(string.IsNullOrEmpty(displayName) ? "User" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(displayName.ToLower()))</div>
+                <div class="profile-avatar">@initials</div>
+            </div>
+        </div>
+    </header>
+
+    @if (!isSubmitted)
+    {
+        <!-- Main Phases (A-D) -->
+        <div class="main-stepper" id="govStepper">
+            <div class="step-item active" id="phase-A">
+                <div class="step-icon">A</div>
+                <div class="step-text">Personal & Identity</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item" id="phase-B">
+                <div class="step-icon">B</div>
+                <div class="step-text">Qualifications</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item" id="phase-C">
+                <div class="step-icon">C</div>
+                <div class="step-text">Experience & Projects</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-item" id="phase-D">
+                <div class="step-icon">D</div>
+                <div class="step-text">Documents & Review</div>
+            </div>
+        </div>
+
+        <!-- Sub Stepper (Dynamic) -->
+        <div class="sub-stepper">
+            <div class="step-circles" id="subStepCircles">
                 <!-- Dynamically populated by JS -->
             </div>
-        }
-    </div>
-    <div class="profile-section">
-        <div class="profile-trigger">
-            <div class="profile-avatar">
-                @{
-                    var displayName = ViewBag.UserName as string ?? "User";
-                    var initials = "";
-                    if (!string.IsNullOrEmpty(displayName))
-                    {
-                        var words = displayName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (words.Length >= 2) {
-                            initials = (words[0][0].ToString() + words[1][0].ToString()).ToUpper();
-                        } else if (words[0].Length >= 2) {
-                            initials = words[0].Substring(0, 2).ToUpper();
-                        } else {
-                            initials = words[0][0].ToString().ToUpper();
-                        }
-                    }
-                }
-                @initials
+            <div class="step-title" id="currentSubStepTitle">Applicant Details</div>
+            <div class="step-meta" id="subStepMeta">
+                Step <span id="currentStepDisplay">1</span> of 15 • <span id="currentPhaseDisplay">Phase A</span> of 4
             </div>
-            <span>Welcome, @(string.IsNullOrEmpty(displayName) ? "User" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(displayName.ToLower()))</span>
         </div>
-        <div class="profile-dropdown">
-            <a href="#" class="dropdown-item">My Profile</a>
-            <a href="#" class="dropdown-item">My Applications</a>
-            <hr style="border: 0; border-top: 1px solid var(--line); margin: 4px 0;">
-            <a href="/Auth/Logout" class="dropdown-item logout">Sign Out</a>
-        </div>
-    </div>
-</header>
-
-@if (!isSubmitted)
-{
-<div class="stepper-full-width">
-    <!-- Top Government Stepper -->
-    <div class="gov-stepper-container" id="govStepper">
-        <div class="stepper-phase active" id="phase-A">
-            <div class="phase-icon">A</div>
-            <div class="phase-text" style="text-align: center;">Personal & Identity<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 1-4</small></div>
-        </div>
-        <div class="stepper-phase" id="phase-B">
-            <div class="phase-icon">B</div>
-            <div class="phase-text" style="text-align: center;">Qualifications<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 5-8</small></div>
-        </div>
-        <div class="stepper-phase" id="phase-C">
-            <div class="phase-icon">C</div>
-            <div class="phase-text" style="text-align: center;">Experience & Projects<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 9-12</small></div>
-        </div>
-        <div class="stepper-phase" id="phase-D">
-            <div class="phase-icon">D</div>
-            <div class="phase-text" style="text-align: center;">Documents & Review<br><small style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Steps 13-15</small></div>
-        </div>
-    </div>
-
+    }
 </div>
-}
 
 <div class="form-wrapper @(isSubmitted ? "submitted-view" : "")">
     <!-- Sidebar Navigation -->
@@ -349,7 +345,6 @@
                         </div>
                         <div id="photoError" class="error-msg" style="display: none; margin-top: 16px; text-align: center;"></div>
                         </div>
-                    </div>
 
                     <!-- CARD B: PERSONAL DETAILS -->
                     <div class="form-card">
@@ -363,87 +358,119 @@
                             </div>
                         </div>
 
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Mr. / Mrs. <span class="req">*</span></label>
-                                <select name="title" required>
-                                    <option value="">Select</option>
-                                    <option>Mr.</option>
-                                    <option>Mrs.</option>
-                                    <option>Ms.</option>
-                                    <option>Dr.</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Candidate Name <span class="req">*</span></label>
-                                <input name="full_name" type="text" required placeholder="Enter full name" value="@ViewBag.UserName" />
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mr. / Mrs.</label>
-                                <select name="parent_title">
-                                    <option value="">Select</option>
-                                    <option>Mr.</option>
-                                    <option>Mrs.</option>
-                                    <option>Dr.</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Parent / Guardian Name <span class="req">*</span></label>
-                                <input name="parent_name" type="text" required placeholder="Father/Mother/Guardian name" />
-                            </div>
-                            <div class="form-group">
-                                <label>Parent / Guardian Relation <span class="req">*</span></label>
-                                <select name="parent_relation" required>
-                                    <option value="">Select Relation</option>
-                                    <option>Father</option>
-                                    <option>Mother</option>
-                                    <option>Guardian</option>
-                                </select>
+                        <div class="personal-details-form">
+                            <!-- Row 1 -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Mr. / Mrs. <span class="req">*</span></label>
+                                        <select name="title" required>
+                                            <option value="">Select</option>
+                                            <option>Mr.</option>
+                                            <option>Mrs.</option>
+                                            <option>Ms.</option>
+                                            <option>Dr.</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group candidate-name">
+                                        <label>Candidate Name <span class="req">*</span></label>
+                                        <input name="full_name" type="text" required placeholder="Enter full name" value="@ViewBag.UserName" />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label>Email ID <span class="req">*</span></label>
-                                <input name="email" type="email" required value="@ViewBag.UserEmail" readonly class="prefilled-readonly" />
-                            </div>
-                            <div class="form-group">
-                                <label>Mobile Number (OTP Verification) <span class="req">*</span></label>
-                                <input name="mobile" type="tel" required value="@ViewBag.UserMobile" readonly class="prefilled-readonly" />
-                            </div>
-                            <div class="form-group">
-                                <label>Alternative Mobile Number</label>
-                                <input name="alt_mobile" type="tel" placeholder="10-digit mobile number" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            <!-- Row 2 -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Mr. / Mrs.</label>
+                                        <select name="parent_title">
+                                            <option value="">Select</option>
+                                            <option>Mr.</option>
+                                            <option>Mrs.</option>
+                                            <option>Dr.</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Parent / Guardian Name <span class="req">*</span></label>
+                                        <input name="parent_name" type="text" required placeholder="Father/Mother/Guardian name" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Parent / Guardian Relation <span class="req">*</span></label>
+                                        <select name="parent_relation" required>
+                                            <option value="">Select Relation</option>
+                                            <option>Father</option>
+                                            <option>Mother</option>
+                                            <option>Guardian</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                                <!-- DEMOGRAPHICS SECTION -->
-                                <div class="form-card-group-title" style="margin-top: 8px;">Demographics</div>
-                                <div class="col-4">
-                                    <label>Date of Birth <span class="req">*</span></label>
-                            <input id="dob" name="dob" type="date" required onchange="updateAgeEligibility()" />
-                            <div id="ageEligibilityFeedback" class="eligibility-feedback hide"></div>
+                            <!-- Row 3 -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Email ID <span class="req">*</span></label>
+                                        <input name="email" type="email" required value="@ViewBag.UserEmail" readonly class="prefilled-readonly" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Mobile Number (OTP Verification) <span class="req">*</span></label>
+                                        <input name="mobile" type="tel" required value="@ViewBag.UserMobile" readonly class="prefilled-readonly" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Alternative Mobile Number</label>
+                                        <input name="alt_mobile" type="tel" placeholder="10-digit mobile number" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 4: DEMOGRAPHICS SECTION -->
+                            <div class="form-card-group-title">Demographics</div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Date of Birth <span class="req">*</span></label>
+                                        <input id="dob" name="dob" type="date" required onchange="updateAgeEligibility()" />
+                                        <div id="ageEligibilityFeedback" class="eligibility-feedback hide"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Gender <span class="req">*</span></label>
+                                        <select name="gender" required>
+                                            <option value="">Select</option>
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Citizenship (Indian) <span class="req">*</span></label>
+                                        <select name="citizenship" required>
+                                            <option value="">Select</option>
+                                            <option value="Indian">Indian</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <label>Gender <span class="req">*</span></label>
-                            <select name="gender" required>
-                                <option value="">Select</option>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <label>Citizenship (Indian) <span class="req">*</span></label>
-                            <select name="citizenship" required>
-                                <option value="">Select</option>
-                                <option value="Indian">Indian</option>
-                            </select>
+
                         </div>
 
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CARD C: ADDRESS DETAILS -->
                     <!-- CARD C: ADDRESS DETAILS -->
                     <div class="form-card">
                         <div class="form-card-header">
@@ -455,144 +482,173 @@
                             </div>
                         </div>
 
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>City <span class="req">*</span></label>
-                                <select id="city_perm" name="perm_city" required>
-                                    <option value="">Select City</option>
-                                    <option>Mumbai</option>
-                                    <option>Delhi</option>
-                                    <option>Bengaluru</option>
-                                    <option>Hyderabad</option>
-                                    <option>Ahmedabad</option>
-                                    <option>Chennai</option>
-                                    <option>Kolkata</option>
-                                    <option>Surat</option>
-                                    <option>Pune</option>
-                                    <option>Jaipur</option>
-                                    <option>Lucknow</option>
-                                    <option>Kanpur</option>
-                                    <option>Nagpur</option>
-                                    <option>Indore</option>
-                                    <option>Thane</option>
-                                    <option>Bhopal</option>
-                                    <option>Visakhapatnam</option>
-                                    <option>Pimpri-Chinchwad</option>
-                                    <option>Patna</option>
-                                    <option>Vadodara</option>
-                                    <option>Ghaziabad</option>
-                                    <option>Ludhiana</option>
-                                    <option>Agra</option>
-                                    <option>Nashik</option>
-                                    <option>Faridabad</option>
-                                    <option>Meerut</option>
-                                    <option>Rajkot</option>
-                                    <option>Kalyan-Dombivli</option>
-                                    <option>Vasai-Virar</option>
-                                    <option>Varanasi</option>
-                                    <option>Srinagar</option>
-                                    <option>Aurangabad</option>
-                                    <option>Dhanbad</option>
-                                    <option>Amritsar</option>
-                                    <option>Navi Mumbai</option>
-                                    <option>Allahabad</option>
-                                    <option>Ranchi</option>
-                                    <option>Howrah</option>
-                                    <option>Coimbatore</option>
-                                    <option>Jabalpur</option>
-                                    <option>Gwalior</option>
-                                    <option>Vijayawada</option>
-                                    <option>Jodhpur</option>
-                                    <option>Madurai</option>
-                                    <option>Raipur</option>
-                                    <option>Kota</option>
-                                    <option>Guwahati</option>
-                                    <option>Chandigarh</option>
-                                    <option>Solapur</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Pin Code <span class="req">*</span></label>
-                                <input type="text" id="pincode_perm" name="perm_pincode" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label>Permanent Address <span class="req">*</span></label>
-                                <textarea id="address_perm" name="address_perm" rows="3" required placeholder="Flat No, Building, Street, Area"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Correspondence City <span class="req">*</span></label>
-                                <select id="city_corr" name="corr_city" required>
-                                    <option value="">Select City</option>
-                                    <option>Mumbai</option>
-                                    <option>Delhi</option>
-                                    <option>Bengaluru</option>
-                                    <option>Hyderabad</option>
-                                    <option>Ahmedabad</option>
-                                    <option>Chennai</option>
-                                    <option>Kolkata</option>
-                                    <option>Surat</option>
-                                    <option>Pune</option>
-                                    <option>Jaipur</option>
-                                    <option>Lucknow</option>
-                                    <option>Kanpur</option>
-                                    <option>Nagpur</option>
-                                    <option>Indore</option>
-                                    <option>Thane</option>
-                                    <option>Bhopal</option>
-                                    <option>Visakhapatnam</option>
-                                    <option>Pimpri-Chinchwad</option>
-                                    <option>Patna</option>
-                                    <option>Vadodara</option>
-                                    <option>Ghaziabad</option>
-                                    <option>Ludhiana</option>
-                                    <option>Agra</option>
-                                    <option>Nashik</option>
-                                    <option>Faridabad</option>
-                                    <option>Meerut</option>
-                                    <option>Rajkot</option>
-                                    <option>Kalyan-Dombivli</option>
-                                    <option>Vasai-Virar</option>
-                                    <option>Varanasi</option>
-                                    <option>Srinagar</option>
-                                    <option>Aurangabad</option>
-                                    <option>Dhanbad</option>
-                                    <option>Amritsar</option>
-                                    <option>Navi Mumbai</option>
-                                    <option>Allahabad</option>
-                                    <option>Ranchi</option>
-                                    <option>Howrah</option>
-                                    <option>Coimbatore</option>
-                                    <option>Jabalpur</option>
-                                    <option>Gwalior</option>
-                                    <option>Vijayawada</option>
-                                    <option>Jodhpur</option>
-                                    <option>Madurai</option>
-                                    <option>Raipur</option>
-                                    <option>Kota</option>
-                                    <option>Guwahati</option>
-                                    <option>Chandigarh</option>
-                                    <option>Solapur</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Correspondence Pin Code <span class="req">*</span></label>
-                                <input type="text" id="pincode_corr" name="corr_pincode" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                        <div class="section-content-inner" style="padding: 24px;">
+                            <!-- ROW 1: City & Pincode -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City <span class="req">*</span></label>
+                                        <select id="city_perm" name="perm_city" required>
+                                            <option value="">Select City</option>
+                                            <option>Mumbai</option>
+                                            <option>Delhi</option>
+                                            <option>Bengaluru</option>
+                                            <option>Hyderabad</option>
+                                            <option>Ahmedabad</option>
+                                            <option>Chennai</option>
+                                            <option>Kolkata</option>
+                                            <option>Surat</option>
+                                            <option>Pune</option>
+                                            <option>Jaipur</option>
+                                            <option>Lucknow</option>
+                                            <option>Kanpur</option>
+                                            <option>Nagpur</option>
+                                            <option>Indore</option>
+                                            <option>Thane</option>
+                                            <option>Bhopal</option>
+                                            <option>Visakhapatnam</option>
+                                            <option>Pimpri-Chinchwad</option>
+                                            <option>Patna</option>
+                                            <option>Vadodara</option>
+                                            <option>Ghaziabad</option>
+                                            <option>Ludhiana</option>
+                                            <option>Agra</option>
+                                            <option>Nashik</option>
+                                            <option>Faridabad</option>
+                                            <option>Meerut</option>
+                                            <option>Rajkot</option>
+                                            <option>Kalyan-Dombivli</option>
+                                            <option>Vasai-Virar</option>
+                                            <option>Varanasi</option>
+                                            <option>Srinagar</option>
+                                            <option>Aurangabad</option>
+                                            <option>Dhanbad</option>
+                                            <option>Amritsar</option>
+                                            <option>Navi Mumbai</option>
+                                            <option>Allahabad</option>
+                                            <option>Ranchi</option>
+                                            <option>Howrah</option>
+                                            <option>Coimbatore</option>
+                                            <option>Jabalpur</option>
+                                            <option>Gwalior</option>
+                                            <option>Vijayawada</option>
+                                            <option>Jodhpur</option>
+                                            <option>Madurai</option>
+                                            <option>Raipur</option>
+                                            <option>Kota</option>
+                                            <option>Guwahati</option>
+                                            <option>Chandigarh</option>
+                                            <option>Solapur</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Pin Code <span class="req">*</span></label>
+                                        <input type="text" id="pincode_perm" name="perm_pincode" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group full-width">
-                                <label>Correspondence Address <span class="req">*</span></label>
-                                <textarea id="address_corr" name="address_corr" rows="3" required placeholder="Flat No, Building, Street, Area"></textarea>
+                            <!-- ROW 2: Permanent Address -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Permanent Address <span class="req">*</span></label>
+                                        <textarea id="address_perm" name="address_perm" rows="3" required placeholder="Flat No, Building, Street, Area"></textarea>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group full-width" style="flex-direction: row; align-items: center; gap: 10px;">
-                                <input type="checkbox" id="sameAddress" style="width: 18px; height: 18px; cursor: pointer;" onchange="toggleAddressSync()">
-                                <label for="sameAddress" style="margin: 0; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #475569;">Same as Permanent</label>
+                            <!-- ROW 3: Correspondence City & Pincode -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Correspondence City <span class="req">*</span></label>
+                                        <select id="city_corr" name="corr_city" required>
+                                            <option value="">Select City</option>
+                                            <option>Mumbai</option>
+                                            <option>Delhi</option>
+                                            <option>Bengaluru</option>
+                                            <option>Hyderabad</option>
+                                            <option>Ahmedabad</option>
+                                            <option>Chennai</option>
+                                            <option>Kolkata</option>
+                                            <option>Surat</option>
+                                            <option>Pune</option>
+                                            <option>Jaipur</option>
+                                            <option>Lucknow</option>
+                                            <option>Kanpur</option>
+                                            <option>Nagpur</option>
+                                            <option>Indore</option>
+                                            <option>Thane</option>
+                                            <option>Bhopal</option>
+                                            <option>Visakhapatnam</option>
+                                            <option>Pimpri-Chinchwad</option>
+                                            <option>Patna</option>
+                                            <option>Vadodara</option>
+                                            <option>Ghaziabad</option>
+                                            <option>Ludhiana</option>
+                                            <option>Agra</option>
+                                            <option>Nashik</option>
+                                            <option>Faridabad</option>
+                                            <option>Meerut</option>
+                                            <option>Rajkot</option>
+                                            <option>Kalyan-Dombivli</option>
+                                            <option>Vasai-Virar</option>
+                                            <option>Varanasi</option>
+                                            <option>Srinagar</option>
+                                            <option>Aurangabad</option>
+                                            <option>Dhanbad</option>
+                                            <option>Amritsar</option>
+                                            <option>Navi Mumbai</option>
+                                            <option>Allahabad</option>
+                                            <option>Ranchi</option>
+                                            <option>Howrah</option>
+                                            <option>Coimbatore</option>
+                                            <option>Jabalpur</option>
+                                            <option>Gwalior</option>
+                                            <option>Vijayawada</option>
+                                            <option>Jodhpur</option>
+                                            <option>Madurai</option>
+                                            <option>Raipur</option>
+                                            <option>Kota</option>
+                                            <option>Guwahati</option>
+                                            <option>Chandigarh</option>
+                                            <option>Solapur</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Correspondence Pin Code <span class="req">*</span></label>
+                                        <input type="text" id="pincode_corr" name="corr_pincode" required placeholder="Enter Pincode" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ROW 4: Correspondence Address -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Correspondence Address <span class="req">*</span></label>
+                                        <textarea id="address_corr" name="address_corr" rows="3" required placeholder="Flat No, Building, Street, Area"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ROW 5: Checkbox -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="checkbox-align-fix">
+                                        <input type="checkbox" id="sameAddress" onchange="toggleAddressSync()">
+                                        <label for="sameAddress">Same as Permanent</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
+
 
                     <!-- CARD D: IDENTITY DETAILS -->
                     <div class="form-card">
@@ -604,29 +660,38 @@
                                 <h3 class="form-card-title">Identity Details</h3>
                             </div>
                         </div>
-                        <div class="form-grid" style="grid-template-columns: 1fr 1fr 1.2fr;">
-                            <div class="form-group">
-                                <label>Government Photo ID Type <span class="req">*</span></label>
-                                <select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()">
-                                    <option value="">Select ID Type</option>
-                                    <option value="aadhaar">Aadhaar</option>
-                                    <option value="pan">PAN</option>
-                                    <option value="passport">Passport</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label id="govIdLabel">ID Number <span class="req">*</span></label>
-                                <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
-                            </div>
-                            <div class="form-group">
-                                <label>Upload Selected ID Proof <span class="req">*</span></label>
-                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; background: #f8fafc; display: flex; align-items: center; gap: 10px; position: relative;">
-                                    <input id="govIdUpload" name="gov_id_upload" type="file" required onchange="validateFileUpload(this)" style="font-size: 0.8rem; width: 100%;" />
+                        <div class="section-content-inner" style="padding: 24px;">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Government Photo ID Type <span class="req">*</span></label>
+                                        <select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()">
+                                            <option value="">Select ID Type</option>
+                                            <option value="aadhaar">Aadhaar</option>
+                                            <option value="pan">PAN</option>
+                                            <option value="passport">Passport</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Images (JPG, PNG) ≤ 2 MB | PDF ≤ 10 MB</span>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label id="govIdLabel">ID Number <span class="req">*</span></label>
+                                        <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Upload Selected ID Proof <span class="req">*</span></label>
+                                        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; background: #f8fafc; display: flex; align-items: center; gap: 10px; position: relative;">
+                                            <input id="govIdUpload" name="gov_id_upload" type="file" required onchange="validateFileUpload(this)" style="font-size: 0.8rem; width: 100%;" />
+                                        </div>
+                                        <span style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Images (JPG, PNG) ≤ 2 MB | PDF ≤ 10 MB</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -1444,7 +1509,7 @@
         if (currentStep > maxReachedStep + 1) currentStep = maxReachedStep + 1;
 
         // Update Gov Stepper Phases
-        document.querySelectorAll('.stepper-phase').forEach(phase => phase.classList.remove('active', 'completed'));
+        document.querySelectorAll('.step-item').forEach(phase => phase.classList.remove('active', 'completed'));
         if (currentStep >= 1 && currentStep <= 4) document.getElementById('phase-A')?.classList.add('active');
         if (currentStep > 4) document.getElementById('phase-A')?.classList.add('completed');
         if (currentStep >= 5 && currentStep <= 8) document.getElementById('phase-B')?.classList.add('active');
@@ -1453,7 +1518,7 @@
         if (currentStep > 12) document.getElementById('phase-C')?.classList.add('completed');
         if (currentStep >= 13 && currentStep <= 15) document.getElementById('phase-D')?.classList.add('active');
 
-        // Update Sub-Step Indicator
+        // Calculate current group/phase info
         let groupName = "";
         let stepInGroup = 0;
         let totalInGroup = 0;
@@ -1474,10 +1539,35 @@
             stepInGroup = currentStep - 12;
             totalInGroup = 3;
         }
+
+        // Update Sub Stepper UI
+        const subStepCircles = document.getElementById('subStepCircles');
+        const currentSubStepTitle = document.getElementById('currentSubStepTitle');
+        const currentPhaseDisplay = document.getElementById('currentPhaseDisplay');
+        const currentStepDisplay = document.getElementById('currentStepDisplay');
         
-        const subStepIndicator = document.getElementById('subStepIndicator');
-        if (subStepIndicator) {
-            subStepIndicator.innerHTML = `<span style="color: var(--accent);">${groupName}</span> <span style="opacity: 0.6; margin: 0 8px;">•</span> Step ${stepInGroup} of ${totalInGroup}`;
+        if (subStepCircles) {
+            let circlesHtml = "";
+            for (let i = 1; i <= totalInGroup; i++) {
+                let statusClass = "";
+                if (i < stepInGroup) statusClass = "completed";
+                else if (i === stepInGroup) statusClass = "active";
+                circlesHtml += `<div class="sub-circle ${statusClass}">${i < stepInGroup ? '✓' : i}</div>`;
+            }
+            subStepCircles.innerHTML = circlesHtml;
+        }
+        
+        if (currentSubStepTitle) {
+            currentSubStepTitle.textContent = stepNames[currentStep - 1];
+        }
+        
+        if (currentStepDisplay) {
+            currentStepDisplay.textContent = currentStep;
+        }
+
+        if (currentPhaseDisplay) {
+            const phaseMap = { "Personal & Identity": "Phase A", "Qualifications": "Phase B", "Experience & Projects": "Phase C", "Documents & Review": "Phase D" };
+            currentPhaseDisplay.textContent = phaseMap[groupName] || "Phase";
         }
 
         // Toggle Sections
@@ -1509,13 +1599,8 @@
         });
 
         // Progress
-        const progress = (currentStep / totalSteps) * 100;
-        const fill = document.getElementById('progressBarFill');
-        if (fill) fill.style.width = progress + '%';
+        // Old progress bar logic removed
         
-        document.getElementById('currentStepDisplay').textContent = currentStep;
-        document.getElementById('currentStepName').textContent = stepNames[currentStep - 1];
-
         // Buttons
         document.getElementById('btnPrev').style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
         
@@ -2724,7 +2809,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const isSubmitted = @isSubmitted.ToString().ToLower();
+        const isSubmitted = @(isSubmitted.ToString().ToLower());
         
         if (isSubmitted) {
             // Submitted Mode: Fetch data and show read-only summary
