@@ -234,6 +234,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    justify-content: flex-end;
 }
 
 .draft-status {
@@ -254,7 +255,12 @@ body {
     border-radius: 50%;
 }
 
-.profile-box {
+.profile-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-trigger {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -277,6 +283,56 @@ body {
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+.dropdown-menu {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    display: none;
+    min-width: 150px;
+    z-index: 2000;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 4px 0;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background: var(--bg);
+    color: var(--accent);
+}
+
+.dropdown-item.logout {
+    color: #ef4444;
+}
+
+.dropdown-item.logout:hover {
+    background: #fef2f2;
+}
+
 
 /* =========================
    Main Stepper (A-D)
@@ -1463,36 +1519,6 @@ input[type="file"] {
 
 .profile-trigger:hover { background: var(--accent); color: white; }
 
-.profile-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--accent); color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; border: 2px solid white;
-}
-
-.profile-dropdown {
-    position: absolute; top: calc(100% + 8px); right: 0;
-    width: 200px; background: white; border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg); border: 1px solid var(--line);
-    padding: 8px; opacity: 0; visibility: hidden;
-    transform: translateY(10px); transition: all 0.2s;
-    z-index: 101;
-}
-
-.profile-section:hover .profile-dropdown {
-    opacity: 1; visibility: visible; transform: translateY(0);
-}
-
-.dropdown-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; color: var(--ink); text-decoration: none;
-    font-size: 0.85rem; border-radius: var(--radius-sm);
-    transition: background 0.2s;
-}
-
-.dropdown-item:hover { background: var(--bg); color: var(--accent); }
-.dropdown-item.logout { color: var(--warn); }
-.dropdown-item.logout:hover { background: hsl(0, 72%, 97%); }
 
 /* =========================
    Success Confirmation Modal
