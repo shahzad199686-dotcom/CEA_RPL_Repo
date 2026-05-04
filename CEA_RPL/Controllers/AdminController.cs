@@ -17,17 +17,19 @@ public class AdminController : Controller
     }
 
     [HttpGet("Admin/Dashboard")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public async Task<IActionResult> Dashboard()
     {
         var applicants = await _context.Applicants
-            .OrderByDescending(a => a.Id)
+            .OrderByDescending(a => a.SubmittedAt ?? a.CreatedAt)
+            .ThenByDescending(a => a.Id)
             .ToListAsync();
 
         ViewBag.Total = applicants.Count;
         ViewBag.Pending = applicants.Count(a => a.Status == "Submitted" || a.Status == "UnderReview");
         ViewBag.Approved = applicants.Count(a => a.Status == "Approved");
         ViewBag.Rejected = applicants.Count(a => a.Status == "Rejected");
-        ViewBag.SubmittedToday = applicants.Count(a => a.CreatedAt.Date == DateTime.UtcNow.Date);
+        ViewBag.SubmittedToday = applicants.Count(a => a.SubmittedAt.HasValue && a.SubmittedAt.Value.Date == DateTime.UtcNow.Date);
 
         return View(applicants);
     }
@@ -75,10 +77,12 @@ public class AdminController : Controller
     }
 
     [HttpGet("Admin/Applications")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public async Task<IActionResult> Applications()
     {
         var applicants = await _context.Applicants
-            .OrderByDescending(a => a.Id)
+            .OrderByDescending(a => a.SubmittedAt ?? a.CreatedAt)
+            .ThenByDescending(a => a.Id)
             .ToListAsync();
         return View(applicants);
     }
@@ -130,7 +134,13 @@ public class AdminController : Controller
                 });
         }
 
-        return View(docs.OrderByDescending(d => d.Date).ToList());
+        var sortedDocs = docs
+            .GroupBy(d => d.ApplicantId)
+            .OrderByDescending(g => g.Max(d => d.Date))
+            .SelectMany(g => g.OrderByDescending(d => d.Date))
+            .ToList();
+
+        return View(sortedDocs);
     }
 
     [HttpGet("Admin/Reports")]

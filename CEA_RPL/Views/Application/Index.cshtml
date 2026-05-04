@@ -44,15 +44,23 @@
                     <span>Draft saved</span>
                 </div>
             }
-            <div class="profile-dropdown">
-                <div class="profile-trigger">
+            <div class="profile" id="profileMenu">
+                <div class="profile-trigger" id="profileTrigger">
                     <div class="profile-name">@(string.IsNullOrEmpty(displayName) ? "User" : System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(displayName.ToLower()))</div>
                     <div class="profile-avatar">@initials</div>
+                    <svg class="profile-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div class="dropdown-menu">
-                    <a asp-controller="Auth" asp-action="Logout" class="dropdown-item logout">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        Logout
+                <div class="profile-dropdown" id="dropdownMenu">
+                    <div class="dropdown-header">
+                        <div class="fw-bold">@displayName</div>
+                        <div class="text-muted small">Candidate Account</div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="javascript:void(0)" onclick="currentStep=1; updateUI();" class="dropdown-item">
+                        <i data-lucide="user" style="width: 16px; height: 16px;"></i> Profile
+                    </a>
+                    <a href="/Auth/Logout" class="dropdown-item logout" id="logoutBtn">
+                        <i data-lucide="log-out" style="width: 16px; height: 16px;"></i> Logout
                     </a>
                 </div>
             </div>
@@ -4038,22 +4046,70 @@
     document.addEventListener('DOMContentLoaded', function() {
         initMultiSelects();
         
-        // Profile Dropdown Toggle
-        const trigger = document.querySelector('.profile-trigger');
-        const menu = document.querySelector('.dropdown-menu');
-        
-        if (trigger && menu) {
-            trigger.addEventListener('click', function(e) {
+        // --- BULLETPROOF PROFILE DROPDOWN & LOGOUT LOGIC ---
+        const profileMenu = document.getElementById('profileMenu');
+        const profileTrigger = document.getElementById('profileTrigger');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (profileTrigger && dropdownMenu) {
+            // 1. Robust Toggle (Stop Propagation is key)
+            profileTrigger.addEventListener('click', function(e) {
+                e.preventDefault();
                 e.stopPropagation();
-                menu.classList.toggle('show');
+                const isOpen = dropdownMenu.classList.contains('open');
+                
+                // Toggle state
+                if (isOpen) {
+                    dropdownMenu.classList.remove('open');
+                    profileMenu.classList.remove('active');
+                } else {
+                    dropdownMenu.classList.add('open');
+                    profileMenu.classList.add('active');
+                }
             });
 
-            document.addEventListener('click', function(e) {
-                if (!menu.contains(e.target) && !trigger.contains(e.target)) {
-                    menu.classList.remove('show');
+            // 2. Prevent closing when clicking inside the dropdown (except on links)
+            dropdownMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // 3. Global Outside Click Close
+            document.addEventListener('click', function() {
+                dropdownMenu.classList.remove('open');
+                profileMenu.classList.remove('active');
+            });
+
+            // 4. Global ESC Key Close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    dropdownMenu.classList.remove('open');
+                    profileMenu.classList.remove('active');
                 }
             });
         }
+
+        // 5. FAILSAFE LOGOUT (Event Delegation)
+        document.addEventListener('click', function(e) {
+            const logoutLink = e.target.closest('#logoutBtn');
+            if (logoutLink) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (confirm("Are you sure you want to logout?")) {
+                    // Clear all session artifacts
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Clear cookies as an additional safeguard
+                    document.cookie.split(";").forEach(function(c) {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+
+                    // Redirect to secure logout route
+                    window.location.href = logoutLink.getAttribute('href') || "/Auth/Logout";
+                }
+            }
+        });
     });
 </script>
 </body>

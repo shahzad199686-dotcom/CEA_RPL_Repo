@@ -43,57 +43,92 @@
         </div>
     }
 
-    @foreach (var doc in Model)
-    {
-        var iconType = doc.Type == "GOV ID" ? "user-square-2" : (doc.Type == "REPORT" ? "file-text" : "paperclip");
-        var stColor = doc.Type == "GOV ID" ? "var(--st-info)" : (doc.Type == "REPORT" ? "var(--a-primary)" : "var(--st-warning)");
-        var stBg = doc.Type == "GOV ID" ? "var(--st-info-bg)" : (doc.Type == "REPORT" ? "var(--a-primary-light)" : "var(--st-warning-bg)");
-
-        <div class="col-xl-4 col-md-6 doc-card-wrapper">
-            <div class="modern-card p-4 h-100 hover-lift">
-                <div class="d-flex align-items-start justify-content-between mb-4">
-                    <div class="p-3 rounded-4 shadow-sm" style="background: @stBg; color: @stColor;">
-                        <i data-lucide="@iconType" style="width: 24px; height: 24px;"></i>
-                    </div>
-                    <span class="status-badge" style="background: @stBg; color: @stColor; font-size: 0.65rem;">@doc.Type</span>
-                </div>
-                
-                <div class="mb-4">
-                    <h6 class="fw-bold fs-6 text-dark mb-1 text-truncate" title="@doc.ApplicantName">@doc.ApplicantName</h6>
-                    <div class="small fw-bold text-muted">REF: @doc.ApplicantRef</div>
-                </div>
-
-                <div class="small fw-bold text-dark p-2 bg-light rounded text-center mb-4">
-                    Uploaded: @doc.Date.ToString("dd MMM yyyy")
-                </div>
-
-                <div class="d-flex gap-2">
-                    <a href="@doc.Path" target="_blank" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold rounded-pill">View</a>
-                    <a href="@doc.Path" download class="btn btn-secondary btn-sm flex-grow-1 fw-bold rounded-pill">Download</a>
-                </div>
+@foreach (var group in Model.GroupBy(d => d.ApplicantId))
+{
+    var firstDoc = group.First();
+    <div class="col-12 applicant-group mb-2" data-applicant="@firstDoc.ApplicantName.ToLower() @firstDoc.ApplicantRef.ToLower()">
+        <div class="d-flex align-items-center gap-3 py-3 border-bottom mb-4">
+            <div class="bg-primary-light text-primary fw-bold rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                @(firstDoc.ApplicantName.Length > 0 ? firstDoc.ApplicantName[0].ToString() : "A")
             </div>
+            <h5 class="fw-800 mb-0" style="font-size: 1.1rem; color: var(--a-ink);">
+                Applicant: <span class="text-primary">@firstDoc.ApplicantName</span> 
+                <span class="text-muted mx-2">–</span> 
+                <span class="text-muted" style="font-size: 0.9rem;">@firstDoc.ApplicantRef</span>
+            </h5>
         </div>
-    }
+
+        <div class="row g-4 mb-5 group-cards">
+            @foreach (var doc in group)
+            {
+                var iconType = doc.Type == "GOV ID" ? "user-square-2" : (doc.Type == "REPORT" ? "file-text" : "paperclip");
+                var stColor = doc.Type == "GOV ID" ? "var(--st-info)" : (doc.Type == "REPORT" ? "var(--a-primary)" : "var(--st-warning)");
+                var stBg = doc.Type == "GOV ID" ? "var(--st-info-bg)" : (doc.Type == "REPORT" ? "var(--a-primary-light)" : "var(--st-warning-bg)");
+
+                <div class="col-xl-4 col-md-6 doc-card-wrapper">
+                    <div class="modern-card p-4 h-100 hover-lift">
+                        <div class="d-flex align-items-start justify-content-between mb-4">
+                            <div class="p-3 rounded-4 shadow-sm" style="background: @stBg; color: @stColor;">
+                                <i data-lucide="@iconType" style="width: 24px; height: 24px;"></i>
+                            </div>
+                            <span class="status-badge" style="background: @stBg; color: @stColor; font-size: 0.65rem;">@doc.Type</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold fs-6 text-dark mb-1 text-truncate" title="@doc.ApplicantName">@doc.ApplicantName</h6>
+                            <div class="small fw-bold text-muted">REF: @doc.ApplicantRef</div>
+                        </div>
+
+                        <div class="small fw-bold text-dark p-2 bg-light rounded text-center mb-4">
+                            Uploaded: @doc.Date.ToString("dd MMM yyyy")
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="@doc.Path" target="_blank" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold rounded-pill">View</a>
+                            <a href="@doc.Path" download class="btn btn-secondary btn-sm flex-grow-1 fw-bold rounded-pill">Download</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
 </div>
 
 @section Scripts {
     <script>
         const docSearch = document.getElementById('docSearch');
         const typeFilter = document.getElementById('typeFilter');
-        const cards = document.querySelectorAll('.doc-card-wrapper');
+        const groups = document.querySelectorAll('.applicant-group');
 
         function filterDocs() {
             const query = docSearch.value.toLowerCase();
             const type = typeFilter.value.toLowerCase();
 
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                const cardType = card.querySelector('.status-badge').innerText.toLowerCase();
+            groups.forEach(group => {
+                let groupVisible = false;
+                const cards = group.querySelectorAll('.doc-card-wrapper');
                 
-                const matchesSearch = text.includes(query);
-                const matchesType = type === "" || cardType.includes(type);
-                
-                card.style.display = matchesSearch && matchesType ? "block" : "none";
+                // Group search match (name or ref)
+                const groupMatchesSearch = group.dataset.applicant.includes(query);
+
+                cards.forEach(card => {
+                    const cardType = card.querySelector('.status-badge').innerText.toLowerCase();
+                    const matchesType = type === "" || cardType.includes(type);
+                    
+                    // A card is visible if its type matches AND (group matches search OR card text matches search)
+                    const cardText = card.innerText.toLowerCase();
+                    const matchesSearch = groupMatchesSearch || cardText.includes(query);
+
+                    if (matchesSearch && matchesType) {
+                        card.style.display = "block";
+                        groupVisible = true;
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+
+                group.style.display = groupVisible ? "block" : "none";
             });
         }
 

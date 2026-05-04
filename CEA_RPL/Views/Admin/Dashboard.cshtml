@@ -110,8 +110,12 @@
                         "Rejected" => "st-rejected",
                         "Submitted" => "st-submitted",
                         "UnderReview" => "st-review",
+                        "Draft" => "st-review",
                         _ => "st-submitted"
                     };
+
+                    var displayDate = app.SubmittedAt ?? app.CreatedAt;
+                    var dateLabel = app.Status == "Draft" ? "Portal Entry" : "Portal Direct";
 
                     <tr class="feed-row">
                         <!-- Ref ID -->
@@ -146,8 +150,8 @@
 
                         <!-- Submission Date -->
                         <td class="feed-cell">
-                            <div class="fw-bold text-dark" style="font-size: 0.85rem;">@app.CreatedAt.ToString("dd MMM yyyy")</div>
-                            <div class="x-small text-muted fw-bold">Portal Direct</div>
+                            <div class="fw-bold text-dark" style="font-size: 0.85rem;">@displayDate.ToString("dd MMM yyyy")</div>
+                            <div class="x-small text-muted fw-bold">@dateLabel</div>
                         </td>
 
                         <!-- Status Badge -->
