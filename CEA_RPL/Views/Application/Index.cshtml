@@ -24,6 +24,7 @@
     <title>CEA RPL Application – Modern Portal</title>
     <link rel="stylesheet" href="~/css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="~/js/face-api.min.js"></script>
 </head>
 <body>
 
@@ -1504,6 +1505,20 @@
     let currentStep = 1;
     let maxReachedStep = 1; 
     const totalSteps = 15;
+    let isFaceApiLoaded = false;
+
+    // --- FACE API INITIALIZATION ---
+    async function loadFaceApiModels() {
+        try {
+            await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+            isFaceApiLoaded = true;
+            console.log("Face-api models loaded successfully.");
+        } catch (e) {
+            console.error("Error loading face-api models:", e);
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadFaceApiModels);
 
     // Helper to set field value safely (used by Resume logic)
     const setVal = (name, val) => {
@@ -3608,8 +3623,8 @@
             uploadBox.addEventListener("click", function () {
                 fileInput.click();
             });
-
-            fileInput.addEventListener("change", function (event) {
+            
+            fileInput.addEventListener("change", async function (event) {
                 const file = event.target.files[0];
                 if (!file) return;
 
@@ -3617,6 +3632,13 @@
                 const preview = document.getElementById("profilePreviewImage");
                 const actions = document.getElementById("photoActions");
                 const subtitle = document.getElementById("uploadSubtitle");
+                const photoError = document.getElementById("photoError");
+
+                // Reset error
+                if (photoError) {
+                    photoError.style.display = 'none';
+                    photoError.innerText = '';
+                }
 
                 if (!allowedTypes.includes(file.type)) {
                     alert("Only JPG and PNG files are allowed.");
@@ -3630,13 +3652,57 @@
                     return;
                 }
 
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    if (preview) preview.src = e.target.result;
-                    if (subtitle) subtitle.style.display = 'none';
-                    if (actions) actions.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
+                // Show loading state if possible
+                if (subtitle) subtitle.innerText = "Analyzing image...";
+
+                try {
+                    // Create image element for face-api
+                    const img = await faceapi.bufferToImage(file);
+                    
+                    if (!isFaceApiLoaded) {
+                        await loadFaceApiModels();
+                    }
+
+                    const detections = await faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions());
+                    
+                    if (detections.length === 0) {
+                        const errorMsg = "Please upload a valid human photograph (passport-style image only).";
+                        if (photoError) {
+                            photoError.innerText = errorMsg;
+                            photoError.style.display = 'block';
+                            photoError.style.color = '#c53030';
+                        }
+                        showToast(errorMsg, "error");
+                        fileInput.value = "";
+                        if (preview) preview.src = "https://via.placeholder.com/150?text=Profile";
+                        if (subtitle) {
+                            subtitle.style.display = 'block';
+                            subtitle.innerText = "Click to browse image (JPG, PNG) - Max 2MB";
+                        }
+                        if (actions) actions.style.display = 'none';
+                        return;
+                    }
+
+                    // Face detected, proceed with preview
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (preview) preview.src = e.target.result;
+                        if (subtitle) subtitle.style.display = 'none';
+                        if (actions) actions.style.display = 'flex';
+                    };
+                    reader.readAsDataURL(file);
+
+                } catch (err) {
+                    console.error("Face detection error:", err);
+                    // Fallback: allow upload if face-api fails but warn
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (preview) preview.src = e.target.result;
+                        if (subtitle) subtitle.style.display = 'none';
+                        if (actions) actions.style.display = 'flex';
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
         }
     });
