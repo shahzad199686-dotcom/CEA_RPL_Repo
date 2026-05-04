@@ -25,7 +25,7 @@
                 <input id="candidatePass" name="candidate_password" type="password" placeholder="••••••••" required autocomplete="section-candidate current-password" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
             </div>
 
-            <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14,165,165,0.2);">
+            <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14, 90, 60, 0.2);">
                 Continue
             </button>
         </form>
@@ -37,15 +37,15 @@
         
         <div style="margin-bottom: 25px;">
             <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 600; text-align: center;">Verification Code</label>
-            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #0ea5a5; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #f8ffff;" />
+            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #0E5A3C; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #f8ffff;" />
         </div>
 
-        <button id="btnVerify" style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+        <button id="btnVerify" style="width: 100%; background: #0E5A3C; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
             Verify & Sign In
         </button>
 
         <div style="text-align: center; margin-top: 25px;">
-            <button id="btnResend" style="background: none; border: none; color: #0ea5a5; font-weight: 700; cursor: pointer; font-size: 0.95rem; opacity: 1; transition: opacity 0.2s;">
+            <button id="btnResend" style="background: none; border: none; color: #0E5A3C; font-weight: 700; cursor: pointer; font-size: 0.95rem; opacity: 1; transition: opacity 0.2s;">
                 Resend Verification Code
             </button>
             <div id="cooldownTimer" style="font-size: 0.8rem; color: #718096; margin-top: 8px; display: none;">
@@ -57,7 +57,7 @@
     <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 12px; border-radius: 10px; display: none; font-weight: 500;"></div>
 
     <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #eee;">
-        <p style="color: #666; font-size: 0.95rem;">Don't have an account? <a asp-action="SignUp" style="color: #0ea5a5; font-weight: 700; text-decoration: none;">Create Account</a></p>
+        <p style="color: #666; font-size: 0.95rem;">Don't have an account? <a asp-action="SignUp" style="color: #0E5A3C; font-weight: 700; text-decoration: none;">Create Account</a></p>
     </div>
 </div>
 
@@ -89,7 +89,7 @@
                 document.getElementById('confirmedEmail').innerText = loginForm.elements['candidate_email'].value;
                 loginArea.style.display = 'none';
                 otpArea.style.display = 'block';
-                showStatus(data.message, '#e6f6f6', '#0ea5a5');
+                showStatus(data.message, '#F0F7F4', '#0E5A3C');
                 startCooldown(); // Start on first entry
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
@@ -118,7 +118,7 @@
             const data = await resp.json();
 
             if (resp.ok) {
-                showStatus('Successfully signed in! Redirecting...', '#e6f6f6', '#0ea5a5');
+                showStatus('Successfully signed in! Redirecting...', '#F0F7F4', '#0E5A3C');
                 localStorage.setItem('showDocPopup', 'true');
                 
                 const redirectUrl = data.role === 'Admin' ? '/Admin/Dashboard' : '/Application/Index';
@@ -145,7 +145,7 @@
         try {
             const resp = await fetch('/api/auth/sendotp', { method: 'POST', body: formData });
             const data = await resp.json();
-            showStatus(data.message, resp.ok ? '#e6f6f6' : '#fff5f5', resp.ok ? '#0ea5a5' : '#e53e3e');
+            showStatus(data.message, resp.ok ? '#F0F7F4' : '#fff5f5', resp.ok ? '#0E5A3C' : '#e53e3e');
             if (resp.ok) startCooldown();
             else btnResend.disabled = false;
         } catch (err) {
@@ -184,5 +184,5 @@
 
 <style>
     @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    input:focus { border-color: #0ea5a5 !important; }
+    input:focus { border-color: #0E5A3C !important; box-shadow: 0 0 0 3px rgba(14, 90, 60, 0.1); }
 </style>

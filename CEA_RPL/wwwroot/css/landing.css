@@ -25,13 +25,13 @@ body {
 }
 
 :root {
-    --l-primary: #0f4d3f; /* Deep Green */
-    --l-primary-light: #166b57;
-    --l-secondary: #e6f2ee; /* Soft Green */
-    --l-accent: #d4a017; /* Gold */
-    --l-bg: #f7faf8; /* Very light background */
-    --l-ink: #1f2937;
-    --l-muted: #4b5563;
+    --l-primary: #0E5A3C; /* Primary Green */
+    --l-primary-light: #12744d;
+    --l-secondary: #F0F7F4; /* Soft Green */
+    --l-accent: #E5B100; /* Accent Yellow */
+    --l-bg: #F9FAFB;
+    --l-ink: #1F2937;
+    --l-muted: #64748b;
     --l-white: #ffffff;
     --l-glass: rgba(255, 255, 255, 0.95);
     --l-radius-lg: 14px;

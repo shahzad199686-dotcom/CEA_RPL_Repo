@@ -9,9 +9,9 @@
     --header-height: 72px;
 
     /* Core Palette */
-    --a-primary: #0ea5a5;
-    --a-primary-dark: #078c8c;
-    --a-primary-light: #f0fdfa;
+    --a-primary: #0E5A3C;
+    --a-primary-dark: #0B4A32;
+    --a-primary-light: #F0F7F4;
     --a-bg: #f8fafc;
     --a-surface: #ffffff;
     --a-ink: #0f172a;
@@ -26,8 +26,8 @@
     --st-warning-bg: #fffbeb;
     --st-error: #ef4444;
     --st-error-bg: #fef2f2;
-    --st-info: #3b82f6;
-    --st-info-bg: #eff6ff;
+    --st-info: #0E5A3C;
+    --st-info-bg: #EAF5F1;
 
     /* Radii & Shadows */
     --a-radius-xl: 24px;
@@ -325,7 +325,7 @@ body {
     justify-content: center;
     font-weight: 800;
     font-size: 0.9rem;
-    border: 1.5px solid #ccfbf1;
+    border: 1.5px solid var(--a-primary-light);
     flex-shrink: 0;
 }
 

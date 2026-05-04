@@ -127,7 +127,7 @@ public class AuthController : Controller
             await _otpSender.SendEmailOtpAsync(email, otp);
             return Ok(new { message = "OTP sent to your email." });
         } catch (Exception) {
-            return Ok(new { message = "OTP generated but email delivery failed. For testing, use code: 123456" });
+            return BadRequest(new { message = "Failed to send OTP. Please try again later." });
         }
     }
 
@@ -192,7 +192,7 @@ public class AuthController : Controller
             var otp = await _otpService.GenerateOtpAsync(email);
             await _otpSender.SendEmailOtpAsync(email, otp);
         } catch {
-            warning = " (Note: SMTP failed. Use dummy code '123456' for testing).";
+            // Log error but don't expose to user
         }
 
         return Ok(new { message = "Password correct." + warning, requiresVerification = true, email = email });
@@ -212,7 +212,7 @@ public class AuthController : Controller
             await _otpSender.SendEmailOtpAsync(email, otp);
             return Ok(new { message = "OTP sent to your registered email." });
         } catch {
-            return Ok(new { message = "OTP generated. Use '123456' for testing." });
+            return BadRequest(new { message = "Failed to send reset code. Please try again." });
         }
     }
 
@@ -228,8 +228,8 @@ public class AuthController : Controller
         var user = await _authService.GetUserByEmailAsync(email);
         if (user == null) return BadRequest(new { message = "User not found." });
 
-        // Update password (implement in AuthService)
-        // await _authService.UpdatePasswordAsync(user, newPassword);
+        var success = await _authService.UpdatePasswordAsync(user, newPassword);
+        if (!success) return BadRequest(new { message = "Failed to update password. Please try again." });
 
         return Ok(new { message = "Password updated successfully. You can now login." });
     }

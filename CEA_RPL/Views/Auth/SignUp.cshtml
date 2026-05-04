@@ -2,41 +2,41 @@
     ViewData["Title"] = "Create Account - CEA RPL";
 }
 
-<div class="auth-page-container" style="max-width: 500px; margin: 40px auto; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 1px solid #f0f0f0;">
+<div class="auth-page-container" style="max-width: 500px; margin: 40px auto; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 1px solid #E5E7EB;">
     <div style="text-align: center; margin-bottom: 35px;">
-        <h2 style="font-size: 2.2rem; color: #1a202c; font-weight: 800; margin-bottom: 10px;">Get Started</h2>
-        <p style="color: #718096; font-size: 1rem;">Begin your environment auditor certification</p>
+        <h2 style="font-size: 2.2rem; color: #1F2937; font-weight: 800; margin-bottom: 10px;">Get Started</h2>
+        <p style="color: #4B5563; font-size: 1rem;">Begin your environment auditor certification</p>
     </div>
 
     <form id="registerForm">
         <!-- STEP 1: EMAIL VERIFICATION -->
         <div id="step1">
             <div style="margin-bottom: 25px; position: relative;">
-                <label for="email" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4a5568;">Email Address *</label>
+                <label for="email" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Email Address *</label>
                 <div style="display: flex; gap: 10px;">
                     <input id="email" name="email" type="email" placeholder="you@example.com" required 
-                           style="flex: 1; height: 56px; padding: 16px; border-radius: 12px; border: 2px solid #edf2f7; outline: none; transition: all 0.2s; font-size: 1rem;" />
-                    <button type="button" id="btnSendOtp" 
-                            style="width: 120px; background: #0ea5a5; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                           style="flex: 1; height: 56px; padding: 16px; border-radius: 12px; border: 2px solid #E5E7EB; outline: none; transition: all 0.2s; font-size: 1rem;" />
+                    <button type="button" id="btnSendOtp" class="btn-primary-green"
+                            style="width: 120px; background: #0E5A3C; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
                         Send OTP
                     </button>
                 </div>
-                <div id="cooldownTimer" style="font-size: 0.75rem; color: #718096; margin-top: 5px; display: none;">Resend available in <span id="seconds">60</span>s</div>
+                <div id="cooldownTimer" style="font-size: 0.75rem; color: #4B5563; margin-top: 5px; display: none;">Resend available in <span id="seconds">60</span>s</div>
             </div>
 
             <!-- OTP INPUT (HIDDEN INITIALLY) -->
             <div id="otpInputArea" style="display: none; margin-bottom: 25px; animation: fadeIn 0.3s ease-out;">
-                <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 700; font-size: 0.9rem; color: #4a5568; text-align: center;">Enter 6-digit Code</label>
+                <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 700; font-size: 0.9rem; color: #4B5563; text-align: center;">Enter 6-digit Code</label>
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
                     <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" 
-                           style="width: 200px; padding: 12px; border-radius: 12px; border: 2px solid #0ea5a5; text-align: center; letter-spacing: 8px; font-size: 1.5rem; font-weight: 800; outline: none; background: #fff;" />
-                    <button type="button" id="btnVerifyEmail" style="width: 100%; max-width: 200px; background: #2d3748; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;">
+                           style="width: 200px; padding: 12px; border-radius: 12px; border: 2px solid #0E5A3C; text-align: center; letter-spacing: 8px; font-size: 1.5rem; font-weight: 800; outline: none; background: #fff;" />
+                    <button type="button" id="btnVerifyEmail" style="width: 100%; max-width: 200px; background: #1F2937; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;">
                         Verify Email
                     </button>
                 </div>
             </div>
             
-            <div id="emailVerifiedBadge" style="display: none; text-align: center; padding: 12px; background: #f0fff4; color: #2f855a; border-radius: 12px; font-weight: 700; margin-bottom: 25px; border: 1px solid #c6f6d5;">
+            <div id="emailVerifiedBadge" style="display: none; text-align: center; padding: 12px; background: #F0F7F4; color: #0E5A3C; border-radius: 12px; font-weight: 700; margin-bottom: 25px; border: 1px solid #E5E7EB;">
                 ✓ Email Verified Successfully
             </div>
         </div>
@@ -45,27 +45,28 @@
         <div id="profileDetails" style="opacity: 0.5; pointer-events: none; transition: opacity 0.3s;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                 <div>
-                    <label for="firstName" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.85rem; color: #4a5568;">First Name *</label>
-                    <input id="firstName" name="firstName" type="text" placeholder="First" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #edf2f7; outline: none;" />
+                    <label for="firstName" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.85rem; color: #4B5563;">First Name *</label>
+                    <input id="firstName" name="firstName" type="text" placeholder="First" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
                 </div>
                 <div>
-                    <label for="lastName" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.85rem; color: #4a5568;">Last Name *</label>
-                    <input id="lastName" name="lastName" type="text" placeholder="Last" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #edf2f7; outline: none;" />
+                    <label for="lastName" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.85rem; color: #4B5563;">Last Name *</label>
+                    <input id="lastName" name="lastName" type="text" placeholder="Last" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
                 </div>
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="mobile" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4a5568;">Mobile Number *</label>
-                <input id="mobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit primary mobile" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #edf2f7; outline: none;" />
+                <label for="mobile" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Mobile Number *</label>
+                <input id="mobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit primary mobile" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
             </div>
 
             <div style="margin-bottom: 30px;">
-                <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4a5568;">Set Password *</label>
-                <input id="regPass" name="password" type="password" minlength="8" placeholder="At least 8 characters" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #edf2f7; outline: none;" />
-                <p style="font-size: 0.75rem; color: #718096; margin-top: 6px;">Use at least 8 characters with uppercase, lowercase, number, and special character.</p>
+                <label for="regPass" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Set Password *</label>
+                <input id="regPass" name="password" type="password" minlength="8" placeholder="At least 8 characters" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
+                <p style="font-size: 0.75rem; color: #4B5563; margin-top: 6px;">Use at least 8 characters with uppercase, lowercase, number, and special character.</p>
             </div>
 
-            <button type="submit" id="btnContinue" disabled style="width: 100%; background: #0ea5a5; color: white; border: none; padding: 18px; border-radius: 14px; font-size: 1.1rem; font-weight: 800; cursor: not-allowed; opacity: 0.6; transition: all 0.2s;">
+            <button type="submit" id="btnContinue" disabled class="btn-primary-green"
+                    style="width: 100%; background: #0E5A3C; color: white; border: none; padding: 18px; border-radius: 14px; font-size: 1.1rem; font-weight: 800; cursor: not-allowed; opacity: 0.6; transition: all 0.2s;">
                 Complete Registration
             </button>
         </div>
@@ -73,8 +74,8 @@
 
     <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 14px; border-radius: 12px; display: none; font-weight: 600; font-size: 0.9rem;"></div>
 
-    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #edf2f7;">
-        <p style="color: #718096; font-size: 0.95rem;">Already a member? <a asp-action="Login" style="color: #0ea5a5; font-weight: 800; text-decoration: none;">Sign In</a></p>
+    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #E5E7EB;">
+        <p style="color: #4B5563; font-size: 0.95rem;">Already a member? <a asp-action="Login" style="color: #0E5A3C; font-weight: 800; text-decoration: none;">Sign In</a></p>
     </div>
 </div>
 
@@ -107,7 +108,7 @@
             const data = await resp.json();
             
             if (resp.ok) {
-                showStatus(data.message, '#e6fffa', '#08979c');
+                showStatus(data.message, '#F0F7F4', '#0E5A3C');
                 otpInputArea.style.display = 'block';
                 startCooldown();
             } else {
@@ -148,7 +149,7 @@
                 profileDetails.style.opacity = '1';
                 profileDetails.style.pointerEvents = 'auto';
                 checkFormValidity();
-                showStatus('Email verified!', '#f0fff4', '#2f855a');
+                showStatus('Email verified!', '#F0F7F4', '#0E5A3C');
             } else {
                 const data = await resp.json();
                 showStatus(data.message, '#fff5f5', '#e53e3e');
@@ -209,7 +210,7 @@
         try {
             const resp = await fetch('/api/auth/signup', { method: 'POST', body: formData });
             if (resp.ok) {
-                showStatus('Account created successfully!', '#f0fff4', '#2f855a');
+                showStatus('Account created successfully!', '#F0F7F4', '#0E5A3C');
                 setTimeout(() => window.location.href = '/Application/Index', 1500);
             } else {
                 const data = await resp.json();
@@ -230,5 +231,7 @@
 
 <style>
     @@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    input:focus { border-color: #0ea5a5 !important; box-shadow: 0 0 0 3px rgba(14,165,165,0.1); }
+    input:focus { border-color: #0E5A3C !important; box-shadow: 0 0 0 3px rgba(14, 90, 60, 0.1) !important; }
+    .btn-primary-green { background: #0E5A3C !important; }
+    .btn-primary-green:hover:not(:disabled) { background: #0B4A32 !important; }
 </style>

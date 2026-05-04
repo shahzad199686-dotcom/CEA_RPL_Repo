@@ -62,8 +62,7 @@ public class DbOtpService : IOtpService
                 .AnyAsync(o => o.ContactKey == contactKey && o.IsVerified && o.ExpiryTime > DateTime.UtcNow.AddMinutes(-10));
         }
 
-        // Global dummy code for development
-        if (otp == "123456") return true;
+        // Removed global dummy code for security
 
         var record = await _context.OtpRecords
             .Where(o => o.ContactKey == contactKey && o.OtpCode == otp && !o.IsVerified && o.ExpiryTime > DateTime.UtcNow)

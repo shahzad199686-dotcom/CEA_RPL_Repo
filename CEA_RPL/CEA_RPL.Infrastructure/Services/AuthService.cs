@@ -67,4 +67,18 @@ public class AuthService : IAuthService
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<bool> UpdatePasswordAsync(User user, string newPassword)
+    {
+        try
+        {
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
