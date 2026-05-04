@@ -249,8 +249,8 @@ public class ApplicationController : Controller
 
                     applicant.Educations.Add(new Education {
                         Degree = req.edu_degree[i],
-                        Discipline = i < (req.edu_discipline?.Count ?? 0) ? req.edu_discipline![i] : "",
-                        Institution = i < (req.edu_institution?.Count ?? 0) ? req.edu_institution![i] : "",
+                        Discipline = i < (req.edu_discipline?.Count ?? 0) ? req.edu_discipline![i] ?? "" : "",
+                        Institution = i < (req.edu_institution?.Count ?? 0) ? req.edu_institution![i] ?? "" : "",
                         Year = i < (req.edu_year?.Count ?? 0) ? req.edu_year![i] : 0,
                         CertificatePath = certPath
                     });
@@ -270,10 +270,10 @@ public class ApplicationController : Controller
 
                     applicant.ProfessionalExperiences.Add(new ProfessionalExperience {
                         Organization = req.exp_org[i],
-                        Designation = i < (req.exp_designation?.Count ?? 0) ? req.exp_designation![i] : "",
-                        Duration = i < (req.exp_duration?.Count ?? 0) ? req.exp_duration![i] : "",
-                        NatureOfWork = i < (req.exp_nature?.Count ?? 0) ? req.exp_nature![i] : "",
-                        ReferencePhone = i < (req.ref2_phone?.Count ?? 0) ? req.ref2_phone![i] : "",
+                        Designation = i < (req.exp_designation?.Count ?? 0) ? req.exp_designation![i] ?? "" : "",
+                        Duration = i < (req.exp_duration?.Count ?? 0) ? req.exp_duration![i] ?? "" : "",
+                        NatureOfWork = i < (req.exp_nature?.Count ?? 0) ? req.exp_nature![i] ?? "" : "",
+                        ReferencePhone = i < (req.ref2_phone?.Count ?? 0) ? req.ref2_phone![i] ?? "" : "",
                         ProofPath = proofPath
                     });
                 }
@@ -289,10 +289,10 @@ public class ApplicationController : Controller
                     applicant.ProjectExperiences.Add(new ProjectExperience {
                         Category = "Category 1",
                         Name = req.project_name_cat1[i],
-                        Client = i < (req.project_client_cat1?.Count ?? 0) ? req.project_client_cat1![i] : "",
-                        Location = i < (req.project_location_cat1?.Count ?? 0) ? req.project_location_cat1![i] : "",
+                        Client = i < (req.project_client_cat1?.Count ?? 0) ? req.project_client_cat1![i] ?? "" : "",
+                        Location = i < (req.project_location_cat1?.Count ?? 0) ? req.project_location_cat1![i] ?? "" : "",
                         Year = i < (req.project_year_cat1?.Count ?? 0) ? req.project_year_cat1![i] : 0,
-                        Role = i < (req.project_role_cat1?.Count ?? 0) ? req.project_role_cat1![i] : ""
+                        Role = i < (req.project_role_cat1?.Count ?? 0) ? req.project_role_cat1![i] ?? "" : ""
                     });
                 }
             }
@@ -322,8 +322,8 @@ public class ApplicationController : Controller
 
                     applicant.CertificationTrainings.Add(new CertificationTraining {
                         Name = req.training_name[i],
-                        ObtainedFrom = i < (req.training_from?.Count ?? 0) ? req.training_from![i] : "",
-                        Duration = i < (req.training_duration?.Count ?? 0) ? req.training_duration![i] : "",
+                        ObtainedFrom = i < (req.training_from?.Count ?? 0) ? req.training_from![i] ?? "" : "",
+                        Duration = i < (req.training_duration?.Count ?? 0) ? req.training_duration![i] ?? "" : "",
                         Year = i < (req.training_year?.Count ?? 0) ? req.training_year![i] : 0,
                         ProofPath = proof
                     });
@@ -343,9 +343,9 @@ public class ApplicationController : Controller
 
                     applicant.Memberships.Add(new Membership {
                         Name = req.membership_name[i],
-                        ObtainedFrom = i < (req.membership_from?.Count ?? 0) ? req.membership_from![i] : "",
+                        ObtainedFrom = i < (req.membership_from?.Count ?? 0) ? req.membership_from![i] ?? "" : "",
                         Year = i < (req.membership_year?.Count ?? 0) ? req.membership_year![i] : 0,
-                        Duration = i < (req.membership_duration?.Count ?? 0) ? req.membership_duration![i] : "",
+                        Duration = i < (req.membership_duration?.Count ?? 0) ? req.membership_duration![i] ?? "" : "",
                         ProofPath = proof
                     });
                 }
@@ -364,9 +364,9 @@ public class ApplicationController : Controller
 
                     applicant.PaperPublisheds.Add(new PaperPublished {
                         Name = req.paper_name[i],
-                        Place = i < (req.paper_place?.Count ?? 0) ? req.paper_place![i] : "",
+                        Place = i < (req.paper_place?.Count ?? 0) ? req.paper_place![i] ?? "" : "",
                         Year = i < (req.paper_year?.Count ?? 0) ? req.paper_year![i] : 0,
-                        Role = i < (req.paper_role?.Count ?? 0) ? req.paper_role![i] : "",
+                        Role = i < (req.paper_role?.Count ?? 0) ? req.paper_role![i] ?? "" : "",
                         ProofPath = proof
                     });
                 }
@@ -385,7 +385,7 @@ public class ApplicationController : Controller
 
                     applicant.Awards.Add(new Award {
                         Name = req.award_name[i],
-                        ReceivedFrom = i < (req.award_from?.Count ?? 0) ? req.award_from![i] : "",
+                        ReceivedFrom = i < (req.award_from?.Count ?? 0) ? req.award_from![i] ?? "" : "",
                         Year = i < (req.award_year?.Count ?? 0) ? req.award_year![i] : 0,
                         ProofPath = proof
                     });
@@ -401,7 +401,7 @@ public class ApplicationController : Controller
                     if (string.IsNullOrWhiteSpace(req.software_skill[i])) continue;
                     applicant.SoftwareSkills.Add(new SoftwareSkill {
                         SoftwareName = req.software_skill[i],
-                        ProficiencyLevel = i < (req.proficiency_level?.Count ?? 0) ? req.proficiency_level![i] : ""
+                        ProficiencyLevel = i < (req.proficiency_level?.Count ?? 0) ? req.proficiency_level![i] ?? "" : ""
                     });
                 }
             }

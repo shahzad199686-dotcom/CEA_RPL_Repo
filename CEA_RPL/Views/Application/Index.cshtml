@@ -1320,11 +1320,11 @@
                             Payee Details (Bank Transfer)
                         </div>
                         <div class="bank-grid">
-                            <div class="bank-item"><span class="bank-label">Beneficiary Name</span><span class="bank-value">CEA RPL Authority</span></div>
-                            <div class="bank-item"><span class="bank-label">Bank Name</span><span class="bank-value">State Bank of India</span></div>
-                            <div class="bank-item"><span class="bank-label">Account Number</span><span class="bank-value">12345678901</span></div>
-                            <div class="bank-item"><span class="bank-label">IFSC Code</span><span class="bank-value">SBIN0001234</span></div>
-                            <div class="bank-item"><span class="bank-label">Branch</span><span class="bank-value">New Delhi Main Branch</span></div>
+                            <div class="bank-item"><span class="bank-label">Beneficiary Name</span><span class="bank-value">NATIONAL PRODUCTIVITY COUNCIL -(EADA)</span></div>
+                            <div class="bank-item"><span class="bank-label">Bank Name</span><span class="bank-value">Indian Overseas Bank</span></div>
+                            <div class="bank-item"><span class="bank-label">Account Number</span><span class="bank-value">026501000030809</span></div>
+                            <div class="bank-item"><span class="bank-label">IFSC Code</span><span class="bank-value">IOBA0000265</span></div>
+                            <div class="bank-item"><span class="bank-label">Branch</span><span class="bank-value">Golf Links</span></div>
                             <div class="bank-item"><span class="bank-label">Mode</span><span class="bank-value">NEFT / RTGS / UPI</span></div>
                         </div>
 
@@ -1844,12 +1844,101 @@
         if (oldAddress) oldAddress.remove();
     }
 
+    function validateField(input) {
+        if (!input) return true;
+        
+        let isInvalid = false;
+        let customMsg = null;
+        
+        // Step mapping context for address fields
+        const isAddressField = input.name === 'address_perm' || input.name === 'address_corr';
+        const isPincodeField = input.name === 'pincode_perm' || input.name === 'pincode_corr';
+        const isCityField = input.name === 'city_perm' || input.name === 'city_corr';
+
+        if (input.name === 'enclosure_desc' && !input.hasAttribute('required')) {
+            if (input.value.trim() !== '' && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, true)) {
+                isInvalid = true;
+                customMsg = "Please enter a meaningful description for your enclosure.";
+            }
+        } else if (input.type === 'checkbox' || input.type === 'radio') {
+            if (input.name.includes('[]')) {
+                const section = input.closest('.form-section');
+                const group = section.querySelectorAll(`input[name="${input.name}"]`);
+                const checkedCount = Array.from(group).filter(i => i.checked).length;
+                if (checkedCount === 0) isInvalid = true;
+            } else if (!input.checked && input.hasAttribute('required')) {
+                isInvalid = true;
+            }
+        } else {
+            if (!input.value || input.value.trim() === '') {
+                if (input.hasAttribute('required')) isInvalid = true;
+            } else if (input.type === 'text' || input.tagName === 'TEXTAREA' || input.tagName === 'SELECT') {
+                const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
+                const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
+                
+                if (isAddressField || isPincodeField || isCityField) {
+                    const prefix = (input.name.includes('perm') || (input.id && input.id.includes('perm'))) ? 'perm' : 'corr';
+                    const cityField = document.getElementById(`city_${prefix}`);
+                    const pinField = document.getElementById(`pincode_${prefix}`);
+                    const addrField = document.getElementById(`address_${prefix}`);
+                    
+                    if (cityField && !cityField.value) {
+                        isInvalid = true;
+                        customMsg = "Please select a city.";
+                    } else if (pinField && (!/^[0-9]{6}$/.test(pinField.value))) {
+                        isInvalid = true;
+                        customMsg = "Pincode must be exactly 6 digits.";
+                    } else if (addrField && (addrField.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(addrField.value.trim()))) {
+                        isInvalid = true;
+                        customMsg = "Street address must be at least 3 characters.";
+                    }
+                } else if (input.name === 'mobile' || input.name === 'alt_mobile') {
+                    if (input.value.trim() !== '' && !/^[0-9]{10}$/.test(input.value.trim())) {
+                        isInvalid = true;
+                        customMsg = "Please enter a valid 10-digit mobile number.";
+                    }
+                } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
+                    isInvalid = true;
+                    customMsg = isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.";
+                }
+            }
+        }
+
+        // DOB / Age Logic
+        if (input.id === 'dob' && input.value) {
+            const dob = new Date(input.value);
+            const today = new Date();
+            if (dob >= today) {
+                isInvalid = true;
+                customMsg = "Please select a valid Date of Birth.";
+            } else {
+                let age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+                if (age < 18) {
+                    isInvalid = true;
+                    customMsg = "Applicant must be at least 18 years old.";
+                } else if (age >= 70) {
+                    isInvalid = true;
+                    customMsg = "Applicant must be below 70 years of age.";
+                }
+            }
+        }
+
+        if (isInvalid) {
+            showFieldError(input, customMsg);
+            return false;
+        } else {
+            hideFieldError(input);
+            return true;
+        }
+    }
+
     function validateSection(step) {
         const section = document.getElementById('step-' + step);
         if (!section) return true;
 
-        // Collect all inputs to validate: those with [required] AND those we want to check even if optional (like Step 12 desc)
-        const inputs = section.querySelectorAll('[required], .required-group, textarea[name="enclosure_desc"]');
+        const inputs = section.querySelectorAll('[required], .required-group, textarea[name="enclosure_desc"], select[id^="city_"], input[id^="pincode_"]');
         let firstInvalid = null;
         let valid = true;
 
@@ -1857,67 +1946,12 @@
         section.querySelectorAll('input, select, textarea').forEach(input => hideFieldError(input));
 
         inputs.forEach(input => {
-            let isInvalid = false;
-            let customMsg = null;
-
-            // Optional Enclosure Desc Check: only check if user has typed something
-            if (input.name === 'enclosure_desc' && !input.hasAttribute('required')) {
-                if (input.value.trim() !== '' && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, true)) {
-                    isInvalid = true;
-                    customMsg = "Please enter a meaningful description for your enclosure.";
-                }
-            } else if (input.type === 'checkbox' || input.type === 'radio') {
-                // ... (rest of checkbox logic)
-                if (input.name.includes('[]')) {
-                    const group = section.querySelectorAll(`input[name="${input.name}"]`);
-                    const checkedCount = Array.from(group).filter(i => i.checked).length;
-                    if (checkedCount === 0) isInvalid = true;
-                } else if (!input.checked) {
-                    isInvalid = true;
-                }
-            } else {
-                if (!input.value || input.value.trim() === '') {
-                    // Only mark invalid if it's truly required
-                    if (input.hasAttribute('required')) isInvalid = true;
-                } else if (input.type === 'text' || input.tagName === 'TEXTAREA') {
-                    const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
-                    const skipNames = ['gov_id_number', 'payment_utr', 'mobile', 'alt_mobile', 'email', 'total_experience', 'payment_amount', 'address_perm', 'address_corr'];
-                    
-                    if (input.name === 'address_perm' || input.name === 'address_corr') {
-                        const prefix = input.name === 'address_perm' ? 'perm' : 'corr';
-                        const cityField = document.getElementById(`city_${prefix}`);
-                        const pinField = document.getElementById(`pincode_${prefix}`);
-                        
-                        if (cityField && !cityField.value) {
-                            isInvalid = true;
-                            customMsg = "Please select a city.";
-                        } else if (pinField && (!/^[0-9]{6}$/.test(pinField.value))) {
-                            isInvalid = true;
-                            customMsg = "Pincode must be exactly 6 digits.";
-                        } else if (input.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(input.value.trim())) {
-                            isInvalid = true;
-                            customMsg = "Street address must be at least 3 characters.";
-                        }
-                    } else if (input.name === 'mobile' || input.name === 'alt_mobile') {
-                        if (input.value.trim() !== '' && !/^[0-9]{10}$/.test(input.value.trim())) {
-                            isInvalid = true;
-                            customMsg = "Please enter a valid 10-digit mobile number.";
-                        }
-                    } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
-                        isInvalid = true;
-                        customMsg = isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.";
-                    }
-                }
-            }
-
-            if (isInvalid) {
+            if (!validateField(input)) {
                 valid = false;
-                showFieldError(input, customMsg);
                 if (!firstInvalid) firstInvalid = input;
             }
         });
 
-        // Step 2 specific check
         // Step 6 specific check: enforce min 2 reports
         if (step === 6) {
            const reports = section.querySelectorAll('input[name="audit_report"]');
@@ -1934,35 +1968,6 @@
                }
                showToast("Please upload at least 2 reports.", "error");
            }
-        }
-
-        if (step === 1) {
-            const dobInput = document.getElementById('dob');
-            if (dobInput && dobInput.value) {
-                const dob = new Date(dobInput.value);
-                const today = new Date();
-                
-                if (dob >= today) {
-                    valid = false;
-                    showFieldError(dobInput, "Please select a valid Date of Birth.");
-                    if (!firstInvalid) firstInvalid = dobInput;
-                } else {
-                    let age = today.getFullYear() - dob.getFullYear();
-                    const m = today.getMonth() - dob.getMonth();
-                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                        age--;
-                    }
-                    if (age < 18) {
-                        valid = false;
-                        showFieldError(dobInput, "Applicant must be at least 18 years old.");
-                        if (!firstInvalid) firstInvalid = dobInput;
-                    } else if (age >= 70) {
-                        valid = false;
-                        showFieldError(dobInput, "Applicant must be below 70 years of age to be eligible.");
-                        if (!firstInvalid) firstInvalid = dobInput;
-                    }
-                }
-            }
         }
 
         if (step === 2) {
@@ -2857,8 +2862,41 @@
             // Attach auto-save to all inputs
             const form = document.getElementById('applicationForm');
             if (form) {
-                form.addEventListener('input', autoSave);
-                form.addEventListener('change', autoSave);
+                form.addEventListener('input', (e) => {
+                    autoSave();
+                    // Real-time validation: If field has an error, re-validate immediately
+                    const target = e.target;
+                    
+                    // Trigger address sync if checkbox is checked
+                    const sameAddrCheck = document.getElementById('sameAddress');
+                    if (sameAddrCheck && sameAddrCheck.checked) {
+                        if (target.id === 'address_perm' || target.id === 'city_perm' || target.id === 'pincode_perm') {
+                            syncAddress();
+                        }
+                    }
+
+                    if (target.classList.contains('field-invalid') || target.closest('.form-section')?.querySelector('.error-guidance')) {
+                        validateField(target);
+                        
+                        // Handle interdependent address fields
+                        if (target.id.includes('city_') || target.id.includes('pincode_')) {
+                            const prefix = target.id.includes('perm') ? 'perm' : 'corr';
+                            const addr = document.getElementById(`address_${prefix}`);
+                            if (addr) validateField(addr);
+                        }
+                    }
+                });
+                form.addEventListener('change', (e) => {
+                    autoSave();
+                    // For selects and files, always re-validate on change
+                    validateField(e.target);
+                    
+                    if (e.target.id && e.target.id.includes('city_')) {
+                        const prefix = e.target.id.includes('perm') ? 'perm' : 'corr';
+                        const addr = document.getElementById(`address_${prefix}`);
+                        if (addr) validateField(addr);
+                    }
+                });
             }
 
             // Bind Final Submit
@@ -3347,7 +3385,15 @@
 
     function validateFileUpload(input) {
         const file = input.files[0];
-        if (!file) return;
+        if (!file) {
+            // If field is required, show error, otherwise clear
+            if (input.hasAttribute('required')) {
+                showFieldError(input, "Please upload the required file.");
+            } else {
+                hideFieldError(input);
+            }
+            return;
+        }
 
         const fileName = file.name.toLowerCase();
         const fileSize = file.size;
@@ -3391,8 +3437,10 @@
             showToast(errorMsg, "error");
             input.value = "";
             hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${errorMsg}</span>`;
+            showFieldError(input, errorMsg);
         } else {
             hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ${limitMsg}</span>`;
+            hideFieldError(input);
         }
     }
 
@@ -3620,13 +3668,23 @@
         const pinPerm = document.getElementById('pincode_perm');
         
         if (isChecked) {
-            if (cityCorr) { cityCorr.value = cityPerm.value; cityCorr.disabled = true; }
-            if (pinCorr) { pinCorr.value = pinPerm.value; pinCorr.readOnly = true; pinCorr.style.background = 'var(--bg)'; }
+            if (cityCorr) { 
+                cityCorr.value = cityPerm.value; 
+                cityCorr.disabled = true; 
+                hideFieldError(cityCorr);
+            }
+            if (pinCorr) { 
+                pinCorr.value = pinPerm.value; 
+                pinCorr.readOnly = true; 
+                pinCorr.style.background = 'var(--bg)'; 
+                hideFieldError(pinCorr);
+            }
             if (corr) {
                 corr.value = perm.value;
                 corr.readOnly = true;
                 corr.style.background = 'var(--bg)';
                 corr.style.cursor = 'not-allowed';
+                hideFieldError(corr);
             }
         } else {
             if (cityCorr) { cityCorr.value = ''; cityCorr.disabled = false; }
@@ -3650,9 +3708,9 @@
             const pinPerm = document.getElementById('pincode_perm');
             const pinCorr = document.getElementById('pincode_corr');
 
-            if (perm && corr) corr.value = perm.value;
-            if (cityPerm && cityCorr) cityCorr.value = cityPerm.value;
-            if (pinPerm && pinCorr) pinCorr.value = pinPerm.value;
+            if (perm && corr) { corr.value = perm.value; hideFieldError(corr); }
+            if (cityPerm && cityCorr) { cityCorr.value = cityPerm.value; hideFieldError(cityCorr); }
+            if (pinPerm && pinCorr) { pinCorr.value = pinPerm.value; hideFieldError(pinCorr); }
         }
     }
 
