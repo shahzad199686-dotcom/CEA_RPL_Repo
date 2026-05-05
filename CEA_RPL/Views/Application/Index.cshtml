@@ -1994,11 +1994,22 @@
         if (input.id === 'govIdNumber' || input.id === 'confirmGovIdNumber') {
             const type = document.getElementById('govIdType')?.value;
             if (type === 'aadhaar') {
-                const govId = document.getElementById('govIdNumber')?.value.trim();
-                const confirmGovId = document.getElementById('confirmGovIdNumber')?.value.trim();
-                if (govId && confirmGovId && govId !== confirmGovId) {
-                    isInvalid = true;
-                    customMsg = "Aadhaar numbers do not match.";
+                const govIdRaw = document.getElementById('govIdNumber')?.value || "";
+                const confirmGovIdRaw = document.getElementById('confirmGovIdNumber')?.value || "";
+
+                // IF both values are masked → treat as valid
+                if (isMasked(govIdRaw) && isMasked(confirmGovIdRaw)) {
+                    isInvalid = false;
+                } else {
+                    const cleanOriginal = normalizeAadhaar(originalIdValue || govIdRaw);
+                    const cleanConfirm = normalizeAadhaar(originalConfirmValue || confirmGovIdRaw);
+
+                    if (cleanOriginal && cleanConfirm && cleanOriginal !== cleanConfirm) {
+                        isInvalid = true;
+                        customMsg = "Aadhaar numbers do not match.";
+                    } else {
+                        isInvalid = false;
+                    }
                 }
             }
         }
@@ -3779,27 +3790,56 @@
         }
     }
 
+    function isMasked(val) {
+        return val && val.includes("X");
+    }
+
+    function normalizeAadhaar(val) {
+        if (!val) return "";
+        return val.replace(/\D/g, ''); // remove spaces, X, everything except digits
+    }
+
     function validateAadhaarMatch() {
         const errorDiv = document.getElementById('aadhaarError');
         const confirmInput = document.getElementById('confirmGovIdNumber');
+        const idType = document.getElementById('govIdType')?.value;
+        const idInput = document.getElementById('govIdNumber');
 
-        const cleanOriginal = originalIdValue ? originalIdValue.replace(/\s/g, "") : "";
-        const cleanConfirm = originalConfirmValue ? originalConfirmValue.replace(/\s/g, "") : "";
+        const idValRaw = idInput?.value || "";
+        const confirmValRaw = confirmInput?.value || "";
 
-        // PART 6: CRITICAL FIX - Do not validate if either is empty
+        // CASE 1: BOTH MASKED (Aadhaar only) -> VALID
+        if (idType === 'aadhaar' && isMasked(idValRaw) && isMasked(confirmValRaw)) {
+            errorDiv.style.display = 'none';
+            confirmInput.style.borderColor = '';
+            return;
+        }
+
+        // Use original values if available, otherwise fallback to UI values for normalization
+        let cleanOriginal = originalIdValue ? originalIdValue.replace(/\s/g, "") : idValRaw;
+        let cleanConfirm = originalConfirmValue ? originalConfirmValue.replace(/\s/g, "") : confirmValRaw;
+
+        if (idType === 'aadhaar') {
+            cleanOriginal = normalizeAadhaar(cleanOriginal);
+            cleanConfirm = normalizeAadhaar(cleanConfirm);
+        }
+
+        // CASE 2: BOTH EMPTY -> no error
         if (!cleanOriginal || !cleanConfirm) {
             errorDiv.style.display = 'none';
             confirmInput.style.borderColor = '';
             return;
         }
 
-        if (cleanOriginal !== cleanConfirm) {
-            errorDiv.style.display = 'block';
-            errorDiv.innerText = 'ID numbers do not match';
-            confirmInput.style.borderColor = '#e53e3e';
-        } else {
+        // CASE 3: MATCH -> remove error
+        if (cleanOriginal === cleanConfirm) {
             errorDiv.style.display = 'none';
             confirmInput.style.borderColor = '';
+            errorDiv.innerText = '';
+        } else {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = (idType === 'aadhaar' ? 'Aadhaar' : 'ID') + ' numbers do not match';
+            confirmInput.style.borderColor = '#e53e3e';
         }
     }
 
