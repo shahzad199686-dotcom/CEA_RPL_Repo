@@ -694,9 +694,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="form-group">
+                                    <div class="form-group" style="margin-bottom: 20px;">
                                         <label id="govIdLabel">ID Number <span class="req">*</span></label>
                                         <input id="govIdNumber" name="gov_id_number" type="text" required placeholder="Enter ID Number" />
+                                    </div>
+                                    <div class="form-group confirm-aadhaar-group" id="confirmAadhaarGroup" style="display: none;">
+                                        <label>Confirm Aadhaar Number <span class="req">*</span></label>
+                                        <input id="confirmGovIdNumber" type="text" placeholder="Confirm Aadhaar Number" />
+                                        <div id="aadhaarError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 6px; font-weight: 600; display: none;">Aadhaar numbers do not match</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -1925,6 +1930,18 @@
                 } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
                     isInvalid = true;
                     customMsg = isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.";
+                }
+            }
+        }
+
+        if (input.id === 'govIdNumber' || input.id === 'confirmGovIdNumber') {
+            const type = document.getElementById('govIdType')?.value;
+            if (type === 'aadhaar') {
+                const govId = document.getElementById('govIdNumber')?.value.trim();
+                const confirmGovId = document.getElementById('confirmGovIdNumber')?.value.trim();
+                if (govId && confirmGovId && govId !== confirmGovId) {
+                    isInvalid = true;
+                    customMsg = "Aadhaar numbers do not match.";
                 }
             }
         }
@@ -3479,34 +3496,74 @@
             
             try {
                 let text = "";
+                let extractedId = null;
+
                 if (isImage) {
-                    const result = await Tesseract.recognize(file, 'eng');
+                    let result = await Tesseract.recognize(file, 'eng');
                     text = result.data.text;
+                    extractedId = detectIdNumber(text, idType);
+
+                    if (!extractedId) {
+                        const img = new Image();
+                        img.src = URL.createObjectURL(file);
+                        await new Promise(r => img.onload = r);
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        const orientations = [90, 180, 270];
+                        for (const angle of orientations) {
+                            hint.innerHTML = `<span style="color: var(--primary); font-weight: 600;"><i class="spinner-small"></i> Scanning orientation ${angle}°...</span>`;
+                            
+                            if (angle === 90 || angle === 270) {
+                                canvas.width = img.height;
+                                canvas.height = img.width;
+                            } else {
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                            }
+                            
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.save();
+                            ctx.translate(canvas.width / 2, canvas.height / 2);
+                            ctx.rotate(angle * Math.PI / 180);
+                            ctx.drawImage(img, -img.width / 2, -img.height / 2);
+                            ctx.restore();
+                            
+                            const rotatedBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg'));
+                            result = await Tesseract.recognize(rotatedBlob, 'eng');
+                            text += " " + result.data.text;
+                            
+                            extractedId = detectIdNumber(text, idType);
+                            if (extractedId) break;
+                        }
+                    }
                 } else if (isPdf) {
                     text = await extractTextFromPdf(file);
+                    extractedId = detectIdNumber(text, idType);
                 }
 
-                const extractedId = detectIdNumber(text, idType);
                 if (extractedId) {
                     document.getElementById('govIdNumber').value = extractedId;
+                    validateAadhaarMatch(); // Trigger match validation if it's Aadhaar
                     hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ID Detected & Verified</span>`;
                     hideFieldError(input);
                     showToast("ID number extracted successfully.", "success");
                 } else {
                     if (idType !== 'other') {
-                        throw new Error("Uploaded document does not match selected ID type or ID number not found.");
+                        const warnMsg = "Unable to auto-detect Aadhaar number. Please enter manually or upload clearer image.";
+                        showToast(warnMsg, "warning");
+                        hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
+                        // Do NOT clear input.value, allow user to proceed manually
                     } else {
                          hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ Document Uploaded</span>`;
                     }
                 }
             } catch (err) {
                 console.error("OCR Error:", err);
-                const msg = err.message || "Unable to detect ID number. Please upload a clear document.";
-                showToast(msg, "error");
-                input.value = "";
-                hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${msg}</span>`;
-                showFieldError(input, msg);
-                return;
+                const warnMsg = "Unable to auto-detect Aadhaar number. Please enter manually or upload clearer image.";
+                showToast(warnMsg, "warning");
+                hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
+                // Do NOT clear input.value, allow user to proceed manually
             }
         } else {
             hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ${limitMsg}</span>`;
@@ -3574,10 +3631,56 @@
         if (label) {
             label.textContent = (type === 'aadhaar' ? 'Aadhaar' : (type === 'pan' ? 'PAN' : (type === 'passport' ? 'Passport' : 'ID'))) + ' Number *';
         }
+
+        const confirmAadhaarGroup = document.getElementById('confirmAadhaarGroup');
+        const confirmGovIdNumber = document.getElementById('confirmGovIdNumber');
+        const aadhaarError = document.getElementById('aadhaarError');
+        if (confirmAadhaarGroup && confirmGovIdNumber) {
+            if (type === 'aadhaar') {
+                confirmAadhaarGroup.style.display = 'block';
+                confirmGovIdNumber.required = true;
+            } else {
+                confirmAadhaarGroup.style.display = 'none';
+                confirmGovIdNumber.required = false;
+                confirmGovIdNumber.value = '';
+                if(aadhaarError) aadhaarError.style.display = 'none';
+                confirmGovIdNumber.style.borderColor = '';
+                hideFieldError(confirmGovIdNumber);
+            }
+        }
+    }
+
+    function validateAadhaarMatch() {
+        const type = document.getElementById('govIdType')?.value;
+        if (type !== 'aadhaar') return;
+
+        const govId = document.getElementById('govIdNumber').value.trim();
+        const confirmGovId = document.getElementById('confirmGovIdNumber').value.trim();
+        const errorDiv = document.getElementById('aadhaarError');
+        const confirmInput = document.getElementById('confirmGovIdNumber');
+
+        if (confirmGovId.length > 0 && govId !== confirmGovId) {
+            errorDiv.style.display = 'block';
+            confirmInput.style.borderColor = '#e53e3e';
+        } else {
+            errorDiv.style.display = 'none';
+            confirmInput.style.borderColor = '';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
+
+        const govIdInput = document.getElementById('govIdNumber');
+        const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
+        if (govIdInput) {
+            govIdInput.addEventListener('input', validateAadhaarMatch);
+            govIdInput.addEventListener('blur', validateAadhaarMatch);
+        }
+        if (confirmGovIdInput) {
+            confirmGovIdInput.addEventListener('input', validateAadhaarMatch);
+            confirmGovIdInput.addEventListener('blur', validateAadhaarMatch);
+        }
         
         // --- DOB LIMIT FIX ---
         const dobInput = document.getElementById('dob');

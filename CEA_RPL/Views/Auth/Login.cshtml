@@ -18,6 +18,8 @@
             </div>
 
 
+            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+
             <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14, 90, 60, 0.2);">
                 Continue
             </button>
@@ -66,9 +68,17 @@
         e.preventDefault();
         showStatus('Verifying credentials...', '#eee', '#666');
         
+        const captchaToken = grecaptcha.getResponse();
+        if (!captchaToken) {
+            alert('Please verify that you are not a robot.');
+            showStatus('Please complete the CAPTCHA.', '#fff5f5', '#e53e3e');
+            return;
+        }
+
         const payload = new FormData();
         payload.append('email', loginForm.elements['candidate_email'].value);
         payload.append('requiredRole', 'Candidate');
+        payload.append('captchaToken', captchaToken);
 
         try {
             const resp = await fetch('/api/auth/signin', {
@@ -85,9 +95,11 @@
                 startCooldown(); // Start on first entry
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
+                grecaptcha.reset();
             }
         } catch (err) {
             showStatus('Connection failed. Please try again.', '#fff5f5', '#e53e3e');
+            grecaptcha.reset();
         }
     });
 
@@ -178,3 +190,4 @@
     @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     input:focus { border-color: #0E5A3C !important; box-shadow: 0 0 0 3px rgba(14, 90, 60, 0.1); }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

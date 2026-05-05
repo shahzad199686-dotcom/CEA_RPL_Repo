@@ -111,9 +111,14 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/sendotp")]
-    public async Task<IActionResult> SendOtp([FromForm] string email)
+    public async Task<IActionResult> SendOtp([FromForm] string email, [FromForm] string captchaToken)
     {
         if (string.IsNullOrEmpty(email)) return BadRequest(new { message = "Email missing." });
+
+        if (!await ValidateCaptchaAsync(captchaToken))
+        {
+            return BadRequest(new { message = "Please verify that you are not a robot." });
+        }
 
         // Cooldown check (60 seconds)
         var canSend = await _otpService.VerifyOtpAsync(email, "CHECK_COOLDOWN");
@@ -170,8 +175,13 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/signin")]
-    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string? requiredRole)
+    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string? requiredRole, [FromForm] string captchaToken)
     {
+        if (!await ValidateCaptchaAsync(captchaToken))
+        {
+            return BadRequest(new { message = "Please verify that you are not a robot." });
+        }
+
         var user = await _authService.GetUserByEmailAsync(email);
         if (user == null) return Unauthorized(new { message = "Email not found. Please register first." });
 
@@ -208,4 +218,22 @@ public class AuthController : Controller
         return Ok(new { authenticated = false });
     }
 
+    private async Task<bool> ValidateCaptchaAsync(string captchaToken)
+    {
+        if (string.IsNullOrEmpty(captchaToken)) return false;
+
+        var secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; // Google's official reCAPTCHA v2 testing secret key
+        using var client = new HttpClient();
+        var response = await client.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaToken}", null);
+        
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<System.Text.Json.Nodes.JsonObject>();
+            if (result != null && result["success"]?.GetValue<bool>() == true)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

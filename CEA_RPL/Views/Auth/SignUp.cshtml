@@ -23,6 +23,8 @@
                 </div>
                 <div id="cooldownTimer" style="font-size: 0.75rem; color: #4B5563; margin-top: 5px; display: none;">Resend available in <span id="seconds">60</span>s</div>
             </div>
+            
+            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom: 25px; display: flex; justify-content: center;"></div>
 
             <!-- OTP INPUT (HIDDEN INITIALLY) -->
             <div id="otpInputArea" style="display: none; margin-bottom: 25px; animation: fadeIn 0.3s ease-out;">
@@ -59,6 +61,12 @@
                 <input id="mobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit primary mobile" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
             </div>
 
+            <div style="margin-bottom: 20px;">
+                <label for="confirmMobile" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Confirm Mobile Number *</label>
+                <input id="confirmMobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="Re-enter mobile number" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none; transition: border-color 0.2s;" />
+                <div id="mobileError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 6px; font-weight: 600; display: none;">Mobile numbers do not match</div>
+            </div>
+
 
             <button type="submit" id="btnContinue" disabled class="btn-primary-green"
                     style="width: 100%; background: #0E5A3C; color: white; border: none; padding: 18px; border-radius: 14px; font-size: 1.1rem; font-weight: 800; cursor: not-allowed; opacity: 0.6; transition: all 0.2s;">
@@ -92,11 +100,18 @@
         const email = emailInput.value.trim();
         if (!/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email)) return alert('Please enter a valid email address.');
 
+        const captchaToken = grecaptcha.getResponse();
+        if (!captchaToken) {
+            alert('Please verify that you are not a robot.');
+            return;
+        }
+
         btnSendOtp.disabled = true;
         btnSendOtp.innerText = 'Sending...';
         
         const formData = new FormData();
         formData.append('email', email);
+        formData.append('captchaToken', captchaToken);
 
         try {
             const resp = await fetch('/api/auth/sendotp', { method: 'POST', body: formData });
@@ -110,10 +125,13 @@
                 showStatus(data.message, '#fff5f5', '#e53e3e');
                 btnSendOtp.disabled = false;
                 btnSendOtp.innerText = 'Send OTP';
+                grecaptcha.reset();
             }
         } catch (err) {
             showStatus('Connection failed.', '#fff5f5', '#e53e3e');
             btnSendOtp.disabled = false;
+            btnSendOtp.innerText = 'Send OTP';
+            grecaptcha.reset();
         }
     });
 
@@ -173,6 +191,7 @@
                 btnSendOtp.disabled = false;
                 btnSendOtp.style.opacity = '1';
                 btnSendOtp.innerText = 'Send OTP';
+                grecaptcha.reset();
             }
         }, 1000);
     }
@@ -183,14 +202,41 @@
         const fname = document.getElementById('firstName').value.trim();
         const lname = document.getElementById('lastName').value.trim();
         const mobile = document.getElementById('mobile').value.trim();
-        const allValid = fname.length >= 2 && lname.length >= 2 && /^[6-9][0-9]{9}$/.test(mobile);
+        const confirmMobile = document.getElementById('confirmMobile').value.trim();
+        
+        const isMobileValid = /^[6-9][0-9]{9}$/.test(mobile);
+        const isMatch = mobile === confirmMobile && isMobileValid;
+        
+        const allValid = fname.length >= 2 && lname.length >= 2 && isMatch;
         btnContinue.disabled = !allValid;
         btnContinue.style.opacity = allValid ? "1" : "0.6";
         btnContinue.style.cursor = allValid ? "pointer" : "not-allowed";
     }
 
-    ['firstName', 'lastName', 'mobile'].forEach(id => {
-        document.getElementById(id).addEventListener('input', checkFormValidity);
+    function validateMobileMatch() {
+        const mobile = document.getElementById('mobile').value.trim();
+        const confirmMobile = document.getElementById('confirmMobile').value.trim();
+        const errorDiv = document.getElementById('mobileError');
+        const confirmInput = document.getElementById('confirmMobile');
+
+        if (confirmMobile.length > 0 && mobile !== confirmMobile) {
+            errorDiv.style.display = 'block';
+            confirmInput.style.borderColor = '#e53e3e';
+        } else {
+            errorDiv.style.display = 'none';
+            confirmInput.style.borderColor = '#E5E7EB';
+        }
+    }
+
+    ['firstName', 'lastName', 'mobile', 'confirmMobile'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => {
+            if (id === 'mobile' || id === 'confirmMobile') validateMobileMatch();
+            checkFormValidity();
+        });
+        if (id === 'mobile' || id === 'confirmMobile') {
+            el.addEventListener('blur', validateMobileMatch);
+        }
     });
 
     // FINAL SUBMISSION
@@ -227,3 +273,4 @@
     .btn-primary-green { background: #0E5A3C !important; }
     .btn-primary-green:hover:not(:disabled) { background: #0B4A32 !important; }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

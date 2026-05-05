@@ -40,6 +40,8 @@
             </div>
 
 
+            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+
             <button type="submit" id="btnContinue" style="width: 100%; background: #333; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
                 Sign In to Portal
             </button>
@@ -129,9 +131,17 @@
         const prefix = role.toLowerCase();
         const email = loginForm.elements[`${prefix}_email`].value;
 
+        const captchaToken = grecaptcha.getResponse();
+        if (!captchaToken) {
+            alert('Please verify that you are not a robot.');
+            showStatus('Please complete the CAPTCHA.', '#fff5f5', '#e53e3e');
+            return;
+        }
+
         const payload = new FormData();
         payload.append('email', email);
         payload.append('requiredRole', role);
+        payload.append('captchaToken', captchaToken);
 
         try {
             const resp = await fetch('/api/auth/signin', {
@@ -147,9 +157,11 @@
                 showStatus(`${role} access confirmed. Check your email for OTP.`, '#f0f7f7', '#0ea5a5');
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
+                grecaptcha.reset();
             }
         } catch (err) {
             showStatus('Connection failed. Please try again.', '#fff5f5', '#e53e3e');
+            grecaptcha.reset();
         }
     });
 
@@ -203,3 +215,4 @@
     @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     input:focus { border-color: #333 !important; }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
