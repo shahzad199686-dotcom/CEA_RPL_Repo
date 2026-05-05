@@ -196,19 +196,16 @@
         }, 1000);
     }
 
-    // FORM VALIDATION
+    let originalMobile = "";
+    let originalConfirmMobile = "";
+
     function checkFormValidity() {
         if (!isEmailVerified) return;
         const fname = document.getElementById('firstName').value.trim();
         const lname = document.getElementById('lastName').value.trim();
-        const mobileEl = document.getElementById('mobile');
-        const confirmMobileEl = document.getElementById('confirmMobile');
         
-        const mobile = mobileEl.dataset.val || mobileEl.value.trim();
-        const confirmMobile = confirmMobileEl.dataset.val || confirmMobileEl.value.trim();
-        
-        const isMobileValid = /^[6-9][0-9]{9}$/.test(mobile);
-        const isMatch = mobile === confirmMobile && isMobileValid;
+        const isMobileValid = /^[6-9][0-9]{9}$/.test(originalMobile);
+        const isMatch = originalMobile === originalConfirmMobile && isMobileValid;
         
         const allValid = fname.length >= 2 && lname.length >= 2 && isMatch;
         btnContinue.disabled = !allValid;
@@ -217,14 +214,10 @@
     }
 
     function validateMobileMatch() {
-        const mobileEl = document.getElementById('mobile');
         const confirmInput = document.getElementById('confirmMobile');
-        
-        const mobile = mobileEl.dataset.val || mobileEl.value.trim();
-        const confirmMobile = confirmInput.dataset.val || confirmInput.value.trim();
         const errorDiv = document.getElementById('mobileError');
 
-        if (confirmMobile.length > 0 && mobile !== confirmMobile) {
+        if (originalConfirmMobile.length > 0 && originalMobile !== originalConfirmMobile) {
             errorDiv.style.display = 'block';
             confirmInput.style.borderColor = '#e53e3e';
         } else {
@@ -243,19 +236,24 @@
         
         if (id === 'mobile' || id === 'confirmMobile') {
             el.addEventListener('focus', function() {
-                if (this.dataset.val) {
-                    this.value = this.dataset.val;
-                }
+                const val = (id === 'mobile') ? originalMobile : originalConfirmMobile;
+                if (val) this.value = val;
             });
             el.addEventListener('blur', function() {
+                if (this.value && !this.value.includes('XXXXXX')) {
+                    if (id === 'mobile') originalMobile = this.value;
+                    else originalConfirmMobile = this.value;
+                }
                 validateMobileMatch();
                 if (this.value) {
-                    this.dataset.val = this.value;
-                    this.value = maskMobile(this.value);
+                    this.value = maskMobile((id === 'mobile') ? originalMobile : originalConfirmMobile);
                 }
             });
             el.addEventListener('input', function() {
-                this.dataset.val = this.value;
+                if (this.value && !this.value.includes('XXXXXX')) {
+                    if (id === 'mobile') originalMobile = this.value;
+                    else originalConfirmMobile = this.value;
+                }
                 validateMobileMatch();
                 checkFormValidity();
             });
@@ -271,9 +269,8 @@
         
         const formData = new FormData(registerForm);
         
-        const realMobile = document.getElementById('mobile').dataset.val;
-        if (realMobile) {
-            formData.set('mobile', realMobile);
+        if (originalMobile) {
+            formData.set('mobile', originalMobile);
         }
         
         try {

@@ -2651,11 +2651,13 @@
         corrAddr.value = oldCorrVal;
         
         // Use real values for masked fields
-        const realGovId = document.getElementById('govIdNumber')?.dataset?.val;
-        if (realGovId) formData.set('gov_id_number', realGovId);
+        if (originalIdValue) formData.set('gov_id_number', originalIdValue);
+        else {
+            const realGovId = document.getElementById('govIdNumber')?.value;
+            if (realGovId) formData.set('gov_id_number', realGovId);
+        }
         
-        const realMobile = document.getElementById('mobile')?.dataset?.val;
-        if (realMobile) formData.set('mobile', realMobile);
+        if (originalMobile) formData.set('mobile', originalMobile);
 
         formData.append('current_step', currentStep);
 
@@ -2759,6 +2761,8 @@
             setVal('gov_id_type', draftData.gov_id_type);
             setVal('other_gov_id_type', draftData.other_gov_id_type);
             setVal('gov_id_number', draftData.gov_id_number);
+            originalIdValue = draftData.gov_id_number || "";
+            applyIdMask();
             setVal('enclosure_desc', draftData.enclosure_desc);
 
             // Trigger UI logic
@@ -3068,11 +3072,13 @@
             corrAddr.value = oldCorrVal;
             
             // Use real values for masked fields
-            const realGovId = document.getElementById('govIdNumber')?.dataset?.val;
-            if (realGovId) formData.set('gov_id_number', realGovId);
+            if (originalIdValue) formData.set('gov_id_number', originalIdValue);
+            else {
+                const realGovId = document.getElementById('govIdNumber')?.value;
+                if (realGovId) formData.set('gov_id_number', realGovId);
+            }
             
-            const realMobile = document.getElementById('mobile')?.dataset?.val;
-            if (realMobile) formData.set('mobile', realMobile);
+            if (originalMobile) formData.set('mobile', originalMobile);
 
             const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
 
@@ -3619,7 +3625,8 @@
                 if (idType === 'passport') typeName = 'Passport';
 
                 if (extractedId) {
-                    document.getElementById('govIdNumber').value = extractedId;
+                    originalIdValue = extractedId.replace(/\s/g, "");
+                    applyIdMask();
                     
                     // We DO NOT auto-fill the confirm field per user request
                     validateAadhaarMatch(); // Validate match if user had already typed something
@@ -3769,12 +3776,20 @@
     }
 
     function validateAadhaarMatch() {
-        const govId = document.getElementById('govIdNumber').value.trim();
-        const confirmGovId = document.getElementById('confirmGovIdNumber').value.trim();
         const errorDiv = document.getElementById('aadhaarError');
         const confirmInput = document.getElementById('confirmGovIdNumber');
 
-        if (confirmGovId.length > 0 && govId !== confirmGovId) {
+        const cleanOriginal = originalIdValue ? originalIdValue.replace(/\s/g, "") : "";
+        const cleanConfirm = originalConfirmValue ? originalConfirmValue.replace(/\s/g, "") : "";
+
+        // PART 6: CRITICAL FIX - Do not validate if either is empty
+        if (!cleanOriginal || !cleanConfirm) {
+            errorDiv.style.display = 'none';
+            confirmInput.style.borderColor = '';
+            return;
+        }
+
+        if (cleanOriginal !== cleanConfirm) {
             errorDiv.style.display = 'block';
             errorDiv.innerText = 'ID numbers do not match';
             confirmInput.style.borderColor = '#e53e3e';
@@ -3784,9 +3799,53 @@
         }
     }
 
+    let originalIdValue = "";
+    let originalConfirmValue = "";
+    let originalMobile = "";
+
     function maskAadhaar(value) {
         if (!value || value.length < 4) return value;
         return "XXXX XXXX " + value.slice(-4);
+    }
+
+    function maskPAN(value) {
+        if (!value || value.length < 5) return value;
+        return value.slice(0, 3) + "XXXXX" + value.slice(-2);
+    }
+
+    function maskPassport(value) {
+        if (!value || value.length < 2) return value;
+        return value.charAt(0) + "XXXXXX" + value.slice(-1);
+    }
+
+    function maskOther(value) {
+        if (!value || value.length < 4) return value;
+        return "XXXXX" + value.slice(-4);
+    }
+
+    function maskValueByType(value, idType) {
+        if (!value) return "";
+        if (idType === 'aadhaar') return maskAadhaar(value);
+        if (idType === 'pan') return maskPAN(value);
+        if (idType === 'passport') return maskPassport(value);
+        if (idType === 'other') return maskOther(value);
+        return value;
+    }
+
+    function applyIdMask() {
+        const idType = document.getElementById('govIdType')?.value;
+        const input = document.getElementById('govIdNumber');
+        const confirmInput = document.getElementById('confirmGovIdNumber');
+
+        if (input) {
+            if (!originalIdValue) input.value = "";
+            else input.value = maskValueByType(originalIdValue, idType);
+        }
+
+        if (confirmInput) {
+            if (!originalConfirmValue) confirmInput.value = "";
+            else confirmInput.value = maskValueByType(originalConfirmValue, idType);
+        }
     }
 
     function maskMobile(value) {
@@ -3800,33 +3859,66 @@
         const govIdInput = document.getElementById('govIdNumber');
         const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
         if (govIdInput) {
+            originalIdValue = govIdInput.value;
+            applyIdMask();
+            
             govIdInput.addEventListener('focus', function() {
-                if (this.dataset.val) this.value = this.dataset.val;
+                if (originalIdValue) this.value = originalIdValue;
             });
             govIdInput.addEventListener('blur', function() {
-                validateAadhaarMatch();
-                if (this.value) {
-                    this.dataset.val = this.value;
-                    const type = document.getElementById('govIdType')?.value;
-                    if (type === 'aadhaar') {
-                        this.value = maskAadhaar(this.value);
-                    }
+                if (this.value && !this.value.includes('XXXX')) {
+                    originalIdValue = this.value.replace(/\s/g, "");
                 }
+                applyIdMask();
+                validateAadhaarMatch();
             });
             govIdInput.addEventListener('input', function() {
-                this.dataset.val = this.value;
+                if (this.value && !this.value.includes('XXXX')) {
+                    originalIdValue = this.value.replace(/\s/g, "");
+                }
                 validateAadhaarMatch();
             });
         }
+
+        const idTypeSelect = document.getElementById('govIdType');
+        if (idTypeSelect) {
+            idTypeSelect.addEventListener('change', applyIdMask);
+        }
         if (confirmGovIdInput) {
-            confirmGovIdInput.addEventListener('input', validateAadhaarMatch);
-            confirmGovIdInput.addEventListener('blur', validateAadhaarMatch);
+            originalConfirmValue = confirmGovIdInput.value;
+            
+            confirmGovIdInput.addEventListener('focus', function() {
+                if (originalConfirmValue) this.value = originalConfirmValue;
+            });
+            confirmGovIdInput.addEventListener('blur', function() {
+                if (this.value && !this.value.includes('XXXX')) {
+                    originalConfirmValue = this.value.replace(/\s/g, "");
+                }
+                applyIdMask();
+                validateAadhaarMatch();
+            });
+            confirmGovIdInput.addEventListener('input', function() {
+                if (this.value && !this.value.includes('XXXX')) {
+                    originalConfirmValue = this.value.replace(/\s/g, "");
+                }
+                validateAadhaarMatch();
+            });
         }
         
         const mobileInput = document.getElementById('mobile');
         if (mobileInput) {
-            mobileInput.dataset.val = mobileInput.value;
-            mobileInput.value = maskMobile(mobileInput.value);
+            originalMobile = mobileInput.value;
+            mobileInput.value = maskMobile(originalMobile);
+            
+            mobileInput.addEventListener('focus', function() {
+                if (originalMobile) this.value = originalMobile;
+            });
+            mobileInput.addEventListener('blur', function() {
+                if (this.value && this.value !== maskMobile(originalMobile)) {
+                    originalMobile = this.value;
+                }
+                this.value = maskMobile(originalMobile);
+            });
         }
         
         // --- DOB LIMIT FIX ---
