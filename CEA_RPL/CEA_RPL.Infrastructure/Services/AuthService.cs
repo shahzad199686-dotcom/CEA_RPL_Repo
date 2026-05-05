@@ -52,10 +52,6 @@ public class AuthService : IAuthService
         }
     }
 
-    public Task<bool> ValidatePasswordAsync(User user, string password)
-    {
-        return Task.FromResult(BCrypt.Net.BCrypt.Verify(password, user.PasswordHash));
-    }
 
     public async Task UpdateVerificationStatusAsync(string email, bool emailVerified, bool mobileVerified)
     {
@@ -68,17 +64,4 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<bool> UpdatePasswordAsync(User user, string newPassword)
-    {
-        try
-        {
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
 }

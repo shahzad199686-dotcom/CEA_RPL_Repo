@@ -66,7 +66,7 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/signup")]
-    public async Task<IActionResult> SignUpApi([FromForm] string firstName, [FromForm] string? middleName, [FromForm] string? lastName, [FromForm] string email, [FromForm] string mobile, [FromForm] string password)
+    public async Task<IActionResult> SignUpApi([FromForm] string firstName, [FromForm] string? middleName, [FromForm] string? lastName, [FromForm] string email, [FromForm] string mobile)
     {
         if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < 2)
             return BadRequest(new { message = "Validation failed: Please enter a valid first name" });
@@ -80,15 +80,12 @@ public class AuthController : Controller
         if (string.IsNullOrWhiteSpace(mobile) || !System.Text.RegularExpressions.Regex.IsMatch(mobile, "^[6-9][0-9]{9}$"))
             return BadRequest(new { message = "Validation failed: Please enter a valid 10-digit mobile number" });
 
-        if (!IsValidPassword(password))
-            return BadRequest(new { message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character." });
-
         // IMPORTANT: Verify that the email was previously verified via OTP
         var isVerified = await _otpService.VerifyOtpAsync(email, "CHECK_VERIFIED");
         if (!isVerified) 
             return BadRequest(new { message = "Please verify your email address via OTP before completing registration." });
 
-        var result = await _authService.RegisterUserAsync(firstName, middleName, lastName, email, mobile, password);
+        var result = await _authService.RegisterUserAsync(firstName, middleName, lastName, email, mobile, "OTP_ONLY_ACCOUNT");
         if (!result.Success) 
             return BadRequest(new { message = result.ErrorMessage });
 
@@ -173,66 +170,29 @@ public class AuthController : Controller
     }
 
     [HttpPost("api/auth/signin")]
-    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string password, [FromForm] string? requiredRole)
+    public async Task<IActionResult> SignInApi([FromForm] string email, [FromForm] string? requiredRole)
     {
         var user = await _authService.GetUserByEmailAsync(email);
-        if (user == null) return Unauthorized(new { message = "Invalid credentials." });
+        if (user == null) return Unauthorized(new { message = "Email not found. Please register first." });
 
         if (!string.IsNullOrEmpty(requiredRole) && user.Role != requiredRole)
         {
             return Unauthorized(new { message = $"This account is not authorized for {requiredRole} login." });
         }
 
-        var valid = await _authService.ValidatePasswordAsync(user, password);
-        if (!valid) return Unauthorized(new { message = "Invalid credentials." });
-
         // Trigger OTP
-        string warning = "";
         try {
             var otp = await _otpService.GenerateOtpAsync(email);
             await _otpSender.SendEmailOtpAsync(email, otp);
         } catch {
-            // Log error but don't expose to user
+            return BadRequest(new { message = "Failed to send OTP. Please try again later." });
         }
 
-        return Ok(new { message = "Password correct." + warning, requiresVerification = true, email = email });
+        return Ok(new { message = "Verification code sent to your email.", requiresVerification = true, email = email });
     }
     
     [HttpGet("Auth/ForgotPassword")]
-    public IActionResult ForgotPassword() => View();
-
-    [HttpPost("api/auth/reset-request")]
-    public async Task<IActionResult> ResetRequest([FromForm] string email)
-    {
-        var user = await _authService.GetUserByEmailAsync(email);
-        if (user == null) return Ok(new { message = "If your email is registered, you will receive an OTP." });
-
-        try {
-            var otp = await _otpService.GenerateOtpAsync(email);
-            await _otpSender.SendEmailOtpAsync(email, otp);
-            return Ok(new { message = "OTP sent to your registered email." });
-        } catch {
-            return BadRequest(new { message = "Failed to send reset code. Please try again." });
-        }
-    }
-
-    [HttpPost("api/auth/reset-password")]
-    public async Task<IActionResult> ResetPassword([FromForm] string email, [FromForm] string otp, [FromForm] string newPassword)
-    {
-        if (!IsValidPassword(newPassword))
-            return BadRequest(new { message = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character." });
-
-        var isValid = await _otpService.VerifyOtpAsync(email, otp);
-        if (!isValid) return BadRequest(new { message = "Invalid or expired OTP." });
-
-        var user = await _authService.GetUserByEmailAsync(email);
-        if (user == null) return BadRequest(new { message = "User not found." });
-
-        var success = await _authService.UpdatePasswordAsync(user, newPassword);
-        if (!success) return BadRequest(new { message = "Failed to update password. Please try again." });
-
-        return Ok(new { message = "Password updated successfully. You can now login." });
-    }
+    public IActionResult ForgotPassword() => RedirectToAction("Login");
 
     [HttpGet("api/auth/status")]
     public IActionResult Status()
@@ -248,9 +208,4 @@ public class AuthController : Controller
         return Ok(new { authenticated = false });
     }
 
-    private bool IsValidPassword(string password)
-    {
-        if (string.IsNullOrEmpty(password) || password.Length < 8) return false;
-        return System.Text.RegularExpressions.Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
-    }
 }

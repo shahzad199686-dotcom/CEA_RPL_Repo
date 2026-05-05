@@ -17,13 +17,6 @@
                 <input id="candidateEmail" name="candidate_email" type="email" placeholder="you@example.com" required autocomplete="section-candidate username" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
             </div>
 
-            <div style="margin-bottom: 25px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="candidatePass" style="font-weight: 600; font-size: 0.9rem; margin: 0; color: var(--l-ink);">Password</label>
-                    <a asp-action="ForgotPassword" style="color: var(--l-primary); font-size: 0.85rem; text-decoration: none; font-weight: 700; transition: color 0.2s;">Forgot?</a>
-                </div>
-                <input id="candidatePass" name="candidate_password" type="password" placeholder="••••••••" required autocomplete="section-candidate current-password" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
-            </div>
 
             <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14, 90, 60, 0.2);">
                 Continue
@@ -75,7 +68,6 @@
         
         const payload = new FormData();
         payload.append('email', loginForm.elements['candidate_email'].value);
-        payload.append('password', loginForm.elements['candidate_password'].value);
         payload.append('requiredRole', 'Candidate');
 
         try {
