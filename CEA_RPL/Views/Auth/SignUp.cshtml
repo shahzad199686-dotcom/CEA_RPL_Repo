@@ -57,13 +57,13 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="mobile" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Mobile Number *</label>
-                <input id="mobile" name="mobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit primary mobile" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" />
+                <label for="mobileNumber" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Mobile Number *</label>
+                <input id="mobileNumber" name="mobile" type="text" maxlength="10" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="10-digit primary mobile" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="confirmMobile" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Confirm Mobile Number *</label>
-                <input id="confirmMobile" type="text" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="Re-enter mobile number" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none; transition: border-color 0.2s;" />
+                <label for="confirmMobileNumber" style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4B5563;">Confirm Mobile Number *</label>
+                <input id="confirmMobileNumber" type="text" maxlength="10" inputmode="numeric" pattern="[6-9][0-9]{9}" placeholder="Re-enter mobile number" required style="width: 100%; height: 50px; padding: 14px; border-radius: 10px; border: 2px solid #E5E7EB; outline: none; transition: border-color 0.2s;" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                 <div id="mobileError" style="color: #e53e3e; font-size: 0.85rem; margin-top: 6px; font-weight: 600; display: none;">Mobile numbers do not match</div>
             </div>
 
@@ -196,16 +196,18 @@
         }, 1000);
     }
 
-    let originalMobile = "";
-    let originalConfirmMobile = "";
-
     function checkFormValidity() {
         if (!isEmailVerified) return;
         const fname = document.getElementById('firstName').value.trim();
         const lname = document.getElementById('lastName').value.trim();
         
-        const isMobileValid = /^[6-9][0-9]{9}$/.test(originalMobile);
-        const isMatch = originalMobile === originalConfirmMobile && isMobileValid;
+        const mobileInput = document.getElementById('mobileNumber');
+        const confirmInput = document.getElementById('confirmMobileNumber');
+        const mobileRaw = mobileInput?.dataset.raw || '';
+        const confirmRaw = confirmInput?.dataset.raw || '';
+
+        const isMobileValid = /^[6-9][0-9]{9}$/.test(mobileRaw);
+        const isMatch = mobileRaw === confirmRaw && isMobileValid;
         
         const allValid = fname.length >= 2 && lname.length >= 2 && isMatch;
         btnContinue.disabled = !allValid;
@@ -214,15 +216,29 @@
     }
 
     function validateMobileMatch() {
-        const confirmInput = document.getElementById('confirmMobile');
+        const mobileInput = document.getElementById("mobileNumber");
+        const confirmInput = document.getElementById("confirmMobileNumber");
         const errorDiv = document.getElementById('mobileError');
 
-        if (originalConfirmMobile.length > 0 && originalMobile !== originalConfirmMobile) {
-            errorDiv.style.display = 'block';
-            confirmInput.style.borderColor = '#e53e3e';
-        } else {
+        const mobileRaw = mobileInput?.dataset.raw || '';
+        const confirmRaw = confirmInput?.dataset.raw || '';
+
+        if (!mobileRaw || !confirmRaw) {
             errorDiv.style.display = 'none';
             confirmInput.style.borderColor = '#E5E7EB';
+            return;
+        }
+
+        const isMatch = mobileRaw === confirmRaw;
+        const is10Digits = /^[0-9]{10}$/.test(mobileRaw);
+
+        if (isMatch) {
+            errorDiv.style.display = 'none';
+            confirmInput.style.borderColor = '#E5E7EB';
+        } else {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = "Mobile numbers do not match.";
+            confirmInput.style.borderColor = '#e53e3e';
         }
     }
 
@@ -231,28 +247,26 @@
         return "XXXXXX" + value.slice(-4);
     }
 
-    ['firstName', 'lastName', 'mobile', 'confirmMobile'].forEach(id => {
+    ['firstName', 'lastName', 'mobileNumber', 'confirmMobileNumber'].forEach(id => {
         const el = document.getElementById(id);
         
-        if (id === 'mobile' || id === 'confirmMobile') {
+        if (id === 'mobileNumber' || id === 'confirmMobileNumber') {
             el.addEventListener('focus', function() {
-                const val = (id === 'mobile') ? originalMobile : originalConfirmMobile;
+                const val = this.dataset.raw || '';
                 if (val) this.value = val;
             });
             el.addEventListener('blur', function() {
                 if (this.value && !this.value.includes('XXXXXX')) {
-                    if (id === 'mobile') originalMobile = this.value;
-                    else originalConfirmMobile = this.value;
+                    this.dataset.raw = this.value.replace(/\D/g, '');
                 }
                 validateMobileMatch();
-                if (this.value) {
-                    this.value = maskMobile((id === 'mobile') ? originalMobile : originalConfirmMobile);
+                if (this.dataset.raw) {
+                    this.value = maskMobile(this.dataset.raw);
                 }
             });
             el.addEventListener('input', function() {
                 if (this.value && !this.value.includes('XXXXXX')) {
-                    if (id === 'mobile') originalMobile = this.value;
-                    else originalConfirmMobile = this.value;
+                    this.dataset.raw = this.value.replace(/\D/g, '');
                 }
                 validateMobileMatch();
                 checkFormValidity();
@@ -269,8 +283,11 @@
         
         const formData = new FormData(registerForm);
         
-        if (originalMobile) {
-            formData.set('mobile', originalMobile);
+        const mobileInput = document.getElementById('mobileNumber');
+        const mobileRaw = mobileInput?.dataset.raw || '';
+        
+        if (mobileRaw) {
+            formData.set('mobile', mobileRaw);
         }
         
         try {
