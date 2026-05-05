@@ -3722,23 +3722,35 @@
         const otherInput = document.getElementById('otherGovIdType');
         const label = document.getElementById('govIdLabel');
         
-        // --- CLEAR STATE ON TYPE CHANGE ---
-        const govIdInput = document.getElementById('govIdNumber');
-        if (govIdInput) {
-            govIdInput.value = '';
-            hideFieldError(govIdInput);
-        }
+        // --- 1. CLEAR ORIGINAL VALUES (VERY IMPORTANT) ---
+        originalIdValue = "";
+        originalConfirmValue = "";
         
+        // --- 2. CLEAR INPUT FIELDS ---
+        const govIdInput = document.getElementById('govIdNumber');
+        const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
+        if (govIdInput) govIdInput.value = '';
+        if (confirmGovIdInput) confirmGovIdInput.value = '';
+        
+        // --- 3. CLEAR FILE INPUT & 4. RESET FILE UI ---
         const fileInput = document.getElementById('govIdUpload');
         if (fileInput) {
             fileInput.value = '';
             hideFieldError(fileInput);
             const hint = fileInput.parentNode.querySelector('.file-validation-hint, .identity-hint');
             if (hint) {
-                hint.innerHTML = '';
+                hint.innerHTML = ''; // Clear detection messages
             }
         }
-        // ----------------------------------
+        
+        // --- 5. REMOVE SUCCESS / ERROR STATES ---
+        const aadhaarError = document.getElementById('aadhaarError');
+        if (aadhaarError) {
+            aadhaarError.style.display = 'none';
+            aadhaarError.innerText = '';
+        }
+        if (govIdInput) govIdInput.style.borderColor = '';
+        if (confirmGovIdInput) confirmGovIdInput.style.borderColor = '';
         
         if (otherContainer && otherInput) {
             if (type === 'other') {
@@ -3756,21 +3768,13 @@
         }
 
         const confirmAadhaarGroup = document.getElementById('confirmAadhaarGroup');
-        const confirmGovIdNumber = document.getElementById('confirmGovIdNumber');
-        const aadhaarError = document.getElementById('aadhaarError');
-        if (confirmAadhaarGroup && confirmGovIdNumber) {
-            // Always clear the confirm field on ID type change
-            confirmGovIdNumber.value = '';
-            confirmGovIdNumber.style.borderColor = '';
-            if (aadhaarError) aadhaarError.style.display = 'none';
-            hideFieldError(confirmGovIdNumber);
-
+        if (confirmAadhaarGroup && confirmGovIdInput) {
             if (type === 'aadhaar') {
                 confirmAadhaarGroup.style.display = 'block';
-                confirmGovIdNumber.required = true;
+                confirmGovIdInput.required = true;
             } else {
                 confirmAadhaarGroup.style.display = 'none';
-                confirmGovIdNumber.required = false;
+                confirmGovIdInput.required = false;
             }
         }
     }
@@ -3882,7 +3886,8 @@
 
         const idTypeSelect = document.getElementById('govIdType');
         if (idTypeSelect) {
-            idTypeSelect.addEventListener('change', applyIdMask);
+            // toggleGovIdUpload already handles full reset and UI toggling
+            idTypeSelect.addEventListener('change', toggleGovIdUpload);
         }
         if (confirmGovIdInput) {
             originalConfirmValue = confirmGovIdInput.value;
