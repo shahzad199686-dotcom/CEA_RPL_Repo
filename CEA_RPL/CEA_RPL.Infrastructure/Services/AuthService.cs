@@ -9,10 +9,12 @@ namespace CEA_RPL.Infrastructure.Services;
 public class AuthService : IAuthService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IEncryptionService _encryptionService;
 
-    public AuthService(ApplicationDbContext context)
+    public AuthService(ApplicationDbContext context, IEncryptionService encryptionService)
     {
         _context = context;
+        _encryptionService = encryptionService;
     }
 
     public Task<User?> GetUserByEmailAsync(string email)
@@ -22,11 +24,13 @@ public class AuthService : IAuthService
 
     public async Task<(bool Success, User? User, string ErrorMessage)> RegisterUserAsync(string firstName, string? middleName, string? lastName, string email, string mobile, string password)
     {
-        var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email || u.Mobile == mobile);
+        var encryptedMobile = _encryptionService.Encrypt(mobile);
+        
+        var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email || u.Mobile == encryptedMobile);
         if (existingUser != null)
         {
             if (existingUser.Email == email) return (false, null, "Email already registered.");
-            if (existingUser.Mobile == mobile) return (false, null, "Mobile number already registered.");
+            if (existingUser.Mobile == encryptedMobile) return (false, null, "Mobile number already registered.");
         }
 
         try
@@ -38,7 +42,7 @@ public class AuthService : IAuthService
                 MiddleName = middleName,
                 LastName = lastName,
                 Email = email, 
-                Mobile = mobile, 
+                Mobile = encryptedMobile, 
                 PasswordHash = hash, 
                 Role = "Candidate" 
             };

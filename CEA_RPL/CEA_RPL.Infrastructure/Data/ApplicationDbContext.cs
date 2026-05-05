@@ -49,7 +49,7 @@ public class ApplicationDbContext : DbContext
         {
             e.Property(a => a.FullName).IsRequired().HasMaxLength(255);
             e.Property(a => a.Email).IsRequired().HasMaxLength(255); 
-            e.Property(a => a.Mobile).IsRequired().HasMaxLength(15);
+            e.Property(a => a.Mobile).IsRequired().HasMaxLength(255);
 
             // 1-to-1 Applicant <-> Declaration
             e.HasOne(a => a.Declaration)

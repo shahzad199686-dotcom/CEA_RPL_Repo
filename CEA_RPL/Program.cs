@@ -21,6 +21,10 @@ builder.Services.AddScoped<IOtpSender, SmtpOtpSender>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<IFileService, LocalFileService>();
 
+var encKey = builder.Configuration["Encryption:SecretKey"] ?? "v9y$B&E)H@McQfTjWnZr4u7x!A%D*G-K";
+var encIv = builder.Configuration["Encryption:IV"] ?? "8y/B?E(G+KbPeShV";
+builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(encKey, encIv));
+
 // Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -71,6 +75,9 @@ using (var scope = app.Services.CreateScope())
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'ProfessionalExperienceSectors') ALTER TABLE Applicants ADD ProfessionalExperienceSectors NVARCHAR(MAX);");
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TechnicalSubjectExpertise') ALTER TABLE Applicants ADD TechnicalSubjectExpertise NVARCHAR(MAX);");
         
+        // Data Patch: Expand Mobile column size for AES encryption
+        context.Database.ExecuteSqlRaw("ALTER TABLE Applicants ALTER COLUMN Mobile NVARCHAR(255) NOT NULL;");
+        
         // OTP Schema Patch
         context.Database.ExecuteSqlRaw(@"
             IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('OtpRecords') AND name = 'IsVerified')
@@ -86,12 +93,14 @@ using (var scope = app.Services.CreateScope())
     }
     catch { /* Ignore errors if already patched or schema locked */ }
     
+    var encryptionService = services.GetRequiredService<IEncryptionService>();
+    
     if (!context.Users.Any(u => u.Email == "admin@cearpl.gov.in"))
     {
         var admin = new User
         {
             Email = "admin@cearpl.gov.in",
-            Mobile = "9999999999",
+            Mobile = encryptionService.Encrypt("9999999999"),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
             IsEmailVerified = true,
             IsMobileVerified = true,
@@ -106,7 +115,7 @@ using (var scope = app.Services.CreateScope())
         var finance = new User
         {
             Email = "finance@cearpl.gov.in",
-            Mobile = "8888888888",
+            Mobile = encryptionService.Encrypt("8888888888"),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Finance@123"),
             IsEmailVerified = true,
             IsMobileVerified = true,

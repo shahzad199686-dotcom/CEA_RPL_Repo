@@ -201,8 +201,11 @@
         if (!isEmailVerified) return;
         const fname = document.getElementById('firstName').value.trim();
         const lname = document.getElementById('lastName').value.trim();
-        const mobile = document.getElementById('mobile').value.trim();
-        const confirmMobile = document.getElementById('confirmMobile').value.trim();
+        const mobileEl = document.getElementById('mobile');
+        const confirmMobileEl = document.getElementById('confirmMobile');
+        
+        const mobile = mobileEl.dataset.val || mobileEl.value.trim();
+        const confirmMobile = confirmMobileEl.dataset.val || confirmMobileEl.value.trim();
         
         const isMobileValid = /^[6-9][0-9]{9}$/.test(mobile);
         const isMatch = mobile === confirmMobile && isMobileValid;
@@ -214,10 +217,12 @@
     }
 
     function validateMobileMatch() {
-        const mobile = document.getElementById('mobile').value.trim();
-        const confirmMobile = document.getElementById('confirmMobile').value.trim();
-        const errorDiv = document.getElementById('mobileError');
+        const mobileEl = document.getElementById('mobile');
         const confirmInput = document.getElementById('confirmMobile');
+        
+        const mobile = mobileEl.dataset.val || mobileEl.value.trim();
+        const confirmMobile = confirmInput.dataset.val || confirmInput.value.trim();
+        const errorDiv = document.getElementById('mobileError');
 
         if (confirmMobile.length > 0 && mobile !== confirmMobile) {
             errorDiv.style.display = 'block';
@@ -228,14 +233,34 @@
         }
     }
 
+    function maskMobile(value) {
+        if (!value || value.length < 4) return value;
+        return "XXXXXX" + value.slice(-4);
+    }
+
     ['firstName', 'lastName', 'mobile', 'confirmMobile'].forEach(id => {
         const el = document.getElementById(id);
-        el.addEventListener('input', () => {
-            if (id === 'mobile' || id === 'confirmMobile') validateMobileMatch();
-            checkFormValidity();
-        });
+        
         if (id === 'mobile' || id === 'confirmMobile') {
-            el.addEventListener('blur', validateMobileMatch);
+            el.addEventListener('focus', function() {
+                if (this.dataset.val) {
+                    this.value = this.dataset.val;
+                }
+            });
+            el.addEventListener('blur', function() {
+                validateMobileMatch();
+                if (this.value) {
+                    this.dataset.val = this.value;
+                    this.value = maskMobile(this.value);
+                }
+            });
+            el.addEventListener('input', function() {
+                this.dataset.val = this.value;
+                validateMobileMatch();
+                checkFormValidity();
+            });
+        } else {
+            el.addEventListener('input', checkFormValidity);
         }
     });
 
@@ -245,6 +270,12 @@
         showStatus('Finalizing registration...', '#edf2f7', '#4a5568');
         
         const formData = new FormData(registerForm);
+        
+        const realMobile = document.getElementById('mobile').dataset.val;
+        if (realMobile) {
+            formData.set('mobile', realMobile);
+        }
+        
         try {
             const resp = await fetch('/api/auth/signup', { method: 'POST', body: formData });
             if (resp.ok) {

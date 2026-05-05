@@ -10,10 +10,12 @@ namespace CEA_RPL.Controllers;
 public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly CEA_RPL.Infrastructure.Services.IEncryptionService _encryptionService;
 
-    public AdminController(ApplicationDbContext context)
+    public AdminController(ApplicationDbContext context, CEA_RPL.Infrastructure.Services.IEncryptionService encryptionService)
     {
         _context = context;
+        _encryptionService = encryptionService;
     }
 
     [HttpGet("Admin/Dashboard")]
@@ -54,6 +56,13 @@ public class AdminController : Controller
 
         if (applicant == null) return NotFound();
 
+        applicant.GovIdNumber = _encryptionService.Decrypt(applicant.GovIdNumber);
+        applicant.Mobile = _encryptionService.Decrypt(applicant.Mobile);
+        if (!string.IsNullOrEmpty(applicant.AlternateMobile))
+        {
+            applicant.AlternateMobile = _encryptionService.Decrypt(applicant.AlternateMobile);
+        }
+
         return View(applicant);
     }
 
@@ -84,6 +93,15 @@ public class AdminController : Controller
             .OrderByDescending(a => a.SubmittedAt ?? a.CreatedAt)
             .ThenByDescending(a => a.Id)
             .ToListAsync();
+
+        foreach (var app in applicants)
+        {
+            app.GovIdNumber = _encryptionService.Decrypt(app.GovIdNumber);
+            app.Mobile = _encryptionService.Decrypt(app.Mobile);
+            if (!string.IsNullOrEmpty(app.AlternateMobile))
+                app.AlternateMobile = _encryptionService.Decrypt(app.AlternateMobile);
+        }
+
         return View(applicants);
     }
 

@@ -3,6 +3,7 @@ using CEA_RPL.Models;
 using CEA_RPL.Application.Interfaces;
 using CEA_RPL.Domain.Entities;
 using CEA_RPL.Infrastructure.Data;
+using CEA_RPL.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,14 @@ public class ApplicationController : Controller
     private readonly ApplicationDbContext _context;
     private readonly IFileService _fileService;
     private readonly IWebHostEnvironment _env;
+    private readonly IEncryptionService _encryptionService;
 
-    public ApplicationController(ApplicationDbContext context, IFileService fileService, IWebHostEnvironment env)
+    public ApplicationController(ApplicationDbContext context, IFileService fileService, IWebHostEnvironment env, IEncryptionService encryptionService)
     {
         _context = context;
         _fileService = fileService;
         _env = env;
+        _encryptionService = encryptionService;
     }
 
     public async Task<IActionResult> Index()
@@ -40,7 +43,7 @@ public class ApplicationController : Controller
                 ViewBag.AdminFeedback = user.Applicant?.AdminFeedback;
                 ViewBag.LastSavedAt = user.Applicant?.LastSavedAt?.ToString("f");
                 ViewBag.UserEmail = user.Email;
-                ViewBag.UserMobile = user.Mobile;
+                ViewBag.UserMobile = _encryptionService.Decrypt(user.Mobile);
 
                 if (user.Applicant != null)
                 {
@@ -206,11 +209,11 @@ public class ApplicationController : Controller
             applicant.PermanentAddress = req.address_perm ?? "";
             applicant.CorrespondenceAddress = req.address_corr;
             applicant.Email = req.email ?? "";
-            applicant.Mobile = req.mobile ?? "";
-            applicant.AlternateMobile = req.alt_mobile;
+            applicant.Mobile = _encryptionService.Encrypt(req.mobile ?? "");
+            applicant.AlternateMobile = req.alt_mobile != null ? _encryptionService.Encrypt(req.alt_mobile) : null;
             applicant.GovIdType = req.gov_id_type ?? "";
             applicant.OtherGovIdType = req.other_gov_id_type;
-            applicant.GovIdNumber = req.gov_id_number ?? "";
+            applicant.GovIdNumber = _encryptionService.Encrypt(req.gov_id_number ?? "");
             applicant.Categories = req.cert_category != null ? string.Join(", ", req.cert_category) : string.Empty;
             applicant.ProfessionalExperienceSectors = req.sector_experience != null ? string.Join(", ", req.sector_experience) : string.Empty;
             applicant.TechnicalSubjectExpertise = req.subject_expertise != null ? string.Join(", ", req.subject_expertise) : string.Empty;
@@ -499,8 +502,8 @@ public class ApplicationController : Controller
             parent_relation = applicant.ParentRelation,
             parent_name = applicant.ParentName,
             email = applicant.Email,
-            mobile = applicant.Mobile,
-            alt_mobile = applicant.AlternateMobile,
+            mobile = _encryptionService.Decrypt(applicant.Mobile),
+            alt_mobile = applicant.AlternateMobile != null ? _encryptionService.Decrypt(applicant.AlternateMobile) : null,
             gender = applicant.Gender,
             dob = applicant.DateOfBirth.ToString("yyyy-MM-dd"),
             citizenship = applicant.Citizenship,
@@ -508,7 +511,7 @@ public class ApplicationController : Controller
             address_corr = applicant.CorrespondenceAddress,
             gov_id_type = applicant.GovIdType,
             other_gov_id_type = applicant.OtherGovIdType,
-            gov_id_number = applicant.GovIdNumber,
+            gov_id_number = _encryptionService.Decrypt(applicant.GovIdNumber),
             categories = applicant.Categories.Split(", ", StringSplitOptions.RemoveEmptyEntries).ToList(),
             enclosure_desc = applicant.EnclosureDescription,
             educations = applicant.Educations.Select(e => new { 
