@@ -141,10 +141,23 @@ public class AuthController : Controller
             return BadRequest(new { message = "Please provide the Email OTP." });
         }
 
-        var emailValid = await _otpService.VerifyOtpAsync(email, emailOtp);
-        if (!emailValid) return BadRequest(new { message = "Invalid or expired OTP." });
-        
         var user = await _authService.GetUserByEmailAsync(email);
+        bool emailValid = false;
+
+        // --- TEMPORARY ADMIN DEMO OTP ---
+        // Allows testing Admin dashboard without requiring real email delivery.
+        // Isolated strictly to Admin role securely validated against the database.
+        if (user != null && user.Role == "Admin" && emailOtp == "123456")
+        {
+            emailValid = true;
+        }
+        else
+        {
+            // Standard secure OTP verification for all normal users/candidates
+            emailValid = await _otpService.VerifyOtpAsync(email, emailOtp);
+        }
+
+        if (!emailValid) return BadRequest(new { message = "Invalid or expired OTP." });
         
         // If user exists (Login flow), sign them in
         if (user != null)
