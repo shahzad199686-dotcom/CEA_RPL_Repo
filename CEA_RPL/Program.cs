@@ -25,14 +25,33 @@ var encKey = builder.Configuration["Encryption:SecretKey"] ?? "v9y$B&E)H@McQfTjW
 var encIv = builder.Configuration["Encryption:IV"] ?? "8y/B?E(G+KbPeShV";
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(encKey, encIv));
 
-// Cookie Authentication
+// Add basic services required by Security Services
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
+
+// Cookie Authentication & Session Hardening
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Auth/Login";
         options.AccessDeniedPath = "/Auth/Login";
         options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        
+        // Secure Cookie Settings (HttpOnly, Secure, SameSite)
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
     });
+
+// Configure Session securely
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
 
 builder.Services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
 builder.Services.AddControllersWithViews();
@@ -48,6 +67,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// Add Session middleware before Authentication
+app.UseSession();
 
 // Add Authentication before Authorization
 app.UseAuthentication();
