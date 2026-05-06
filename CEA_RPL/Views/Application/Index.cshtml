@@ -2963,7 +2963,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const isSubmitted = @(isSubmitted.ToString().ToLower());
+        const isSubmitted = @(isSubmitted ? "true" : "false");
         
         if (isSubmitted) {
             // Submitted Mode: Fetch data and show read-only summary

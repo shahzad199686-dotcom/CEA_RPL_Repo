@@ -1,58 +1,265 @@
 @{
+    Layout = null; // No global header/footer for auth pages
     ViewData["Title"] = "Sign In - CEA RPL";
 }
 
-<div class="auth-page-container">
-    <div style="text-align: center; margin-bottom: 35px;">
-        <h2 style="font-size: 2rem; color: var(--l-ink); margin-bottom: 10px; font-weight: 800;">Welcome Back</h2>
-        <p style="color: var(--l-muted);">Sign in to manage your application</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-green: #0E5A3C;
+            --primary-hover: #0B4A32;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --req-color: #DC2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom right, #f0fdf4, #ecfdf5);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .auth-card {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            position: relative;
+            animation: cardFadeUp 0.5s ease-out;
+        }
+
+        @@keyframes cardFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-logo {
+            display: block;
+            width: 64px;
+            height: auto;
+            margin: 0 auto 24px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #4B5563;
+        }
+
+        .req {
+            color: var(--req-color);
+            font-weight: 500;
+            margin-left: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            outline: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(14, 90, 60, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            height: 52px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-auth:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 90, 60, 0.15);
+        }
+
+        .btn-auth:active {
+            transform: translateY(0);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-link {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .back-home:hover {
+            transform: translateX(-4px);
+        }
+
+        #authStatus {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .otp-input {
+            letter-spacing: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-green);
+        }
+
+        @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <a href="/" class="back-home">
+        <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+        Back to Home
+    </a>
+
+    <img src="/images/eada_logo.png" alt="EADA" class="auth-logo">
+
+    <div class="auth-header">
+        <h2 class="auth-title">Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to manage your application</p>
     </div>
 
     <!-- LOGIN FORM -->
     <div id="loginArea">
         <form id="candidateLoginForm" method="POST">
             <input type="hidden" name="requiredRole" value="Candidate" />
-            <div style="margin-bottom: 20px;">
-                <label for="candidateEmail" style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--l-ink);">Email Address</label>
-                <input id="candidateEmail" name="candidate_email" type="email" placeholder="you@example.com" required autocomplete="section-candidate username" style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; outline: none; transition: all 0.2s; font-size: 1rem;" />
+            <div class="form-group">
+                <label for="candidateEmail" class="form-label">Email Address <span class="req">*</span></label>
+                <input id="candidateEmail" name="candidate_email" type="email" class="form-input" placeholder="you@example.com" required autocomplete="section-candidate username" />
             </div>
-
 
             <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
 
-            <button type="submit" id="btnContinue" style="width: 100%; background: var(--l-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 20px rgba(14, 90, 60, 0.2);">
+            <button type="submit" id="btnContinue" class="btn-auth">
                 Continue
+                <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
             </button>
         </form>
     </div>
 
-    <!-- OTP AREA (INLINE) -->
+    <!-- OTP AREA -->
     <div id="otpArea" style="display: none; animation: fadeIn 0.4s ease-out;">
-        <p style="text-align: center; color: #666; margin-bottom: 25px;">Enter the 6-digit code sent to <br><b id="confirmedEmail"></b></p>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+            Enter the 6-digit code sent to <br><b id="confirmedEmail" style="color: var(--text-main);"></b>
+        </p>
         
-        <div style="margin-bottom: 25px;">
-            <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 600; text-align: center;">Verification Code</label>
-            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #0E5A3C; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #f8ffff;" />
+        <div class="form-group">
+            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" class="form-input otp-input" />
         </div>
 
-        <button id="btnVerify" style="width: 100%; background: #0E5A3C; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+        <button id="btnVerify" class="btn-auth">
             Verify & Sign In
         </button>
 
-        <div style="text-align: center; margin-top: 25px;">
-            <button id="btnResend" style="background: none; border: none; color: #0E5A3C; font-weight: 700; cursor: pointer; font-size: 0.95rem; opacity: 1; transition: opacity 0.2s;">
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="btnResend" style="background: none; border: none; color: var(--primary-green); font-weight: 700; cursor: pointer; font-size: 0.9rem;">
                 Resend Verification Code
             </button>
-            <div id="cooldownTimer" style="font-size: 0.8rem; color: #718096; margin-top: 8px; display: none;">
+            <div id="cooldownTimer" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: none;">
                 Resend available in <span id="seconds">60</span>s
             </div>
         </div>
     </div>
 
-    <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 12px; border-radius: 10px; display: none; font-weight: 500;"></div>
+    <div id="authStatus"></div>
 
-    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #eee;">
-        <p style="color: #666; font-size: 0.95rem;">Don't have an account? <a asp-action="SignUp" style="color: #0E5A3C; font-weight: 700; text-decoration: none;">Create Account</a></p>
+    <div class="auth-footer">
+        Don't have an account? <a asp-action="SignUp" class="auth-link">Create Account</a>
     </div>
 </div>
 
@@ -186,8 +393,135 @@
     }
 </script>
 
-<style>
-    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    input:focus { border-color: #0E5A3C !important; box-shadow: 0 0 0 3px rgba(14, 90, 60, 0.1); }
-</style>
+<script>
+    lucide.createIcons();
+
+    const loginForm = document.getElementById('candidateLoginForm');
+    const loginArea = document.getElementById('loginArea');
+    const otpArea = document.getElementById('otpArea');
+    const authStatus = document.getElementById('authStatus');
+    const btnResend = document.getElementById('btnResend');
+    let cooldown = 0;
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showStatus('Verifying credentials...', '#eee', '#666');
+        
+        const captchaToken = grecaptcha.getResponse();
+        if (!captchaToken) {
+            showStatus('Please complete the CAPTCHA.', '#fff5f5', '#e53e3e');
+            return;
+        }
+
+        const payload = new FormData();
+        payload.append('email', loginForm.elements['candidate_email'].value);
+        payload.append('requiredRole', 'Candidate');
+        payload.append('captchaToken', captchaToken);
+
+        try {
+            const resp = await fetch('/api/auth/signin', {
+                method: 'POST',
+                body: payload
+            });
+            const data = await resp.json();
+            
+            if (resp.ok) {
+                document.getElementById('confirmedEmail').innerText = loginForm.elements['candidate_email'].value;
+                loginArea.style.display = 'none';
+                otpArea.style.display = 'block';
+                showStatus(data.message, '#F0F7F4', '#0E5A3C');
+                startCooldown(); 
+            } else {
+                showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
+                grecaptcha.reset();
+            }
+        } catch (err) {
+            showStatus('Connection failed. Please try again.', '#fff5f5', '#e53e3e');
+            grecaptcha.reset();
+        }
+    });
+
+    document.getElementById('btnVerify').addEventListener('click', async () => {
+        const otp = document.getElementById('emailOtp').value;
+        const email = document.getElementById('confirmedEmail').innerText;
+        
+        if (!otp || otp.length < 6) return alert('Enter 6-digit OTP');
+
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('emailOtp', otp);
+        formData.append('requiredRole', 'Candidate');
+
+        try {
+            const resp = await fetch('/api/auth/verifyotp', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await resp.json();
+
+            if (resp.ok) {
+                showStatus('Successfully signed in! Redirecting...', '#F0F7F4', '#0E5A3C');
+                localStorage.setItem('showDocPopup', 'true');
+                
+                const redirectUrl = data.role === 'Admin' ? '/Admin/Dashboard' : '/Application/Index';
+                setTimeout(() => window.location.href = redirectUrl, 1000);
+            } else {
+                showStatus(data.message, '#fff5f5', '#e53e3e');
+            }
+        } catch (err) {
+            showStatus('Verification failed.', '#fff5f5', '#e53e3e');
+        }
+    });
+
+    btnResend.addEventListener('click', async () => {
+        if (cooldown > 0) return;
+        const email = document.getElementById('confirmedEmail').innerText;
+        
+        btnResend.disabled = true;
+        btnResend.style.opacity = '0.5';
+
+        const formData = new FormData();
+        formData.append('email', email);
+
+        try {
+            const resp = await fetch('/api/auth/sendotp', { method: 'POST', body: formData });
+            const data = await resp.json();
+            showStatus(data.message, resp.ok ? '#F0F7F4' : '#fff5f5', resp.ok ? '#0E5A3C' : '#e53e3e');
+            if (resp.ok) startCooldown();
+            else btnResend.disabled = false;
+        } catch (err) {
+            showStatus('Failed to resend.', '#fff5f5', '#e53e3e');
+            btnResend.disabled = false;
+        }
+    });
+
+    function startCooldown() {
+        cooldown = 60;
+        document.getElementById('cooldownTimer').style.display = 'block';
+        btnResend.disabled = true;
+        btnResend.style.opacity = '0.5';
+        btnResend.style.cursor = 'not-allowed';
+        
+        const timer = setInterval(() => {
+            cooldown--;
+            document.getElementById('seconds').innerText = cooldown;
+            if (cooldown <= 0) {
+                clearInterval(timer);
+                document.getElementById('cooldownTimer').style.display = 'none';
+                btnResend.disabled = false;
+                btnResend.style.opacity = '1';
+                btnResend.style.cursor = 'pointer';
+            }
+        }, 1000);
+    }
+
+    function showStatus(msg, bg, color) {
+        authStatus.innerText = msg;
+        authStatus.style.background = bg;
+        authStatus.style.color = color;
+        authStatus.style.display = 'block';
+    }
+</script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>
