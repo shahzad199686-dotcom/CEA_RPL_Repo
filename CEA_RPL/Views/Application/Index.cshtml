@@ -1022,13 +1022,43 @@
                 </div>
             </div>
 
-            <!-- STEP 5: PROJECT EXPERIENCE (CAT 1) -->
+            <!-- STEP 5: PROJECT EXPERIENCE (CAT-WISE GROUPED) -->
             <div class="form-section hide" id="step-5">
                 <div class="section-header"><h2>Step 5: Project Experience</h2></div>
                 <div class="section-content">
-                    <div class="project-container" id="projectContainerCat1">
-                        <div class="project-card">
-                            <div class="project-badge">Project 1</div>
+                    <!-- Dynamic Categories will be rendered here -->
+                    <div id="projectContainerGrouped" style="display: flex; flex-direction: column; gap: 24px;"></div>
+                    
+                    <div id="noProjectMsg" class="info-note-blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        <span>Please select certification categories in <b>Step 2</b> to add project experience.</span>
+                    </div>
+
+                    <!-- TEMPLATES (Hidden) -->
+                    <template id="projectGroupTemplate">
+                        <div class="category-project-group" data-category="" style="margin-bottom: 24px; padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--accent-light);">
+                                <h3 class="category-group-title" style="margin: 0; color: var(--accent); font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                                    <span></span>
+                                </h3>
+                                <span style="font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Projects for this category</span>
+                            </div>
+                            <div class="project-list-container" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; width: 100%; border-style: dashed; color: var(--accent); border-color: var(--accent-light);" onclick="addProjectRowGrouped(this.closest('.category-project-group'))">+ Add Project Experience</button>
+                        </div>
+                    </template>
+
+                    <template id="projectCardTemplate">
+                        <div class="project-card" style="position: relative;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <div class="project-badge" style="margin-bottom:0;">Project 1</div>
+                                <input type="hidden" name="project_category[]" class="project-category-hidden">
+                                <button type="button" class="btn btn-ghost btn-sm remove-project-btn" onclick="removeProjectRowGrouped(this)" style="color: #ef4444; border: none; padding: 4px 8px; font-size: 0.75rem; display: none;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+                                    Remove
+                                </button>
+                            </div>
                             <div class="project-grid-5">
                                 <div>
                                     <label>Project Name</label>
@@ -1056,83 +1086,63 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addProjectRow()">+ Add Project</button>
+                    </template>
                 </div>
             </div>
 
-            <!-- STEP 6: UPLOAD REPORTS -->
+            <!-- STEP 6: UPLOAD REPORTS (CAT-WISE GROUPED) -->
             <div class="form-section hide" id="step-6">
-                <div class="section-header">
-                    <h2>Step 6: Upload Reports</h2>
-                    
-                </div>
+                <div class="section-header"><h2>Step 6: Upload Reports</h2></div>
                 <div class="section-content">
                     <div class="info-note-blue" style="margin-bottom: 24px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                         <div style="flex: 1;">
                             <b style="font-weight: 700; display: block; margin-bottom: 4px;">Upload your environmental audit / study reports.</b>
-                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Please provide a minimum of 2 reports and a maximum of 5 reports in PDF format (Max 10MB each).</p>
+                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Please provide a minimum of 1 report per category (Max 5 reports per category) in PDF format (Max 10MB each).</p>
                         </div>
                     </div>
 
-                    <div id="reportGuidance" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div id="reportProgressDot" style="width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1;"></div>
-                            <span id="reportCountText" style="font-weight: 700; color: #475569; font-size: 0.9rem;">Requirement: 0 of 5 Reports Uploaded</span>
-                        </div>
-                        <span id="reportStatusBadge" style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: #fee2e2; color: #991b1b;">Minimum 2 Required</span>
+                    <!-- Dynamic Categories will be rendered here -->
+                    <div id="reportContainerGrouped" style="display: flex; flex-direction: column; gap: 24px;"></div>
+                    
+                    <div id="noReportMsg" class="info-note-blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        <span>Please select certification categories in <b>Step 2</b> to upload reports.</span>
                     </div>
 
-                    <div id="auditReportContainer" style="display: flex; flex-direction: column; gap: 16px;">
-                        <!-- Report 1 & 2 (Always Visible) -->
-                        <div class="report-row active" data-index="1" style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 700;">Report 1 <span class="req">*</span></label>
-                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStats();" />
+                    <!-- TEMPLATES (Hidden) -->
+                    <template id="reportGroupTemplate">
+                        <div class="category-report-group" data-category="" style="margin-bottom: 24px; padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;">
+                                <h3 class="category-group-title" style="margin: 0; color: #1e293b; font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                    <span></span>
+                                </h3>
+                                <span style="font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Audit Reports</span>
+                            </div>
+                            <div class="report-list-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; width: 100%; border-style: dashed;" onclick="addReportRowGrouped(this.closest('.category-report-group'))">+ Add Another Report</button>
+                        </div>
+                    </template>
+
+                    <template id="reportRowTemplate">
+                        <div class="report-row active" style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #f8fafc; border: 1px solid var(--line); border-radius: 12px;">
+                            <div style="width: 100%;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <label style="margin:0; font-weight: 700;" class="report-label">Report 1 <span class="req">*</span></label>
+                                    <input type="hidden" name="report_category[]" class="report-category-hidden">
+                                </div>
+                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStatsGrouped(this.closest('.category-report-group'));" />
                                 <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
                             </div>
+                            <button type="button" class="btn btn-ghost btn-sm remove-report-btn" onclick="removeReportRowGrouped(this)" style="color: #ef4444; border: none; padding: 4px 8px; font-size: 0.75rem; display: none;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+                                Remove
+                            </button>
                         </div>
+                    </template>
 
-                        <div class="report-row active" data-index="2" style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 700;">Report 2 <span class="req">*</span></label>
-                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStats();" />
-                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
-                            </div>
-                        </div>
-
-                        <!-- Optional Slots 3, 4, 5 (Hidden by default) -->
-                        <div class="report-row" data-index="3" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 3 (Optional)</label>
-                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
-                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(3)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
-                        </div>
-
-                        <div class="report-row" data-index="4" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 4 (Optional)</label>
-                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
-                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(4)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
-                        </div>
-
-                        <div class="report-row" data-index="5" style="display: none; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 16px; background: #fcfdfd; border: 1px dashed var(--line); border-radius: 12px; transition: all 0.3s ease;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--accent);">Report 5 (Optional)</label>
-                                <input type="file" name="audit_report" accept=".pdf" onchange="validateFileUpload(this); updateReportStats();" />
-                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="removeAuditReport(5)" style="color: #ef4444; border-color: #fee2e2;">Remove</button>
-                        </div>
-                    </div>
-
-                    <button type="button" id="btnAddReport" class="btn btn-ghost" style="margin-top: 24px; padding: 12px 24px; width: 100%; border: 2px dashed #0F9D9A; color: #0F9D9A;" onclick="addAuditReport()">+ Add Another Report (Optional)</button>
+                    <div id="reportGuidance" class="hide"></div> <!-- Keep ID for stats logic compatibility if needed -->
                 </div>
             </div>
 
@@ -2057,22 +2067,45 @@
             }
         });
 
-        // Step 6 specific check: enforce min 2 reports
+        // Step 5 specific check: enforce min 1 project per category
+        if (step === 5) {
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="cert_category[]"]:checked')).map(cb => cb.value);
+            for (const cat of selectedCategories) {
+                const group = section.querySelector(`.category-project-group[data-category="${cat}"]`);
+                const projects = group ? group.querySelectorAll('.project-card') : [];
+                if (projects.length === 0) {
+                    valid = false;
+                    showToast(`Please add at least one project for ${cat}.`, "error");
+                    break;
+                }
+                const firstProjName = projects[0].querySelector('[name="project_name_cat1[]"]');
+                if (firstProjName && !firstProjName.value.trim()) {
+                    valid = false;
+                    showFieldError(firstProjName, `Project name is required for ${cat}.`);
+                    if (!firstInvalid) firstInvalid = firstProjName;
+                }
+            }
+        }
+
+        // Step 6 specific check: enforce min 1 report per category
         if (step === 6) {
-           const reports = section.querySelectorAll('input[name="audit_report"]');
-           let uploadCount = 0;
-           reports.forEach(inp => { if (inp.files && inp.files.length > 0) uploadCount++; });
-           if (uploadCount < 2) {
-               valid = false;
-               const guidance = document.getElementById('reportGuidance');
-               if (guidance) {
-                   guidance.classList.add('field-error-pulse');
-                   guidance.style.borderColor = '#c53030';
-                   guidance.style.background = '#fff5f5';
-                   if (!firstInvalid) firstInvalid = guidance;
-               }
-               showToast("Please upload at least 2 reports.", "error");
-           }
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="cert_category[]"]:checked')).map(cb => cb.value);
+            for (const cat of selectedCategories) {
+                const group = section.querySelector(`.category-report-group[data-category="${cat}"]`);
+                if (group) {
+                    const reports = group.querySelectorAll('input[name="audit_report"]');
+                    let catUploads = 0;
+                    reports.forEach(inp => { if (inp.files && inp.files.length > 0) catUploads++; });
+                    
+                    if (catUploads < 1) {
+                        valid = false;
+                        showToast(`Please upload at least one report for ${cat}.`, "error");
+                        const firstInput = group.querySelector('input[name="audit_report"]');
+                        if (firstInput && !firstInvalid) firstInvalid = firstInput;
+                        break;
+                    }
+                }
+            }
         }
 
         if (step === 2) {
@@ -2826,13 +2859,27 @@
 
         safeRestore('Projects', () => {
             if (draftData.projects && draftData.projects.length > 0) {
-                const projContainer = document.getElementById('projectContainerCat1');
-                if (projContainer) {
-                    const existing = projContainer.querySelectorAll('.project-card');
-                    for (let i = existing.length; i < draftData.projects.length; i++) addProjectRow();
-                    const cards = projContainer.querySelectorAll('.project-card');
-                    draftData.projects.forEach((proj, i) => {
-                        const card = cards[i];
+                // Ensure groups are rendered first
+                syncCategoryGroups();
+                
+                draftData.projects.forEach(proj => {
+                    const group = document.querySelector(`.category-project-group[data-category="${proj.category}"]`);
+                    if (group) {
+                        const listContainer = group.querySelector('.project-list-container');
+                        const existingCards = listContainer.querySelectorAll('.project-card');
+                        const lastCard = existingCards[existingCards.length - 1];
+                        
+                        // If the last card is empty and we have more than 1 project to restore, populate it
+                        // Otherwise add a new row
+                        let card;
+                        if (existingCards.length === 1 && !lastCard.querySelector('[name="project_name_cat1[]"]').value) {
+                            card = lastCard;
+                        } else {
+                            addProjectRowGrouped(group);
+                            const updatedCards = listContainer.querySelectorAll('.project-card');
+                            card = updatedCards[updatedCards.length - 1];
+                        }
+                        
                         if (card) {
                             card.querySelector('[name="project_name_cat1[]"]').value = proj.name || "";
                             card.querySelector('[name="project_client_cat1[]"]').value = proj.client || "";
@@ -2840,8 +2887,35 @@
                             card.querySelector('[name="project_year_cat1[]"]').value = proj.year || "";
                             card.querySelector('[name="project_role_cat1[]"]').value = proj.role || "";
                         }
-                    });
-                }
+                    }
+                });
+            }
+        });
+
+        safeRestore('Reports', () => {
+            if (draftData.reports && draftData.reports.length > 0) {
+                syncCategoryGroups();
+                
+                draftData.reports.forEach(report => {
+                    const group = document.querySelector(`.category-report-group[data-category="${report.category}"]`);
+                    if (group) {
+                        const listContainer = group.querySelector('.report-list-container');
+                        const existingRows = listContainer.querySelectorAll('.report-row');
+                        const lastRow = existingRows[existingRows.length - 1];
+                        
+                        // Skip if already has file or name
+                        // (File inputs can't be restored, but we might have category mapping)
+                        // Actually, for reports, we just ensure the rows exist and the hidden category is set.
+                        // If we have multiple reports for one category in draft, we add rows.
+                        
+                        // Check if we need to add a row (if the current count in group < count of reports in draft for this cat)
+                        const draftReportsForCat = draftData.reports.filter(r => r.category === report.category);
+                        const rowsNeeded = draftReportsForCat.length;
+                        while(listContainer.querySelectorAll('.report-row').length < rowsNeeded) {
+                            addReportRowGrouped(group);
+                        }
+                    }
+                });
             }
         });
 
@@ -4635,7 +4709,169 @@
                 }
             }
         });
+        
+        // --- CATEGORY-WISE GROUPED UI LOGIC ---
+        
+        function syncCategoryGroups() {
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="cert_category[]"]:checked')).map(cb => cb.value);
+            
+            // Update Step 5 (Projects)
+            const projectContainer = document.getElementById('projectContainerGrouped');
+            const noProjectMsg = document.getElementById('noProjectMsg');
+            
+            if (selectedCategories.length === 0) {
+                projectContainer.innerHTML = '';
+                noProjectMsg.style.display = 'flex';
+            } else {
+                noProjectMsg.style.display = 'none';
+                // Remove groups for unselected categories
+                const currentGroups = projectContainer.querySelectorAll('.category-project-group');
+                currentGroups.forEach(group => {
+                    if (!selectedCategories.includes(group.dataset.category)) {
+                        group.remove();
+                    }
+                });
+                // Add groups for new selections
+                selectedCategories.forEach(cat => {
+                    if (!projectContainer.querySelector(`.category-project-group[data-category="${cat}"]`)) {
+                        renderProjectGroup(cat);
+                    }
+                });
+            }
+
+            // Update Step 6 (Reports)
+            const reportContainer = document.getElementById('reportContainerGrouped');
+            const noReportMsg = document.getElementById('noReportMsg');
+            
+            if (selectedCategories.length === 0) {
+                reportContainer.innerHTML = '';
+                noReportMsg.style.display = 'flex';
+            } else {
+                noReportMsg.style.display = 'none';
+                // Remove groups for unselected categories
+                const currentGroups = reportContainer.querySelectorAll('.category-report-group');
+                currentGroups.forEach(group => {
+                    if (!selectedCategories.includes(group.dataset.category)) {
+                        group.remove();
+                    }
+                });
+                // Add groups for new selections
+                selectedCategories.forEach(cat => {
+                    if (!reportContainer.querySelector(`.category-report-group[data-category="${cat}"]`)) {
+                        renderReportGroup(cat);
+                    }
+                });
+            }
+        }
+
+        function renderProjectGroup(category) {
+            const template = document.getElementById('projectGroupTemplate');
+            const clone = template.content.cloneNode(true);
+            const group = clone.querySelector('.category-project-group');
+            group.dataset.category = category;
+            group.querySelector('.category-group-title span').textContent = category;
+            
+            document.getElementById('projectContainerGrouped').appendChild(group);
+            addProjectRowGrouped(group); // Add initial project
+        }
+
+        function renderReportGroup(category) {
+            const template = document.getElementById('reportGroupTemplate');
+            const clone = template.content.cloneNode(true);
+            const group = clone.querySelector('.category-report-group');
+            group.dataset.category = category;
+            group.querySelector('.category-group-title span').textContent = category;
+            
+            document.getElementById('reportContainerGrouped').appendChild(group);
+            addReportRowGrouped(group); // Add initial report
+        }
+
+        // Attach listeners to Step 2 checkboxes dynamically
+        document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
+            cb.addEventListener('change', syncCategoryGroups);
+        });
+        
+        // Initialize on load
+        syncCategoryGroups();
     });
+
+    function addProjectRowGrouped(groupElement) {
+        const category = groupElement.dataset.category;
+        const listContainer = groupElement.querySelector('.project-list-container');
+        const currentCount = listContainer.querySelectorAll('.project-card').length;
+        
+        if (currentCount >= 15) {
+            alert(`Maximum 15 projects allowed for ${category}.`);
+            return;
+        }
+
+        const template = document.getElementById('projectCardTemplate');
+        const clone = template.content.cloneNode(true);
+        const card = clone.querySelector('.project-card');
+        
+        card.querySelector('.project-badge').textContent = `Project ${currentCount + 1}`;
+        card.querySelector('.project-category-hidden').value = category;
+        
+        if (currentCount > 0) {
+            card.querySelector('.remove-project-btn').style.display = 'flex';
+        }
+        
+        listContainer.appendChild(card);
+    }
+
+    function removeProjectRowGrouped(btn) {
+        const group = btn.closest('.category-project-group');
+        btn.closest('.project-card').remove();
+        
+        // Re-index
+        const cards = group.querySelectorAll('.project-card');
+        cards.forEach((card, i) => {
+            card.querySelector('.project-badge').textContent = `Project ${i + 1}`;
+            card.querySelector('.remove-project-btn').style.display = i === 0 ? 'none' : 'flex';
+        });
+    }
+
+    function addReportRowGrouped(groupElement) {
+        const category = groupElement.dataset.category;
+        const listContainer = groupElement.querySelector('.report-list-container');
+        const currentCount = listContainer.querySelectorAll('.report-row').length;
+        
+        if (currentCount >= 5) {
+            alert("Maximum 5 reports allowed per category.");
+            return;
+        }
+
+        const template = document.getElementById('reportRowTemplate');
+        const clone = template.content.cloneNode(true);
+        const row = clone.querySelector('.report-row');
+        
+        row.querySelector('.report-label').innerHTML = `Report ${currentCount + 1} ${currentCount === 0 ? '<span class="req">*</span>' : '(Optional)'}`;
+        row.querySelector('.report-category-hidden').value = category;
+        
+        if (currentCount > 0) {
+            row.querySelector('.remove-report-btn').style.display = 'block';
+            row.querySelector('input[type="file"]').removeAttribute('required');
+        }
+        
+        listContainer.appendChild(row);
+    }
+
+    function removeReportRowGrouped(btn) {
+        const group = btn.closest('.category-report-group');
+        btn.closest('.report-row').remove();
+        
+        // Re-index
+        const rows = group.querySelectorAll('.report-row');
+        rows.forEach((row, i) => {
+            row.querySelector('.report-label').innerHTML = `Report ${i + 1} ${i === 0 ? '<span class="req">*</span>' : '(Optional)'}`;
+            row.querySelector('.remove-report-btn').style.display = i === 0 ? 'none' : 'block';
+            if (i === 0) row.querySelector('input[type="file"]').setAttribute('required', 'required');
+        });
+    }
+
+    function updateReportStatsGrouped(group) {
+        // Optional: Implement category-specific progress if needed
+    }
 </script>
 </body>
 </html>
