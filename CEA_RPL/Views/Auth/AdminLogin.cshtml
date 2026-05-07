@@ -1,21 +1,251 @@
 @{
+    Layout = null; // No global header/footer for auth pages
     ViewData["Title"] = "Admin Login - CEA RPL";
 }
 
-<div class="auth-page-container" style="max-width: 480px; margin: 60px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-admin: #333333;
+            --primary-hover: #1a1a1a;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --req-color: #DC2626;
+            --accent-bg: #F8FAFC;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom right, #f1f5f9, #f8fafc);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        /* Prevent scroll on desktop only */
+        @@media (min-height: 700px) {
+            body { overflow: hidden; }
+        }
+
+        .auth-card {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 32px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            position: relative;
+            animation: cardFadeUp 0.5s ease-out;
+        }
+
+        @@keyframes cardFadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-home {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-admin);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .back-home:hover {
+            transform: translateX(-4px);
+        }
+
+        .role-toggle {
+            display: flex;
+            background: var(--accent-bg);
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            gap: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .role-tab {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .role-tab.active {
+            background: var(--primary-admin);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .role-icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: var(--accent-bg);
+            color: var(--primary-admin);
+            border-radius: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            letter-spacing: -0.025em;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #4B5563;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            outline: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-admin);
+            box-shadow: 0 0 0 4px rgba(51, 51, 51, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            background: var(--primary-admin);
+            color: white;
+            border: none;
+            height: 50px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-auth:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-auth:active {
+            transform: translateY(0);
+        }
+
+        .otp-input {
+            letter-spacing: 12px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-admin);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        #authStatus {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <a href="/" class="back-home">
+        <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+        Back to Home
+    </a>
+
     <!-- ROLE TOGGLE -->
-    <div style="display: flex; background: #f1f5f9; padding: 6px; border-radius: 14px; margin-bottom: 30px; gap: 4px;">
-        <button type="button" id="tabAdmin" class="role-tab active" onclick="switchRole('Admin')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;">Administrator</button>
-        <button type="button" id="tabFinance" class="role-tab" onclick="switchRole('Finance')" style="flex: 1; padding: 10px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b;">Finance</button>
+    <div class="role-toggle">
+        <button type="button" id="tabAdmin" class="role-tab active" onclick="switchRole('Admin')">Administrator</button>
+        <button type="button" id="tabFinance" class="role-tab" onclick="switchRole('Finance')">Finance</button>
     </div>
 
-    <div style="text-align: center; margin-bottom: 35px;">
-        <div id="roleIcon" style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: #f0f7f7; color: #0ea5a5; border-radius: 16px; margin-bottom: 20px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="adminIcon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="financeIcon" style="display: none;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    <div class="auth-header">
+        <div class="role-icon-wrapper">
+            <i id="adminIcon" data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+            <i id="financeIcon" data-lucide="banknote" style="width: 32px; height: 32px; display: none;"></i>
         </div>
-        <h2 id="loginTitle" style="font-size: 1.8rem; color: #333; margin-bottom: 10px; font-weight: 800;">Administrator Login</h2>
-        <p id="loginSubtitle" style="color: #666;">Secure access to manage the CEA RPL portal</p>
+        <h2 id="loginTitle" class="auth-title">Administrator Login</h2>
+        <p id="loginSubtitle" class="auth-subtitle">Secure access to manage the CEA RPL portal</p>
     </div>
 
     <!-- LOGIN FORM -->
@@ -23,53 +253,55 @@
         <form id="adminLoginForm" method="POST">
             <input type="hidden" name="requiredRole" id="requiredRole" value="Admin" />
             
-            <!-- ADMIN FIELDS -->
             <div id="adminFields">
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Admin Email</label>
-                    <input id="adminEmail" name="admin_email" type="email" autocomplete="section-admin username" placeholder="admin@cearpl.gov.in" required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <div class="form-group">
+                    <label class="form-label">Admin Email</label>
+                    <input id="adminEmail" name="admin_email" type="email" class="form-input" placeholder="admin@cearpl.gov.in" required autocomplete="section-admin username" />
                 </div>
             </div>
 
-            <!-- FINANCE FIELDS -->
             <div id="financeFields" style="display: none;">
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem;">Finance Email</label>
-                    <input id="financeEmail" name="finance_email" type="email" autocomplete="section-finance username" placeholder="finance@cearpl.gov.in" disabled required style="width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f0f0f0; outline: none; transition: border-color 0.2s;" />
+                <div class="form-group">
+                    <label class="form-label">Finance Email</label>
+                    <input id="financeEmail" name="finance_email" type="email" class="form-input" placeholder="finance@cearpl.gov.in" disabled required autocomplete="section-finance username" />
                 </div>
             </div>
-
 
             <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
 
-            <button type="submit" id="btnContinue" style="width: 100%; background: #333; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
+            <button type="submit" id="btnContinue" class="btn-auth">
                 Sign In to Portal
+                <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
             </button>
         </form>
     </div>
 
-    <!-- OTP AREA (INLINE) -->
+    <!-- OTP AREA -->
     <div id="otpArea" style="display: none; animation: fadeIn 0.4s ease-out;">
-        <p style="text-align: center; color: #666; margin-bottom: 25px;">Enter the 6-digit administrator code <br><b id="confirmedEmail"></b></p>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 25px;">
+            Enter the 6-digit administrator code sent to <br><b id="confirmedEmail" style="color: var(--text-main);"></b>
+        </p>
         
-        <div style="margin-bottom: 25px;">
-            <label for="emailOtp" style="display: block; margin-bottom: 12px; font-weight: 600; text-align: center;">Verification Code</label>
-            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" style="width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #333; text-align: center; letter-spacing: 12px; font-size: 1.8rem; font-weight: 800; outline: none; background: #fff;" />
+        <div class="form-group">
+            <label for="emailOtp" class="form-label" style="text-align: center;">Verification Code</label>
+            <input id="emailOtp" type="text" maxlength="6" inputmode="numeric" placeholder="000000" class="form-input otp-input" />
         </div>
 
-        <button id="btnVerify" style="width: 100%; background: #333; color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+        <button id="btnVerify" class="btn-auth">
             Verify & Authorize
         </button>
 
         <div style="text-align: center; margin-top: 20px;">
-            <button id="btnResend" style="background: none; border: none; color: #666; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Resend Code</button>
+            <button id="btnResend" style="background: none; border: none; color: var(--text-muted); font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+                Resend Code
+            </button>
         </div>
     </div>
 
-    <div id="authStatus" style="margin-top: 25px; text-align: center; padding: 12px; border-radius: 10px; display: none; font-weight: 500;"></div>
+    <div id="authStatus"></div>
 
-    <div style="text-align: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #eee;">
-        <p style="color: #666; font-size: 0.85rem;">System Administrators Only. <br>Unauthorized access is prohibited.</p>
+    <div class="auth-footer">
+        <p>System Administrators Only. <br>Unauthorized access is prohibited.</p>
     </div>
 </div>
 
@@ -83,18 +315,10 @@
         const tFinance = document.getElementById('tabFinance');
         if (isAdmin) {
             tAdmin.classList.add('active');
-            tAdmin.style.background = '#333';
-            tAdmin.style.color = 'white';
             tFinance.classList.remove('active');
-            tFinance.style.background = 'transparent';
-            tFinance.style.color = '#64748b';
         } else {
             tFinance.classList.add('active');
-            tFinance.style.background = '#333';
-            tFinance.style.color = 'white';
             tAdmin.classList.remove('active');
-            tAdmin.style.background = 'transparent';
-            tAdmin.style.color = '#64748b';
         }
 
         // Toggle Fields
@@ -104,14 +328,13 @@
         adminFields.style.display = isAdmin ? 'block' : 'none';
         financeFields.style.display = isAdmin ? 'none' : 'block';
 
-        // Disable inactive fields to avoid browser confusion and FormData pollution
         const adminInputs = adminFields.querySelectorAll('input');
         const financeInputs = financeFields.querySelectorAll('input');
         
         adminInputs.forEach(input => input.disabled = !isAdmin);
         financeInputs.forEach(input => input.disabled = isAdmin);
 
-        // Update UI Text
+        // Update UI Text & Icons
         document.getElementById('loginTitle').innerText = isAdmin ? 'Administrator Login' : 'Finance Login';
         document.getElementById('loginSubtitle').innerText = isAdmin ? 'Secure access to manage the CEA RPL portal' : 'Sign in to verify candidate payments and receipts';
         document.getElementById('adminIcon').style.display = isAdmin ? 'block' : 'none';
@@ -133,7 +356,6 @@
 
         const captchaToken = grecaptcha.getResponse();
         if (!captchaToken) {
-            alert('Please verify that you are not a robot.');
             showStatus('Please complete the CAPTCHA.', '#fff5f5', '#e53e3e');
             return;
         }
@@ -154,7 +376,7 @@
                 document.getElementById('confirmedEmail').innerText = email;
                 loginArea.style.display = 'none';
                 otpArea.style.display = 'block';
-                showStatus(`${role} access confirmed. Check your email for OTP.`, '#f0f7f7', '#0ea5a5');
+                showStatus(`${role} access confirmed. Check your email for OTP.`, '#f1fdf4', '#0E5A3C');
             } else {
                 showStatus(data.message || 'Invalid credentials.', '#fff5f5', '#e53e3e');
                 grecaptcha.reset();
@@ -185,7 +407,7 @@
             const data = await resp.json();
 
             if (resp.ok) {
-                showStatus(`Success! Redirecting to ${role} Dashboard...`, '#f0f7f7', '#0ea5a5');
+                showStatus(`Success! Redirecting to ${role} Dashboard...`, '#f1fdf4', '#0E5A3C');
                 
                 let redirectUrl = '/Application/Index';
                 if (data.role === 'Admin') redirectUrl = '/Admin/Dashboard';
@@ -200,19 +422,15 @@
         }
     });
 
-    // Initialize UI
-    switchRole('Admin');
-
     function showStatus(msg, bg, color) {
         authStatus.innerText = msg;
         authStatus.style.background = bg;
         authStatus.style.color = color;
         authStatus.style.display = 'block';
     }
-</script>
 
-<style>
-    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    input:focus { border-color: #333 !important; }
-</style>
+    lucide.createIcons();
+</script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>
