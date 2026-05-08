@@ -848,46 +848,43 @@
 
             <!-- STEP 3: EDUCATIONAL QUALIFICATIONS -->
             <div class="form-section hide" id="step-3">
-                <div class="section-header"><h2>Step 3: Educational Qualifications</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 3: Educational Qualifications</h2></div>
                 <div class="section-content">
-                    <div class="education-grid-header">
-                        <div>Degree</div>
-                        <div>Course</div>
-                        <div>Institution / University</div>
-                        <div>Passing Year</div>
-                        <div>Certificate</div>
-                    </div>
-                    <div class="education-container" id="educationContainer">
-                        <div class="education-row">
-                            <div>
-                                <label class="edu-field-label">Degree</label>
-                                <select name="edu_degree[]" required>
-                                    <option value="">Select</option>
-                                    <option>Graduate</option>
-                                    <option>Post Graduate</option>
-                                    <option>PhD</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="edu-field-label">Course</label>
-                                <input type="text" name="edu_discipline[]" required placeholder="Enter Course (e.g., B.Tech, MBA, etc.)" />
-                            </div>
-                            <div>
-                                <label class="edu-field-label">Institution / University</label>
-                                <input name="edu_institution[]" required placeholder="University Name" />
-                            </div>
-                            <div>
-                                <label class="edu-field-label">Passing Year</label>
-                                <input type="number" name="edu_year[]" required placeholder="YYYY" />
-                            </div>
-                            <div>
-                                <label class="edu-field-label">Certificate</label>
-                                <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                                <div class="file-validation-hint" style="font-size: 0.72rem; margin-top: 2px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-ghost" style="margin-top: 20px;" onclick="addEducationRow()">+ Add Degree</button>
+                    <table class="modern-table" id="educationTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">S. No.</th>
+                                <th style="width: 200px;">Degree</th>
+                                <th>Course</th>
+                                <th>Institution / University</th>
+                                <th style="width: 120px;">Passing Year</th>
+                                <th style="width: 250px;">Certificate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                <td>
+                                    <select name="edu_degree[]" required>
+                                        <option value="">Select</option>
+                                        <option>Graduate</option>
+                                        <option>Post Graduate</option>
+                                        <option>PhD</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="edu_discipline[]" required placeholder="Enter Course (e.g., B.Tech, MBA, etc.)" /></td>
+                                <td><input name="edu_institution[]" required placeholder="University Name" /></td>
+                                <td><input type="number" name="edu_year[]" required placeholder="YYYY" /></td>
+                                <td>
+                                    <div class="membership-file-wrap">
+                                        <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; margin-top: 2px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('educationTable')">+ Add Degree</button>
                 </div>
             </div>
 
@@ -1149,219 +1146,153 @@
 
             <!-- STEP 7: TRAINING / CERTIFICATION -->
             <div class="form-section hide" id="step-7">
-                <div class="section-header"><h2>Step 7: Details of Certification / Training</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 7: Details of Certification / Training</h2></div>
                 <div class="section-content">
-                    <div class="step7-section-container">
-                        <!-- SECTION 1: TRAINING DETAILS -->
-                        <div class="step7-card">
-                            <div class="step7-card-header">
-                                <span class="step7-card-title">Training Details</span>
-                            </div>
-                            <div id="trainingRowsContainer">
-                                <div class="step7-grid">
-                                    <div>
-                                        <label>S. No.</label>
-                                        <div class="membership-serial" style="font-weight: 700; color: var(--accent); margin-top: 12px;">1</div>
-                                    </div>
-                                    <div>
-                                        <label>Name of Training/Certification</label>
-                                        <input name="training_name[]" placeholder="Name of Training/Certification" />
-                                    </div>
-                                    <div>
-                                        <label>Obtained from</label>
-                                        <input name="training_from[]" placeholder="Obtained from" />
-                                    </div>
-                                    <div>
-                                        <label>Duration of Training/Certification</label>
-                                        <input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" />
-                                    </div>
-                                    <div>
-                                        <label>Executed in Year</label>
-                                        <select name="training_year[]">
-                                            <option value="">Year</option>
-                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label>Upload Proof of Training/Certification</label>
+                    <table class="modern-table" id="trainingTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">S. No.</th>
+                                <th>Name of Training/Certification</th>
+                                <th>Obtained from</th>
+                                <th style="width: 180px;">Duration of Training/Certification</th>
+                                <th style="width: 120px;">Executed in Year</th>
+                                <th style="width: 250px;">Upload Proof of Training/Certification</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                <td><input name="training_name[]" placeholder="Name of Training/Certification" /></td>
+                                <td><input name="training_from[]" placeholder="Obtained from" /></td>
+                                <td><input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" /></td>
+                                <td>
+                                    <select name="training_year[]">
+                                        <option value="">Year</option>
+                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="membership-file-wrap">
                                         <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
                                         <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                     </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="addTrainingRow()">+ Add Row</button>
-                        </div>
-
-                        <!-- SECTION 2: CERTIFICATION DETAILS -->
-                        <div class="step7-card">
-                            <div class="step7-card-header">
-                                <span class="step7-card-title">Certification Details</span>
-                            </div>
-                            <div id="certificationRowsContainer">
-                                <div class="step7-grid">
-                                    <div>
-                                        <label>S. No.</label>
-                                        <div class="membership-serial" style="font-weight: 700; color: var(--accent); margin-top: 12px;">1</div>
-                                    </div>
-                                    <div>
-                                        <label>Name of Training/Certification</label>
-                                        <input name="training_name[]" placeholder="Name of Training/Certification" />
-                                    </div>
-                                    <div>
-                                        <label>Obtained from</label>
-                                        <input name="training_from[]" placeholder="Obtained from" />
-                                    </div>
-                                    <div>
-                                        <label>Duration of Training/Certification</label>
-                                        <input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" />
-                                    </div>
-                                    <div>
-                                        <label>Executed in Year</label>
-                                        <select name="training_year[]">
-                                            <option value="">Year</option>
-                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label>Upload Proof of Training/Certification</label>
-                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="addCertificationRow()">+ Add Row</button>
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('trainingTable')">+ Add Row</button>
                 </div>
             </div>
 
             <!-- STEP 8: MEMBERSHIP (LABLED AS 9 IN UI) -->
             <div class="form-section hide" id="step-8">
-                <div class="section-header"><h2>Step 8: Membership in Professional Bodies</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 8: Membership in Professional Bodies</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List of professional body memberships or institutional affiliations, including advisory roles or membership in any government committees</p>
-                    <div class="membership-header-grid">
-                        <span>S. No.</span>
-                        <span>Name of Membership/Association</span>
-                        <span>Obtained from</span>
-                        <span>Obtained in Year</span>
-                        <span>Duration of Membership/Association</span>
-                        <span>Upload Proof of Affiliation/Membership</span>
-                    </div>
-                    <div class="membership-container" id="membershipContainer">
-                        <div class="membership-row">
-                            <div class="membership-grid-6">
-                                <div class="membership-serial" style="font-weight: 700; color: var(--accent);">1</div>
-                                
-                                <div>
-                                    <label>Name of Membership/Association</label>
-                                    <input name="membership_name[]" placeholder="Name of Membership/Association" />
-                                </div>
-                                
-                                <div>
-                                    <label>Obtained from</label>
-                                    <input name="membership_from[]" placeholder="Obtained from" />
-                                </div>
-                                
-                                <div>
-                                    <label>Obtained in Year</label>
+                    
+                    <table class="modern-table" id="membershipTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">S. No.</th>
+                                <th>Name of Membership/Association</th>
+                                <th>Obtained from</th>
+                                <th style="width: 120px;">Obtained in Year</th>
+                                <th style="width: 200px;">Duration of Membership/Association</th>
+                                <th style="width: 250px;">Upload Proof of Affiliation/Membership</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                <td><input name="membership_name[]" placeholder="Name of Membership/Association" /></td>
+                                <td><input name="membership_from[]" placeholder="Obtained from" /></td>
+                                <td>
                                     <select name="membership_year[]">
                                         <option value="">Year</option>
                                         @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                     </select>
-                                </div>
-                                
-                                <div>
-                                    <label>Duration of Membership/Association</label>
-                                    <input name="membership_duration[]" placeholder="Duration of Membership/Association" />
-                                </div>
-                                
-                                <div class="membership-file-wrap">
-                                    <label>Upload Proof of Affiliation/Membership</label>
-                                    <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </td>
+                                <td><input name="membership_duration[]" placeholder="Duration of Membership/Association" /></td>
+                                <td>
+                                    <div class="membership-file-wrap">
+                                        <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addMembershipRow()">+ Add Row</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('membershipTable')">+ Add Row</button>
                 </div>
             </div>
 
             <div class="form-section hide" id="step-9">
-                <div class="section-header"><h2>Step 9: Paper Published / Presented</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 9: Paper Published / Presented</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the major technical papers authored or published by the applicant</p>
-                    <div class="publication-header-grid">
-                        <span>S. No.</span>
-                        <span>Name of Paper</span>
-                        <span>Published or Presented in</span>
-                        <span>Year of Publication or Presentation</span>
-                        <span>Role of Applicant</span>
-                        <span>Upload Proof of Paper Published/ Presented</span>
-                    </div>
-                    <div class="publication-container" id="publicationContainer">
-                        <div class="publication-row">
-                            <div class="publication-grid-6">
-                                <div class="membership-serial" style="font-weight: 700; color: var(--accent);">1</div>
-                                
-                                <div>
-                                    <label>Name of Paper</label>
-                                    <input name="paper_name[]" placeholder="Name of Paper" />
-                                </div>
-                                <div>
-                                    <label>Published or Presented in</label>
-                                    <input name="paper_place[]" placeholder="Published or Presented in" />
-                                </div>
-                                <div>
-                                    <label>Year of Publication or Presentation</label>
-                                    <input type="number" name="paper_year[]" placeholder="Year" />
-                                </div>
-                                <div>
-                                    <label>Role of Applicant</label>
+                    
+                    <table class="modern-table" id="publicationTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">S. No.</th>
+                                <th>Name of Paper</th>
+                                <th>Published or Presented in</th>
+                                <th style="width: 150px;">Year</th>
+                                <th style="width: 150px;">Role of Applicant</th>
+                                <th style="width: 250px;">Upload Proof</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                <td><input name="paper_name[]" placeholder="Name of Paper" /></td>
+                                <td><input name="paper_place[]" placeholder="Published or Presented in" /></td>
+                                <td><input type="number" name="paper_year[]" placeholder="Year" /></td>
+                                <td>
                                     <select name="paper_role[]">
                                         <option value="">Select</option>
                                         <option value="Author">Author</option>
                                         <option value="Co-Author">Co-Author</option>
                                     </select>
-                                </div>
-                                <div class="membership-file-wrap">
-                                    <label>Upload Proof of Paper Published/ Presented</label>
-                                    <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </td>
+                                <td>
+                                    <div class="membership-file-wrap">
+                                        <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addPublicationRow()">+ Add Row</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('publicationTable')">+ Add Row</button>
                 </div>
             </div>
 
             <!-- STEP 10: AWARDS -->
             <div class="form-section hide" id="step-10">
-                <div class="section-header"><h2>Step 10: Awards / Recognition</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 10: Awards / Recognition</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the major awards/ recognition/ appriciation received by applicant</p>
                     <table class="modern-table" id="awardTable">
                         <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Name of Award/recognition/appreciation</th><th>Received from</th><th style="width: 150px;">Year of Receipt</th></tr></thead>
                         <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="award_name[]" placeholder="Name of Award/recognition/appreciation" /></td><td><input name="award_from[]" placeholder="Received from" /></td><td><input type="number" name="award_year[]" placeholder="Year" /></td></tr></tbody>
                     </table>
-                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('awardTable')">+ Add Row</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('awardTable')">+ Add Row</button>
                 </div>
             </div>
 
             <!-- STEP 11: SOFTWARE SKILLS -->
             <div class="form-section hide" id="step-11">
-                <div class="section-header"><h2>Step 11: Software / Tools / Application Skills</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 11: Software / Tools / Application Skills</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the software tools or application the applicant is conversant with</p>
                     <table class="modern-table" id="softwareTable">
                         <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Software (e.g., MS Office, SPSS, MATLAB, ArcGIS, AutoCAD, AERMOD, etc.)</th><th style="width: 200px;">Level of Proficiency</th></tr></thead>
                         <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="software_skill[]" placeholder="Enter Software Name" /></td><td><select name="proficiency_level[]"><option value="">Select</option><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td></tr></tbody>
                     </table>
-                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('softwareTable')">+ Add Row</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('softwareTable')">+ Add Row</button>
                 </div>
             </div>
 
@@ -2202,22 +2133,7 @@
         tbody.appendChild(row);
     }
 
-    function addEducationRow() {
-        const container = document.getElementById('educationContainer');
-        const firstRow = container.querySelector('.education-row');
-        const newRow = firstRow.cloneNode(true);
-        
-        // Reset values
-        newRow.querySelectorAll('input, select').forEach(el => {
-            if (el.type === 'file') {
-                el.value = '';
-            } else {
-                el.value = '';
-            }
-        });
-        
-        container.appendChild(newRow);
-    }
+
 
     function addExperienceRow() {
         const container = document.getElementById('experienceContainer');
@@ -2505,29 +2421,7 @@
 
 
 
-    function addMembershipRow() {
-        const container = document.getElementById('membershipContainer');
-        const firstRow = container.querySelector('.membership-row');
-        const newRow = firstRow.cloneNode(true);
-        
-        // Reset serial
-        const count = container.querySelectorAll('.membership-row').length + 1;
-        newRow.querySelector('.membership-serial').textContent = count;
-        
-        // Reset values
-        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
-        newRow.querySelectorAll('.membership-year-cell').forEach(c => c.classList.remove('hidden'));
-        
-        container.appendChild(newRow);
-    }
 
-    function addPublicationRow() {
-        const container = document.getElementById('publicationContainer');
-        const firstRow = container.querySelector('.publication-row');
-        const newRow = firstRow.cloneNode(true);
-        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
-        container.appendChild(newRow);
-    }
 
     function updateWordCount(el) {
         const text = el.value.trim();
