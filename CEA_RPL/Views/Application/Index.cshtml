@@ -1160,6 +1160,10 @@
                             <div id="trainingRowsContainer">
                                 <div class="step7-grid">
                                     <div>
+                                        <label>S. No.</label>
+                                        <div class="membership-serial" style="font-weight: 700; color: var(--accent); margin-top: 12px;">1</div>
+                                    </div>
+                                    <div>
                                         <label>Name of Training/Certification</label>
                                         <input name="training_name[]" placeholder="Name of Training/Certification" />
                                     </div>
@@ -1169,7 +1173,7 @@
                                     </div>
                                     <div>
                                         <label>Duration of Training/Certification</label>
-                                        <input type="text" name="training_duration[]" placeholder="Duration (e.g. 5 Days)" />
+                                        <input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" />
                                     </div>
                                     <div>
                                         <label>Executed in Year</label>
@@ -1185,7 +1189,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-ghost" onclick="addTrainingRow()">+ Add Training</button>
+                            <button type="button" class="btn btn-ghost" onclick="addTrainingRow()">+ Add Row</button>
                         </div>
 
                         <!-- SECTION 2: CERTIFICATION DETAILS -->
@@ -1196,6 +1200,10 @@
                             <div id="certificationRowsContainer">
                                 <div class="step7-grid">
                                     <div>
+                                        <label>S. No.</label>
+                                        <div class="membership-serial" style="font-weight: 700; color: var(--accent); margin-top: 12px;">1</div>
+                                    </div>
+                                    <div>
                                         <label>Name of Training/Certification</label>
                                         <input name="training_name[]" placeholder="Name of Training/Certification" />
                                     </div>
@@ -1205,7 +1213,7 @@
                                     </div>
                                     <div>
                                         <label>Duration of Training/Certification</label>
-                                        <input type="text" name="training_duration[]" placeholder="Duration (e.g. 5 Days)" />
+                                        <input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" />
                                     </div>
                                     <div>
                                         <label>Executed in Year</label>
@@ -1221,7 +1229,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-ghost" onclick="addCertificationRow()">+ Add Certification</button>
+                            <button type="button" class="btn btn-ghost" onclick="addCertificationRow()">+ Add Row</button>
                         </div>
                     </div>
                 </div>
@@ -1231,58 +1239,45 @@
             <div class="form-section hide" id="step-8">
                 <div class="section-header"><h2>Step 8: Membership in Professional Bodies</h2></div>
                 <div class="section-content">
+                    <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List of professional body memberships or institutional affiliations, including advisory roles or membership in any government committees</p>
                     <div class="membership-header-grid">
-                        <span>S.No</span>
-                        <span>Institution / Association / Body</span>
-                        <span>Position Held</span>
-                        <span>Status</span>
-                        <span>From Year</span>
-                        <span>To Year</span>
-                        <span>Proof</span>
+                        <span>S. No.</span>
+                        <span>Name of Membership/Association</span>
+                        <span>Obtained from</span>
+                        <span>Obtained in Year</span>
+                        <span>Duration of Membership/Association</span>
+                        <span>Upload Proof of Affiliation/Membership</span>
                     </div>
                     <div class="membership-container" id="membershipContainer">
                         <div class="membership-row">
-                            <div class="membership-grid-7">
+                            <div class="membership-grid-6">
                                 <div class="membership-serial" style="font-weight: 700; color: var(--accent);">1</div>
                                 
                                 <div>
-                                    <label>Institution / Association / Body</label>
-                                    <input name="membership_name[]" placeholder="Enter Institution Name" />
+                                    <label>Name of Membership/Association</label>
+                                    <input name="membership_name[]" placeholder="Name of Membership/Association" />
                                 </div>
                                 
                                 <div>
-                                    <label>Position Held</label>
-                                    <input name="membership_from[]" placeholder="Enter Position Held" />
+                                    <label>Obtained from</label>
+                                    <input name="membership_from[]" placeholder="Obtained from" />
                                 </div>
                                 
                                 <div>
-                                    <label>Validity Status</label>
-                                    <select class="membership-status-val" onchange="toggleMembershipYears(this)">
-                                        <option value="Active">Active</option>
-                                        <option value="Expired">Expired</option>
-                                    </select>
-                                    <input type="hidden" name="membership_duration[]" class="membership-duration-hidden" value="Active" />
-                                </div>
-                                
-                                <div class="membership-year-cell">
-                                    <label>From Year</label>
+                                    <label>Obtained in Year</label>
                                     <select name="membership_year[]">
                                         <option value="">Year</option>
                                         @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                     </select>
                                 </div>
                                 
-                                <div class="membership-year-cell">
-                                    <label>To Year</label>
-                                    <select class="membership-to-year-val" onchange="syncMembershipDuration(this)">
-                                        <option value="">Year</option>
-                                        <option value="Present">Present</option>
-                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
-                                    </select>
+                                <div>
+                                    <label>Duration of Membership/Association</label>
+                                    <input name="membership_duration[]" placeholder="Duration of Membership/Association" />
                                 </div>
                                 
                                 <div class="membership-file-wrap">
-                                    <label>Proof of Membership</label>
+                                    <label>Upload Proof of Affiliation/Membership</label>
                                     <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
                                     <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                 </div>
@@ -1290,42 +1285,49 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addMembershipRow()">+ Add Membership</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addMembershipRow()">+ Add Row</button>
                 </div>
             </div>
 
-            <!-- STEP 9: PUBLICATIONS -->
             <div class="form-section hide" id="step-9">
                 <div class="section-header"><h2>Step 9: Paper Published / Presented</h2></div>
                 <div class="section-content">
+                    <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the major technical papers authored or published by the applicant</p>
                     <div class="publication-header-grid">
-                        <span>Topic of Paper</span>
-                        <span>Journal / Conference / Workshop</span>
-                        <span>Year</span>
-                        <span>Publication Link</span>
-                        <span>Proof</span>
+                        <span>S. No.</span>
+                        <span>Name of Paper</span>
+                        <span>Published or Presented in</span>
+                        <span>Year of Publication or Presentation</span>
+                        <span>Role of Applicant</span>
+                        <span>Upload Proof of Paper Published/ Presented</span>
                     </div>
                     <div class="publication-container" id="publicationContainer">
                         <div class="publication-row">
-                            <div class="publication-grid-5">
+                            <div class="publication-grid-6">
+                                <div class="membership-serial" style="font-weight: 700; color: var(--accent);">1</div>
+                                
                                 <div>
-                                    <label>Topic of Paper</label>
-                                    <input name="paper_name[]" placeholder="Enter Paper / Publication Title" />
+                                    <label>Name of Paper</label>
+                                    <input name="paper_name[]" placeholder="Name of Paper" />
                                 </div>
                                 <div>
-                                    <label>Journal / Conference / Workshop</label>
-                                    <input name="paper_place[]" placeholder="Enter Journal or Venue Name" />
+                                    <label>Published or Presented in</label>
+                                    <input name="paper_place[]" placeholder="Published or Presented in" />
                                 </div>
                                 <div>
-                                    <label>Published Year</label>
+                                    <label>Year of Publication or Presentation</label>
                                     <input type="number" name="paper_year[]" placeholder="Year" />
                                 </div>
                                 <div>
-                                    <label>Publication Link (If any)</label>
-                                    <input type="url" name="paper_role[]" placeholder="Paste Link Here" />
+                                    <label>Role of Applicant</label>
+                                    <select name="paper_role[]">
+                                        <option value="">Select</option>
+                                        <option value="Author">Author</option>
+                                        <option value="Co-Author">Co-Author</option>
+                                    </select>
                                 </div>
                                 <div class="membership-file-wrap">
-                                    <label>Upload Proof of Paper</label>
+                                    <label>Upload Proof of Paper Published/ Presented</label>
                                     <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
                                     <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                 </div>
@@ -1333,7 +1335,7 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addPublicationRow()">+ Add Publication</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addPublicationRow()">+ Add Row</button>
                 </div>
             </div>
 
@@ -1341,11 +1343,12 @@
             <div class="form-section hide" id="step-10">
                 <div class="section-header"><h2>Step 10: Awards / Recognition</h2></div>
                 <div class="section-content">
+                    <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the major awards/ recognition/ appriciation received by applicant</p>
                     <table class="modern-table" id="awardTable">
-                        <thead><tr><th>Award/Recognition</th><th>Awarded By</th><th>Year of Award</th></tr></thead>
-                        <tbody><tr><td><input name="award_name[]" placeholder="Award / Recognition Name" /></td><td><input name="award_from[]" placeholder="Enter Awarding Organization / Institution Name" /></td><td><input type="number" name="award_year[]" placeholder="Select Award Year" /></td></tr></tbody>
+                        <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Name of Award/recognition/appreciation</th><th>Received from</th><th style="width: 150px;">Year of Receipt</th></tr></thead>
+                        <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="award_name[]" placeholder="Name of Award/recognition/appreciation" /></td><td><input name="award_from[]" placeholder="Received from" /></td><td><input type="number" name="award_year[]" placeholder="Year" /></td></tr></tbody>
                     </table>
-                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('awardTable')">+ Add Award</button>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('awardTable')">+ Add Row</button>
                 </div>
             </div>
 
@@ -1353,11 +1356,12 @@
             <div class="form-section hide" id="step-11">
                 <div class="section-header"><h2>Step 11: Software / Tools / Application Skills</h2></div>
                 <div class="section-content">
+                    <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the software tools or application the applicant is conversant with</p>
                     <table class="modern-table" id="softwareTable">
-                        <thead><tr><th>Software Skill</th><th>Proficiency</th></tr></thead>
-                        <tbody><tr><td><input name="software_skill[]" /></td><td><select name="proficiency_level[]"><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td></tr></tbody>
+                        <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Software (e.g., MS Office, SPSS, MATLAB, ArcGIS, AutoCAD, AERMOD, etc.)</th><th style="width: 200px;">Level of Proficiency</th></tr></thead>
+                        <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="software_skill[]" placeholder="Enter Software Name" /></td><td><select name="proficiency_level[]"><option value="">Select</option><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td></tr></tbody>
                     </table>
-                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('softwareTable')">+ Add Skill</button>
+                    <button type="button" class="btn btn-ghost" onclick="addGenericRow('softwareTable')">+ Add Row</button>
                 </div>
             </div>
 
@@ -1365,14 +1369,14 @@
             <div class="form-section hide" id="step-12">
                 <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2></div>
                 <div class="section-content">
-                    <label>Upload additional supporting documents (if any)</label>
-                    <input type="file" name="other_enclosure" accept=".pdf,.zip,.rar" onchange="validateFileUpload(this)" />
-                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">PDF / ZIP ≤ 10 MB</div>
+                    <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List any relevant Enclosures (PDF only, ≤ 5 MB)</p>
+                    <input type="file" name="other_enclosure" accept=".pdf" onchange="validateFileUpload(this)" />
+                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF only, ≤ 5 MB</div>
 
-                    <div class="description-box-wrap">
-                        <label>Description</label>
+                    <div class="description-box-wrap" style="margin-top: 24px;">
+                        <label style="font-weight: 600; color: var(--ink); margin-bottom: 8px; display: block;">Description</label>
                         <textarea class="description-box" id="enclosure_desc" name="enclosure_desc" 
-                                  placeholder="Describe The Enclosure You Uploaded (Maximum 200 Words)"
+                                  placeholder="Describe the enclosures you uploaded (Maximum 200 words)"
                                   oninput="updateWordCount(this)"></textarea>
                         
                         <div class="word-counter-wrap">
@@ -2187,6 +2191,13 @@
         const tbody = document.querySelector(`#${tableId} tbody`);
         if (!tbody) return;
         const row = tbody.querySelector('tr').cloneNode(true);
+        
+        // Reset serial number if first cell contains a number
+        const firstCell = row.cells[0];
+        if (firstCell && !isNaN(parseInt(firstCell.textContent))) {
+            firstCell.textContent = tbody.querySelectorAll('tr').length + 1;
+        }
+
         row.querySelectorAll('input, select').forEach(el => el.value = '');
         tbody.appendChild(row);
     }
@@ -2403,6 +2414,11 @@
         const container = document.getElementById('trainingRowsContainer');
         const firstRow = container.querySelector('.step7-grid');
         const newRow = firstRow.cloneNode(true);
+        
+        // Update serial number
+        const serial = newRow.querySelector('.membership-serial');
+        if (serial) serial.textContent = container.querySelectorAll('.step7-grid').length + 1;
+
         newRow.querySelectorAll('input, select').forEach(el => el.value = '');
         container.appendChild(newRow);
     }
@@ -2411,6 +2427,11 @@
         const container = document.getElementById('certificationRowsContainer');
         const firstRow = container.querySelector('.step7-grid');
         const newRow = firstRow.cloneNode(true);
+
+        // Update serial number
+        const serial = newRow.querySelector('.membership-serial');
+        if (serial) serial.textContent = container.querySelectorAll('.step7-grid').length + 1;
+
         newRow.querySelectorAll('input, select').forEach(el => el.value = '');
         container.appendChild(newRow);
     }
@@ -2482,31 +2503,7 @@
         }
     }
 
-    function toggleMembershipYears(select) {
-        const row = select.closest('.membership-grid-7');
-        const yearCells = row.querySelectorAll('.membership-year-cell');
-        const isExpired = select.value === 'Expired';
-        
-        yearCells.forEach(cell => {
-            if (isExpired) cell.classList.add('hidden');
-            else cell.classList.remove('hidden');
-        });
-        
-        syncMembershipDuration(select);
-    }
 
-    function syncMembershipDuration(el) {
-        const row = el.closest('.membership-grid-7');
-        const status = row.querySelector('.membership-status-val').value;
-        const toYear = row.querySelector('.membership-to-year-val').value;
-        const hiddenInput = row.querySelector('.membership-duration-hidden');
-        
-        if (status === 'Expired') {
-            hiddenInput.value = 'Expired';
-        } else {
-            hiddenInput.value = `Active${toYear ? ' (To: ' + toYear + ')' : ''}`;
-        }
-    }
 
     function addMembershipRow() {
         const container = document.getElementById('membershipContainer');
@@ -2528,7 +2525,7 @@
         const container = document.getElementById('publicationContainer');
         const firstRow = container.querySelector('.publication-row');
         const newRow = firstRow.cloneNode(true);
-        newRow.querySelectorAll('input').forEach(el => el.value = '');
+        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
         container.appendChild(newRow);
     }
 
