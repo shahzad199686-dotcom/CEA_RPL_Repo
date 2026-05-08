@@ -37,7 +37,8 @@ body {
 }
 
 .form-wrapper {
-    max-width: 1000px;
+    max-width: 1400px;
+    width: 95%;
     margin: 0 auto;
     padding: 24px;
     position: relative;
@@ -1981,10 +1982,10 @@ input[type="file"] {
 
 .step7-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1.2fr 0.8fr 0.8fr 1.5fr;
+    grid-template-columns: 1.8fr 1.2fr 1.8fr 0.8fr 2.2fr;
     gap: 16px;
     margin-bottom: 16px;
-    align-items: end;
+    align-items: flex-start;
 }
 
 .step7-grid label {
@@ -1992,7 +1993,10 @@ input[type="file"] {
     font-weight: 600;
     color: var(--muted);
     margin-bottom: 8px;
-    display: block;
+    display: flex;
+    align-items: flex-end;
+    min-height: 34px;
+    line-height: 1.2;
 }
 
 /* Tablet Scale Step 7 */

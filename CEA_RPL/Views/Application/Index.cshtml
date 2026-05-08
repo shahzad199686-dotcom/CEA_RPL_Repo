@@ -1160,16 +1160,16 @@
                             <div id="trainingRowsContainer">
                                 <div class="step7-grid">
                                     <div>
-                                        <label>Topic of Training</label>
-                                        <input name="training_name[]" placeholder="Topic" />
+                                        <label>Name of Training/Certification</label>
+                                        <input name="training_name[]" placeholder="Name of Training/Certification" />
                                     </div>
                                     <div>
-                                        <label>Organized By</label>
-                                        <input name="training_from[]" placeholder="Institution" />
+                                        <label>Obtained from</label>
+                                        <input name="training_from[]" placeholder="Obtained from" />
                                     </div>
                                     <div>
-                                        <label>Duration (Days)</label>
-                                        <input type="number" name="training_duration[]" placeholder="Days" />
+                                        <label>Duration of Training/Certification</label>
+                                        <input type="text" name="training_duration[]" placeholder="Duration (e.g. 5 Days)" />
                                     </div>
                                     <div>
                                         <label>Executed in Year</label>
@@ -1179,7 +1179,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label>Proof of Training</label>
+                                        <label>Upload Proof of Training/Certification</label>
                                         <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
                                         <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                     </div>
@@ -1196,30 +1196,26 @@
                             <div id="certificationRowsContainer">
                                 <div class="step7-grid">
                                     <div>
-                                        <label>Name of Certification</label>
-                                        <input name="training_name[]" placeholder="Certification Name" />
+                                        <label>Name of Training/Certification</label>
+                                        <input name="training_name[]" placeholder="Name of Training/Certification" />
                                     </div>
                                     <div>
-                                        <label>Issuing Authority</label>
-                                        <input name="training_from[]" placeholder="Institution" />
+                                        <label>Obtained from</label>
+                                        <input name="training_from[]" placeholder="Obtained from" />
                                     </div>
                                     <div>
-                                        <label>Validity Status</label>
-                                        <select name="training_duration[]">
-                                            <option value="">Select</option>
-                                            <option>Valid</option>
-                                            <option>Expired</option>
-                                        </select>
+                                        <label>Duration of Training/Certification</label>
+                                        <input type="text" name="training_duration[]" placeholder="Duration (e.g. 5 Days)" />
                                     </div>
                                     <div>
-                                        <label>Conducted in Year</label>
+                                        <label>Executed in Year</label>
                                         <select name="training_year[]">
                                             <option value="">Year</option>
                                             @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                         </select>
                                     </div>
                                     <div>
-                                        <label>Proof of Certificate</label>
+                                        <label>Upload Proof of Training/Certification</label>
                                         <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
                                         <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
                                     </div>
