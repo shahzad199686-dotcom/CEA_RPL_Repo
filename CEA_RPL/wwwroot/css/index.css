@@ -43,15 +43,15 @@ body {
     position: relative;
     z-index: 1;
     box-sizing: border-box;
-    padding-top: 40px; /* Reduced since header is now sticky-wrapper */
-    padding-bottom: 120px;
+    padding-top: 24px; /* Reduced from 40px */
+    padding-bottom: 80px; /* Reduced from 120px */
 }
 
 .form-card {
     background: #fff;
     border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
+    padding: 20px; /* Reduced from 24px */
+    margin-bottom: 16px; /* Reduced from 24px */
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
@@ -60,7 +60,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 16px; /* Reduced from 24px */
 }
 
 .form-card-icon {
@@ -82,7 +82,7 @@ body {
 }
 
 .form-card-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.8rem; /* Reduced from 0.85rem */
     color: #64748b;
     margin-left: 8px;
     font-weight: 400;
@@ -97,11 +97,11 @@ body {
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px; /* Reduced from 8px */
 }
 
 .form-group label {
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Reduced from 0.9rem */
     font-weight: 600;
     color: #475569;
 }
@@ -115,10 +115,10 @@ body {
 .form-group select, 
 .form-group textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 8px 12px; /* Reduced height */
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Reduced from 0.95rem */
     color: #1e293b;
     background: #fff;
     transition: all 0.2s;
@@ -138,14 +138,14 @@ body {
 
 .photo-section {
     display: flex;
-    gap: 32px;
+    gap: 24px; /* Reduced from 32px */
     align-items: center;
-    padding: 8px 0;
+    padding: 4px 0; /* Reduced from 8px */
 }
 
 .profile-preview-box {
-    width: 120px;
-    height: 120px;
+    width: 100px; /* Reduced from 120px */
+    height: 100px; /* Reduced from 120px */
     border-radius: 50%;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
@@ -531,7 +531,7 @@ body {
     flex-wrap: wrap !important;
     margin-right: -10px !important;
     margin-left: -10px !important;
-    margin-bottom: 20px !important; /* Space between rows */
+    margin-bottom: 12px !important; /* Reduced from 20px */
 }
 
 [class*="col-"] {
@@ -600,15 +600,15 @@ input, select, textarea {
 
 .form-card-group-title {
     grid-column: 1 / -1;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Reduced from 0.75rem */
     font-weight: 700;
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding-bottom: 8px;
+    padding-bottom: 6px; /* Reduced from 8px */
     border-bottom: 1px solid rgba(0,0,0,0.06);
-    margin-top: 20px;
-    margin-bottom: 12px;
+    margin-top: 16px; /* Reduced from 20px */
+    margin-bottom: 8px; /* Reduced from 12px */
 }
 
 /* =========================

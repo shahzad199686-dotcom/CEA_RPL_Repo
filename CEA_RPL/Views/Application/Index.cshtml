@@ -316,9 +316,9 @@
             
             <!-- STEP 1: APPLICANT DETAILS -->
             <div class="form-section active" id="step-1" style="background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 0;">
-                <div style="margin-bottom: 32px;">
-                    <h2 style="font-size: 1.8rem; font-weight: 800; color: #1e293b; margin: 0 0 8px 0;">Applicant Details</h2>
-                    <p style="color: #64748b; margin: 0; font-size: 0.95rem;">Fill in your personal information exactly as it appears on your government-issued identity proof.</p>
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin: 0 0 6px 0;">Applicant Details</h2>
+                    <p style="color: #64748b; margin: 0; font-size: 0.9rem;">Fill in your personal information exactly as it appears on your government-issued identity proof.</p>
                 </div>
                 
                 <div class="section-content" style="padding: 0;">
@@ -496,7 +496,7 @@
                             </div>
                         </div>
 
-                        <div class="section-content-inner" style="padding: 24px;">
+                        <div class="section-content-inner" style="padding: 20px;">
                             <!-- ROW 1: City & Pincode -->
                             <div class="row">
                                 <div class="col-md-6">
@@ -674,23 +674,23 @@
                                 <h3 class="form-card-title">Identity Details</h3>
                             </div>
                         </div>
-                        <div class="section-content-inner" style="padding: 24px;">
+                        <div class="section-content-inner" style="padding: 20px;">
                             <style>
                                 .identity-grid {
                                     display: grid;
                                     grid-template-columns: 1fr 1fr;
-                                    gap: 24px 20px;
+                                    gap: 16px 20px;
                                     align-items: start;
                                 }
                                 .identity-grid .form-group {
                                     display: flex !important;
                                     flex-direction: column !important;
-                                    gap: 8px !important;
+                                    gap: 4px !important;
                                     margin: 0 !important;
                                 }
                                 .identity-grid label {
                                     display: block !important;
-                                    font-size: 0.85rem !important;
+                                    font-size: 0.8rem !important;
                                     font-weight: 700 !important;
                                     color: #4B5563 !important;
                                     margin: 0 !important;
@@ -702,13 +702,13 @@
                                 .identity-grid input,
                                 .identity-grid select,
                                 .identity-grid .upload-container {
-                                    height: 46px !important;
+                                    height: 40px !important;
                                     width: 100% !important;
                                     box-sizing: border-box !important;
                                     border: 1.5px solid #E5E7EB !important;
                                     border-radius: 10px !important;
                                     padding: 0 14px !important;
-                                    font-size: 0.9rem !important;
+                                    font-size: 0.85rem !important;
                                     background: #fff !important;
                                 }
                                 .identity-grid select {
@@ -741,10 +741,8 @@
                                     <label>Government ID Type <span class="req">*</span></label>
                                     <select id="govIdType" name="gov_id_type" required onchange="toggleGovIdUpload()">
                                         <option value="">Select ID Type</option>
-                                        <option value="aadhaar">Aadhaar</option>
-                                        <option value="pan">PAN</option>
-                                        <option value="passport">Passport</option>
-                                        <option value="other">Other</option>
+                                        <option value="government_id">Government ID</option>
+                                        <option value="employee_id">Employee ID</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -3272,7 +3270,7 @@
                     <div><dt>Citizenship</dt><dd>${getData('citizenship')}</dd></div>
                     <div><dt>Email ID</dt><dd>${getData('email')}</dd></div>
                     <div><dt>Mobile Number</dt><dd>${getData('mobile')} ${getData('alt_mobile') !== 'Not provided' ? ' / ' + getData('alt_mobile') : ''}</dd></div>
-                    <div><dt>Gov ID Type</dt><dd>${getData('gov_id_type') === 'other' ? getData('other_gov_id_type') : getData('gov_id_type')}</dd></div>
+                    <div><dt>Gov ID Type</dt><dd>${getData('gov_id_type') === 'government_id' ? 'Government ID' : (getData('gov_id_type') === 'employee_id' ? 'Employee ID' : getData('gov_id_type'))}</dd></div>
                     <div><dt>ID Number</dt><dd>${getData('gov_id_number')}</dd></div>
                     <div><dt>ID Proof Doc</dt><dd>${getFileStatus('gov_id_upload')}</dd></div>
                     <div><dt>Photograph</dt><dd>${getFileStatus('applicant_photo')}</dd></div>
@@ -3699,10 +3697,7 @@
                     extractedId = detectIdNumber(text, idType);
                 }
 
-                let typeName = 'ID';
-                if (idType === 'aadhaar') typeName = 'Aadhaar';
-                if (idType === 'pan') typeName = 'PAN';
-                if (idType === 'passport') typeName = 'Passport';
+                let typeName = (idType === 'government_id') ? 'Government ID' : (idType === 'employee_id' ? 'Employee ID' : 'ID');
 
                 if (extractedId) {
                     originalIdValue = extractedId.replace(/\s/g, "");
@@ -3716,12 +3711,8 @@
                     showToast(`${typeName} detected & verified.`, "success");
                 } else {
                     let warnMsg = `Unable to detect ID number. Please enter manually.`;
-                    if (idType === 'pan') {
-                        warnMsg = "Uploaded document does not match PAN format";
-                    } else if (idType === 'passport') {
-                        warnMsg = "Uploaded document does not match Passport format";
-                    } else if (idType === 'aadhaar') {
-                        warnMsg = "Unable to auto-detect Aadhaar number. Please enter manually or upload clearer image.";
+                    if (idType === 'government_id') {
+                        warnMsg = "Unable to auto-detect ID number. Please enter manually or upload a clearer document.";
                     }
 
                     showToast(warnMsg, "warning");
@@ -3729,18 +3720,11 @@
                 }
             } catch (err) {
                 console.error("OCR Error:", err);
-                let typeName = 'ID';
-                if (idType === 'aadhaar') typeName = 'Aadhaar';
-                if (idType === 'pan') typeName = 'PAN';
-                if (idType === 'passport') typeName = 'Passport';
+                let typeName = (idType === 'government_id') ? 'Government ID' : (idType === 'employee_id' ? 'Employee ID' : 'ID');
                 
                 let warnMsg = `Unable to detect ID number. Please enter manually.`;
-                if (idType === 'pan') {
-                    warnMsg = "Uploaded document does not match PAN format";
-                } else if (idType === 'passport') {
-                    warnMsg = "Uploaded document does not match Passport format";
-                } else if (idType === 'aadhaar') {
-                    warnMsg = "Unable to auto-detect Aadhaar number. Please enter manually or upload clearer image.";
+                if (idType === 'government_id') {
+                    warnMsg = "Unable to auto-detect ID number. Please enter manually or upload a clearer document.";
                 }
 
                 showToast(warnMsg, "warning");
@@ -3770,18 +3754,26 @@
         if (!text) return null;
         const cleanText = text.replace(/[\n\r]/g, " ").toUpperCase();
 
-        if (type === 'aadhaar') {
-            const match = cleanText.match(/\b\d{4}\s\d{4}\s\d{4}\b|\b\d{12}\b/);
-            return match ? match[0] : null;
-        } else if (type === 'pan') {
-            const match = cleanText.match(/\b[A-Z]{5}[0-9]{4}[A-Z]\b/);
-            return match ? match[0] : null;
-        } else if (type === 'passport') {
-            const match = cleanText.match(/\b[A-Z][0-9]{7}\b/);
-            return match ? match[0] : null;
-        } else if (type === 'other') {
+        if (type === 'government_id') {
+            // Check for Aadhaar (12 digits or 4-4-4)
+            const aadhaarMatch = cleanText.match(/\b\d{4}\s\d{4}\s\d{4}\b|\b\d{12}\b/);
+            if (aadhaarMatch) return aadhaarMatch[0];
+
+            // Check for PAN (5 letters, 4 digits, 1 letter)
+            const panMatch = cleanText.match(/\b[A-Z]{5}[0-9]{4}[A-Z]\b/);
+            if (panMatch) return panMatch[0];
+
+            // Check for Passport (1 letter, 7 digits)
+            const passportMatch = cleanText.match(/\b[A-Z][0-9]{7}\b/);
+            if (passportMatch) return passportMatch[0];
+
+            // Check for Other (EPIC - 3 letters, 7 digits)
             const epicMatch = cleanText.match(/\b[A-Z]{3}[0-9]{7}\b/);
-            return epicMatch ? epicMatch[0] : null;
+            if (epicMatch) return epicMatch[0];
+        } else if (type === 'employee_id') {
+            // Employee IDs can be very varied, usually alphanumeric. 
+            // We can try to detect something that looks like an ID, but for now we'll keep it simple or null.
+            return null; 
         }
         return null;
     }
@@ -3798,64 +3790,64 @@
 
     function toggleGovIdUpload() {
         const type = document.getElementById('govIdType')?.value;
-        const otherContainer = document.getElementById('otherGovIdContainer');
-        const otherInput = document.getElementById('otherGovIdType');
         const label = document.getElementById('govIdLabel');
+        const govIdInput = document.getElementById('govIdNumber');
+        const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
+        const confirmAadhaarGroup = document.getElementById('confirmAadhaarGroup');
+        const confirmLabel = confirmAadhaarGroup?.querySelector('label');
+        const fileInput = document.getElementById('govIdUpload');
+        const aadhaarError = document.getElementById('aadhaarError');
         
         // --- 1. CLEAR ORIGINAL VALUES (VERY IMPORTANT) ---
         originalIdValue = "";
         originalConfirmValue = "";
         
         // --- 2. CLEAR INPUT FIELDS ---
-        const govIdInput = document.getElementById('govIdNumber');
-        const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
-        if (govIdInput) govIdInput.value = '';
-        if (confirmGovIdInput) confirmGovIdInput.value = '';
+        if (govIdInput) {
+            govIdInput.value = '';
+            govIdInput.style.borderColor = '';
+        }
+        if (confirmGovIdInput) {
+            confirmGovIdInput.value = '';
+            confirmGovIdInput.style.borderColor = '';
+        }
         
         // --- 3. CLEAR FILE INPUT & 4. RESET FILE UI ---
-        const fileInput = document.getElementById('govIdUpload');
         if (fileInput) {
             fileInput.value = '';
             hideFieldError(fileInput);
             const hint = fileInput.parentNode.querySelector('.file-validation-hint, .identity-hint');
             if (hint) {
-                hint.innerHTML = ''; // Clear detection messages
+                hint.innerHTML = '<span style="font-size: 0.7rem; color: #6B7280; margin-top: 2px;">JPG, PNG ≤ 2MB | PDF ≤ 10MB</span>'; 
             }
         }
         
         // --- 5. REMOVE SUCCESS / ERROR STATES ---
-        const aadhaarError = document.getElementById('aadhaarError');
         if (aadhaarError) {
             aadhaarError.style.display = 'none';
             aadhaarError.innerText = '';
         }
-        if (govIdInput) govIdInput.style.borderColor = '';
-        if (confirmGovIdInput) confirmGovIdInput.style.borderColor = '';
         
-        if (otherContainer && otherInput) {
-            if (type === 'other') {
-                otherContainer.style.display = 'block';
-                otherInput.required = true;
-            } else {
-                otherContainer.style.display = 'none';
-                otherInput.required = false;
-                otherInput.value = '';
-            }
-        }
-        
-        if (label) {
-            label.innerHTML = (type === 'aadhaar' ? 'Aadhaar' : (type === 'pan' ? 'PAN' : (type === 'passport' ? 'Passport' : 'ID'))) + ' Number <span class="req">*</span>';
-        }
-
-        const confirmAadhaarGroup = document.getElementById('confirmAadhaarGroup');
-        if (confirmAadhaarGroup && confirmGovIdInput) {
-            if (type === 'aadhaar') {
-                confirmAadhaarGroup.style.display = 'block';
-                confirmGovIdInput.required = true;
-            } else {
-                confirmAadhaarGroup.style.display = 'none';
-                confirmGovIdInput.required = false;
-            }
+        // --- 6. UPDATE LABELS & PLACEHOLDERS ---
+        if (type === 'government_id') {
+            if (label) label.innerHTML = 'Government ID Number <span class="req">*</span>';
+            if (govIdInput) govIdInput.placeholder = 'Enter Government ID Number';
+            if (confirmLabel) confirmLabel.innerHTML = 'Confirm ID Number <span class="req">*</span>';
+            if (confirmGovIdInput) confirmGovIdInput.placeholder = 'Confirm ID Number';
+            
+            if (confirmAadhaarGroup) confirmAadhaarGroup.style.display = 'block';
+            if (confirmGovIdInput) confirmGovIdInput.required = true;
+        } else if (type === 'employee_id') {
+            if (label) label.innerHTML = 'Employee ID <span class="req">*</span>';
+            if (govIdInput) govIdInput.placeholder = 'Enter Employee ID';
+            if (confirmLabel) confirmLabel.innerHTML = 'Confirm Employee ID <span class="req">*</span>';
+            if (confirmGovIdInput) confirmGovIdInput.placeholder = 'Enter Employee ID';
+            
+            if (confirmAadhaarGroup) confirmAadhaarGroup.style.display = 'block';
+            if (confirmGovIdInput) confirmGovIdInput.required = true;
+        } else {
+            if (confirmAadhaarGroup) confirmAadhaarGroup.style.display = 'none';
+            if (confirmGovIdInput) confirmGovIdInput.required = false;
         }
     }
 
@@ -3877,18 +3869,19 @@
         const idValRaw = idInput?.value || "";
         const confirmValRaw = confirmInput?.value || "";
 
-        // CASE 1: BOTH MASKED (Aadhaar only) -> VALID
-        if (idType === 'aadhaar' && isMasked(idValRaw) && isMasked(confirmValRaw)) {
+        // CASE 1: BOTH MASKED -> VALID
+        if (isMasked(idValRaw) && isMasked(confirmValRaw)) {
             errorDiv.style.display = 'none';
             confirmInput.style.borderColor = '';
             return;
         }
 
         // Use original values if available, otherwise fallback to UI values for normalization
-        let cleanOriginal = originalIdValue ? originalIdValue.replace(/\s/g, "") : idValRaw;
-        let cleanConfirm = originalConfirmValue ? originalConfirmValue.replace(/\s/g, "") : confirmValRaw;
+        let cleanOriginal = originalIdValue ? originalIdValue.replace(/\s/g, "") : idValRaw.replace(/\s/g, "");
+        let cleanConfirm = originalConfirmValue ? originalConfirmValue.replace(/\s/g, "") : confirmValRaw.replace(/\s/g, "");
 
-        if (idType === 'aadhaar') {
+        // Only normalize for Government ID patterns if they look like Aadhaar
+        if (idType === 'government_id' && cleanOriginal.length === 12 && /^\d+$/.test(cleanOriginal)) {
             cleanOriginal = normalizeAadhaar(cleanOriginal);
             cleanConfirm = normalizeAadhaar(cleanConfirm);
         }
@@ -3907,7 +3900,7 @@
             errorDiv.innerText = '';
         } else {
             errorDiv.style.display = 'block';
-            errorDiv.innerText = (idType === 'aadhaar' ? 'Aadhaar' : 'ID') + ' numbers do not match';
+            errorDiv.innerText = 'ID numbers do not match';
             confirmInput.style.borderColor = '#e53e3e';
         }
     }
@@ -3938,10 +3931,13 @@
 
     function maskValueByType(value, idType) {
         if (!value) return "";
-        if (idType === 'aadhaar') return maskAadhaar(value);
-        if (idType === 'pan') return maskPAN(value);
-        if (idType === 'passport') return maskPassport(value);
-        if (idType === 'other') return maskOther(value);
+        if (idType === 'government_id') {
+            if (value.length === 12 && /^\d+$/.test(value)) return maskAadhaar(value);
+            if (value.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(value)) return maskPAN(value);
+            if (value.length === 8 && /^[A-Z][0-9]{7}$/.test(value)) return maskPassport(value);
+            return maskOther(value);
+        }
+        if (idType === 'employee_id') return maskOther(value);
         return value;
     }
 
@@ -4397,7 +4393,7 @@
                         <li>Government-approved Photo Identity Card</li>
                         <li>Experience Certificates <span>(Subject to verification)</span></li>
                         <li>Applicant's photograph and signature</li>
-                        <li>2 to 5 audit/study reports authored/co-authored by the applicant</li>
+                        <li>2 to 5 audit/study reports authored/co-authored by the applicant per category</li>
                     </ul>
                 </div>
                 
@@ -4405,9 +4401,9 @@
                     <h3>Additional Documents</h3>
                     <ul class="req-list">
                         <li>Final year marksheet(s) of relevant degrees</li>
-                        <li>Details of certifications/training</li>
+                        <li>certifications/training</li>
                         <li>Membership in professional bodies</li>
-                        <li>Details of papers published/presented</li>
+                        <li>Papers published/presented</li>
                         <li>Awards/recognition</li>
                         <li>Any other relevant enclosure</li>
                     </ul>
