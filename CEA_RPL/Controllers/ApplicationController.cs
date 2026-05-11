@@ -530,6 +530,7 @@ public class ApplicationController : Controller
                 hasFile = !string.IsNullOrEmpty(ex.ProofPath)
             }).ToList(),
             projects = applicant.ProjectExperiences.Select(p => new {
+                category = p.Category,
                 name = p.Name,
                 client = p.Client,
                 location = p.Location,

@@ -36,8 +36,7 @@
 <div class="header-wrapper">
     <header class="header-bar">
         <div class="header-left">
-            <h3>Certification Application Portal</h3>
-            <p>Ministry of Environment</p>
+                <h3>Application form for CEA</h3>
         </div>
         <div class="header-right">
             @if (!isSubmitted)
@@ -86,7 +85,7 @@
             <div class="step-line"></div>
             <div class="step-item" id="phase-D">
                 <div class="step-icon">D</div>
-                <div class="step-text">Documents & Review</div>
+                <div class="step-text">Documents & Preview</div>
             </div>
         </div>
 
@@ -1683,7 +1682,7 @@
         }
 
         if (currentPhaseDisplay) {
-            const phaseMap = { "Personal & Identity": "Phase A", "Qualifications": "Phase B", "Experience & Projects": "Phase C", "Documents & Review": "Phase D" };
+            const phaseMap = { "Personal & Identity": "Phase A", "Qualifications": "Phase B", "Experience & Projects": "Phase C", "Documents & Preview": "Phase D" };
             currentPhaseDisplay.textContent = phaseMap[groupName] || "Phase";
         }
 
@@ -3283,7 +3282,8 @@
                     
                     ${['Category 1', 'Category 2', 'Category 3'].map(cat => {
                         const projects = Array.from(document.querySelectorAll('#projectContainerGrouped .project-card')).filter(card => {
-                            return card.querySelector('.project-category-hidden')?.value === cat;
+                            const hiddenVal = card.querySelector('.project-category-hidden')?.value || '';
+                            return hiddenVal.startsWith(cat);
                         });
                         
                         if (projects.length === 0 && cat !== 'Category 1') return '';
@@ -3765,7 +3765,7 @@
             hideFieldError(fileInput);
             const hint = fileInput.parentNode.querySelector('.file-validation-hint, .identity-hint');
             if (hint) {
-                hint.innerHTML = '<span style="font-size: 0.7rem; color: #6B7280; margin-top: 2px;">JPG, PNG ≤ 2MB | PDF ≤ 10MB</span>'; 
+                                hint.innerHTML = '<span style="font-size: 0.7rem; color: #6B7280; margin-top: 2px;">PDF only 2mb</span>';
             }
         }
         
