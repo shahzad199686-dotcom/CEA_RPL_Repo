@@ -1103,6 +1103,14 @@ input[type="file"] {
 .modern-table td {
     padding: 14px 16px;
     border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+.membership-file-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 52px;
 }
 
 /* =========================

@@ -380,7 +380,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Mr. / Mrs. <span class="req">*</span></label>
+                                        <label>Select Salutation <span class="req">*</span></label>
                                         <select name="title" required>
                                             <option value="">Select</option>
                                             <option>Mr.</option>
@@ -402,7 +402,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Mr. / Mrs.</label>
+                                        <label>Select Salutation</label>
                                         <select name="parent_title">
                                             <option value="">Select</option>
                                             <option>Mr.</option>
@@ -890,7 +890,7 @@
 
             <!-- STEP 4: PROFESSIONAL EXPERIENCE -->
             <div class="form-section hide" id="step-4">
-                <div class="section-header"><h2>Step 4: Professional Experience</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 4: Professional Experience</h2></div>
                 <div class="section-content">
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
@@ -1016,13 +1016,13 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="btn btn-ghost" style="margin-top: 24px;" onclick="addExperienceRow()">+ Add Experience</button>
+                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addExperienceRow()">+ Add Experience</button>
                 </div>
             </div>
 
             <!-- STEP 5: PROJECT EXPERIENCE (CAT-WISE GROUPED) -->
             <div class="form-section hide" id="step-5">
-                <div class="section-header"><h2>Step 5: Project Experience - List the major Audit / Assessment / Verification / Inspection Projects undertaken by the applicant for each selected category</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 5: Project Experience - List the major Audit / Assessment / Verification / Inspection Projects undertaken by the applicant for each selected category</h2></div>
                 <div class="section-content">
                     <!-- Dynamic Categories will be rendered here -->
                     <div id="projectContainerGrouped" style="display: flex; flex-direction: column; gap: 24px;"></div>
@@ -1043,7 +1043,7 @@
                                 <span style="font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Projects for this category</span>
                             </div>
                             <div class="project-list-container" style="display: flex; flex-direction: column; gap: 16px;"></div>
-                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; width: 100%; border-style: dashed; color: var(--accent); border-color: var(--accent-light);" onclick="addProjectRowGrouped(this.closest('.category-project-group'))">+ Add Project Experience</button>
+                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addProjectRowGrouped(this.closest('.category-project-group'))">+ Add Project Experience</button>
                         </div>
                     </template>
 
@@ -1090,7 +1090,7 @@
 
             <!-- STEP 6: UPLOAD REPORTS (CAT-WISE GROUPED) -->
             <div class="form-section hide" id="step-6">
-                <div class="section-header"><h2>Step 6: Upload Reports</h2></div>
+                <div class="section-header"><h2 style="color: var(--accent);">Step 6: Upload Reports</h2></div>
                 <div class="section-content">
                     <div class="info-note-blue" style="margin-bottom: 24px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -1119,7 +1119,7 @@
                                 <span style="font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;">Audit Reports</span>
                             </div>
                             <div class="report-list-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
-                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; width: 100%; border-style: dashed;" onclick="addReportRowGrouped(this.closest('.category-report-group'))">+ Add Another Report</button>
+                            <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addReportRowGrouped(this.closest('.category-report-group'))">+ Add Another Report</button>
                         </div>
                     </template>
 
@@ -1148,39 +1148,90 @@
             <div class="form-section hide" id="step-7">
                 <div class="section-header"><h2 style="color: var(--accent);">Step 7: Details of Certification / Training</h2></div>
                 <div class="section-content">
-                    <table class="modern-table" id="trainingTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 60px; text-align: center;">S. No.</th>
-                                <th>Name of Training/Certification</th>
-                                <th>Obtained from</th>
-                                <th style="width: 180px;">Duration of Training/Certification</th>
-                                <th style="width: 120px;">Executed in Year</th>
-                                <th style="width: 250px;">Upload Proof of Training/Certification</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
-                                <td><input name="training_name[]" placeholder="Name of Training/Certification" /></td>
-                                <td><input name="training_from[]" placeholder="Obtained from" /></td>
-                                <td><input type="text" name="training_duration[]" placeholder="Duration of Training/Certification" /></td>
-                                <td>
-                                    <select name="training_year[]">
-                                        <option value="">Year</option>
-                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="membership-file-wrap">
-                                        <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('trainingTable')">+ Add Row</button>
+                    
+                    <!-- 1. TRAINING DETAILS -->
+                    <div class="step7-sub-section" style="margin-bottom: 40px;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--accent-light); padding-bottom: 8px;">TRAINING DETAILS</h3>
+                        <table class="modern-table" id="trainingTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center;">S. No.</th>
+                                    <th>Topic of Training</th>
+                                    <th>Organized By</th>
+                                    <th style="width: 180px;">Duration (Days)</th>
+                                    <th style="width: 120px;">Executed in Year</th>
+                                    <th style="width: 250px;">Proof of Training</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                    <td><input name="training_name[]" placeholder="Topic" /></td>
+                                    <td><input name="training_from[]" placeholder="Institution" /></td>
+                                    <td><input type="text" name="training_duration[]" placeholder="Days" /></td>
+                                    <td>
+                                        <select name="training_year[]">
+                                            <option value="">Year</option>
+                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="membership-file-wrap">
+                                            <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('trainingTable')">+ Add Training</button>
+                    </div>
+
+                    <!-- 2. CERTIFICATION DETAILS -->
+                    <div class="step7-sub-section">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--accent-light); padding-bottom: 8px;">CERTIFICATION DETAILS</h3>
+                        <table class="modern-table" id="certificationTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px; text-align: center;">S. No.</th>
+                                    <th>Name of Certification</th>
+                                    <th>Issuing Authority / Obtained from</th>
+                                    <th style="width: 180px;">Validity Status</th>
+                                    <th style="width: 120px;">Conducted in Year</th>
+                                    <th style="width: 250px;">Upload Proof of Certificate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
+                                    <td><input name="training_name[]" placeholder="Certification Name" /></td>
+                                    <td><input name="training_from[]" placeholder="Issuing Authority" /></td>
+                                    <td>
+                                        <select name="training_duration[]">
+                                            <option value="">Select Status</option>
+                                            <option value="Valid">Valid</option>
+                                            <option value="Expired">Expired</option>
+                                            <option value="Lifetime">Lifetime</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="training_year[]">
+                                            <option value="">Year</option>
+                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="membership-file-wrap">
+                                            <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
+                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('certificationTable')">+ Add Certification</button>
+                    </div>
+
                 </div>
             </div>
 
@@ -1194,25 +1245,40 @@
                         <thead>
                             <tr>
                                 <th style="width: 60px; text-align: center;">S. No.</th>
-                                <th>Name of Membership/Association</th>
-                                <th>Obtained from</th>
-                                <th style="width: 120px;">Obtained in Year</th>
-                                <th style="width: 200px;">Duration of Membership/Association</th>
-                                <th style="width: 250px;">Upload Proof of Affiliation/Membership</th>
+                                <th>Institution / Association / Body</th>
+                                <th>Position Held</th>
+                                <th style="width: 140px;">Status</th>
+                                <th style="width: 120px;">From Year</th>
+                                <th style="width: 120px;">To Year</th>
+                                <th style="width: 250px;">Proof</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
-                                <td><input name="membership_name[]" placeholder="Name of Membership/Association" /></td>
-                                <td><input name="membership_from[]" placeholder="Obtained from" /></td>
+                                <td><input name="membership_name[]" placeholder="Enter Institution Name" /></td>
+                                <td><input name="membership_from[]" placeholder="Enter Position Held" /></td>
+                                <td>
+                                    <select name="membership_duration[]">
+                                        <option value="">Select Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Lifetime">Lifetime</option>
+                                    </select>
+                                </td>
                                 <td>
                                     <select name="membership_year[]">
                                         <option value="">Year</option>
                                         @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                     </select>
                                 </td>
-                                <td><input name="membership_duration[]" placeholder="Duration of Membership/Association" /></td>
+                                <td>
+                                    <select name="membership_to_year[]">
+                                        <option value="">Year</option>
+                                        <option value="Present">Present</option>
+                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                    </select>
+                                </td>
                                 <td>
                                     <div class="membership-file-wrap">
                                         <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
@@ -1236,26 +1302,25 @@
                         <thead>
                             <tr>
                                 <th style="width: 60px; text-align: center;">S. No.</th>
-                                <th>Name of Paper</th>
-                                <th>Published or Presented in</th>
-                                <th style="width: 150px;">Year</th>
-                                <th style="width: 150px;">Role of Applicant</th>
-                                <th style="width: 250px;">Upload Proof</th>
+                                <th>Topic of Paper</th>
+                                <th>Journal / Conference / Workshop</th>
+                                <th style="width: 120px;">Year</th>
+                                <th>Publication Link</th>
+                                <th style="width: 250px;">Proof</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td style="text-align: center; font-weight: 700; color: var(--accent);">1</td>
-                                <td><input name="paper_name[]" placeholder="Name of Paper" /></td>
-                                <td><input name="paper_place[]" placeholder="Published or Presented in" /></td>
-                                <td><input type="number" name="paper_year[]" placeholder="Year" /></td>
+                                <td><input name="paper_name[]" placeholder="Enter Paper / Publication Title" /></td>
+                                <td><input name="paper_place[]" placeholder="Enter Journal or Venue Name" /></td>
                                 <td>
-                                    <select name="paper_role[]">
-                                        <option value="">Select</option>
-                                        <option value="Author">Author</option>
-                                        <option value="Co-Author">Co-Author</option>
+                                    <select name="paper_year[]">
+                                        <option value="">Year</option>
+                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                     </select>
                                 </td>
+                                <td><input name="paper_role[]" placeholder="Paste Link Here" /></td>
                                 <td>
                                     <div class="membership-file-wrap">
                                         <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
@@ -1433,7 +1498,7 @@
                                 </thead>
                                 <tbody id="checklistBody">
                                     <tr><td style="padding-left: 20px;">Applicant Photograph</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Photograph"></td></tr>
-                                    <tr><td style="padding-left: 20px;">Government ID Proof (Aadhaar/PAN/Passport)</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Gov ID"></td></tr>
+                                    <tr><td style="padding-left: 20px;">Identity Proof (Government ID/Employee ID)</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Gov ID"></td></tr>
                                     <tr><td style="padding-left: 20px;">Step 3: Degree Certificates / Marksheets</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Degree"></td></tr>
                                     <tr><td style="padding-left: 20px;">Step 4: Experience Certificates / Proof</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Experience"></td></tr>
                                     <tr><td style="padding-left: 20px;">Step 6: Environmental Audit Reports</td><td>Yes</td><td style="text-align: center;"><input type="checkbox" class="checklist-cb mandatory-cb" data-doc="Reports"></td></tr>
@@ -1692,7 +1757,7 @@
         'citizenship': { label: 'Citizenship', error: 'Please select your citizenship.', example: 'Only Indian citizens are eligible', keywords: ['Citizenship'] },
         'address_perm': { label: 'Permanent Address', error: 'Please enter your complete permanent address.', example: 'Example: 123, Park Street, Kolkata, WB - 700016', keywords: ['Permanent Address'] },
         'address_corr': { label: 'Correspondence Address', error: 'Please enter your correspondence address.', example: 'Example: Same as above', keywords: ['Correspondence Address'] },
-        'gov_id_type': { label: 'ID Type', error: 'Please select a government-approved identity proof.', example: 'Example: Aadhaar Card', keywords: ['ID Type'] },
+        'gov_id_type': { label: 'ID Type', error: 'Please select an identity proof type.', example: 'Example: Government ID or Employee ID', keywords: ['ID Type'] },
         'gov_id_number': { label: 'ID Number', error: 'Please enter a valid identity document number.', example: 'Example: 1234 5678 9012', keywords: ['ID Number'] },
         'gov_id_upload': { label: 'ID Proof Upload', error: 'Please upload a clear copy of your identity proof.', example: 'Max size: 2MB for Images, 10MB for PDF', keywords: ['ID Proof', 'Government ID', 'gov_id_upload'] },
         'applicant_photo': { label: 'Photograph', error: 'Please upload a professional passport-size photograph.', example: 'Clear face, neutral background, max 2MB', keywords: ['Photograph', 'photo', 'applicant_photo'] },
@@ -1943,7 +2008,7 @@
 
                     if (cleanOriginal && cleanConfirm && cleanOriginal !== cleanConfirm) {
                         isInvalid = true;
-                        customMsg = "Aadhaar numbers do not match.";
+                        customMsg = "ID numbers do not match.";
                     } else {
                         isInvalid = false;
                     }
@@ -2326,31 +2391,7 @@
         container.appendChild(newCard);
     }
 
-    function addTrainingRow() {
-        const container = document.getElementById('trainingRowsContainer');
-        const firstRow = container.querySelector('.step7-grid');
-        const newRow = firstRow.cloneNode(true);
-        
-        // Update serial number
-        const serial = newRow.querySelector('.membership-serial');
-        if (serial) serial.textContent = container.querySelectorAll('.step7-grid').length + 1;
 
-        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
-        container.appendChild(newRow);
-    }
-
-    function addCertificationRow() {
-        const container = document.getElementById('certificationRowsContainer');
-        const firstRow = container.querySelector('.step7-grid');
-        const newRow = firstRow.cloneNode(true);
-
-        // Update serial number
-        const serial = newRow.querySelector('.membership-serial');
-        if (serial) serial.textContent = container.querySelectorAll('.step7-grid').length + 1;
-
-        newRow.querySelectorAll('input, select').forEach(el => el.value = '');
-        container.appendChild(newRow);
-    }
 
     // --- STEP 6: AUDIT REPORTS LOGIC ---
     let reportCount = 2; // Initial visible mandatory reports
@@ -2769,11 +2810,7 @@
 
         safeRestore('Trainings', () => {
             if (draftData.trainings && draftData.trainings.length > 0) {
-                const tCont = document.getElementById('trainingRowsContainer');
-                const cCont = document.getElementById('certificationRowsContainer');
-                
-                // For simplicity, we fill existing and add to the first container if overflow.
-                // But Step 7 uses a shared name for two tables. We'll handle order.
+                // Step 7 uses shared names for two tables. We'll handle order.
                 const topicInputs = document.querySelectorAll('#step-7 [name="training_name[]"]');
                 const fromInputs = document.querySelectorAll('#step-7 [name="training_from[]"]');
                 const durInputs = document.querySelectorAll('#step-7 [name="training_duration[]"]');
@@ -2792,18 +2829,40 @@
 
         safeRestore('Memberships', () => {
             if (draftData.memberships && draftData.memberships.length > 0) {
-                const container = document.getElementById('membershipContainer');
-                const existing = container.querySelectorAll('.membership-row');
-                for (let i = existing.length; i < draftData.memberships.length; i++) addMembershipRow();
-                const rows = container.querySelectorAll('.membership-row');
+                const table = document.getElementById('membershipTable');
+                const tbody = table?.querySelector('tbody');
+                if (!tbody) return;
+                while (tbody.children.length < draftData.memberships.length) addGenericRow('membershipTable');
+                const rows = tbody.children;
                 draftData.memberships.forEach((m, i) => {
                     const row = rows[i];
                     if (row) {
-                        row.querySelector('[name="membership_name[]"]').value = m.name || "";
-                        row.querySelector('[name="membership_from[]"]').value = m.from || "";
-                        row.querySelector('[name="membership_year[]"]').value = m.year || "";
-                        const dur = row.querySelector('.membership-duration-hidden');
-                        if (dur) dur.value = m.duration || "";
+                        const nameInp = row.querySelector('[name="membership_name[]"]');
+                        if (nameInp) nameInp.value = m.name || "";
+                        const fromInp = row.querySelector('[name="membership_from[]"]');
+                        if (fromInp) fromInp.value = m.from || "";
+                        const yearInp = row.querySelector('[name="membership_year[]"]');
+                        if (yearInp) yearInp.value = m.year || "";
+                        const durInp = row.querySelector('[name="membership_duration[]"]');
+                        if (durInp) durInp.value = m.duration || "";
+                    }
+                });
+            }
+        });
+
+        safeRestore('Papers', () => {
+            if (draftData.papers && draftData.papers.length > 0) {
+                const tbody = document.querySelector('#publicationTable tbody');
+                const existing = tbody.querySelectorAll('tr');
+                for (let i = existing.length; i < draftData.papers.length; i++) addGenericRow('publicationTable');
+                const rows = tbody.querySelectorAll('tr');
+                draftData.papers.forEach((p, i) => {
+                    const row = rows[i];
+                    if (row) {
+                        row.querySelector('[name="paper_name[]"]').value = p.name || "";
+                        row.querySelector('[name="paper_place[]"]').value = p.place || "";
+                        row.querySelector('[name="paper_year[]"]').value = p.year || "";
+                        row.querySelector('[name="paper_role[]"]').value = p.role || "";
                     }
                 });
             }
@@ -3254,12 +3313,12 @@
                     <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Training Details</p>
                     <table class="review-table">
                         <tbody>
-                            ${Array.from(document.querySelectorAll('#trainingRowsContainer .step7-grid')).map(grid => {
-                                const name = grid.querySelector('[name="training_name[]"]')?.value;
+                            ${Array.from(document.querySelectorAll('#trainingTable tbody tr')).map(tr => {
+                                const name = tr.querySelector('[name="training_name[]"]')?.value;
                                 if (!name) return '';
                                 return `<tr>
-                                    <td><strong>${name}</strong> from ${grid.querySelector('[name="training_from[]"]')?.value || '-'} (${grid.querySelector('[name="training_duration[]"]')?.value || '-'} days, ${grid.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 100px;">${getFileStatus(grid.querySelector('[name="training_proof[]"]'))}</td>
+                                    <td><strong>${name}</strong> from ${tr.querySelector('[name="training_from[]"]')?.value || '-'} (${tr.querySelector('[name="training_duration[]"]')?.value || '-'} days, ${tr.querySelector('[name="training_year[]"]')?.value || '-'})</td>
+                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No training records.</td></tr>'}
                         </tbody>
@@ -3269,12 +3328,12 @@
                     <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Certification Details</p>
                     <table class="review-table">
                         <tbody>
-                            ${Array.from(document.querySelectorAll('#certificationRowsContainer .step7-grid')).map(grid => {
-                                const name = grid.querySelector('[name="training_name[]"]')?.value;
+                            ${Array.from(document.querySelectorAll('#certificationTable tbody tr')).map(tr => {
+                                const name = tr.querySelector('[name="training_name[]"]')?.value;
                                 if (!name) return '';
                                 return `<tr>
-                                    <td><strong>${name}</strong> by ${grid.querySelector('[name="training_from[]"]')?.value || '-'} (${grid.querySelector('[name="training_duration[]"]')?.value || 'Active'}, ${grid.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 100px;">${getFileStatus(grid.querySelector('[name="training_proof[]"]'))}</td>
+                                    <td><strong>${name}</strong> by ${tr.querySelector('[name="training_from[]"]')?.value || '-'} (${tr.querySelector('[name="training_duration[]"]')?.value || 'Active'}, ${tr.querySelector('[name="training_year[]"]')?.value || '-'})</td>
+                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'))}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No certification records.</td></tr>'}
                         </tbody>
@@ -3291,19 +3350,23 @@
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Institution</th><th>Position</th><th>Status</th><th>Year</th><th>Proof</th></tr></thead>
+                        <thead><tr><th>Institution</th><th>Position</th><th>Status</th><th>Duration</th><th>Proof</th></tr></thead>
                         <tbody>
-                            ${Array.from(document.querySelectorAll('#membershipContainer .membership-row')).map(row => {
+                            ${Array.from(document.querySelectorAll('#membershipTable tbody tr')).map(row => {
                                 const inst = row.querySelector('[name="membership_name[]"]')?.value;
                                 if (!inst) return '';
+                                const pos = row.querySelector('[name="membership_from[]"]')?.value || '-';
+                                const status = row.querySelector('[name="membership_duration[]"]')?.value || '-';
+                                const fromYear = row.querySelector('[name="membership_year[]"]')?.value || '-';
+                                const toYear = row.querySelector('[name="membership_to_year[]"]')?.value || '-';
                                 return `<tr>
                                     <td>${inst}</td>
-                                    <td>${row.querySelector('[name="membership_from[]"]')?.value || '-'}</td>
-                                    <td>${row.querySelector('.membership-duration-hidden')?.value || '-'}</td>
-                                    <td>${row.querySelector('[name="membership_year[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus(row.querySelector('[name="membership_proof[]"]'))}</td>
+                                    <td>${pos}</td>
+                                    <td>${status}</td>
+                                    <td>${fromYear} - ${toYear}</td>
+                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="membership_proof[]"]'))}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No memberships added.</td></tr>'}
+                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:8px; color:var(--ink-light);">No membership records.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
@@ -3318,9 +3381,9 @@
                 </div>
                 <div class="review-table-wrap">
                     <table class="review-table">
-                        <thead><tr><th>Topic</th><th>Venue / Journal</th><th>Year</th><th>Link</th><th>Proof</th></tr></thead>
+                        <thead><tr><th>Topic of Paper</th><th>Venue / Journal</th><th>Year</th><th>Link</th><th>Proof</th></tr></thead>
                         <tbody>
-                            ${Array.from(document.querySelectorAll('#publicationContainer .publication-row')).map(row => {
+                            ${Array.from(document.querySelectorAll('#publicationTable tbody tr')).map(row => {
                                 const topic = row.querySelector('[name="paper_name[]"]')?.value;
                                 if (!topic) return '';
                                 return `<tr>
@@ -3328,9 +3391,9 @@
                                     <td>${row.querySelector('[name="paper_place[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="paper_year[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="paper_role[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus(row.querySelector('[name="paper_proof[]"]'))}</td>
+                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="paper_proof[]"]'))}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No papers added.</td></tr>'}
+                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:8px; color:var(--ink-light);">No paper records.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
@@ -3431,6 +3494,16 @@
     }
 
     async function validateFileUpload(input) {
+        // Special check for ID Proof upload - ensure ID Type is selected first
+        if (input.id === 'govIdUpload') {
+            const idTypeSelect = document.getElementById('govIdType');
+            if (idTypeSelect && !idTypeSelect.value) {
+                showFieldError(input, "Please select ID Type before uploading proof.");
+                input.value = ''; // Clear the file selection
+                return;
+            }
+        }
+
         const file = input.files[0];
         if (!file) {
             // If field is required, show error, otherwise clear
