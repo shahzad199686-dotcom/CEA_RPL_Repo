@@ -60,6 +60,10 @@ public class ApplicationSubmissionRequest
 
     // Section 6: Audit Reports
     public List<IFormFile>? audit_report { get; set; }
+    public List<string>? report_category { get; set; }
+
+    // Project Experience Category Mapping
+    public List<string>? project_category { get; set; }
 
     // Section 8: Training
     public List<string>? training_name { get; set; }

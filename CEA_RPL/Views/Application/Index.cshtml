@@ -2695,6 +2695,13 @@
 
             // Trigger UI logic
             if (typeof toggleGovIdUpload === 'function') toggleGovIdUpload();
+            
+            // Set file flags
+            if (draftData.hasPhoto) document.querySelector('[name="applicant_photo"]')?.setAttribute('data-has-file', 'true');
+            if (draftData.hasGovId) document.querySelector('[name="gov_id_upload"]')?.setAttribute('data-has-file', 'true');
+            if (draftData.hasOtherEnclosure) document.querySelector('[name="other_enclosure"]')?.setAttribute('data-has-file', 'true');
+            if (draftData.hasPaymentReceipt) document.querySelector('[name="payment_receipt"]')?.setAttribute('data-has-file', 'true');
+            if (draftData.declaration?.hasFile) document.querySelector('[name="signature_file"]')?.setAttribute('data-has-file', 'true');
         });
 
         safeRestore('Categories', () => {
@@ -2707,11 +2714,12 @@
 
         safeRestore('Education', () => {
             if (draftData.educations && draftData.educations.length > 0) {
-                const eduContainer = document.getElementById('educationContainer');
-                if (eduContainer) {
-                    const existingRows = eduContainer.querySelectorAll('.education-row');
-                    for (let i = existingRows.length; i < draftData.educations.length; i++) addEducationRow();
-                    const rows = eduContainer.querySelectorAll('.education-row');
+                const eduTable = document.getElementById('educationTable');
+                if (eduTable) {
+                    const tbody = eduTable.querySelector('tbody');
+                    const existingRows = tbody.querySelectorAll('tr');
+                    for (let i = existingRows.length; i < draftData.educations.length; i++) addGenericRow('educationTable');
+                    const rows = tbody.querySelectorAll('tr');
                     draftData.educations.forEach((edu, i) => {
                         const row = rows[i];
                         if (row) {
@@ -2719,6 +2727,10 @@
                             row.querySelector('[name="edu_discipline[]"]').value = edu.discipline || "";
                             row.querySelector('[name="edu_institution[]"]').value = edu.institution || "";
                             row.querySelector('[name="edu_year[]"]').value = edu.year || "";
+                            if (edu.hasFile) {
+                                const fileInp = row.querySelector('[name="edu_cert[]"]');
+                                if (fileInp) fileInp.dataset.hasFile = "true";
+                            }
                         }
                     });
                 }
@@ -2740,6 +2752,10 @@
                             card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
                             const durationHidden = card.querySelector('.exp-duration-hidden');
                             if (durationHidden) durationHidden.value = exp.duration || "";
+                            if (exp.hasFile) {
+                                const fileInp = card.querySelector('[name="exp_proof[]"]');
+                                if (fileInp) fileInp.dataset.hasFile = "true";
+                            }
                         }
                     });
                 }
@@ -3137,7 +3153,7 @@
         
         const getFileStatus = (nameOrEl) => {
             const input = (typeof nameOrEl === 'string') ? document.querySelector(`input[name="${nameOrEl}"]`) : nameOrEl;
-            const isUploaded = (input && input.files && input.files.length > 0);
+            const isUploaded = (input && input.files && input.files.length > 0) || (input && input.getAttribute('data-has-file') === 'true');
             return isUploaded ? 
                 '<span style="color: var(--success); font-weight: 600;">✓ Uploaded</span>' : 
                 '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
@@ -3146,7 +3162,9 @@
         const getMultiFileStatus = (name) => {
             const inputs = document.querySelectorAll(`input[name="${name}"]`);
             let count = 0;
-            inputs.forEach(input => { if (input.files && input.files.length > 0) count++; });
+            inputs.forEach(input => { 
+                if ((input.files && input.files.length > 0) || input.getAttribute('data-has-file') === 'true') count++; 
+            });
             return count > 0 ? 
                 `<span style="color: var(--success); font-weight: 600;">✓ ${count} File(s) Uploaded</span>` : 
                 '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
@@ -3201,94 +3219,100 @@
             </div>`;
 
         // --- STEP 3: EDUCATIONAL QUALIFICATIONS ---
-        html += `
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 3: Educational Qualifications</h4>
-                    ${editLink(3)}
-                </div>
-                <div class="review-table-wrap">
-                    <table class="review-table">
-                        <thead><tr><th>Degree</th><th>Course</th><th>Institution</th><th>Year</th><th>Doc</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#educationContainer .education-row')).map(row => {
-                                const deg = row.querySelector('[name="edu_degree[]"]')?.value;
-                                if (!deg) return '';
-                                return `<tr>
-                                    <td>${deg}</td>
-                                    <td>${row.querySelector('[name="edu_discipline[]"]')?.value || '-'}</td>
-                                    <td>${row.querySelector('[name="edu_institution[]"]')?.value || '-'}</td>
-                                    <td>${row.querySelector('[name="edu_year[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus(row.querySelector('[name="edu_cert[]"]'))}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No education records added.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>
-            </div>`;
-
-        // --- STEP 4: PROFESSIONAL EXPERIENCE ---
-        html += `
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 4: Professional Experience</h4>
-                    ${editLink(4)}
-                </div>
-                <div class="review-dl" style="margin-bottom: 16px;">
-                    <div><dt>Total Experience</dt><dd>${getData('total_experience')} Years</dd></div>
-                </div>
-                <div class="review-table-wrap">
-                    <table class="review-table">
-                        <thead><tr><th>Organization</th><th>Duration</th><th>Designation / Proof Type</th><th>Proof</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#experienceContainer .experience-card')).map(card => {
-                                const org = card.querySelector('[name="exp_org[]"]')?.value;
-                                if (!org) return '';
-                                return `<tr>
-                                    <td>${org}</td>
-                                    <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
-                                    <td>${getFileStatus(card.querySelector('[name="exp_proof[]"]'))}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="4" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>
-            </div>`;
-
-        // --- STEP 5: PROJECT EXPERIENCE ---
-        html += `
-            <div class="review-section">
-                <div class="review-header">
-                    <h4>Step 5: Project Experience</h4>
-                    ${editLink(5)}
-                </div>
-                
-                <p style="font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">5.1 Projects for Category 1 Sub-types (1A, 1B, 1C, 1D)</p>
-                <div class="review-table-wrap" style="margin-bottom: 24px;">
-                    <table class="review-table">
-                        <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th><th>Role</th></tr></thead>
-                        <tbody>
-                            ${Array.from(document.querySelectorAll('#projectContainerCat1 .project-card')).map(card => {
-                                const pName = card.querySelector('[name="project_name_cat1[]"]')?.value;
-                                if (!pName) return '';
-                                return `<tr>
-                                    <td>${pName}</td>
-                                    <td>${card.querySelector('[name="project_client_cat1[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="project_location_cat1[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="project_year_cat1[]"]')?.value || '-'}</td>
-                                    <td>${card.querySelector('[name="project_role_cat1[]"]')?.value || '-'}</td>
-                                </tr>`;
-                            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No Category 1 projects added.</td></tr>'}
-                        </tbody>
-                    </table>
+        html += `                <!-- STEP 3: EDUCATION -->
+                <div class="review-section">
+                    <div class="review-header">
+                        <h4>Step 3: Educational Qualifications</h4>
+                        ${editLink(3)}
+                    </div>
+                    <div class="review-table-wrap">
+                        <table class="review-table">
+                            <thead><tr><th>Degree</th><th>Discipline</th><th>Institution</th><th>Year</th><th>Proof</th></tr></thead>
+                            <tbody>
+                                ${Array.from(document.querySelectorAll('#educationTable tbody tr')).map(row => {
+                                    const deg = row.querySelector('[name="edu_degree[]"]')?.value;
+                                    if (!deg) return '';
+                                    return `<tr>
+                                        <td>${deg}</td>
+                                        <td>${row.querySelector('[name="edu_discipline[]"]')?.value || '-'}</td>
+                                        <td>${row.querySelector('[name="edu_institution[]"]')?.value || '-'}</td>
+                                        <td>${row.querySelector('[name="edu_year[]"]')?.value || '-'}</td>
+                                        <td>${getFileStatus(row.querySelector('[name="edu_cert[]"]'))}</td>
+                                    </tr>`;
+                                }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No education records added.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="review-dl">
-                    <div><dt>5.2 Category 2 Projects</dt><dd>None provided</dd></div>
-                    <div><dt>5.3 Category 3 Projects</dt><dd>None provided</dd></div>
+                <!-- STEP 4: EXPERIENCE -->
+                <div class="review-section">
+                    <div class="review-header">
+                        <h4>Step 4: Professional Experience</h4>
+                        ${editLink(4)}
+                    </div>
+                    <div class="review-dl" style="margin-bottom: 16px;">
+                        <div><dt>Total Experience</dt><dd>${getData('total_experience')} Years</dd></div>
+                    </div>
+                    <div class="review-table-wrap">
+                        <table class="review-table">
+                            <thead><tr><th>Organization</th><th>Designation</th><th>Duration</th><th>Description</th><th>Proof</th></tr></thead>
+                            <tbody>
+                                ${Array.from(document.querySelectorAll('#experienceContainer .experience-card')).map(card => {
+                                    const org = card.querySelector('[name="exp_org[]"]')?.value;
+                                    if (!org) return '';
+                                    return `<tr>
+                                        <td>${org}</td>
+                                        <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
+                                        <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
+                                        <td style="font-size:0.75rem; max-width:200px;">${(card.querySelector('[name="exp_nature[]"]')?.value || '-').substring(0,60)}...</td>
+                                        <td>${getFileStatus(card.querySelector('[name="exp_proof[]"]'))}</td>
+                                    </tr>`;
+                                }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>`;
+
+                <!-- STEP 5: PROJECT EXPERIENCE -->
+                <div class="review-section">
+                    <div class="review-header">
+                        <h4>Step 5: Project Experience</h4>
+                        ${editLink(5)}
+                    </div>
+                    
+                    ${['Category 1', 'Category 2', 'Category 3'].map(cat => {
+                        const projects = Array.from(document.querySelectorAll('#projectContainerGrouped .project-card')).filter(card => {
+                            return card.querySelector('.project-category-hidden')?.value === cat;
+                        });
+                        
+                        if (projects.length === 0 && cat !== 'Category 1') return '';
+                        
+                        let catTitle = cat === 'Category 1' ? '5.1 Projects for Category 1 Sub-types (1A, 1B, 1C, 1D)' : 
+                                       cat === 'Category 2' ? '5.2 Projects for Category 2' : '5.3 Projects for Category 3';
+
+                        return `
+                            <p style="font-size: 0.85rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">${catTitle}</p>
+                            <div class="review-table-wrap" style="margin-bottom: 24px;">
+                                <table class="review-table">
+                                    <thead><tr><th>Project Name</th><th>Client</th><th>Location</th><th>Year</th><th>Role</th></tr></thead>
+                                    <tbody>
+                                        ${projects.map(card => {
+                                            const pName = card.querySelector('[name="project_name_cat1[]"]')?.value;
+                                            if (!pName) return '';
+                                            return `<tr>
+                                                <td>${pName}</td>
+                                                <td>${card.querySelector('[name="project_client_cat1[]"]')?.value || '-'}</td>
+                                                <td>${card.querySelector('[name="project_location_cat1[]"]')?.value || '-'}</td>
+                                                <td>${card.querySelector('[name="project_year_cat1[]"]')?.value || '-'}</td>
+                                                <td>${card.querySelector('[name="project_role_cat1[]"]')?.value || '-'}</td>
+                                            </tr>`;
+                                        }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No projects added for this category.</td></tr>'}
+                                    </tbody>
+                                </table>
+                            </div>`;
+                    }).join('')}
+                </div>`;
 
         // --- STEP 6: UPLOAD REPORTS ---
         html += `

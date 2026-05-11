@@ -290,7 +290,7 @@ public class ApplicationController : Controller
                 {
                     if (string.IsNullOrWhiteSpace(req.project_name_cat1[i])) continue;
                     applicant.ProjectExperiences.Add(new ProjectExperience {
-                        Category = "Category 1",
+                        Category = i < (req.project_category?.Count ?? 0) ? req.project_category![i] ?? "Category 1" : "Category 1",
                         Name = req.project_name_cat1[i],
                         Client = i < (req.project_client_cat1?.Count ?? 0) ? req.project_client_cat1![i] ?? "" : "",
                         Location = i < (req.project_location_cat1?.Count ?? 0) ? req.project_location_cat1![i] ?? "" : "",
@@ -518,14 +518,16 @@ public class ApplicationController : Controller
                 degree = e.Degree, 
                 discipline = e.Discipline, 
                 institution = e.Institution,
-                year = e.Year 
+                year = e.Year,
+                hasFile = !string.IsNullOrEmpty(e.CertificatePath)
             }).ToList(),
             experiences = applicant.ProfessionalExperiences.Select(ex => new {
                 org = ex.Organization,
                 designation = ex.Designation,
                 duration = ex.Duration,
                 nature = ex.NatureOfWork,
-                phone = ex.ReferencePhone
+                phone = ex.ReferencePhone,
+                hasFile = !string.IsNullOrEmpty(ex.ProofPath)
             }).ToList(),
             projects = applicant.ProjectExperiences.Select(p => new {
                 name = p.Name,
@@ -538,24 +540,28 @@ public class ApplicationController : Controller
                 name = t.Name,
                 from = t.ObtainedFrom,
                 duration = t.Duration,
-                year = t.Year
+                year = t.Year,
+                hasFile = !string.IsNullOrEmpty(t.ProofPath)
             }).ToList(),
             memberships = applicant.Memberships.Select(m => new {
                 name = m.Name,
                 from = m.ObtainedFrom,
                 year = m.Year,
-                duration = m.Duration
+                duration = m.Duration,
+                hasFile = !string.IsNullOrEmpty(m.ProofPath)
             }).ToList(),
             papers = applicant.PaperPublisheds.Select(p => new {
                 name = p.Name,
                 place = p.Place,
                 year = p.Year,
-                role = p.Role
+                role = p.Role,
+                hasFile = !string.IsNullOrEmpty(p.ProofPath)
             }).ToList(),
             awards = applicant.Awards.Select(a => new {
                 name = a.Name,
                 from = a.ReceivedFrom,
-                year = a.Year
+                year = a.Year,
+                hasFile = !string.IsNullOrEmpty(a.ProofPath)
             }).ToList(),
             software_skills = applicant.SoftwareSkills.Select(s => new {
                 skill = s.SoftwareName,
@@ -564,13 +570,22 @@ public class ApplicationController : Controller
             payment = applicant.PaymentDetails.OrderByDescending(p => p.Id).Select(p => new {
                 amount = p.Amount,
                 date = p.PaymentDate.ToString("yyyy-MM-dd"),
-                utr = p.UtrNumber
+                utr = p.UtrNumber,
+                hasFile = !string.IsNullOrEmpty(p.ReceiptPath)
             }).FirstOrDefault(),
             declaration = applicant.Declaration != null ? new {
                 name = applicant.Declaration.Name,
                 date = applicant.Declaration.Date.ToString("yyyy-MM-dd"),
-                place = applicant.Declaration.Place
-            } : null
+                place = applicant.Declaration.Place,
+                hasFile = !string.IsNullOrEmpty(applicant.Declaration.SignaturePath)
+            } : null,
+            hasPhoto = !string.IsNullOrEmpty(applicant.PhotoPath),
+            hasGovId = !string.IsNullOrEmpty(applicant.GovIdPath),
+            hasOtherEnclosure = applicant.OtherEnclosures.Any(e => !string.IsNullOrEmpty(e.FilePath)),
+            hasPaymentReceipt = applicant.PaymentDetails.Any(p => !string.IsNullOrEmpty(p.ReceiptPath)),
+            reports = applicant.UploadReports.Select(r => new {
+                hasFile = !string.IsNullOrEmpty(r.FilePath)
+            }).ToList()
         });
     }
 
