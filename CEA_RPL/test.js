@@ -1236,7 +1236,7 @@
             <!-- Step 8: Membership -->
             <div class="review-section">
                 <div class="review-header">
-                    <h4>Step 8: Membership in Professional Bodies</h4>
+                    <h4>Step 8: Professional Affiliation Details</h4>
                     ${editLink(8)}
                 </div>
                 <div class="review-table-wrap">
