@@ -96,6 +96,7 @@ using (var scope = app.Services.CreateScope())
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'FinanceRemarks') ALTER TABLE Applicants ADD FinanceRemarks NVARCHAR(MAX);");
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'ProfessionalExperienceSectors') ALTER TABLE Applicants ADD ProfessionalExperienceSectors NVARCHAR(MAX);");
         context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TechnicalSubjectExpertise') ALTER TABLE Applicants ADD TechnicalSubjectExpertise NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TotalExperience') ALTER TABLE Applicants ADD TotalExperience NVARCHAR(MAX);");
         
         // Data Patch: Expand Mobile column size for AES encryption
         context.Database.ExecuteSqlRaw("ALTER TABLE Applicants ALTER COLUMN Mobile NVARCHAR(255) NOT NULL;");

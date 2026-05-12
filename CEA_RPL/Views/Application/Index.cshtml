@@ -1558,41 +1558,41 @@
                         </label>
                         <div style="display: flex; gap: 24px;">
                             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="radio" name="decl_retired_gov" value="Yes" required /> Yes
+                                <input type="radio" name="decl_retired_gov" value="Yes" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" /> Yes
                             </label>
                             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="radio" name="decl_retired_gov" value="No" required /> No
+                                <input type="radio" name="decl_retired_gov" value="No" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" /> No
                             </label>
                         </div>
                     </div>
-                    <div class="grid" style="margin-bottom: 24px; display: flex; align-items: stretch;">
-                        <div class="col-6">
-                            <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
-                                <div style="padding-top: 22px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                    <div class="grid" style="margin-bottom: 24px;">
+                        <div class="col-12" style="margin-bottom: 16px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <div style="padding-top: 14px; flex-shrink: 0;">
+                                    <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
                                 </div>
-                                <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
-                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
-                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.8; font-size: 14.5px;">
-                                        <li>All information provided in this application is true and correct to the best of my knowledge.</li>
-                                        <li>I am not engaged in any activity or employment that may create a conflict of interest.</li>
-                                        <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
-                                        <li>I understand that any false information may lead to disqualification of application or revocation of certification.</li>
+                                <div class="declaration-statement" style="flex: 1; padding: 16px 20px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 0; text-align: left;">
+                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 8px; text-align: left;">I hereby declare that:</p>
+                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.6; font-size: 14.5px; text-align: left;">
+                                        <li>No disciplinary/vigilance proceedings or criminal case is pending or contemplated against me.</li>
+                                        <li>No penalty has been imposed on me which renders me unsuitable for such engagement.</li>
+                                        <li>The information furnished by me is true and correct to the best of my knowledge.</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
-                                <div style="padding-top: 22px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                        <div class="col-12">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <div style="padding-top: 14px; flex-shrink: 0;">
+                                    <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
                                 </div>
-                                <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
-                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
-                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.8; font-size: 14.5px;">
-                                        <li>No disciplinary/vigilance proceedings or criminal case is pending or contemplated against me.</li>
-                                        <li>No penalty has been imposed on me which renders me unsuitable for such engagement.</li>
-                                        <li>The information furnished by me is true and correct to the best of my knowledge.</li>
+                                <div class="declaration-statement" style="flex: 1; padding: 16px 20px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 0; text-align: left;">
+                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 8px; text-align: left;">I hereby declare that:</p>
+                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.6; font-size: 14.5px; text-align: left;">
+                                        <li>All information provided in this application is true and correct to the best of my knowledge.</li>
+                                        <li>I am not engaged in any activity or employment that may create a conflict of interest.</li>
+                                        <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
+                                        <li>I understand that any false information may lead to disqualification of application or revocation of certification.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -1884,33 +1884,33 @@
     }
 
     const validationMetadata = {
-        'full_name': { label: 'Candidate Name', error: 'Please enter candidate name as per government records.', example: 'Example: Rahul Sharma', keywords: ['Candidate Name', 'Full Name'] },
-        'parent_relation': { label: 'Parent Relation', error: 'Please select your relationship with the parent/guardian.', example: 'Example: Father', keywords: ['Parent Relation'] },
-        'parent_name': { label: 'Parent Name', error: 'Please enter the name of your parent or guardian.', example: 'Example: Vijay Sharma', keywords: ['Parent Name'] },
-        'email': { label: 'Email ID', error: 'Please enter a valid email address.', example: 'Example: rahul.sharma@email.com', keywords: ['Email'] },
-        'mobile': { label: 'Mobile Number', error: 'Please enter a valid 10-digit mobile number.', example: 'Example: 9876543210', keywords: ['Mobile Number'] },
-        'dob': { label: 'Date of Birth', error: 'Please select your date of birth.', example: 'Format: DD-MM-YYYY', keywords: ['Date of Birth'] },
-        'gender': { label: 'Gender', error: 'Please select your gender.', example: 'Example: Male', keywords: ['Gender'] },
-        'citizenship': { label: 'Citizenship', error: 'Please select your citizenship.', example: 'Only Indian citizens are eligible', keywords: ['Citizenship'] },
-        'address_perm': { label: 'Permanent Address', error: 'Please enter your complete permanent address.', example: 'Example: 123, Park Street, Kolkata, WB - 700016', keywords: ['Permanent Address'] },
-        'address_corr': { label: 'Correspondence Address', error: 'Please enter your correspondence address.', example: 'Example: Same as above', keywords: ['Correspondence Address'] },
-        'gov_id_type': { label: 'ID Type', error: 'Please select an identity proof type.', example: 'Example: Government ID or Employee ID', keywords: ['ID Type'] },
-        'gov_id_number': { label: 'ID Number', error: 'Please enter a valid identity document number.', example: 'Example: 1234 5678 9012', keywords: ['ID Number'] },
-        'gov_id_upload': { label: 'ID Proof Upload', error: 'Please upload a clear copy of your identity proof.', example: 'Max size: 2MB for Images, 10MB for PDF', keywords: ['ID Proof', 'Government ID', 'gov_id_upload'] },
-        'applicant_photo': { label: 'Photograph', error: 'Please upload a professional passport-size photograph.', example: 'Clear face, neutral background, max 2MB', keywords: ['Photograph', 'photo', 'applicant_photo'] },
+        'full_name': { label: 'Candidate Name', error: 'This field is required.', keywords: ['Candidate Name', 'Full Name'] },
+        'parent_relation': { label: 'Parent Relation', error: 'This field is required.', keywords: ['Parent Relation'] },
+        'parent_name': { label: 'Parent Name', error: 'This field is required.', keywords: ['Parent Name'] },
+        'email': { label: 'Email ID', error: 'This field is required.', keywords: ['Email'] },
+        'mobile': { label: 'Mobile Number', error: 'This field is required.', keywords: ['Mobile Number'] },
+        'dob': { label: 'Date of Birth', error: 'This field is required.', keywords: ['Date of Birth'] },
+        'gender': { label: 'Gender', error: 'This field is required.', keywords: ['Gender'] },
+        'citizenship': { label: 'Citizenship', error: 'This field is required.', keywords: ['Citizenship'] },
+        'address_perm': { label: 'Permanent Address', error: 'This field is required.', keywords: ['Permanent Address'] },
+        'address_corr': { label: 'Correspondence Address', error: 'This field is required.', keywords: ['Correspondence Address'] },
+        'gov_id_type': { label: 'ID Type', error: 'This field is required.', keywords: ['ID Type'] },
+        'gov_id_number': { label: 'ID Number', error: 'This field is required.', keywords: ['ID Number'] },
+        'gov_id_upload': { label: 'ID Proof Upload', error: 'This field is required.', keywords: ['ID Proof', 'Government ID', 'gov_id_upload'] },
+        'applicant_photo': { label: 'Photograph', error: 'This field is required.', keywords: ['Photograph', 'photo', 'applicant_photo'] },
         'other_gov_id_type': { keywords: ['Other Gov ID Type'] },
         
-        'edu_degree[]': { label: 'Degree', error: 'Please enter the degree name.', example: 'Example: B.E. Environmental Engineering', keywords: ['Degree'] },
-        'edu_discipline[]': { label: 'Discipline', error: 'Please enter the discipline or course name.', example: 'Example: Environmental Science', keywords: ['Discipline'] },
-        'edu_institution[]': { label: 'Institution', error: 'Please enter the full university or college name.', example: 'Example: IIT Delhi', keywords: ['Education Institution Name', 'Education Institution'] },
-        'edu_year[]': { label: 'Passing Year', error: 'Please enter a valid passing year.', example: 'Example: 2018', keywords: ['Passing Year'] },
-        'edu_cert[]': { label: 'Certificate', error: 'Please upload your degree certificate.', example: 'Max size: 10MB PDF/Image', keywords: ['Certificate'] },
+        'edu_degree[]': { label: 'Degree', error: 'This field is required.', keywords: ['Degree'] },
+        'edu_discipline[]': { label: 'Discipline', error: 'This field is required.', keywords: ['Discipline'] },
+        'edu_institution[]': { label: 'Institution', error: 'This field is required.', keywords: ['Education Institution Name', 'Education Institution'] },
+        'edu_year[]': { label: 'Passing Year', error: 'This field is required.', keywords: ['Passing Year'] },
+        'edu_cert[]': { label: 'Certificate', error: 'This field is required.', keywords: ['Certificate'] },
         
-        'total_experience': { label: 'Total Experience', error: 'Please enter your total years of experience.', example: 'Example: 10', keywords: ['Total Experience'] },
-        'exp_org[]': { label: 'Organization', error: 'Please enter the organization name.', example: 'Example: Green Tech Solutons', keywords: ['Professional Experience Organization Name', 'Experience Organization'] },
-        'exp_designation[]': { label: 'Designation', error: 'Please enter your designation.', example: 'Example: Senior Auditor', keywords: ['Professional Experience Designation', 'Experience Designation'] },
-        'exp_nature[]': { label: 'Nature of Work', error: 'Please describe your key responsibilities.', example: 'Example: Leading environmental audits for industrial plants...', keywords: ['Professional Experience Role Description', 'Experience Role Description'] },
-        'exp_proof[]': { label: 'Experience Proof', error: 'Please upload service certificate or relieving letter.', example: 'Max size: 10MB PDF', keywords: ['Experience Proof'] },
+        'total_experience': { label: 'Total Experience', error: 'This field is required.', keywords: ['Total Experience'] },
+        'exp_org[]': { label: 'Organization', error: 'This field is required.', keywords: ['Professional Experience Organization Name', 'Experience Organization'] },
+        'exp_designation[]': { label: 'Designation', error: 'This field is required.', keywords: ['Professional Experience Designation', 'Experience Designation'] },
+        'exp_nature[]': { label: 'Nature of Work', error: 'This field is required.', keywords: ['Professional Experience Role Description', 'Experience Role Description'] },
+        'exp_proof[]': { label: 'Experience Proof', error: 'This field is required.', keywords: ['Experience Proof'] },
         'ref2_name': { keywords: ['Professional Experience Reference Name', 'Reference Name'] },
 
         'project_name_cat1[]': { keywords: ['Project Experience Title', 'Project Name'] },
@@ -1933,18 +1933,18 @@
         
         'software_skill[]': { keywords: ['Software Skill Name', 'Software Skill'] },
         
-        'other_enclosure': { label: 'Supporting Document', error: 'Please upload the supporting document.', keywords: ['Other Enclosure'] },
-        'enclosure_desc': { label: 'Enclosure Description', error: 'Please enter a meaningful description.', example: 'Example: This document contains additional project certifications...', keywords: ['Other Enclosure Description', 'Enclosure Description'] },
+        'enclosure_desc': { label: 'Enclosure Description', error: 'This field is required.', keywords: ['Other Enclosure Description', 'Enclosure Description'] },
+        'other_enclosure': { label: 'Supporting Document', error: 'This field is required.', keywords: ['Other Enclosure'] },
         
-        'payment_utr': { label: 'UTR Number', error: 'Please enter the 12 or 22 digit UTR number.', example: 'Example: SBIN123456789012', keywords: ['UTR Number', 'Duplicate UTR'] },
-        'payment_date': { label: 'Payment Date', error: 'Please select the date the payment was made.', example: 'Should match the receipt', keywords: ['Payment Date'] },
-        'payment_receipt': { label: 'Payment Receipt', error: 'Please upload the bank transaction confirmation.', example: 'Max size: 10MB PDF/JPG', keywords: ['Payment Receipt', 'receipt'] },
+        'payment_utr': { label: 'UTR Number', error: 'This field is required.', keywords: ['UTR Number', 'Duplicate UTR'] },
+        'payment_date': { label: 'Payment Date', error: 'This field is required.', keywords: ['Payment Date'] },
+        'payment_receipt': { label: 'Payment Receipt', error: 'This field is required.', keywords: ['Payment Receipt', 'receipt'] },
         
-        'decl_name': { label: 'Candidate Name', error: 'Please enter candidate name for the declaration.', example: 'Should match Applicant Details', keywords: ['Declaration Signature Name', 'Declaration Name'] },
+        'decl_name': { label: 'Candidate Name', error: 'This field is required.', keywords: ['Declaration Signature Name', 'Declaration Name'] },
         'decl_place': { keywords: ['Declaration Place Name', 'Declaration Place'] },
-        'signature_file': { label: 'Signature File', error: 'Please upload your signature image.', keywords: ['Signature', 'signature_file'] },
-        'sector_experience[]': { label: 'Sector Representing', error: 'Please select up to 5 sectors.', keywords: ['Sector Representing'] },
-        'subject_expertise[]': { label: 'Subject Expertise', error: 'Please select up to 3 subjects.', keywords: ['Subject Expertise'] }
+        'signature_file': { label: 'Signature File', error: 'This field is required.', keywords: ['Signature', 'signature_file'] },
+        'sector_experience[]': { label: 'Sector Representing', error: 'This field is required.', keywords: ['Sector Representing'] },
+        'subject_expertise[]': { label: 'Subject Expertise', error: 'This field is required.', keywords: ['Subject Expertise'] }
     };
 
     function handleServerValidation(message) {
@@ -2015,7 +2015,6 @@
         const name = input.name || input.id;
         const meta = validationMetadata[name] || {};
         const errorMsg = customMsg || meta.error || 'This field is required.';
-        const example = meta.example || '';
         
         // Remove existing error logic
         hideFieldError(input);
@@ -2024,23 +2023,27 @@
         guidance.className = 'error-guidance';
         guidance.innerHTML = `
             <span class="error-text">⚠️ ${errorMsg}</span>
-            ${example ? `<span class="example-text">${example}</span>` : ''}
         `;
         
         // Find best place to insert
         let container = input.parentElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
             container = input.closest('.category-card-v2') || input.parentElement;
+            container.appendChild(guidance);
         } else if (input.type === 'file') {
             // Place after the hint usually
             const hint = container.querySelector('.file-validation-hint');
             if (hint) {
                  hint.insertAdjacentElement('afterend', guidance);
-                 return;
+            } else {
+                 container.appendChild(guidance);
             }
+        } else if (input.tagName === 'TEXTAREA') {
+            // Place directly after the textarea (before word counters if any)
+            input.insertAdjacentElement('afterend', guidance);
+        } else {
+            container.appendChild(guidance);
         }
-        
-        container.appendChild(guidance);
     }
 
     function hideFieldError(input) {
@@ -2116,13 +2119,13 @@
                     
                     if (cityField && !cityField.value) {
                         isInvalid = true;
-                        customMsg = "Please select a city.";
+                        customMsg = "This field is required.";
                     } else if (pinField && (!/^[0-9]{6}$/.test(pinField.value))) {
                         isInvalid = true;
                         customMsg = "Pincode must be exactly 6 digits.";
                     } else if (addrField && (addrField.value.trim().length < 3 || !/^[a-zA-Z0-9\s,.\-/#]{3,}$/.test(addrField.value.trim()))) {
                         isInvalid = true;
-                        customMsg = "Street address must be at least 3 characters.";
+                        customMsg = "This field is required.";
                     }
                 } else if (input.name === 'mobile' || input.name === 'alt_mobile') {
                     if (input.value.trim() !== '' && !/^[0-9]{10}$/.test(input.value.trim())) {
@@ -2131,7 +2134,7 @@
                     }
                 } else if (!skipNames.includes(input.name) && typeof isMeaningfulText === 'function' && !isMeaningfulText(input.value, isDesc)) {
                     isInvalid = true;
-                    customMsg = isDesc ? "Please enter a meaningful description." : "Please enter meaningful information.";
+                    customMsg = "This field is required.";
                 }
             }
         }
@@ -2221,7 +2224,7 @@
                 const firstProjName = projects[0].querySelector('[name="project_name_cat1[]"]');
                 if (firstProjName && !firstProjName.value.trim()) {
                     valid = false;
-                    showFieldError(firstProjName, `Project name is required for ${cat}.`);
+                    showFieldError(firstProjName, "This field is required.");
                     if (!firstInvalid) firstInvalid = firstProjName;
                 }
             }
@@ -2290,7 +2293,7 @@
             if (!retiredRadio) {
                 valid = false;
                 const radioGroup = section.querySelector('.retired-gov-question');
-                showFieldError(section.querySelector('input[name="decl_retired_gov"]'), "Please select an option.");
+                showFieldError(section.querySelector('input[name="decl_retired_gov"]'), "This field is required.");
                 if (!firstInvalid) firstInvalid = section.querySelector('input[name="decl_retired_gov"]');
             } else {
                 const retiredVal = retiredRadio.value;
@@ -2299,11 +2302,11 @@
                 
                 if (retiredVal === 'Yes' && !check1.checked) {
                     valid = false;
-                    showFieldError(check1, "Please agree to the declaration.");
+                    showFieldError(check1, "This field is required.");
                     if (!firstInvalid) firstInvalid = check1;
                 } else if (retiredVal === 'No' && !check2.checked) {
                     valid = false;
-                    showFieldError(check2, "Please agree to the declaration.");
+                    showFieldError(check2, "This field is required.");
                     if (!firstInvalid) firstInvalid = check2;
                 }
             }
@@ -2887,6 +2890,24 @@
         } catch (e) { console.log('No draft found'); }
     }
 
+    function refreshFileUI(input) {
+        if (!input) return;
+        const isUploaded = input.getAttribute('data-has-file') === 'true' || (input.files && input.files.length > 0);
+        if (isUploaded) {
+            let hint = input.parentNode.querySelector('.file-validation-hint, .identity-hint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.className = 'file-validation-hint';
+                hint.style.marginLeft = 'auto';
+                hint.style.display = 'flex';
+                hint.style.alignItems = 'center';
+                input.parentNode.appendChild(hint);
+            }
+            hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+            input.removeAttribute('required');
+        }
+    }
+
     async function confirmResume() {
         if (!draftData) return;
         
@@ -2903,302 +2924,385 @@
             // 2. Populate basic fields
             const form = document.getElementById('applicationForm');
         
-        // Segregate restorations into try-catch blocks so one failure doesn't break everything
-        const safeRestore = (name, fn) => { try { fn(); } catch(e) { console.warn(`Restore failed for ${name}:`, e); } };
+            const safeRestore = (name, fn) => { try { fn(); } catch(e) { console.warn(`Restore failed for ${name}:`, e); } };
 
-        safeRestore('Basic Fields', () => {
-            setVal('title', draftData.title);
-            setVal('full_name', draftData.full_name);
-            setVal('email', draftData.email);
-            setVal('mobile', draftData.mobile);
-            setVal('alt_mobile', draftData.alt_mobile);
-            setVal('gender', draftData.gender);
-            setVal('dob', draftData.dob);
-            setVal('parent_relation', draftData.parent_relation);
-            setVal('parent_name', draftData.parent_name);
-            setVal('citizenship', draftData.citizenship);
-            const permParts = parseStructuredAddress(draftData.address_perm);
-            setVal('city_perm', permParts.city);
-            setVal('pincode_perm', permParts.pincode);
-            setVal('address_perm', permParts.street);
-
-            const corrParts = parseStructuredAddress(draftData.address_corr);
-            setVal('city_corr', corrParts.city);
-            setVal('pincode_corr', corrParts.pincode);
-            setVal('address_corr', corrParts.street);
-            setVal('gov_id_type', draftData.gov_id_type);
-            setVal('other_gov_id_type', draftData.other_gov_id_type);
-            setVal('gov_id_number', draftData.gov_id_number);
-            originalIdValue = draftData.gov_id_number || "";
-            applyIdMask();
-            setVal('enclosure_desc', draftData.enclosure_desc);
-
-            // Trigger UI logic
-            if (typeof toggleGovIdUpload === 'function') toggleGovIdUpload();
-            
-            // Set file flags
-            if (draftData.hasPhoto) document.querySelector('[name="applicant_photo"]')?.setAttribute('data-has-file', 'true');
-            if (draftData.hasGovId) document.querySelector('[name="gov_id_upload"]')?.setAttribute('data-has-file', 'true');
-            if (draftData.hasOtherEnclosure) document.querySelector('[name="other_enclosure"]')?.setAttribute('data-has-file', 'true');
-            if (draftData.hasPaymentReceipt) document.querySelector('[name="payment_receipt"]')?.setAttribute('data-has-file', 'true');
-            if (draftData.declaration?.hasFile) document.querySelector('[name="signature_file"]')?.setAttribute('data-has-file', 'true');
-        });
-
-        safeRestore('Categories', () => {
-            if (draftData.categories) {
-                document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
-                    cb.checked = draftData.categories.includes(cb.value);
-                });
-            }
-        });
-
-        safeRestore('Education', () => {
-            if (draftData.educations && draftData.educations.length > 0) {
-                const eduTable = document.getElementById('educationTable');
-                if (eduTable) {
-                    const tbody = eduTable.querySelector('tbody');
-                    const existingRows = tbody.querySelectorAll('tr');
-                    for (let i = existingRows.length; i < draftData.educations.length; i++) addGenericRow('educationTable');
-                    const rows = tbody.querySelectorAll('tr');
-                    draftData.educations.forEach((edu, i) => {
-                        const row = rows[i];
-                        if (row) {
-                            row.querySelector('[name="edu_degree[]"]').value = edu.degree || "";
-                            row.querySelector('[name="edu_discipline[]"]').value = edu.discipline || "";
-                            row.querySelector('[name="edu_institution[]"]').value = edu.institution || "";
-                            row.querySelector('[name="edu_year[]"]').value = edu.year || "";
-                            if (edu.hasFile) {
-                                const fileInp = row.querySelector('[name="edu_cert[]"]');
-                                if (fileInp) fileInp.dataset.hasFile = "true";
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
-        safeRestore('Experience', () => {
-            if (draftData.experiences && draftData.experiences.length > 0) {
-                const expContainer = document.getElementById('experienceContainer');
-                if (expContainer) {
-                    const existingCards = expContainer.querySelectorAll('.experience-card');
-                    for (let i = existingCards.length; i < draftData.experiences.length; i++) addExperienceRow();
-                    const cards = expContainer.querySelectorAll('.experience-card');
-                    draftData.experiences.forEach((exp, i) => {
-                        const card = cards[i];
-                        if (card) {
-                            card.querySelector('[name="exp_org[]"]').value = exp.org || "";
-                            card.querySelector('[name="exp_designation[]"]').value = exp.designation || "";
-                            card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
-                            const durationHidden = card.querySelector('.exp-duration-hidden');
-                            if (durationHidden) durationHidden.value = exp.duration || "";
-                            if (exp.hasFile) {
-                                const fileInp = card.querySelector('[name="exp_proof[]"]');
-                                if (fileInp) fileInp.dataset.hasFile = "true";
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
-        safeRestore('Projects', () => {
-            if (draftData.projects && draftData.projects.length > 0) {
-                // Ensure groups are rendered first
-                syncCategoryGroups();
+            safeRestore('Basic Fields', () => {
+                setVal('title', draftData.title);
+                setVal('full_name', draftData.full_name);
+                setVal('email', draftData.email);
+                setVal('mobile', draftData.mobile);
+                setVal('alt_mobile', draftData.alt_mobile);
+                setVal('gender', draftData.gender);
+                setVal('dob', draftData.dob);
+                setVal('parent_relation', draftData.parent_relation);
+                setVal('parent_name', draftData.parent_name);
+                setVal('citizenship', draftData.citizenship);
                 
-                draftData.projects.forEach(proj => {
-                    const group = document.querySelector(`.category-project-group[data-category="${proj.category}"]`);
-                    if (group) {
-                        const listContainer = group.querySelector('.project-list-container');
-                        const existingCards = listContainer.querySelectorAll('.project-card');
-                        const lastCard = existingCards[existingCards.length - 1];
-                        
-                        // If the last card is empty and we have more than 1 project to restore, populate it
-                        // Otherwise add a new row
-                        let card;
-                        if (existingCards.length === 1 && !lastCard.querySelector('[name="project_name_cat1[]"]').value) {
-                            card = lastCard;
+                const permParts = parseStructuredAddress(draftData.address_perm);
+                setVal('city_perm', permParts.city);
+                setVal('pincode_perm', permParts.pincode);
+                setVal('address_perm', permParts.street);
+
+                const corrParts = parseStructuredAddress(draftData.address_corr);
+                setVal('city_corr', corrParts.city);
+                setVal('pincode_corr', corrParts.pincode);
+                setVal('address_corr', corrParts.street);
+                
+                setVal('gov_id_type', draftData.gov_id_type);
+                setVal('other_gov_id_type', draftData.other_gov_id_type);
+                setVal('gov_id_number', draftData.gov_id_number);
+                originalIdValue = draftData.gov_id_number || "";
+                applyIdMask();
+                setVal('enclosure_desc', draftData.enclosure_desc);
+                setVal('total_experience', draftData.total_experience);
+
+                if (typeof toggleGovIdUpload === 'function') toggleGovIdUpload();
+                
+                // Photo Handling
+                const photoInput = document.querySelector('[name="applicant_photo"]');
+                if (draftData.hasPhoto && photoInput) {
+                    photoInput.setAttribute('data-has-file', 'true');
+                    const preview = document.getElementById('photoPreview');
+                    const placeholder = document.getElementById('photoPlaceholder');
+                    if (draftData.photoUrl && preview && placeholder) {
+                        preview.src = draftData.photoUrl;
+                        preview.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    } else if (placeholder) {
+                        placeholder.innerHTML = '<div style="text-align:center; color:var(--primary);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p style="font-size:0.7rem; margin-top:4px; font-weight:700;">PHOTO SAVED</p></div>';
+                    }
+                }
+                
+                // Basic File Ticks
+                const govIdInp = document.querySelector('[name="gov_id_upload"]');
+                if (draftData.hasGovId && govIdInp) {
+                    govIdInp.setAttribute('data-has-file', 'true');
+                    if (draftData.govIdUrl) govIdInp.setAttribute('data-file-url', draftData.govIdUrl);
+                    refreshFileUI(govIdInp);
+                }
+                const otherEncInp = document.querySelector('[name="other_enclosure"]');
+                if (draftData.hasOtherEnclosure && otherEncInp) {
+                    otherEncInp.setAttribute('data-has-file', 'true');
+                    if (draftData.otherEnclosureUrl) otherEncInp.setAttribute('data-file-url', draftData.otherEnclosureUrl);
+                    refreshFileUI(otherEncInp);
+                }
+            });
+
+            safeRestore('Categories', () => {
+                if (draftData.categories) {
+                    document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
+                        cb.checked = draftData.categories.includes(cb.value);
+                    });
+                    syncCategoryGroups(); // Vital to restore Step 5 & 6 containers
+                }
+            });
+
+            safeRestore('Education', () => {
+                if (draftData.educations && draftData.educations.length > 0) {
+                    const tbody = document.querySelector('#educationTable tbody');
+                    if (tbody) {
+                        while (tbody.querySelectorAll('tr').length < draftData.educations.length) addGenericRow('educationTable');
+                        const rows = tbody.querySelectorAll('tr');
+                        draftData.educations.forEach((edu, i) => {
+                            const row = rows[i];
+                            if (row) {
+                                row.querySelector('[name="edu_degree[]"]').value = edu.degree || "";
+                                row.querySelector('[name="edu_discipline[]"]').value = edu.discipline || "";
+                                row.querySelector('[name="edu_institution[]"]').value = edu.institution || "";
+                                row.querySelector('[name="edu_year[]"]').value = edu.year || "";
+                                if (edu.hasFile) {
+                                    const fileInp = row.querySelector('[name="edu_cert[]"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (edu.fileUrl) fileInp.setAttribute('data-file-url', edu.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Experience', () => {
+                if (draftData.experiences && draftData.experiences.length > 0) {
+                    const expContainer = document.getElementById('experienceContainer');
+                    if (expContainer) {
+                        while (expContainer.querySelectorAll('.experience-card').length < draftData.experiences.length) addExperienceRow();
+                        const cards = expContainer.querySelectorAll('.experience-card');
+                        draftData.experiences.forEach((exp, i) => {
+                            const card = cards[i];
+                            if (card) {
+                                card.querySelector('[name="exp_org[]"]').value = exp.org || "";
+                                card.querySelector('[name="exp_designation[]"]').value = exp.designation || "";
+                                card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
+                                const durationHidden = card.querySelector('.exp-duration-hidden');
+                                if (durationHidden) durationHidden.value = exp.duration || "";
+                                if (exp.hasFile) {
+                                    const fileInp = card.querySelector('[name="exp_proof[]"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (exp.fileUrl) fileInp.setAttribute('data-file-url', exp.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Projects', () => {
+                if (draftData.projects && draftData.projects.length > 0) {
+                    draftData.projects.forEach(proj => {
+                        const group = document.querySelector(`.category-project-group[data-category="${proj.category}"]`);
+                        if (group) {
+                            const listContainer = group.querySelector('.project-list-container');
+                            const existingCards = listContainer.querySelectorAll('.project-card');
+                            const lastCard = existingCards[existingCards.length - 1];
+                            let card;
+                            if (existingCards.length === 1 && !lastCard.querySelector('[name="project_name_cat1[]"]').value) {
+                                card = lastCard;
+                            } else {
+                                addProjectRowGrouped(group);
+                                const updatedCards = listContainer.querySelectorAll('.project-card');
+                                card = updatedCards[updatedCards.length - 1];
+                            }
+                            if (card) {
+                                card.querySelector('[name="project_name_cat1[]"]').value = proj.name || "";
+                                card.querySelector('[name="project_client_cat1[]"]').value = proj.client || "";
+                                card.querySelector('[name="project_location_cat1[]"]').value = proj.location || "";
+                                card.querySelector('[name="project_year_cat1[]"]').value = proj.year || "";
+                                card.querySelector('[name="project_role_cat1[]"]').value = proj.role || "";
+                                if (card.querySelector('.project-category-hidden')) card.querySelector('.project-category-hidden').value = proj.category || "";
+                            }
+                        }
+                    });
+                }
+            });
+
+            safeRestore('Reports', () => {
+                if (draftData.reports && draftData.reports.length > 0) {
+                    draftData.reports.forEach(report => {
+                        const group = document.querySelector(`.category-report-group[data-category="${report.category}"]`);
+                        if (group) {
+                            const listContainer = group.querySelector('.report-list-container');
+                            const draftReportsForCat = draftData.reports.filter(r => r.category === report.category);
+                            while(listContainer.querySelectorAll('.report-row').length < draftReportsForCat.length) addReportRowGrouped(group);
+                            
+                            // Restore ticks for reports
+                            const rows = listContainer.querySelectorAll('.report-row');
+                            draftReportsForCat.forEach((rData, idx) => {
+                                if (rData.hasFile && rows[idx]) {
+                                    const fileInp = rows[idx].querySelector('input[type="file"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (rData.fileUrl) fileInp.setAttribute('data-file-url', rData.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            safeRestore('Trainings', () => {
+                if (draftData.trainings && draftData.trainings.length > 0) {
+                    const trainingTbody = document.querySelector('#trainingTable tbody');
+                    const certTbody = document.querySelector('#certificationTable tbody');
+                    
+                    // Clear existing rows except first if they are placeholders
+                    const clearTable = (tbody) => {
+                        const rows = tbody.querySelectorAll('tr');
+                        if (rows.length === 1 && !rows[0].querySelector('[name="training_name[]"]').value) {
+                            // Keep it as is
                         } else {
-                            addProjectRowGrouped(group);
-                            const updatedCards = listContainer.querySelectorAll('.project-card');
-                            card = updatedCards[updatedCards.length - 1];
+                            // This is complex because we don't want to lose the template.
+                            // We'll just append and fill.
                         }
+                    };
+
+                    draftData.trainings.forEach((t, i) => {
+                        const isCert = ['Valid', 'Expired', 'Lifetime'].includes(t.duration);
+                        const tableId = isCert ? 'certificationTable' : 'trainingTable';
+                        const tbody = document.querySelector(`#${tableId} tbody`);
+                        const rows = tbody.querySelectorAll('tr');
                         
-                        if (card) {
-                            card.querySelector('[name="project_name_cat1[]"]').value = proj.name || "";
-                            card.querySelector('[name="project_client_cat1[]"]').value = proj.client || "";
-                            card.querySelector('[name="project_location_cat1[]"]').value = proj.location || "";
-                            card.querySelector('[name="project_year_cat1[]"]').value = proj.year || "";
-                            card.querySelector('[name="project_role_cat1[]"]').value = proj.role || "";
+                        let targetRow;
+                        // Use first row if it's empty, else add new
+                        if (rows.length === 1 && !rows[0].querySelector('[name="training_name[]"]').value) {
+                            targetRow = rows[0];
+                        } else {
+                            addGenericRow(tableId);
+                            const updatedRows = tbody.querySelectorAll('tr');
+                            targetRow = updatedRows[updatedRows.length - 1];
                         }
-                    }
-                });
-            }
-        });
 
-        safeRestore('Reports', () => {
-            if (draftData.reports && draftData.reports.length > 0) {
-                syncCategoryGroups();
-                
-                draftData.reports.forEach(report => {
-                    const group = document.querySelector(`.category-report-group[data-category="${report.category}"]`);
-                    if (group) {
-                        const listContainer = group.querySelector('.report-list-container');
-                        const existingRows = listContainer.querySelectorAll('.report-row');
-                        const lastRow = existingRows[existingRows.length - 1];
-                        
-                        // Skip if already has file or name
-                        // (File inputs can't be restored, but we might have category mapping)
-                        // Actually, for reports, we just ensure the rows exist and the hidden category is set.
-                        // If we have multiple reports for one category in draft, we add rows.
-                        
-                        // Check if we need to add a row (if the current count in group < count of reports in draft for this cat)
-                        const draftReportsForCat = draftData.reports.filter(r => r.category === report.category);
-                        const rowsNeeded = draftReportsForCat.length;
-                        while(listContainer.querySelectorAll('.report-row').length < rowsNeeded) {
-                            addReportRowGrouped(group);
+                        if (targetRow) {
+                            targetRow.querySelector('[name="training_name[]"]').value = t.name || "";
+                            targetRow.querySelector('[name="training_from[]"]').value = t.from || "";
+                            targetRow.querySelector('[name="training_duration[]"]').value = t.duration || "";
+                            targetRow.querySelector('[name="training_year[]"]').value = t.year || "";
+                            if (t.hasFile) {
+                                const fileInp = targetRow.querySelector('input[type="file"]');
+                                if (fileInp) {
+                                    fileInp.setAttribute('data-has-file', 'true');
+                                    if (t.fileUrl) fileInp.setAttribute('data-file-url', t.fileUrl);
+                                    refreshFileUI(fileInp);
+                                }
+                            }
                         }
-                    }
-                });
-            }
-        });
-
-        safeRestore('Trainings', () => {
-            if (draftData.trainings && draftData.trainings.length > 0) {
-                // Step 7 uses shared names for two tables. We'll handle order.
-                const topicInputs = document.querySelectorAll('#step-7 [name="training_name[]"]');
-                const fromInputs = document.querySelectorAll('#step-7 [name="training_from[]"]');
-                const durInputs = document.querySelectorAll('#step-7 [name="training_duration[]"]');
-                const yearInputs = document.querySelectorAll('#step-7 [name="training_year[]"]');
-                
-                draftData.trainings.forEach((t, i) => {
-                    if (topicInputs[i]) {
-                        topicInputs[i].value = t.name || "";
-                        if (fromInputs[i]) fromInputs[i].value = t.from || "";
-                        if (durInputs[i]) durInputs[i].value = t.duration || "";
-                        if (yearInputs[i]) yearInputs[i].value = t.year || "";
-                    }
-                });
-            }
-        });
-
-        safeRestore('Memberships', () => {
-            if (draftData.memberships && draftData.memberships.length > 0) {
-                const table = document.getElementById('membershipTable');
-                const tbody = table?.querySelector('tbody');
-                if (!tbody) return;
-                while (tbody.children.length < draftData.memberships.length) addGenericRow('membershipTable');
-                const rows = tbody.children;
-                draftData.memberships.forEach((m, i) => {
-                    const row = rows[i];
-                    if (row) {
-                        const nameInp = row.querySelector('[name="membership_name[]"]');
-                        if (nameInp) nameInp.value = m.name || "";
-                        const fromInp = row.querySelector('[name="membership_from[]"]');
-                        if (fromInp) fromInp.value = m.from || "";
-                        const yearInp = row.querySelector('[name="membership_year[]"]');
-                        if (yearInp) yearInp.value = m.year || "";
-                        const durInp = row.querySelector('[name="membership_duration[]"]');
-                        if (durInp) durInp.value = m.duration || "";
-                    }
-                });
-            }
-        });
-
-        safeRestore('Papers', () => {
-            if (draftData.papers && draftData.papers.length > 0) {
-                const tbody = document.querySelector('#publicationTable tbody');
-                const existing = tbody.querySelectorAll('tr');
-                for (let i = existing.length; i < draftData.papers.length; i++) addGenericRow('publicationTable');
-                const rows = tbody.querySelectorAll('tr');
-                draftData.papers.forEach((p, i) => {
-                    const row = rows[i];
-                    if (row) {
-                        row.querySelector('[name="paper_name[]"]').value = p.name || "";
-                        row.querySelector('[name="paper_place[]"]').value = p.place || "";
-                        row.querySelector('[name="paper_year[]"]').value = p.year || "";
-                        row.querySelector('[name="paper_role[]"]').value = p.role || "";
-                    }
-                });
-            }
-        });
-
-        safeRestore('Awards', () => {
-             if (draftData.awards && draftData.awards.length > 0) {
-                const tbody = document.querySelector('#awardTable tbody');
-                const existing = tbody.querySelectorAll('tr');
-                for (let i = existing.length; i < draftData.awards.length; i++) addGenericRow('awardTable');
-                const rows = tbody.querySelectorAll('tr');
-                draftData.awards.forEach((a, i) => {
-                    const row = rows[i];
-                    if (row) {
-                        row.querySelector('[name="award_name[]"]').value = a.name || "";
-                        row.querySelector('[name="award_from[]"]').value = a.from || "";
-                        row.querySelector('[name="award_year[]"]').value = a.year || "";
-                    }
-                });
-            }
-        });
-
-        safeRestore('Software Skills', () => {
-            if (draftData.software_skills && draftData.software_skills.length > 0) {
-                const tbody = document.querySelector('#softwareTable tbody');
-                const existingRows = tbody.querySelectorAll('tr');
-                for (let i = existingRows.length; i < draftData.software_skills.length; i++) addGenericRow('softwareTable');
-                const rows = tbody.querySelectorAll('tr');
-                draftData.software_skills.forEach((skill, i) => {
-                    const row = rows[i];
-                    if (row) {
-                        row.querySelector('[name="software_skill[]"]').value = skill.skill || "";
-                        row.querySelector('[name="proficiency_level[]"]').value = skill.level || "";
-                    }
-                });
-            }
-        });
-
-        safeRestore('Payment', () => {
-            if (draftData.payment) {
-                setVal('payment_amount', draftData.payment.amount);
-                setVal('payment_date', draftData.payment.date);
-                setVal('payment_utr', draftData.payment.utr);
-                if (typeof calculateTotalFee === 'function') calculateTotalFee();
-            }
-        });
-
-        safeRestore('Declaration', () => {
-            if (draftData.declaration) {
-                setVal('decl_name', draftData.declaration.name);
-                setVal('decl_place', draftData.declaration.place);
-                
-                // Set the retired government employee radio button
-                if (draftData.declaration.isRetiredGovtEmployee !== null && draftData.declaration.isRetiredGovtEmployee !== undefined) {
-                    const retiredVal = draftData.declaration.isRetiredGovtEmployee ? 'Yes' : 'No';
-                    const retiredRadio = document.querySelector(`input[name="decl_retired_gov"][value="${retiredVal}"]`);
-                    if (retiredRadio) retiredRadio.checked = true;
+                    });
                 }
-            }
-        });
+            });
+
+            safeRestore('Memberships', () => {
+                if (draftData.memberships && draftData.memberships.length > 0) {
+                    const tbody = document.querySelector('#membershipTable tbody');
+                    if (tbody) {
+                        while (tbody.children.length < draftData.memberships.length) addGenericRow('membershipTable');
+                        const rows = tbody.children;
+                        draftData.memberships.forEach((m, i) => {
+                            const row = rows[i];
+                            if (row) {
+                                row.querySelector('[name="membership_name[]"]').value = m.name || "";
+                                row.querySelector('[name="membership_from[]"]').value = m.from || "";
+                                row.querySelector('[name="membership_year[]"]').value = m.year || "";
+                                row.querySelector('[name="membership_duration[]"]').value = m.duration || "";
+                                if (m.hasFile) {
+                                    const fileInp = row.querySelector('input[type="file"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (m.fileUrl) fileInp.setAttribute('data-file-url', m.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Papers', () => {
+                if (draftData.papers && draftData.papers.length > 0) {
+                    const tbody = document.querySelector('#publicationTable tbody');
+                    if (tbody) {
+                        while (tbody.querySelectorAll('tr').length < draftData.papers.length) addGenericRow('publicationTable');
+                        const rows = tbody.querySelectorAll('tr');
+                        draftData.papers.forEach((p, i) => {
+                            const row = rows[i];
+                            if (row) {
+                                row.querySelector('[name="paper_name[]"]').value = p.name || "";
+                                row.querySelector('[name="paper_place[]"]').value = p.place || "";
+                                row.querySelector('[name="paper_year[]"]').value = p.year || "";
+                                row.querySelector('[name="paper_role[]"]').value = p.role || "";
+                                if (p.hasFile) {
+                                    const fileInp = row.querySelector('input[type="file"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (p.fileUrl) fileInp.setAttribute('data-file-url', p.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Awards', () => {
+                 if (draftData.awards && draftData.awards.length > 0) {
+                    const tbody = document.querySelector('#awardTable tbody');
+                    if (tbody) {
+                        while (tbody.querySelectorAll('tr').length < draftData.awards.length) addGenericRow('awardTable');
+                        const rows = tbody.querySelectorAll('tr');
+                        draftData.awards.forEach((a, i) => {
+                            const row = rows[i];
+                            if (row) {
+                                row.querySelector('[name="award_name[]"]').value = a.name || "";
+                                row.querySelector('[name="award_from[]"]').value = a.from || "";
+                                row.querySelector('[name="award_year[]"]').value = a.year || "";
+                                if (a.hasFile) {
+                                    const fileInp = row.querySelector('input[type="file"]');
+                                    if (fileInp) {
+                                        fileInp.setAttribute('data-has-file', 'true');
+                                        if (a.fileUrl) fileInp.setAttribute('data-file-url', a.fileUrl);
+                                        refreshFileUI(fileInp);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Software Skills', () => {
+                if (draftData.software_skills && draftData.software_skills.length > 0) {
+                    const tbody = document.querySelector('#softwareTable tbody');
+                    if (tbody) {
+                        while (tbody.querySelectorAll('tr').length < draftData.software_skills.length) addGenericRow('softwareTable');
+                        const rows = tbody.querySelectorAll('tr');
+                        draftData.software_skills.forEach((skill, i) => {
+                            const row = rows[i];
+                            if (row) {
+                                row.querySelector('[name="software_skill[]"]').value = skill.skill || "";
+                                row.querySelector('[name="proficiency_level[]"]').value = skill.level || "";
+                            }
+                        });
+                    }
+                }
+            });
+
+            safeRestore('Payment', () => {
+                if (draftData.payment) {
+                    setVal('payment_amount', draftData.payment.amount);
+                    setVal('payment_date', draftData.payment.date);
+                    setVal('payment_utr', draftData.payment.utr);
+                    if (typeof calculateTotalFee === 'function') calculateTotalFee();
+                    
+                    const payRecInp = document.querySelector('[name="payment_receipt"]');
+                    if (draftData.hasPaymentReceipt && payRecInp) {
+                        payRecInp.setAttribute('data-has-file', 'true');
+                        if (draftData.paymentReceiptUrl) payRecInp.setAttribute('data-file-url', draftData.paymentReceiptUrl);
+                        refreshFileUI(payRecInp);
+                    }
+                }
+            });
+
+            safeRestore('Declaration', () => {
+                if (draftData.declaration) {
+                    setVal('decl_name', draftData.declaration.name);
+                    setVal('decl_place', draftData.declaration.place);
+                    if (draftData.declaration.isRetiredGovtEmployee !== null) {
+                        const retiredVal = draftData.declaration.isRetiredGovtEmployee ? 'Yes' : 'No';
+                        const retiredRadio = document.querySelector(`input[name="decl_retired_gov"][value="${retiredVal}"]`);
+                        if (retiredRadio) {
+                            retiredRadio.checked = true;
+                            retiredRadio.dispatchEvent(new Event('change')); // Trigger auto-select logic
+                        }
+                    }
+                    const sigInp = document.querySelector('[name="signature_file"]');
+                    if (draftData.declaration.hasFile && sigInp) {
+                        sigInp.setAttribute('data-has-file', 'true');
+                        if (draftData.declaration.fileUrl) sigInp.setAttribute('data-file-url', draftData.declaration.fileUrl);
+                        refreshFileUI(sigInp);
+                    }
+                }
+            });
 
         } catch(e) {
             console.error('Critical error during resume:', e);
             showToast("Resume encountered errors, but some data may have been restored.", "error");
         } finally {
-            // ALWAYS hide the modal first to unblock the UI
             const overlay = document.getElementById('resumeOverlay');
             if (overlay) overlay.classList.add('hide');
-            
-            // Re-enable button
             btn.disabled = false;
             btn.textContent = oldText;
-
-            // Safe UI updates
             try {
                 updateUI();
                 showToast("Application restored from draft.", "success");
-            } catch(uiError) {
-                console.error('UI Update failed after resume:', uiError);
-            }
+            } catch(uiError) { console.error('UI Update failed after resume:', uiError); }
         }
     }
 
@@ -3410,12 +3514,19 @@
             const isUploaded = (input && input.files && input.files.length > 0) || (input && input.getAttribute('data-has-file') === 'true');
             if (isUploaded) {
                 let viewLink = '';
+                let fileUrl = '';
                 if (input && input.files && input.files[0]) {
-                    try {
-                        const fileUrl = URL.createObjectURL(input.files[0]);
-                        viewLink = `<a href="${fileUrl}" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #ecfdf5; color: #059669; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #10b981;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</a>`;
-                    } catch(e) { console.error("URL creation failed", e); }
+                    try { fileUrl = URL.createObjectURL(input.files[0]); } catch(e) { console.error("URL creation failed", e); }
+                } else if (input) {
+                    fileUrl = input.getAttribute('data-file-url') || '';
                 }
+
+                if (fileUrl) {
+                    viewLink = `<a href="${fileUrl}" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #ecfdf5; color: #059669; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #10b981;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</a>`;
+                } else if (input && input.getAttribute('data-has-file') === 'true') {
+                    viewLink = `<span style="display: inline-flex; align-items: center; padding: 4px 8px; background: #f8fafc; color: #64748b; border-radius: 4px; font-size: 0.72rem; border: 1px solid #e2e8f0; cursor: help;" title="File is stored securely in your draft.">Stored in Draft</span>`;
+                }
+
                 let editAction = (!isReadOnly && step) ? `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #f8fafc; color: #64748b; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #e2e8f0; margin-left: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</a>` : '';
                 
                 return `<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -3793,7 +3904,7 @@
         if (input.id === 'govIdUpload') {
             const idTypeSelect = document.getElementById('govIdType');
             if (idTypeSelect && !idTypeSelect.value) {
-                showFieldError(input, "Please select ID Type before uploading proof.");
+                showFieldError(input, "This field is required.");
                 input.value = ''; // Clear the file selection
                 return;
             }
@@ -3808,7 +3919,7 @@
             }
 
             if (input.hasAttribute('required')) {
-                showFieldError(input, "Please upload the required file.");
+                showFieldError(input, "This field is required.");
             } else {
                 hideFieldError(input);
             }
@@ -4204,16 +4315,16 @@
                             hideFieldError(check1);
                         }
                         if (check2) {
-                            check2.checked = false;
+                            check2.checked = true; // Auto-select BOTH for Yes
                             hideFieldError(check2);
                         }
                     } else {
                         if (check1) {
-                            check1.checked = false;
+                            check1.checked = true; // Still select first for No
                             hideFieldError(check1);
                         }
                         if (check2) {
-                            check2.checked = true;
+                            check2.checked = false; // Unselect second for No
                             hideFieldError(check2);
                         }
                     }

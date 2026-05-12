@@ -218,6 +218,7 @@ public class ApplicationController : Controller
             applicant.ProfessionalExperienceSectors = req.sector_experience != null ? string.Join(", ", req.sector_experience) : string.Empty;
             applicant.TechnicalSubjectExpertise = req.subject_expertise != null ? string.Join(", ", req.subject_expertise) : string.Empty;
             applicant.EnclosureDescription = req.enclosure_desc;
+            applicant.TotalExperience = req.total_experience;
             
             applicant.LastSavedAt = DateTime.Now;
             if (isFinalSubmit)
@@ -517,13 +518,15 @@ public class ApplicationController : Controller
             other_gov_id_type = applicant.OtherGovIdType,
             gov_id_number = _encryptionService.Decrypt(applicant.GovIdNumber),
             categories = applicant.Categories.Split(", ", StringSplitOptions.RemoveEmptyEntries).ToList(),
+            total_experience = applicant.TotalExperience,
             enclosure_desc = applicant.EnclosureDescription,
             educations = applicant.Educations.Select(e => new { 
                 degree = e.Degree, 
                 discipline = e.Discipline, 
                 institution = e.Institution,
                 year = e.Year,
-                hasFile = !string.IsNullOrEmpty(e.CertificatePath)
+                hasFile = !string.IsNullOrEmpty(e.CertificatePath),
+                fileUrl = e.CertificatePath
             }).ToList(),
             experiences = applicant.ProfessionalExperiences.Select(ex => new {
                 org = ex.Organization,
@@ -531,7 +534,8 @@ public class ApplicationController : Controller
                 duration = ex.Duration,
                 nature = ex.NatureOfWork,
                 phone = ex.ReferencePhone,
-                hasFile = !string.IsNullOrEmpty(ex.ProofPath)
+                hasFile = !string.IsNullOrEmpty(ex.ProofPath),
+                fileUrl = ex.ProofPath
             }).ToList(),
             projects = applicant.ProjectExperiences.Select(p => new {
                 category = p.Category,
@@ -546,27 +550,31 @@ public class ApplicationController : Controller
                 from = t.ObtainedFrom,
                 duration = t.Duration,
                 year = t.Year,
-                hasFile = !string.IsNullOrEmpty(t.ProofPath)
+                hasFile = !string.IsNullOrEmpty(t.ProofPath),
+                fileUrl = t.ProofPath
             }).ToList(),
             memberships = applicant.Memberships.Select(m => new {
                 name = m.Name,
                 from = m.ObtainedFrom,
                 year = m.Year,
                 duration = m.Duration,
-                hasFile = !string.IsNullOrEmpty(m.ProofPath)
+                hasFile = !string.IsNullOrEmpty(m.ProofPath),
+                fileUrl = m.ProofPath
             }).ToList(),
             papers = applicant.PaperPublisheds.Select(p => new {
                 name = p.Name,
                 place = p.Place,
                 year = p.Year,
                 role = p.Role,
-                hasFile = !string.IsNullOrEmpty(p.ProofPath)
+                hasFile = !string.IsNullOrEmpty(p.ProofPath),
+                fileUrl = p.ProofPath
             }).ToList(),
             awards = applicant.Awards.Select(a => new {
                 name = a.Name,
                 from = a.ReceivedFrom,
                 year = a.Year,
-                hasFile = !string.IsNullOrEmpty(a.ProofPath)
+                hasFile = !string.IsNullOrEmpty(a.ProofPath),
+                fileUrl = a.ProofPath
             }).ToList(),
             software_skills = applicant.SoftwareSkills.Select(s => new {
                 skill = s.SoftwareName,
@@ -576,22 +584,29 @@ public class ApplicationController : Controller
                 amount = p.Amount,
                 date = p.PaymentDate.ToString("yyyy-MM-dd"),
                 utr = p.UtrNumber,
-                hasFile = !string.IsNullOrEmpty(p.ReceiptPath)
+                hasFile = !string.IsNullOrEmpty(p.ReceiptPath),
+                fileUrl = p.ReceiptPath
             }).FirstOrDefault(),
             declaration = applicant.Declaration != null ? new {
                 name = applicant.Declaration.Name,
                 date = applicant.Declaration.Date.ToString("yyyy-MM-dd"),
                 place = applicant.Declaration.Place,
                 isRetiredGovtEmployee = applicant.Declaration.IsRetiredGovtEmployee,
-                hasFile = !string.IsNullOrEmpty(applicant.Declaration.SignaturePath)
+                hasFile = !string.IsNullOrEmpty(applicant.Declaration.SignaturePath),
+                fileUrl = applicant.Declaration.SignaturePath
             } : null,
             hasPhoto = !string.IsNullOrEmpty(applicant.PhotoPath),
             hasGovId = !string.IsNullOrEmpty(applicant.GovIdPath),
             hasOtherEnclosure = applicant.OtherEnclosures.Any(e => !string.IsNullOrEmpty(e.FilePath)),
             hasPaymentReceipt = applicant.PaymentDetails.Any(p => !string.IsNullOrEmpty(p.ReceiptPath)),
             reports = applicant.UploadReports.Select(r => new {
-                hasFile = !string.IsNullOrEmpty(r.FilePath)
-            }).ToList()
+                hasFile = !string.IsNullOrEmpty(r.FilePath),
+                fileUrl = r.FilePath
+            }).ToList(),
+            photoUrl = applicant.PhotoPath,
+            govIdUrl = applicant.GovIdPath,
+            otherEnclosureUrl = applicant.OtherEnclosures.FirstOrDefault()?.FilePath,
+            paymentReceiptUrl = applicant.PaymentDetails.OrderByDescending(p => p.Id).FirstOrDefault()?.ReceiptPath
         });
     }
 
