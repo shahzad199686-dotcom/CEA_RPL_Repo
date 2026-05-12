@@ -94,12 +94,11 @@ public class SmtpOtpSender : IOtpSender
     {
         try
         {
-            var subject = "CEA RPL Portal - OTP Verification";
-            var body = $@"Your OTP is: {otp}
-This OTP is valid for 5 minutes. Do not share it with anyone.";
+            var subject = "Verification Code: " + otp;
+            var body = $"Your verification code is: {otp}. It is valid for 5 minutes.";
 
             await _emailService.SendEmailAsync(email, subject, body);
-            _logger.LogInformation($"OTP email sent successfully to {email}");
+            _logger.LogInformation("OTP email sent successfully to {email}");
         }
         catch (Exception ex)
         {

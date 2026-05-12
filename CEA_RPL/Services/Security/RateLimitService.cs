@@ -13,7 +13,7 @@ namespace CEA_RPL.Services.Security
         /// <summary>
         /// Records that an OTP was sent to trigger the cooldown.
         /// </summary>
-        void RecordOtpResend(string identifier, int cooldownSeconds = 60);
+        void RecordOtpResend(string identifier, int cooldownSeconds = 120);
         
         /// <summary>
         /// Checks if the user is allowed to attempt OTP verification (blocks brute force).
@@ -46,7 +46,7 @@ namespace CEA_RPL.Services.Security
             if (_cache.TryGetValue(cacheKey, out DateTime lastSentTime))
             {
                 var timePassed = DateTime.UtcNow - lastSentTime;
-                var cooldown = TimeSpan.FromSeconds(60); // 60 seconds default cooldown
+                var cooldown = TimeSpan.FromSeconds(120); // Increased to 120 seconds to avoid spam blocking
                 
                 if (timePassed < cooldown)
                 {
@@ -59,7 +59,7 @@ namespace CEA_RPL.Services.Security
             return true;
         }
 
-        public void RecordOtpResend(string identifier, int cooldownSeconds = 60)
+        public void RecordOtpResend(string identifier, int cooldownSeconds = 120)
         {
             string cacheKey = $"OtpResend_{identifier}";
             _cache.Set(cacheKey, DateTime.UtcNow, TimeSpan.FromSeconds(cooldownSeconds));
