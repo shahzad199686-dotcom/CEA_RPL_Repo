@@ -111,6 +111,7 @@ public class ApplicationSubmissionRequest
     public string decl_date { get; set; } = string.Empty;
     public string? decl_place { get; set; }
     public IFormFile? signature_file { get; set; }
+    public string? decl_retired_gov { get; set; }
 
     public int? current_step { get; set; }
 }

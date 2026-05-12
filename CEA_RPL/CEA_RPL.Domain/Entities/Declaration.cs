@@ -11,4 +11,5 @@ public class Declaration : BaseEntity
     public DateTime Date { get; set; }
     public string? Place { get; set; }
     public string? SignaturePath { get; set; }
+    public bool? IsRetiredGovtEmployee { get; set; }
 }

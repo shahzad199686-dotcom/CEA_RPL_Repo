@@ -449,6 +449,10 @@ public class ApplicationController : Controller
                 applicant.Declaration.Name = req.decl_name ?? "";
                 applicant.Declaration.Date = DateTime.TryParse(req.decl_date, out var dd) ? dd : DateTime.Now;
                 applicant.Declaration.Place = req.decl_place;
+                if (!string.IsNullOrEmpty(req.decl_retired_gov))
+                {
+                    applicant.Declaration.IsRetiredGovtEmployee = req.decl_retired_gov.Equals("Yes", StringComparison.OrdinalIgnoreCase);
+                }
                 
                 if (req.signature_file != null)
                     applicant.Declaration.SignaturePath = await _fileService.SaveFileAsync(req.signature_file.OpenReadStream(), req.signature_file.FileName);
@@ -578,6 +582,7 @@ public class ApplicationController : Controller
                 name = applicant.Declaration.Name,
                 date = applicant.Declaration.Date.ToString("yyyy-MM-dd"),
                 place = applicant.Declaration.Place,
+                isRetiredGovtEmployee = applicant.Declaration.IsRetiredGovtEmployee,
                 hasFile = !string.IsNullOrEmpty(applicant.Declaration.SignaturePath)
             } : null,
             hasPhoto = !string.IsNullOrEmpty(applicant.PhotoPath),

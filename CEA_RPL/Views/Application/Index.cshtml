@@ -1545,14 +1545,51 @@
             <div class="form-section hide" id="step-14">
                 <div class="section-header"><h2>Step 14: Declaration by Applicant</h2></div>
                 <div class="section-content">
-                    <div class="declaration-statement" style="margin-bottom: 24px; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5;">
-                        <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
-                        <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.8; font-size: 14.5px;">
-                            <li>All information provided in this application is true and correct to the best of my knowledge.</li>
-                            <li>I am not engaged in any activity or employment that may create a conflict of interest.</li>
-                            <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
-                            <li>I understand that any false information may lead to disqualification of application or revocation of certification.</li>
-                        </ul>
+                    <div class="retired-gov-question" style="margin-bottom: 24px; padding: 20px; background: #fff; border-radius: 12px; border: 1px solid var(--border);">
+                        <label style="font-weight: 600; color: var(--ink); display: block; margin-bottom: 12px; font-size: 15px;">
+                            Are you a retired Government employee applying under the RPL mode within one year from the date of retirement? <span class="req">*</span>
+                        </label>
+                        <div style="display: flex; gap: 24px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="decl_retired_gov" value="Yes" required /> Yes
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="decl_retired_gov" value="No" required /> No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid" style="margin-bottom: 24px; display: flex; align-items: stretch;">
+                        <div class="col-6">
+                            <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
+                                <div style="padding-top: 22px; flex-shrink: 0;">
+                                    <input type="checkbox" name="declaration_consent_1" required style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                </div>
+                                <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
+                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
+                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.8; font-size: 14.5px;">
+                                        <li>All information provided in this application is true and correct to the best of my knowledge.</li>
+                                        <li>I am not engaged in any activity or employment that may create a conflict of interest.</li>
+                                        <li>I agree to abide by the Code of Conduct of EADA and Environment Audit Rules, 2025.</li>
+                                        <li>I understand that any false information may lead to disqualification of application or revocation of certification.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
+                                <div style="padding-top: 22px; flex-shrink: 0;">
+                                    <input type="checkbox" name="declaration_consent_2" required style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                </div>
+                                <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
+                                    <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
+                                    <ul style="list-style-type: disc; margin-left: 20px; color: #2d3748; line-height: 1.8; font-size: 14.5px;">
+                                        <li>No disciplinary/vigilance proceedings or criminal case is pending or contemplated against me.</li>
+                                        <li>No penalty has been imposed on me which renders me unsuitable for such engagement.</li>
+                                        <li>The information furnished by me is true and correct to the best of my knowledge.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="grid">
                         <div class="col-6"><label>Candidate Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type Candidate Name" class="title-case-input" /></div>
@@ -2052,7 +2089,13 @@
                 isInvalid = true;
             }
         } else {
-            if (!input.value || input.value.trim() === '') {
+            const isFile = input.type === 'file';
+            const hasFile = isFile && (input.files?.length > 0 || input.getAttribute('data-has-file') === 'true');
+            const isEmpty = !input.value || input.value.trim() === '';
+
+            if (isFile) {
+                if (!hasFile && input.hasAttribute('required')) isInvalid = true;
+            } else if (isEmpty) {
                 if (input.hasAttribute('required')) isInvalid = true;
             } else if (input.type === 'text' || input.tagName === 'TEXTAREA' || input.tagName === 'SELECT') {
                 const isDesc = input.tagName === 'TEXTAREA' || input.name === 'enclosure_desc';
@@ -3089,6 +3132,20 @@
             }
         });
 
+        safeRestore('Declaration', () => {
+            if (draftData.declaration) {
+                setVal('decl_name', draftData.declaration.name);
+                setVal('decl_place', draftData.declaration.place);
+                
+                // Set the retired government employee radio button
+                if (draftData.declaration.isRetiredGovtEmployee !== null && draftData.declaration.isRetiredGovtEmployee !== undefined) {
+                    const retiredVal = draftData.declaration.isRetiredGovtEmployee ? 'Yes' : 'No';
+                    const retiredRadio = document.querySelector(`input[name="decl_retired_gov"][value="${retiredVal}"]`);
+                    if (retiredRadio) retiredRadio.checked = true;
+                }
+            }
+        });
+
         } catch(e) {
             console.error('Critical error during resume:', e);
             showToast("Resume encountered errors, but some data may have been restored.", "error");
@@ -3664,6 +3721,7 @@
                     ${editLink(14)}
                 </div>
                 <div class="review-dl">
+                    <div><dt>Retired Govt Employee</dt><dd>${document.querySelector('input[name="decl_retired_gov"]:checked')?.value || 'Not selected'}</dd></div>
                     <div><dt>Full Name</dt><dd>${getData('decl_name')}</dd></div>
                     <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
                     <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
@@ -3694,7 +3752,12 @@
 
         const file = input.files[0];
         if (!file) {
-            // If field is required, show error, otherwise clear
+            // If we already had a file (e.g. from draft or previous upload), don't show error on cancel
+            if (input.getAttribute('data-has-file') === 'true') {
+                hideFieldError(input);
+                return;
+            }
+
             if (input.hasAttribute('required')) {
                 showFieldError(input, "Please upload the required file.");
             } else {
@@ -3745,6 +3808,7 @@
         if (!isValid) {
             showToast(errorMsg, "error");
             input.value = "";
+            input.removeAttribute('data-has-file');
             hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${errorMsg}</span>`;
             showFieldError(input, errorMsg);
             return;
@@ -3814,11 +3878,10 @@
                 if (extractedId) {
                     originalIdValue = extractedId.replace(/\s/g, "");
                     applyIdMask();
-                    
-                    // We DO NOT auto-fill the confirm field per user request
-                    validateAadhaarMatch(); // Validate match if user had already typed something
+                    validateAadhaarMatch();
                     
                     hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+                    input.setAttribute('data-has-file', 'true');
                     hideFieldError(input);
                     showToast(`${typeName} detected & verified.`, "success");
                 } else {
@@ -3829,22 +3892,20 @@
 
                     showToast(warnMsg, "warning");
                     hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
+                    input.setAttribute('data-has-file', 'true'); // Still count as uploaded even if OCR fails
+                    hideFieldError(input);
                 }
             } catch (err) {
                 console.error("OCR Error:", err);
-                let typeName = (idType === 'government_id') ? 'Government ID' : (idType === 'employee_id' ? 'Employee ID' : 'ID');
-                
                 let warnMsg = `Unable to detect ID number. Please enter manually.`;
-                if (idType === 'government_id') {
-                    warnMsg = "Unable to auto-detect ID number. Please enter manually or upload a clearer document.";
-                }
-
                 showToast(warnMsg, "warning");
                 hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
-                // Do NOT clear input.value, allow user to proceed manually
+                input.setAttribute('data-has-file', 'true'); 
+                hideFieldError(input);
             }
         } else {
             hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+            input.setAttribute('data-has-file', 'true');
             hideFieldError(input);
         }
     }
