@@ -701,9 +701,22 @@
                                     overflow: hidden;
                                     white-space: nowrap;
                                 }
+                                .upload-container {
+                                    height: 40px !important;
+                                    width: 100% !important;
+                                    box-sizing: border-box !important;
+                                    border: 1.5px solid #E5E7EB !important;
+                                    border-radius: 10px !important;
+                                    padding: 0 14px !important;
+                                    font-size: 0.85rem !important;
+                                    background: #F9FAFB !important;
+                                    display: flex !important;
+                                    align-items: center !important;
+                                    gap: 10px !important;
+                                    padding: 0 10px !important;
+                                }
                                 .identity-grid input,
-                                .identity-grid select,
-                                .identity-grid .upload-container {
+                                .identity-grid select {
                                     height: 40px !important;
                                     width: 100% !important;
                                     box-sizing: border-box !important;
@@ -716,20 +729,15 @@
                                 .identity-grid select {
                                     cursor: pointer;
                                 }
-                                .identity-grid .upload-container {
-                                    display: flex !important;
-                                    align-items: center !important;
-                                    gap: 10px !important;
-                                    padding: 0 10px !important;
-                                    background: #F9FAFB !important;
-                                }
-                                .identity-grid .upload-container input[type="file"] {
+                                .upload-container input[type="file"] {
                                     border: none !important;
                                     height: auto !important;
                                     padding: 0 !important;
                                     background: transparent !important;
                                     font-size: 0.8rem !important;
+                                    flex: 1;
                                 }
+
                                 @@media (max-width: 768px) {
                                     .identity-grid {
                                         grid-template-columns: 1fr;
@@ -915,9 +923,9 @@
                                 <td><input name="edu_institution[]" required placeholder="University Name" /></td>
                                 <td><input type="number" name="edu_year[]" required placeholder="YYYY" /></td>
                                 <td>
-                                    <div class="membership-file-wrap">
+                                    <div class="upload-container">
                                         <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; margin-top: 2px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
@@ -1045,10 +1053,9 @@
                                         <input type="text" class="other-proof-input" placeholder="Specify Document Type" oninput="updateOtherProofValue(this)" />
                                     </div>
                                 </div>
-                                <div>
-                                    <label class="field-label-premium">Certificate</label>
+                                <div class="upload-container">
                                     <input type="file" name="exp_proof[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                                    <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">Image ≤ 2MB | PDF ≤ 10MB</div>
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                 </div>
                             </div>
 
@@ -1172,8 +1179,10 @@
                                     <label style="margin:0; font-weight: 700;" class="report-label">Report 1 <span class="req">*</span></label>
                                     <input type="hidden" name="report_category[]" class="report-category-hidden">
                                 </div>
-                                <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStatsGrouped(this.closest('.category-report-group'));" />
-                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF ONLY ≤ 10 MB</div>
+                                <div class="upload-container">
+                                    <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStatsGrouped(this.closest('.category-report-group'));" />
+                                    <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-left: auto;">PDF ONLY ≤ 10 MB</div>
+                                </div>
                             </div>
                             <button type="button" class="btn btn-ghost btn-sm remove-report-btn" onclick="removeReportRowGrouped(this)" style="color: #ef4444; border: none; padding: 4px 8px; font-size: 0.75rem; display: none;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
@@ -1219,9 +1228,9 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <div class="membership-file-wrap">
+                                        <div class="upload-container">
                                             <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                         </div>
                                     </td>
                                     <td style="text-align: center;">
@@ -1269,9 +1278,9 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <div class="membership-file-wrap">
+                                        <div class="upload-container">
                                             <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -1329,9 +1338,9 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <div class="membership-file-wrap">
+                                    <div class="upload-container">
                                         <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
@@ -1377,9 +1386,9 @@
                                 </td>
                                 <td><input name="paper_role[]" placeholder="Paste Link Here" /></td>
                                 <td>
-                                    <div class="membership-file-wrap">
+                                    <div class="upload-container">
                                         <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted);">Image 2MB | PDF 10MB</div>
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
@@ -1426,8 +1435,10 @@
                 <div class="section-header"><h2>Step 12: Other Relevant Enclosures</h2></div>
                 <div class="section-content">
 
-                    <input type="file" name="other_enclosure" accept=".pdf" onchange="validateFileUpload(this)" />
-                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF only, ≤ 5 MB</div>
+                    <div class="upload-container">
+                        <input type="file" name="other_enclosure" accept=".pdf" onchange="validateFileUpload(this)" />
+                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">PDF ONLY ≤ 10MB</div>
+                    </div>
 
                     <div class="description-box-wrap" style="margin-top: 24px;">
                         <label style="font-weight: 600; color: var(--ink); margin-bottom: 8px; display: block;">Description</label>
@@ -1516,8 +1527,10 @@
                         </div>
                         <div class="col-12" style="margin-top: 12px;">
                             <label>Upload Payment Receipt / Proof <span class="req">*</span></label>
-                             <input name="payment_receipt" id="payment_receipt" type="file" accept=".pdf,.jpg,.png" required onchange="validateFileUpload(this); validatePaymentStep();" />
-                             <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">Image ≤ 2 MB | PDF ≤ 10 MB</div>
+                             <div class="upload-container">
+                                 <input name="payment_receipt" id="payment_receipt" type="file" accept=".pdf,.jpg,.png" required onchange="validateFileUpload(this); validatePaymentStep();" />
+                                 <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                             </div>
                         </div>
                     </div>
 
@@ -1547,8 +1560,10 @@
                         <div class="col-6"><label>Date <span class="req">*</span></label><input type="text" name="decl_date" id="declaration_date" required readonly style="background-color: #f8fafc; cursor: not-allowed; color: var(--muted);" /></div>
                         <div class="col-6">
                             <label>Signature File (Upload Image) <span class="req">*</span></label>
-                            <input type="file" name="signature_file" accept=".jpg,.jpeg,.png" required onchange="validateFileUpload(this)" />
-                            <div class="file-validation-hint" style="font-size: 0.75rem; margin-top: 4px; color: var(--muted);">JPG / PNG ≤ 2 MB</div>
+                            <div class="upload-container">
+                                <input type="file" name="signature_file" accept=".jpg,.jpeg,.png" required onchange="validateFileUpload(this)" />
+                                <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG ONLY ≤ 2MB</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3721,8 +3736,9 @@
         if (!hint) {
             hint = document.createElement('div');
             hint.className = 'file-validation-hint';
-            hint.style.fontSize = '0.75rem';
-            hint.style.marginTop = '4px';
+            hint.style.marginLeft = 'auto';
+            hint.style.display = 'flex';
+            hint.style.alignItems = 'center';
             input.parentNode.appendChild(hint);
         }
 
@@ -3802,7 +3818,7 @@
                     // We DO NOT auto-fill the confirm field per user request
                     validateAadhaarMatch(); // Validate match if user had already typed something
                     
-                    hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ${typeName} detected & verified</span>`;
+                    hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
                     hideFieldError(input);
                     showToast(`${typeName} detected & verified.`, "success");
                 } else {
@@ -3828,7 +3844,7 @@
                 // Do NOT clear input.value, allow user to proceed manually
             }
         } else {
-            hint.innerHTML = `<span style="color: #2f855a; font-weight: 600;">✓ ${limitMsg}</span>`;
+            hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
             hideFieldError(input);
         }
     }
