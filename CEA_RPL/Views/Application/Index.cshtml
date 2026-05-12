@@ -121,7 +121,7 @@
         <a href="#step-12" class="nav-item locked" data-step="12"><span class="nav-num">12</span><span class="nav-text">Other Relevant Enclosures</span></a>
         <a href="#step-13" class="nav-item locked" data-step="13"><span class="nav-num">13</span><span class="nav-text">Payment Details</span></a>
         <a href="#step-14" class="nav-item locked" data-step="14"><span class="nav-num">14</span><span class="nav-text">Declaration by Applicant</span></a>
-        <a href="#step-15" class="nav-item locked" data-step="15"><span class="nav-num">15</span><span class="nav-text">Review & Submit</span></a>
+        <a href="#step-15" class="nav-item locked" data-step="15"><span class="nav-num">15</span><span class="nav-text">Preview & Submit</span></a>
     </aside>
     }
 
@@ -350,7 +350,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="compact-icon"><path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                                 <div class="compact-text">
                                     <div class="upload-title">Upload Candidate Photograph</div>
-                                    <div class="upload-subtitle" id="uploadSubtitle">Click to browse image (JPG, PNG) - Max 2MB</div>
+                                    <div class="upload-subtitle" id="uploadSubtitle">Click to browse image</div>
                                 </div>
                                 
                                 <div class="photo-action-buttons" id="photoActions" style="display: none; position: relative; z-index: 20;">
@@ -947,10 +947,17 @@
                     <div class="grid" style="margin-bottom: 24px;">
                         <div class="col-12">
                             <label>Total Experience (Years) <span class="req">*</span></label>
-                            <input id="total_experience" name="total_experience" type="number" step="0.1" min="0" required placeholder="Enter Full Years Only (e.g. 10)" 
-                                   oninput="updateExperienceEligibility()" onblur="updateExperienceEligibility()" />
+                            <div style="position: relative;">
+                                <input id="total_experience" name="total_experience" type="number" step="0.1" min="0" required placeholder="Enter Full Years Only (e.g. 10)" 
+                                       oninput="updateExperienceEligibility()" onblur="updateExperienceEligibility()" style="padding-right: 40px;" />
+                                <div id="experienceSuccessTick" style="display: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); z-index: 5;">
+                                    <div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="experienceEligibilityFeedback" class="eligibility-feedback hide"></div>
-                            <div id="experienceHelperInfo" class="helper-info">Minimum required: 20 years</div>
+                            <div id="experienceHelperInfo" class="helper-info">Minimum experience required: 20 years</div>
                         </div>
                         <div class="col-12">
                                         <label>Select Relevant Professional Experience Sectors (Maximum 5)</label>
@@ -1210,7 +1217,7 @@
                                     <th>Topic of Training</th>
                                     <th>Organized By</th>
                                     <th style="width: 180px;">Duration (Days)</th>
-                                    <th style="width: 120px;">Executed in Year</th>
+                                    <th style="width: 120px;">Year</th>
                                     <th style="width: 250px;">Proof of Training</th>
                                     <th style="width: 70px; text-align: center;">Action</th>
                                 </tr>
@@ -1254,8 +1261,8 @@
                                     <th>Name of Certification</th>
                                     <th>Issuing Authority / Obtained from</th>
                                     <th style="width: 180px;">Validity Status</th>
-                                    <th style="width: 120px;">Conducted in Year</th>
-                                    <th style="width: 250px;">Upload Proof of Certificate</th>
+                                    <th style="width: 120px;">Year</th>
+                                    <th style="width: 250px;">Proof of Certification</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1487,7 +1494,7 @@
 
                         <div id="discountSection" style="display: none; border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 12px;">
                             <div class="fee-item" style="color: #059669; font-weight: 600;">
-                                <span id="discountLabel">Application Fee Rebate (0%)</span>
+                                <span id="discountLabel">Applicable Fee Rebate (0%)</span>
                                 <span id="discountAmount">- ₹0</span>
                             </div>
                         </div>
@@ -1562,7 +1569,7 @@
                         <div class="col-6">
                             <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
                                 <div style="padding-top: 22px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_1" required style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                    <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
                                 </div>
                                 <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
                                     <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
@@ -1578,7 +1585,7 @@
                         <div class="col-6">
                             <div style="display: flex; align-items: stretch; gap: 12px; height: 100%;">
                                 <div style="padding-top: 22px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_2" required style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                    <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
                                 </div>
                                 <div class="declaration-statement" style="flex: 1; padding: 20px; background: #f0fdf9; border-radius: 12px; border: 1px solid #c6f6d5; margin-bottom: 0;">
                                     <p style="font-weight: 700; color: var(--ink); margin-bottom: 12px;">I hereby declare that:</p>
@@ -1592,7 +1599,7 @@
                         </div>
                     </div>
                     <div class="grid">
-                        <div class="col-6"><label>Candidate Name as Signature <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type Candidate Name" class="title-case-input" /></div>
+                        <div class="col-6"><label>Candidate Name <span class="req">*</span></label><input type="text" name="decl_name" required placeholder="Type Candidate Name" class="title-case-input" /></div>
                         <div class="col-6"><label>Place</label><input type="text" name="decl_place" placeholder="City" /></div>
                         <div class="col-6"><label>Date <span class="req">*</span></label><input type="text" name="decl_date" id="declaration_date" required readonly style="background-color: #f8fafc; cursor: not-allowed; color: var(--muted);" /></div>
                         <div class="col-6">
@@ -1608,7 +1615,7 @@
 
             <!-- STEP 15: REVIEW & SUBMIT -->
             <div class="form-section hide" id="step-15">
-                <div class="section-header"><h2>Step 15: Review & Submit</h2></div>
+                <div class="section-header"><h2>Step 15: Preview & Submit</h2></div>
                 <div class="section-content">
                     <!-- 1. Real-time Review Summary -->
                     <div id="reviewSummary" class="review-grid">
@@ -1751,7 +1758,7 @@
         "Other Relevant Enclosures",
         "Payment Details",
         "Declaration by Applicant",
-        "Review & Submit"
+        "Preview & Submit"
     ];
 
     function updateUI() {
@@ -2080,11 +2087,11 @@
                 customMsg = "Please enter a meaningful description for your enclosure.";
             }
         } else if (input.type === 'checkbox' || input.type === 'radio') {
-            if (input.name.includes('[]')) {
-                const section = input.closest('.form-section');
+            const section = input.closest('.form-section') || document;
+            if (input.type === 'radio' || input.name.includes('[]')) {
                 const group = section.querySelectorAll(`input[name="${input.name}"]`);
                 const checkedCount = Array.from(group).filter(i => i.checked).length;
-                if (checkedCount === 0) isInvalid = true;
+                if (checkedCount === 0 && input.hasAttribute('required')) isInvalid = true;
             } else if (!input.checked && input.hasAttribute('required')) {
                 isInvalid = true;
             }
@@ -2278,6 +2285,30 @@
             if (subjectSelect) subjectSelect.querySelector('.l-ms-control').classList.remove('invalid');
         }
 
+        if (step === 14) {
+            const retiredRadio = section.querySelector('input[name="decl_retired_gov"]:checked');
+            if (!retiredRadio) {
+                valid = false;
+                const radioGroup = section.querySelector('.retired-gov-question');
+                showFieldError(section.querySelector('input[name="decl_retired_gov"]'), "Please select an option.");
+                if (!firstInvalid) firstInvalid = section.querySelector('input[name="decl_retired_gov"]');
+            } else {
+                const retiredVal = retiredRadio.value;
+                const check1 = section.querySelector('input[name="declaration_consent_1"]');
+                const check2 = section.querySelector('input[name="declaration_consent_2"]');
+                
+                if (retiredVal === 'Yes' && !check1.checked) {
+                    valid = false;
+                    showFieldError(check1, "Please agree to the declaration.");
+                    if (!firstInvalid) firstInvalid = check1;
+                } else if (retiredVal === 'No' && !check2.checked) {
+                    valid = false;
+                    showFieldError(check2, "Please agree to the declaration.");
+                    if (!firstInvalid) firstInvalid = check2;
+                }
+            }
+        }
+
 
         if (!valid) {
             showToast("Please correct the highlighted fields to proceed.", "error");
@@ -2403,6 +2434,7 @@
         const expInput = document.getElementById('total_experience');
         const feedback = document.getElementById('experienceEligibilityFeedback');
         const helper = document.getElementById('experienceHelperInfo');
+        const tick = document.getElementById('experienceSuccessTick');
         if (!expInput || !feedback || !helper) return;
 
         const rawValue = expInput.value;
@@ -2416,10 +2448,11 @@
         const minRequired = 20;
 
         // Update Helper Text
-        helper.innerHTML = `Minimum required: <strong>${minRequired} years</strong>`;
+        helper.innerHTML = `Minimum experience required: <strong>${minRequired} years</strong>`;
 
         if (!rawValue) {
             feedback.classList.add('hide');
+            if (tick) tick.style.display = 'none';
             return;
         }
 
@@ -2427,11 +2460,13 @@
         const isEligible = roundedValue >= minRequired;
 
         if (isEligible) {
-            feedback.className = "eligibility-feedback eligible-success";
-            feedback.innerHTML = `✔ Eligible – Meets minimum requirement (${minRequired} years).`;
+            feedback.classList.add('hide');
+            if (tick) tick.style.display = 'block';
             expInput.classList.remove('field-invalid');
             hideFieldError(expInput);
         } else {
+            if (tick) tick.style.display = 'none';
+            feedback.classList.remove('hide');
             feedback.className = "eligibility-feedback ineligible-error";
             feedback.innerHTML = `❌ Not Eligible – Minimum ${minRequired} years of experience is required.`;
             expInput.classList.add('field-invalid');
@@ -2477,8 +2512,7 @@
             feedback.innerHTML = `❌ Not Eligible – Applicant must be below 70 years of age.`;
             dobInput.classList.add('field-invalid');
         } else {
-            feedback.className = "eligibility-feedback eligible-success";
-            feedback.innerHTML = `✔ Eligible – Minimum age criteria met.`;
+            feedback.classList.add('hide');
             dobInput.classList.remove('field-invalid');
             hideFieldError(dobInput);
         }
@@ -2698,7 +2732,7 @@
             
             if (discountSection) {
                 discountSection.style.display = 'block';
-                discountLabel.textContent = `Application Fee Rebate (${discountPercent}%)`;
+                discountLabel.textContent = `Applicable Fee Rebate (${discountPercent}%)`;
                 discountAmount.textContent = `- ₹${discountValue.toLocaleString('en-IN')}`;
             }
         } else {
@@ -3371,23 +3405,38 @@
             return checked.length > 0 ? checked.join(', ') : 'None selected';
         };
         
-        const getFileStatus = (nameOrEl) => {
+        const getFileStatus = (nameOrEl, step) => {
             const input = (typeof nameOrEl === 'string') ? document.querySelector(`input[name="${nameOrEl}"]`) : nameOrEl;
             const isUploaded = (input && input.files && input.files.length > 0) || (input && input.getAttribute('data-has-file') === 'true');
-            return isUploaded ? 
-                '<span style="color: var(--success); font-weight: 600;">✓ Uploaded</span>' : 
-                '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
+            if (isUploaded) {
+                let viewLink = '';
+                if (input && input.files && input.files[0]) {
+                    try {
+                        const fileUrl = URL.createObjectURL(input.files[0]);
+                        viewLink = `<a href="${fileUrl}" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #ecfdf5; color: #059669; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #10b981;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</a>`;
+                    } catch(e) { console.error("URL creation failed", e); }
+                }
+                let editAction = (!isReadOnly && step) ? `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #f8fafc; color: #64748b; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #e2e8f0; margin-left: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</a>` : '';
+                
+                return `<div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <span style="color: var(--success); font-weight: 600;">✓ Uploaded</span>
+                            <div style="display: flex; gap: 4px;">${viewLink}${editAction}</div>
+                        </div>`;
+            }
+            return '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
         };
 
-        const getMultiFileStatus = (name) => {
+        const getMultiFileStatus = (name, step) => {
             const inputs = document.querySelectorAll(`input[name="${name}"]`);
             let count = 0;
             inputs.forEach(input => { 
                 if ((input.files && input.files.length > 0) || input.getAttribute('data-has-file') === 'true') count++; 
             });
-            return count > 0 ? 
-                `<span style="color: var(--success); font-weight: 600;">✓ ${count} File(s) Uploaded</span>` : 
-                '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
+            if (count > 0) {
+                let editAction = (!isReadOnly && step) ? `<a href="#" onclick="event.preventDefault(); currentStep=${step}; updateUI();" style="display: inline-flex; align-items: center; text-decoration: none; padding: 4px 8px; background: #f8fafc; color: #64748b; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #e2e8f0; margin-left: 12px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</a>` : '';
+                return `<span style="color: var(--success); font-weight: 600;">✓ ${count} File(s) Uploaded</span> ${editAction}`;
+            }
+            return '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
         };
 
         const getFullAddress = (prefix) => {
@@ -3419,8 +3468,8 @@
                     <div><dt>Mobile Number</dt><dd>${getData('mobile')} ${getData('alt_mobile') !== 'Not provided' ? ' / ' + getData('alt_mobile') : ''}</dd></div>
                     <div><dt>Gov ID Type</dt><dd>${getData('gov_id_type') === 'government_id' ? 'Government ID' : (getData('gov_id_type') === 'employee_id' ? 'Employee ID' : getData('gov_id_type'))}</dd></div>
                     <div><dt>ID Number</dt><dd>${getData('gov_id_number')}</dd></div>
-                    <div><dt>ID Proof Doc</dt><dd>${getFileStatus('gov_id_upload')}</dd></div>
-                    <div><dt>Photograph</dt><dd>${getFileStatus('applicant_photo')}</dd></div>
+                    <div><dt>ID Proof Doc</dt><dd>${getFileStatus('gov_id_upload', 1)}</dd></div>
+                    <div><dt>Photograph</dt><dd>${getFileStatus('applicant_photo', 1)}</dd></div>
                     <div style="grid-column: 1 / -1;"><dt>Permanent Address</dt><dd>${getFullAddress('perm')}</dd></div>
                     <div style="grid-column: 1 / -1;"><dt>Correspondence Address</dt><dd>${document.getElementById('sameAddress')?.checked ? 'Same as Permanent' : getFullAddress('corr')}</dd></div>
                 </div>
@@ -3457,7 +3506,7 @@
                                         <td>${row.querySelector('[name="edu_discipline[]"]')?.value || '-'}</td>
                                         <td>${row.querySelector('[name="edu_institution[]"]')?.value || '-'}</td>
                                         <td>${row.querySelector('[name="edu_year[]"]')?.value || '-'}</td>
-                                        <td>${getFileStatus(row.querySelector('[name="edu_cert[]"]'))}</td>
+                                        <td>${getFileStatus(row.querySelector('[name="edu_cert[]"]'), 3)}</td>
                                     </tr>`;
                                 }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No education records added.</td></tr>'}
                             </tbody>
@@ -3486,7 +3535,7 @@
                                         <td>${card.querySelector('[name="exp_designation[]"]')?.value || '-'}</td>
                                         <td>${card.querySelector('.exp-duration-hidden')?.value || '-'}</td>
                                         <td style="font-size:0.75rem; max-width:200px;">${(card.querySelector('[name="exp_nature[]"]')?.value || '-').substring(0,60)}...</td>
-                                        <td>${getFileStatus(card.querySelector('[name="exp_proof[]"]'))}</td>
+                                        <td>${getFileStatus(card.querySelector('[name="exp_proof[]"]'), 4)}</td>
                                     </tr>`;
                                 }).join('') || '<tr><td colspan="5" style="text-align:center; padding:12px; color:var(--ink-light);">No experience records added.</td></tr>'}
                             </tbody>
@@ -3543,7 +3592,7 @@
                     ${editLink(6)}
                 </div>
                 <div class="review-dl">
-                    <div><dt>Applied Audit Reports</dt><dd>${getMultiFileStatus('audit_report')}</dd></div>
+                    <div><dt>Applied Audit Reports</dt><dd>${getMultiFileStatus('audit_report', 6)}</dd></div>
                 </div>
             </div>`;
 
@@ -3563,7 +3612,7 @@
                                 if (!name) return '';
                                 return `<tr>
                                     <td><strong>${name}</strong> from ${tr.querySelector('[name="training_from[]"]')?.value || '-'} (${tr.querySelector('[name="training_duration[]"]')?.value || '-'} days, ${tr.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'))}</td>
+                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'), 7)}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No training records.</td></tr>'}
                         </tbody>
@@ -3578,7 +3627,7 @@
                                 if (!name) return '';
                                 return `<tr>
                                     <td><strong>${name}</strong> by ${tr.querySelector('[name="training_from[]"]')?.value || '-'} (${tr.querySelector('[name="training_duration[]"]')?.value || 'Active'}, ${tr.querySelector('[name="training_year[]"]')?.value || '-'})</td>
-                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'))}</td>
+                                    <td style="width: 100px;">${getFileStatus(tr.querySelector('[name="training_proof[]"]'), 7)}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="2" style="text-align:center; padding:8px; color:var(--ink-light);">No certification records.</td></tr>'}
                         </tbody>
@@ -3609,7 +3658,7 @@
                                     <td>${pos}</td>
                                     <td>${status}</td>
                                     <td>${fromYear} - ${toYear}</td>
-                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="membership_proof[]"]'))}</td>
+                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="membership_proof[]"]'), 8)}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="5" style="text-align:center; padding:8px; color:var(--ink-light);">No membership records.</td></tr>'}
                         </tbody>
@@ -3636,7 +3685,7 @@
                                     <td>${row.querySelector('[name="paper_place[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="paper_year[]"]')?.value || '-'}</td>
                                     <td>${row.querySelector('[name="paper_role[]"]')?.value || '-'}</td>
-                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="paper_proof[]"]'))}</td>
+                                    <td style="width: 100px;">${getFileStatus(row.querySelector('[name="paper_proof[]"]'), 9)}</td>
                                 </tr>`;
                             }).join('') || '<tr><td colspan="5" style="text-align:center; padding:8px; color:var(--ink-light);">No paper records.</td></tr>'}
                         </tbody>
@@ -3694,7 +3743,7 @@
                 </div>
                 <div class="review-dl">
                     <div style="grid-column: 1 / -1;"><dt>Description</dt><dd>${document.getElementById('enclosure_desc')?.value || 'Not provided'}</dd></div>
-                    <div><dt>File Proof</dt><dd>${getFileStatus('other_enclosure')}</dd></div>
+                    <div><dt>File Proof</dt><dd>${getFileStatus('other_enclosure', 12)}</dd></div>
                 </div>
             </div>`;
 
@@ -3709,7 +3758,7 @@
                     <div><dt>Amount Paid</dt><dd>₹${getData('payment_amount')}</dd></div>
                     <div><dt>Date of Payment</dt><dd>${getData('payment_date')}</dd></div>
                     <div><dt>UTR / Ref Number</dt><dd>${getData('payment_utr')}</dd></div>
-                    <div><dt>Receipt Proof</dt><dd>${getFileStatus('payment_receipt')}</dd></div>
+                    <div><dt>Receipt Proof</dt><dd>${getFileStatus('payment_receipt', 13)}</dd></div>
                 </div>
             </div>`;
 
@@ -3725,7 +3774,7 @@
                     <div><dt>Full Name</dt><dd>${getData('decl_name')}</dd></div>
                     <div><dt>Place</dt><dd>${getData('decl_place')}</dd></div>
                     <div><dt>Date</dt><dd>${getData('decl_date')}</dd></div>
-                    <div><dt>Signature Doc</dt><dd>${getFileStatus('signature_file')}</dd></div>
+                    <div><dt>Signature Doc</dt><dd>${getFileStatus('signature_file', 14)}</dd></div>
                 </div>
             </div>`;
 
@@ -4138,6 +4187,40 @@
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
 
+        // Step 14: Retired Govt Employee & Declaration Sync
+        const retiredRadios = document.querySelectorAll('input[name="decl_retired_gov"]');
+        const check1 = document.querySelector('input[name="declaration_consent_1"]');
+        const check2 = document.querySelector('input[name="declaration_consent_2"]');
+
+        retiredRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    // Clear validation error for the whole radio group immediately
+                    retiredRadios.forEach(r => hideFieldError(r));
+                    
+                    if (this.value === 'Yes') {
+                        if (check1) {
+                            check1.checked = true;
+                            hideFieldError(check1);
+                        }
+                        if (check2) {
+                            check2.checked = false;
+                            hideFieldError(check2);
+                        }
+                    } else {
+                        if (check1) {
+                            check1.checked = false;
+                            hideFieldError(check1);
+                        }
+                        if (check2) {
+                            check2.checked = true;
+                            hideFieldError(check2);
+                        }
+                    }
+                }
+            });
+        });
+
         const govIdInput = document.getElementById('govIdNumber');
         const confirmGovIdInput = document.getElementById('confirmGovIdNumber');
         if (govIdInput) {
@@ -4384,7 +4467,7 @@
                         }
                         if (subtitle) {
                             subtitle.style.display = 'block';
-                            subtitle.innerText = "Click to browse image (JPG, PNG) - Max 2MB";
+                            subtitle.innerText = "Click to browse image";
                         }
                         if (actions) actions.style.display = 'none';
                         return;
