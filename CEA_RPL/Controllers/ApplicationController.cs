@@ -621,25 +621,31 @@ public class ApplicationController : Controller
 
         if (isImage)
         {
-            if (file.Length > 2 * 1024 * 1024)
+            // Photo & Signature: 500KB
+            if (file.Length > 500 * 1024)
             {
-                errorMessage = $"Image '{file.FileName}' exceeds 2MB limit.";
+                errorMessage = $"Image '{file.FileName}' exceeds 500KB limit.";
                 return false;
             }
         }
         else if (isPdf)
         {
-            if (file.Length > 10 * 1024 * 1024)
+            // Check if it's a report (audit_report) or other PDF
+            bool isReport = file.Name.Contains("audit_report", StringComparison.OrdinalIgnoreCase);
+            long limit = isReport ? 10 * 1024 * 1024 : 2 * 1024 * 1024;
+            string limitStr = isReport ? "10MB" : "2MB";
+
+            if (file.Length > limit)
             {
-                errorMessage = $"PDF '{file.FileName}' exceeds 10MB limit.";
+                errorMessage = $"PDF '{file.FileName}' exceeds {limitStr} limit.";
                 return false;
             }
         }
         else
         {
-            if (file.Length > 10 * 1024 * 1024)
+            if (file.Length > 2 * 1024 * 1024)
             {
-                errorMessage = $"File '{file.FileName}' exceeds 10MB limit.";
+                errorMessage = $"File '{file.FileName}' exceeds 2MB limit.";
                 return false;
             }
         }

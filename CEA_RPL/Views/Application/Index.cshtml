@@ -330,7 +330,7 @@
                             </div>
                             <div>
                                 <h3 class="form-card-title">Candidate Photograph</h3>
-                                <div class="form-card-subtitle">Recent passport-size photo · JPG or PNG · Max 2 MB</div>
+                                <div class="form-card-subtitle">Recent passport-size photo · JPG, PNG 500KB</div>
                             </div>
                         </div>
                         <div class="photo-section">
@@ -797,9 +797,9 @@
                                 <div class="form-group">
                                     <label>Upload ID Proof <span class="req">*</span></label>
                                     <div class="upload-container">
-                                        <input id="govIdUpload" name="gov_id_upload" type="file" required onchange="validateFileUpload(this)" />
+                                        <input id="govIdUpload" name="gov_id_upload" type="file" accept=".pdf" required onchange="validateFileUpload(this)" />
                                     </div>
-                                    <span style="font-size: 0.7rem; color: #6B7280; margin-top: 2px;">JPG, PNG ≤ 2MB | PDF ≤ 10MB</span>
+                                    <div class="file-validation-hint identity-hint" style="font-size: 0.7rem; color: #6B7280; margin-top: 4px;">PDF 2MB</div>
                                 </div>
 
                                 <!-- ROW 2 -->
@@ -924,9 +924,9 @@
                                 <td><input type="number" name="edu_year[]" required placeholder="YYYY" /></td>
                                 <td>
                                     <div class="upload-container">
-                                        <input type="file" name="edu_cert[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                        <input type="file" name="edu_cert[]" accept=".pdf" required onchange="validateFileUpload(this)" />
                                     </div>
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                 </td>
                                 <td style="text-align: center;">
                                     <button type="button" class="btn-remove" onclick="removeGenericRow(this, 'educationTable')" style="display: none;">
@@ -1061,9 +1061,9 @@
                                     </div>
                                 </div>
                                 <div class="upload-container">
-                                    <input type="file" name="exp_proof[]" accept=".jpg,.jpeg,.png,.pdf" required onchange="validateFileUpload(this)" />
-                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                    <input type="file" name="exp_proof[]" accept=".pdf" required onchange="validateFileUpload(this)" />
                                 </div>
+                                <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                             </div>
 
                             <div>
@@ -1188,8 +1188,8 @@
                                 </div>
                                 <div class="upload-container">
                                     <input type="file" name="audit_report" accept=".pdf" required onchange="validateFileUpload(this); updateReportStatsGrouped(this.closest('.category-report-group'));" />
-                                    <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-left: auto;">PDF ONLY ≤ 10 MB</div>
                                 </div>
+                                <div class="file-validation-hint" style="font-size: 0.7rem; color: var(--muted); margin-top: 4px;">PDF 10MB</div>
                             </div>
                             <button type="button" class="btn btn-ghost btn-sm remove-report-btn" onclick="removeReportRowGrouped(this)" style="color: #ef4444; border: none; padding: 4px 8px; font-size: 0.75rem; display: none;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
@@ -1236,9 +1236,9 @@
                                     </td>
                                     <td>
                                         <div class="upload-container">
-                                            <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                            <input type="file" name="training_proof[]" accept=".pdf" onchange="validateFileUpload(this)" />
                                         </div>
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                     </td>
                                     <td style="text-align: center;">
                                         <button type="button" class="btn-remove" onclick="removeGenericRow(this, 'trainingTable')" style="display: none;">
@@ -1286,9 +1286,9 @@
                                     </td>
                                     <td>
                                         <div class="upload-container">
-                                            <input type="file" name="training_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                            <input type="file" name="training_proof[]" accept=".pdf" onchange="validateFileUpload(this)" />
                                         </div>
+                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1346,9 +1346,9 @@
                                 </td>
                                 <td>
                                     <div class="upload-container">
-                                        <input type="file" name="membership_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                        <input type="file" name="membership_proof[]" accept=".pdf" onchange="validateFileUpload(this)" />
                                     </div>
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                 </td>
                                 <td style="text-align: center;">
                                     <button type="button" class="btn-remove" onclick="removeGenericRow(this, 'membershipTable')" style="display: none;">
@@ -1394,9 +1394,9 @@
                                 <td><input name="paper_role[]" placeholder="Paste Link Here" /></td>
                                 <td>
                                     <div class="upload-container">
-                                        <input type="file" name="paper_proof[]" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileUpload(this)" />
-                                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
+                                        <input type="file" name="paper_proof[]" accept=".pdf" onchange="validateFileUpload(this)" />
                                     </div>
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                 </td>
                                 <td style="text-align: center;">
                                     <button type="button" class="btn-remove" onclick="removeGenericRow(this, 'publicationTable')" style="display: none;">
@@ -1444,7 +1444,7 @@
 
                     <div class="upload-container">
                         <input type="file" name="other_enclosure" accept=".pdf" onchange="validateFileUpload(this)" />
-                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">PDF ONLY ≤ 10MB</div>
+                        <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">PDF 2MB</div>
                     </div>
 
                     <div class="description-box-wrap" style="margin-top: 24px;">
@@ -1536,8 +1536,8 @@
                             <label>Upload Payment Receipt / Proof <span class="req">*</span></label>
                              <div class="upload-container">
                                  <input name="payment_receipt" id="payment_receipt" type="file" accept=".pdf,.jpg,.png" required onchange="validateFileUpload(this); validatePaymentStep();" />
-                                 <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG/PDF 10MB</div>
                              </div>
+                             <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">JPG, PNG 500KB | PDF 2MB</div>
                         </div>
                     </div>
 
@@ -1606,8 +1606,8 @@
                             <label>Signature File (Upload Image) <span class="req">*</span></label>
                             <div class="upload-container">
                                 <input type="file" name="signature_file" accept=".jpg,.jpeg,.png" required onchange="validateFileUpload(this)" />
-                                <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-left: auto;">JPG ONLY ≤ 2MB</div>
                             </div>
+                            <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">JPG, PNG 500KB</div>
                         </div>
                     </div>
                 </div>
@@ -2031,12 +2031,12 @@
             container = input.closest('.category-card-v2') || input.parentElement;
             container.appendChild(guidance);
         } else if (input.type === 'file') {
-            // Place after the hint usually
-            const hint = container.querySelector('.file-validation-hint');
+            const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentElement;
+            const hint = fieldContainer.querySelector('.file-validation-hint, .identity-hint');
             if (hint) {
                  hint.insertAdjacentElement('afterend', guidance);
             } else {
-                 container.appendChild(guidance);
+                 fieldContainer.appendChild(guidance);
             }
         } else if (input.tagName === 'TEXTAREA') {
             // Place directly after the textarea (before word counters if any)
@@ -2051,26 +2051,25 @@
         input.classList.remove('field-invalid');
         input.classList.remove('field-error-pulse');
         
-        // Cleanup file input highlight
         if (input.type === 'file') {
             const wrapper = input.closest('.file-upload-wrapper') || input.parentElement;
-            wrapper.style.borderColor = '';
-            wrapper.style.backgroundColor = '';
+            if (wrapper) {
+                wrapper.style.borderColor = '';
+                wrapper.style.backgroundColor = '';
+            }
         }
         
-        let container = input.parentElement;
-        if (input.type === 'checkbox' || input.type === 'radio') {
-            container = input.closest('.category-card-v2') || input.parentElement;
-        }
-        
-        const existing = container.querySelector('.error-guidance');
-        if (existing) existing.remove();
+        const fieldContainer = input.closest('.form-group') || input.closest('td') || input.closest('.category-card-v2') || input.parentElement;
+        if (fieldContainer) {
+            const existing = fieldContainer.querySelectorAll('.error-guidance');
+            existing.forEach(el => el.remove());
 
-        // Also clean up old-style errors
-        const oldMeaningful = container.querySelectorAll('.meaningful-error');
-        oldMeaningful.forEach(el => el.remove());
-        const oldAddress = container.querySelector('.address-error');
-        if (oldAddress) oldAddress.remove();
+            // Also clean up old-style errors
+            const oldMeaningful = fieldContainer.querySelectorAll('.meaningful-error');
+            oldMeaningful.forEach(el => el.remove());
+            const oldAddress = fieldContainer.querySelector('.address-error');
+            if (oldAddress) oldAddress.remove();
+        }
     }
 
     function validateField(input) {
@@ -2104,7 +2103,14 @@
             const isEmpty = !input.value || input.value.trim() === '';
 
             if (isFile) {
-                if (!hasFile && input.hasAttribute('required')) isInvalid = true;
+                if (!hasFile && input.hasAttribute('required')) {
+                    if (input.id === 'govIdUpload') {
+                        const idType = document.getElementById('govIdType')?.value;
+                        if (idType) isInvalid = true;
+                    } else {
+                        isInvalid = true;
+                    }
+                }
             } else if (isEmpty) {
                 if (input.hasAttribute('required')) isInvalid = true;
             } else if (input.type === 'text' || input.tagName === 'TEXTAREA' || input.tagName === 'SELECT') {
@@ -2619,7 +2625,7 @@
                 input.value = '';
                 // Clear validation hints if any
                 const hint = row.querySelector('.file-validation-hint');
-                if (hint) hint.innerHTML = 'PDF ONLY ≤ 10 MB';
+                if (hint) hint.innerHTML = 'PDF 10MB';
             }
             // Logic to keep slots contiguous or just hide any slot? 
             // The simplest is just hide. But we should update reportCount if it was the last one.
@@ -2894,14 +2900,15 @@
         if (!input) return;
         const isUploaded = input.getAttribute('data-has-file') === 'true' || (input.files && input.files.length > 0);
         if (isUploaded) {
-            let hint = input.parentNode.querySelector('.file-validation-hint, .identity-hint');
+            const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentNode;
+            let hint = fieldContainer.querySelector('.file-validation-hint, .identity-hint');
             if (!hint) {
                 hint = document.createElement('div');
                 hint.className = 'file-validation-hint';
-                hint.style.marginLeft = 'auto';
-                hint.style.display = 'flex';
-                hint.style.alignItems = 'center';
-                input.parentNode.appendChild(hint);
+                hint.style.fontSize = '0.72rem';
+                hint.style.color = 'var(--muted)';
+                hint.style.marginTop = '4px';
+                fieldContainer.appendChild(hint);
             }
             hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
             input.removeAttribute('required');
@@ -3505,8 +3512,19 @@
             return val;
         };
         const getCheckboxes = (name) => {
-            const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
-            return checked.length > 0 ? checked.join(', ') : 'None selected';
+            const vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+            if (vals.length === 0) return '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
+            return vals.map(v => `<span style="display: inline-block; padding: 2px 8px; background: #f0f9ff; color: #0369a1; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; border: 1px solid #bae6fd;">${v}</span>`).join('');
+        };
+
+        const getMultiValues = (name) => {
+            const vals = Array.from(document.querySelectorAll(`input[name="${name}"]`))
+                              .map(i => i.value)
+                              .filter(v => v && v.trim() !== '');
+            if (vals.length === 0) return '<span style="color: var(--warn); font-size: 0.85rem;">Not Provided</span>';
+            return `<div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+                ${vals.map(v => `<span style="display: inline-block; padding: 2px 10px; background: #f0fdf4; color: #166534; border-radius: 6px; font-size: 0.72rem; border: 1px solid #bbf7d0; font-weight: 500; line-height: 1.4;">${v}</span>`).join('')}
+            </div>`;
         };
         
         const getFileStatus = (nameOrEl, step) => {
@@ -3633,6 +3651,8 @@
                     </div>
                     <div class="review-dl" style="margin-bottom: 16px;">
                         <div><dt>Total Experience</dt><dd>${getData('total_experience')} Years</dd></div>
+                        <div style="grid-column: 1 / -1;"><dt>Experience Sectors</dt><dd>${getMultiValues('sector_experience[]')}</dd></div>
+                        <div style="grid-column: 1 / -1;"><dt>Subject Expertise</dt><dd>${getMultiValues('subject_expertise[]')}</dd></div>
                     </div>
                     <div class="review-table-wrap">
                         <table class="review-table">
@@ -3904,7 +3924,7 @@
         if (input.id === 'govIdUpload') {
             const idTypeSelect = document.getElementById('govIdType');
             if (idTypeSelect && !idTypeSelect.value) {
-                showFieldError(input, "This field is required.");
+                showFieldError(input, "Please select ID Type first.");
                 input.value = ''; // Clear the file selection
                 return;
             }
@@ -3931,45 +3951,49 @@
         const isImage = /\.(jpg|jpeg|png)$/.test(fileName);
         const isPdf = /\.pdf$/.test(fileName);
 
-        let isValid = true;
-        let errorMsg = "";
-        let limitMsg = "";
-
-        if (isImage) {
-            if (fileSize > 2 * 1024 * 1024) {
-                isValid = false;
-                errorMsg = "Image must be less than 2 MB";
-            }
-            limitMsg = "Max size: 2 MB (Image)";
+        let maxMB = 2; // Default for certificates and general files
+        let typeLabel = "PDF";
+        
+        if (input.name === 'applicant_photo' || input.name === 'signature_file') {
+            maxMB = 0.5; // 500KB
+            typeLabel = "JPG, PNG";
+        } else if (input.name === 'audit_report' || input.name.includes('report')) {
+            maxMB = 10;
+            typeLabel = "PDF";
         } else if (isPdf) {
-            if (fileSize > 10 * 1024 * 1024) {
-                isValid = false;
-                errorMsg = "PDF must be less than 10 MB";
-            }
-            limitMsg = "Max size: 10 MB (PDF)";
-        } else {
-            if (fileSize > 10 * 1024 * 1024) {
-                isValid = false;
-                errorMsg = "File must be less than 10 MB";
-            }
-            limitMsg = "Max size: 10 MB";
+            maxMB = 2;
+            typeLabel = "PDF";
         }
 
-        let hint = input.parentNode.querySelector('.file-validation-hint, .identity-hint');
+        const maxBytes = maxMB * 1024 * 1024;
+        let isValid = true;
+        let errorMsg = "";
+        let limitMsg = `Max size: ${maxMB < 1 ? (maxMB * 1024) + ' KB' : maxMB + ' MB'} (${typeLabel})`;
+
+        if (fileSize > maxBytes) {
+            isValid = false;
+            errorMsg = `File must be less than ${maxMB < 1 ? (maxMB * 1024) + ' KB' : maxMB + ' MB'}`;
+        }
+
+        const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentNode;
+        let hint = fieldContainer.querySelector('.file-validation-hint, .identity-hint');
         if (!hint) {
             hint = document.createElement('div');
             hint.className = 'file-validation-hint';
-            hint.style.marginLeft = 'auto';
-            hint.style.display = 'flex';
-            hint.style.alignItems = 'center';
-            input.parentNode.appendChild(hint);
+            hint.style.fontSize = '0.72rem';
+            hint.style.color = 'var(--muted)';
+            hint.style.marginTop = '4px';
+            fieldContainer.appendChild(hint);
         }
 
         if (!isValid) {
             showToast(errorMsg, "error");
             input.value = "";
             input.removeAttribute('data-has-file');
-            hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${errorMsg}</span>`;
+            // If it's a size or type error, we show it via showFieldError and keep the hint original
+            if (input.id === 'govIdUpload') {
+                hint.innerHTML = 'PDF 2MB';
+            }
             showFieldError(input, errorMsg);
             return;
         }
@@ -4148,10 +4172,14 @@
         // --- 3. CLEAR FILE INPUT & 4. RESET FILE UI ---
         if (fileInput) {
             fileInput.value = '';
+            fileInput.removeAttribute('data-has-file');
             hideFieldError(fileInput);
-            const hint = fileInput.parentNode.querySelector('.file-validation-hint, .identity-hint');
+            
+            // Reset hint text to original
+            const fieldContainer = fileInput.closest('.form-group');
+            const hint = fieldContainer?.querySelector('.identity-hint');
             if (hint) {
-                                hint.innerHTML = '<span style="font-size: 0.7rem; color: #6B7280; margin-top: 2px;">PDF only 2mb</span>';
+                hint.innerHTML = 'PDF 2MB';
             }
         }
         
