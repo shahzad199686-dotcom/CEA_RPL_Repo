@@ -316,7 +316,7 @@
             <!-- STEP 1: APPLICANT DETAILS -->
             <div class="form-section active" id="step-1" style="background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 0;">
                 <div style="margin-bottom: 20px;">
-                    <h2 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin: 0 0 6px 0;">Applicant Details</h2>
+                    <h2 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin: 0 0 6px 0;">Step 1: Applicant Details</h2>
                     <p style="color: #64748b; margin: 0; font-size: 0.9rem;">Fill in your personal information exactly as it appears on your government-issued identity proof.</p>
                 </div>
                 
@@ -1006,6 +1006,12 @@
                     
                     <div class="experience-container" id="experienceContainer">
                         <div class="experience-card">
+                            <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+                                <button type="button" class="btn btn-ghost btn-sm remove-experience-btn" onclick="removeExperienceRow(this)" style="color: #ef4444; border: none; padding: 4px 8px; font-size: 0.75rem; display: none; align-items: center; gap: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>
+                                    Remove
+                                </button>
+                            </div>
                             <div class="experience-grid-3">
                                 <div>
                                     <label class="field-label-premium">Organization</label>
@@ -1128,7 +1134,7 @@
                                     <input name="project_location_cat1[]" placeholder="Location" />
                                 </div>
                                 <div>
-                                    <label>Executed in Year</label>
+                                    <label>Year</label>
                                     <input type="number" name="project_year_cat1[]" placeholder="Year" />
                                 </div>
                                 <div>
@@ -1324,7 +1330,7 @@
                                 <td><input name="membership_name[]" placeholder="Enter Institution Name" /></td>
                                 <td><input name="membership_from[]" placeholder="Enter Position Held" /></td>
                                 <td>
-                                    <select name="membership_duration[]">
+                                    <select name="membership_duration[]" onchange="handleMembershipChange(this)">
                                         <option value="">Select Status</option>
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
@@ -1332,13 +1338,13 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="membership_year[]">
+                                    <select name="membership_year[]" onchange="handleMembershipChange(this)">
                                         <option value="">Year</option>
                                         @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="membership_to_year[]">
+                                    <select name="membership_to_year[]" onchange="handleMembershipChange(this)">
                                         <option value="">Year</option>
                                         <option value="Present">Present</option>
                                         @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
@@ -1566,7 +1572,7 @@
                         </div>
                     </div>
                     <div class="grid" style="margin-bottom: 24px;">
-                        <div class="col-12" id="decl-card-gov" style="margin-bottom: 16px;">
+                        <div class="col-12 declaration-card" id="decl-card-gov" style="margin-bottom: 16px;">
                             <div style="display: flex; align-items: flex-start; gap: 8px;">
                                 <div style="padding-top: 12px; flex-shrink: 0;">
                                     <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
@@ -1581,7 +1587,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12" id="decl-card-general">
+                        <div class="col-12 declaration-card" id="decl-card-general">
                             <div style="display: flex; align-items: flex-start; gap: 8px;">
                                 <div style="padding-top: 12px; flex-shrink: 0;">
                                     <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
@@ -2004,7 +2010,15 @@
         }
 
         if (!foundMatch) {
-            showToast(message, "error");
+            // Suppress technical backend errors from displaying to the user
+            const techKeywords = ['payload', 'validator', 'server', 'rejected', 'format'];
+            const isTechnical = techKeywords.some(k => message.toLowerCase().includes(k));
+            
+            if (!isTechnical) {
+                showToast(message, "error");
+            } else {
+                console.warn("Suppressed backend error:", message);
+            }
         }
     }
 
@@ -2037,7 +2051,7 @@
         // Find best place to insert
         let container = input.parentElement;
         if (input.type === 'checkbox' || input.type === 'radio') {
-            container = input.closest('.category-card-v2') || input.parentElement;
+            container = input.closest('.category-card-v2') || input.closest('.declaration-card') || input.closest('.retired-gov-question') || input.parentElement;
             container.appendChild(guidance);
         } else if (input.type === 'file') {
             const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentElement;
@@ -2050,6 +2064,8 @@
         } else if (input.tagName === 'TEXTAREA') {
             // Place directly after the textarea (before word counters if any)
             input.insertAdjacentElement('afterend', guidance);
+        } else if (input.tagName === 'DIV') {
+            input.appendChild(guidance);
         } else {
             container.appendChild(guidance);
         }
@@ -2068,7 +2084,7 @@
             }
         }
         
-        const fieldContainer = input.closest('.form-group') || input.closest('td') || input.closest('.category-card-v2') || input.parentElement;
+        const fieldContainer = input.closest('.form-group') || input.closest('td') || input.closest('.category-card-v2') || input.closest('.declaration-card') || input.closest('.retired-gov-question') || input.parentElement;
         if (fieldContainer) {
             const existing = fieldContainer.querySelectorAll('.error-guidance');
             existing.forEach(el => el.remove());
@@ -2119,6 +2135,11 @@
                     } else {
                         isInvalid = true;
                     }
+                }
+                
+                if (input.hasAttribute('data-file-error')) {
+                    isInvalid = true;
+                    customMsg = input.getAttribute('data-file-error');
                 }
             } else if (isEmpty) {
                 if (input.hasAttribute('required')) isInvalid = true;
@@ -2207,6 +2228,44 @@
         }
     }
 
+    function handleMembershipChange(element) {
+        const row = element.closest('tr');
+        const status = row.querySelector('[name="membership_duration[]"]');
+        const fromYear = row.querySelector('[name="membership_year[]"]');
+        const toYear = row.querySelector('[name="membership_to_year[]"]');
+
+        if (!status || !fromYear || !toYear) return;
+
+        hideFieldError(status);
+        hideFieldError(fromYear);
+        hideFieldError(toYear);
+
+        // 1. Lifetime Status Logic
+        if (status.value === 'Lifetime') {
+            toYear.value = '';
+            toYear.disabled = true;
+            toYear.style.backgroundColor = '#f1f5f9';
+            toYear.removeAttribute('required');
+        } else {
+            toYear.disabled = false;
+            toYear.style.backgroundColor = '';
+        }
+
+        // 2. Chronological Validation Logic
+        if (status.value !== 'Lifetime' && fromYear.value && toYear.value && toYear.value !== 'Present') {
+            const from = parseInt(fromYear.value);
+            const to = parseInt(toYear.value);
+            if (to < from) {
+                showFieldError(element, '"To Year" cannot be earlier than "From Year".');
+                if (element.name === 'membership_to_year[]') {
+                    toYear.value = '';
+                } else {
+                    fromYear.value = '';
+                }
+            }
+        }
+    }
+
     function validateSection(step) {
         const section = document.getElementById('step-' + step);
         if (!section) return true;
@@ -2233,7 +2292,8 @@
                 const projects = group ? group.querySelectorAll('.project-card') : [];
                 if (projects.length === 0) {
                     valid = false;
-                    showToast(`Please add at least one project for ${cat}.`, "error");
+                    if (group) showFieldError(group, `Please add at least one project for ${cat}.`);
+                    if (!firstInvalid && group) firstInvalid = group;
                     break;
                 }
                 const firstProjName = projects[0].querySelector('[name="project_name_cat1[]"]');
@@ -2257,9 +2317,12 @@
                     
                     if (catUploads < 2) {
                         valid = false;
-                        showToast(`Please upload at least 2 reports for ${cat}.`, "error");
-                        const firstInput = group.querySelector('input[name="audit_report"]');
-                        if (firstInput && !firstInvalid) firstInvalid = firstInput;
+                        const emptyInput = Array.from(reports).find(inp => inp.getAttribute('data-has-file') !== 'true' && (!inp.files || inp.files.length === 0));
+                        if (emptyInput) {
+                            const customErr = emptyInput.getAttribute('data-file-error');
+                            showFieldError(emptyInput, customErr || "This field is required.");
+                            if (!firstInvalid) firstInvalid = emptyInput;
+                        }
                         break;
                     }
                 }
@@ -2270,11 +2333,11 @@
             const categories = section.querySelectorAll('input[name="cert_category[]"]:checked');
             if (categories.length === 0) {
                 valid = false;
-                showToast("Please select at least one certification category.", "error");
                 const gridElem = section.querySelector('.cat-container-v2');
                 if (gridElem) {
                     gridElem.classList.add('field-invalid');
                     gridElem.classList.add('field-error-pulse');
+                    showFieldError(gridElem, "Please select at least one certification category.");
                     if (!firstInvalid) firstInvalid = gridElem;
                 }
             }
@@ -2307,29 +2370,41 @@
             const retiredRadio = section.querySelector('input[name="decl_retired_gov"]:checked');
             if (!retiredRadio) {
                 valid = false;
-                const radioGroup = section.querySelector('.retired-gov-question');
                 showFieldError(section.querySelector('input[name="decl_retired_gov"]'), "This field is required.");
                 if (!firstInvalid) firstInvalid = section.querySelector('input[name="decl_retired_gov"]');
             } else {
                 const retiredVal = retiredRadio.value;
-                const check1 = section.querySelector('input[name="declaration_consent_1"]');
-                const check2 = section.querySelector('input[name="declaration_consent_2"]');
+                const check1 = section.querySelector('input[name="declaration_consent_1"]'); // General (Second)
+                const check2 = section.querySelector('input[name="declaration_consent_2"]'); // Gov (First)
                 
-                if (retiredVal === 'Yes' && !check1.checked) {
-                    valid = false;
-                    showFieldError(check1, "This field is required.");
-                    if (!firstInvalid) firstInvalid = check1;
-                } else if (retiredVal === 'No' && !check2.checked) {
-                    valid = false;
-                    showFieldError(check2, "This field is required.");
-                    if (!firstInvalid) firstInvalid = check2;
+                if (retiredVal === 'Yes') {
+                    // BOTH are mandatory
+                    if (!check2.checked) {
+                        valid = false;
+                        showFieldError(check2, "This field is required.");
+                        if (!firstInvalid) firstInvalid = check2;
+                    }
+                    if (!check1.checked) {
+                        valid = false;
+                        showFieldError(check1, "This field is required.");
+                        if (!firstInvalid) firstInvalid = check1;
+                    }
+                } else {
+                    // retiredVal === 'No' - Only General (Second) is required
+                    if (!check1.checked) {
+                        valid = false;
+                        showFieldError(check1, "This field is required.");
+                        if (!firstInvalid) firstInvalid = check1;
+                    }
                 }
             }
         }
 
 
         if (!valid) {
-            showToast("Please correct the highlighted fields to proceed.", "error");
+            if (step !== 14) {
+                showToast("Please correct the highlighted fields to proceed.", "error");
+            }
             if (firstInvalid) {
                 const rect = firstInvalid.getBoundingClientRect();
                 const absoluteTop = rect.top + window.pageYOffset;
@@ -2418,11 +2493,17 @@
         
         // Reset values
         newCard.querySelectorAll('input, select, textarea').forEach(el => {
-            if (el.type === 'file') {
-                el.value = '';
-            } else {
-                el.value = '';
-            }
+            el.value = '';
+            el.classList.remove('field-invalid');
+            el.classList.remove('field-error-pulse');
+        });
+
+        // Clear file upload specific states
+        newCard.querySelectorAll('.success-tick').forEach(t => t.remove());
+        newCard.querySelectorAll('.error-guidance').forEach(t => t.remove());
+        newCard.querySelectorAll('.upload-container').forEach(cont => {
+            cont.style.borderColor = '';
+            cont.style.backgroundColor = '';
         });
         
         // Reset dynamic Other Proof options
@@ -2433,6 +2514,28 @@
         });
         
         container.appendChild(newCard);
+        updateExperienceIndices();
+    }
+
+    function removeExperienceRow(btn) {
+        const card = btn.closest('.experience-card');
+        if (card) {
+            card.remove();
+            updateExperienceIndices();
+            autoSave();
+        }
+    }
+
+    function updateExperienceIndices() {
+        const container = document.getElementById('experienceContainer');
+        const cards = container.querySelectorAll('.experience-card');
+        cards.forEach((card, idx) => {
+            const removeBtn = card.querySelector('.remove-experience-btn');
+            if (removeBtn) {
+                // First card never deletable, others deletable if total > 1
+                removeBtn.style.display = (cards.length > 1 && idx > 0) ? 'flex' : 'none';
+            }
+        });
     }
 
 
@@ -2967,6 +3070,7 @@
                 setVal('email', draftData.email);
                 setVal('mobile', draftData.mobile);
                 setVal('alt_mobile', draftData.alt_mobile);
+                applyMobileMasks(); // Apply masking after restoring values
                 setVal('gender', draftData.gender);
                 setVal('dob', draftData.dob);
                 setVal('parent_relation', draftData.parent_relation);
@@ -3932,6 +4036,8 @@
     }
 
     async function validateFileUpload(input) {
+        if (!input) return;
+
         // Special check for ID Proof upload - ensure ID Type is selected first
         if (input.id === 'govIdUpload') {
             const idTypeSelect = document.getElementById('govIdType');
@@ -3947,6 +4053,7 @@
         const file = input.files[0];
         if (!file) {
             input.removeAttribute('data-has-file');
+            input.removeAttribute('data-file-error');
             refreshFileUI(input);
 
             if (input.hasAttribute('required')) {
@@ -3966,7 +4073,7 @@
         let typeLabel = "PDF";
         
         if (input.name === 'applicant_photo' || input.name === 'signature_file') {
-            maxMB = 0.5; // 500KB
+            maxMB = 500 / 1024; // 500KB exactly
             typeLabel = "JPG, PNG";
         } else if (input.name === 'audit_report' || input.name.includes('report')) {
             maxMB = 10;
@@ -3998,9 +4105,9 @@
         }
 
         if (!isValid) {
-            showToast(errorMsg, "error");
             input.value = "";
             input.removeAttribute('data-has-file');
+            input.setAttribute('data-file-error', errorMsg);
             // If it's a size or type error, we show it via showFieldError and keep the hint original
             if (input.id === 'govIdUpload') {
                 hint.innerHTML = 'PDF 2MB';
@@ -4010,11 +4117,13 @@
             return;
         }
 
+        input.removeAttribute('data-file-error');
+
         // --- GOV ID OCR & AUTO-FILL LOGIC ---
         if (input.id === 'govIdUpload') {
             const idType = document.getElementById('govIdType').value;
             if (!idType) {
-                showToast("Please select ID Type first.", "warning");
+                showFieldError(input, "Please select ID Type first.");
                 input.value = "";
                 return;
             }
@@ -4087,7 +4196,6 @@
                         warnMsg = "Unable to auto-detect ID number. Please enter manually or upload a clearer document.";
                     }
 
-                    showToast(warnMsg, "warning");
                     hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
                     input.setAttribute('data-has-file', 'true'); // Still count as uploaded even if OCR fails
                     hideFieldError(input);
@@ -4095,7 +4203,6 @@
             } catch (err) {
                 console.error("OCR Error:", err);
                 let warnMsg = `Unable to detect ID number. Please enter manually.`;
-                showToast(warnMsg, "warning");
                 hint.innerHTML = `<span style="color: #c53030; font-weight: 600;">⚠️ ${warnMsg}</span>`;
                 input.setAttribute('data-has-file', 'true'); 
                 hideFieldError(input);
@@ -4283,6 +4390,7 @@
     let originalIdValue = "";
     let originalConfirmValue = "";
     let originalMobile = "";
+    let originalAltMobile = "";
 
     function maskAadhaar(value) {
         if (!value || value.length < 4) return value;
@@ -4337,8 +4445,23 @@
         return "XXXXXX" + value.slice(-4);
     }
 
+    function applyMobileMasks() {
+        const mobileInput = document.getElementById('mobile');
+        if (mobileInput && mobileInput.value && !mobileInput.value.includes('XXXX')) {
+            originalMobile = mobileInput.value;
+            mobileInput.value = maskMobile(originalMobile);
+        }
+        
+        const altMobileInput = document.querySelector('input[name="alt_mobile"]');
+        if (altMobileInput && altMobileInput.value && !altMobileInput.value.includes('XXXX')) {
+            originalAltMobile = altMobileInput.value;
+            altMobileInput.value = maskMobile(originalAltMobile);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
+        updateExperienceIndices();
 
         // Step 14: Retired Govt Employee & Declaration Sync
         const retiredRadios = document.querySelectorAll('input[name="decl_retired_gov"]');
@@ -4426,20 +4549,34 @@
         }
         
         const mobileInput = document.getElementById('mobile');
+        const altMobileInput = document.querySelector('input[name="alt_mobile"]');
+
         if (mobileInput) {
-            originalMobile = mobileInput.value;
-            mobileInput.value = maskMobile(originalMobile);
-            
             mobileInput.addEventListener('focus', function() {
                 if (originalMobile) this.value = originalMobile;
             });
             mobileInput.addEventListener('blur', function() {
-                if (this.value && this.value !== maskMobile(originalMobile)) {
+                if (this.value && this.value !== maskMobile(originalMobile) && !this.value.includes('XXXX')) {
                     originalMobile = this.value;
                 }
                 this.value = maskMobile(originalMobile);
             });
         }
+
+        if (altMobileInput) {
+            altMobileInput.addEventListener('focus', function() {
+                if (originalAltMobile) this.value = originalAltMobile;
+            });
+            altMobileInput.addEventListener('blur', function() {
+                if (this.value && this.value !== maskMobile(originalAltMobile) && !this.value.includes('XXXX')) {
+                    originalAltMobile = this.value;
+                }
+                this.value = maskMobile(originalAltMobile);
+            });
+        }
+        
+        // Initial mask on load
+        applyMobileMasks();
         
         // --- DOB LIMIT FIX ---
         const dobInput = document.getElementById('dob');
@@ -4580,16 +4717,22 @@
                 }
 
                 if (!allowedTypes.includes(file.type)) {
-                    alert("Only JPG and PNG files are allowed.");
+                    const errorMsg = "Only JPG and PNG files are allowed.";
                     fileInput.value = "";
+                    fileInput.setAttribute('data-file-error', errorMsg);
+                    showFieldError(fileInput, errorMsg);
                     return;
                 }
 
-                if (file.size > 2 * 1024 * 1024) {
-                    alert("File size must be less than 2MB.");
+                if (file.size > 500 * 1024) {
+                    const errorMsg = "File must be less than 500 KB";
                     fileInput.value = "";
+                    fileInput.setAttribute('data-file-error', errorMsg);
+                    showFieldError(fileInput, errorMsg);
                     return;
                 }
+
+                fileInput.removeAttribute('data-file-error');
 
                 // Show loading state if possible
                 if (subtitle) subtitle.innerText = "Analyzing image...";
@@ -4611,14 +4754,14 @@
                             photoError.style.display = 'block';
                             photoError.style.color = '#c53030';
                         }
-                        showToast(errorMsg, "error");
                         fileInput.value = "";
                         if (preview) {
                             preview.src = "";
                             preview.style.display = 'none';
                             const placeholder = preview.previousElementSibling;
-                            if (placeholder) placeholder.style.display = 'block';
+                            if (placeholder) placeholder.style.display = 'flex';
                         }
+                        showFieldError(fileInput, errorMsg);
                         if (subtitle) {
                             subtitle.style.display = 'block';
                             subtitle.innerText = "Click to browse image";
