@@ -1779,22 +1779,28 @@
         let groupName = "";
         let stepInGroup = 0;
         let totalInGroup = 0;
+        let groupStartStep = 1;
+        
         if (currentStep >= 1 && currentStep <= 4) {
             groupName = "Personal & Identity";
             stepInGroup = currentStep;
             totalInGroup = 4;
+            groupStartStep = 1;
         } else if (currentStep >= 5 && currentStep <= 8) {
             groupName = "Qualifications";
             stepInGroup = currentStep - 4;
             totalInGroup = 4;
+            groupStartStep = 5;
         } else if (currentStep >= 9 && currentStep <= 12) {
             groupName = "Experience & Projects";
             stepInGroup = currentStep - 8;
             totalInGroup = 4;
+            groupStartStep = 9;
         } else if (currentStep >= 13 && currentStep <= 15) {
             groupName = "Documents & Review";
             stepInGroup = currentStep - 12;
             totalInGroup = 3;
+            groupStartStep = 13;
         }
 
         // Update Sub Stepper UI
@@ -1806,10 +1812,12 @@
         if (subStepCircles) {
             let circlesHtml = "";
             for (let i = 1; i <= totalInGroup; i++) {
+                const globalStepNum = groupStartStep + i - 1;
                 let statusClass = "";
-                if (i < stepInGroup) statusClass = "completed";
-                else if (i === stepInGroup) statusClass = "active";
-                circlesHtml += `<div class="sub-circle ${statusClass}">${i < stepInGroup ? '✓' : i}</div>`;
+                if (globalStepNum < currentStep) statusClass = "completed";
+                else if (globalStepNum === currentStep) statusClass = "active";
+                
+                circlesHtml += `<div class="sub-circle ${statusClass}">${globalStepNum < currentStep ? '✓' : globalStepNum}</div>`;
             }
             subStepCircles.innerHTML = circlesHtml;
         }
@@ -1839,16 +1847,17 @@
         // Update Sidebar items
         document.querySelectorAll('.nav-item').forEach((item, idx) => {
             const stepNum = idx + 1;
-            item.classList.toggle('active', stepNum === currentStep);
             
-            if (stepNum <= maxReachedStep) {
+            if (stepNum === currentStep) {
+                item.classList.add('active');
+                item.classList.remove('completed', 'locked');
+            } else if (stepNum < currentStep) {
                 item.classList.add('completed');
-                item.classList.remove('locked');
-            } else if (stepNum === maxReachedStep + 1) {
-                item.classList.remove('locked', 'completed');
+                item.classList.remove('active', 'locked');
             } else {
+                // Future steps
+                item.classList.remove('active', 'completed');
                 item.classList.add('locked');
-                item.classList.remove('completed');
             }
         });
 
