@@ -3200,3 +3200,6 @@ input[type="file"] {
         padding: 10px 4px !important;
     }
 }
+
+.upload-container { display: inline-flex; align-items: center; }
+.upload-container + .file-validation-hint { display: inline-flex; align-items: center; margin-top: 0 !important; margin-left: 12px; }

@@ -2253,11 +2253,11 @@
                 if (group) {
                     const reports = group.querySelectorAll('input[name="audit_report"]');
                     let catUploads = 0;
-                    reports.forEach(inp => { if (inp.files && inp.files.length > 0) catUploads++; });
+                    reports.forEach(inp => { if (inp.getAttribute('data-has-file') === 'true' || (inp.files && inp.files.length > 0)) catUploads++; });
                     
-                    if (catUploads < 1) {
+                    if (catUploads < 2) {
                         valid = false;
-                        showToast(`Please upload at least one report for ${cat}.`, "error");
+                        showToast(`Please upload at least 2 reports for ${cat}.`, "error");
                         const firstInput = group.querySelector('input[name="audit_report"]');
                         if (firstInput && !firstInvalid) firstInvalid = firstInput;
                         break;
@@ -2908,19 +2908,38 @@
     function refreshFileUI(input) {
         if (!input) return;
         const isUploaded = input.getAttribute('data-has-file') === 'true' || (input.files && input.files.length > 0);
+        
+        const uploadContainer = input.closest('.upload-container');
+        if (!uploadContainer) return;
+
+        let tick = uploadContainer.querySelector('.success-tick');
+        const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentNode;
+        const hint = fieldContainer.querySelector('.file-validation-hint, .identity-hint');
+
         if (isUploaded) {
-            const fieldContainer = input.closest('.form-group') || input.closest('td') || input.parentNode;
-            let hint = fieldContainer.querySelector('.file-validation-hint, .identity-hint');
-            if (!hint) {
-                hint = document.createElement('div');
-                hint.className = 'file-validation-hint';
-                hint.style.fontSize = '0.72rem';
-                hint.style.color = 'var(--muted)';
-                hint.style.marginTop = '4px';
-                fieldContainer.appendChild(hint);
+            if (!tick) {
+                tick = document.createElement('div');
+                tick.className = 'success-tick';
+                tick.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+                
+                uploadContainer.style.display = 'flex';
+                uploadContainer.style.alignItems = 'center';
+                uploadContainer.style.gap = '12px';
+                uploadContainer.style.justifyContent = 'space-between';
+                uploadContainer.appendChild(tick);
             }
-            hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
             input.removeAttribute('required');
+            
+            if (hint && hint !== tick) {
+                if (!hint.innerHTML.includes('warnMsg') && !hint.innerHTML.includes('spinner')) {
+                    hint.style.display = 'none';
+                }
+            }
+        } else {
+            if (tick) tick.remove();
+            if (hint && hint !== tick) {
+                hint.style.display = '';
+            }
         }
     }
 
@@ -2977,7 +2996,6 @@
                 // Photo Handling
                 const photoInput = document.querySelector('[name="applicant_photo"]');
                 if (draftData.hasPhoto && photoInput) {
-                    photoInput.setAttribute('data-has-file', 'true');
                     const preview = document.getElementById('photoPreview');
                     const placeholder = document.getElementById('photoPlaceholder');
                     if (draftData.photoUrl && preview && placeholder) {
@@ -2992,24 +3010,27 @@
                 // Basic File Ticks
                 const govIdInp = document.querySelector('[name="gov_id_upload"]');
                 if (draftData.hasGovId && govIdInp) {
-                    govIdInp.setAttribute('data-has-file', 'true');
                     if (draftData.govIdUrl) govIdInp.setAttribute('data-file-url', draftData.govIdUrl);
-                    refreshFileUI(govIdInp);
                 }
                 const otherEncInp = document.querySelector('[name="other_enclosure"]');
                 if (draftData.hasOtherEnclosure && otherEncInp) {
-                    otherEncInp.setAttribute('data-has-file', 'true');
                     if (draftData.otherEnclosureUrl) otherEncInp.setAttribute('data-file-url', draftData.otherEnclosureUrl);
-                    refreshFileUI(otherEncInp);
                 }
             });
 
             safeRestore('Categories', () => {
                 if (draftData.categories) {
                     document.querySelectorAll('input[name="cert_category[]"]').forEach(cb => {
-                        cb.checked = draftData.categories.includes(cb.value);
+                        const isChecked = draftData.categories.includes(cb.value);
+                        if (cb.checked !== isChecked) {
+                            cb.checked = isChecked;
+                        }
+                        // Always dispatch change event to ensure dependent sections, 
+                        // fee calculations, and conditional logic sync correctly globally.
+                        cb.dispatchEvent(new Event('change'));
                     });
-                    syncCategoryGroups(); // Vital to restore Step 5 & 6 containers
+                    // syncCategoryGroups is already called via the change event above, 
+                    // but we can leave it or it will just be redundant (which is harmless).
                 }
             });
 
@@ -3029,9 +3050,7 @@
                                 if (edu.hasFile) {
                                     const fileInp = row.querySelector('[name="edu_cert[]"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (edu.fileUrl) fileInp.setAttribute('data-file-url', edu.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             }
@@ -3057,9 +3076,7 @@
                                 if (exp.hasFile) {
                                     const fileInp = card.querySelector('[name="exp_proof[]"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (exp.fileUrl) fileInp.setAttribute('data-file-url', exp.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             }
@@ -3112,9 +3129,7 @@
                                 if (rData.hasFile && rows[idx]) {
                                     const fileInp = rows[idx].querySelector('input[type="file"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (rData.fileUrl) fileInp.setAttribute('data-file-url', rData.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             });
@@ -3163,9 +3178,7 @@
                             if (t.hasFile) {
                                 const fileInp = targetRow.querySelector('input[type="file"]');
                                 if (fileInp) {
-                                    fileInp.setAttribute('data-has-file', 'true');
                                     if (t.fileUrl) fileInp.setAttribute('data-file-url', t.fileUrl);
-                                    refreshFileUI(fileInp);
                                 }
                             }
                         }
@@ -3189,9 +3202,7 @@
                                 if (m.hasFile) {
                                     const fileInp = row.querySelector('input[type="file"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (m.fileUrl) fileInp.setAttribute('data-file-url', m.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             }
@@ -3216,9 +3227,7 @@
                                 if (p.hasFile) {
                                     const fileInp = row.querySelector('input[type="file"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (p.fileUrl) fileInp.setAttribute('data-file-url', p.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             }
@@ -3242,9 +3251,7 @@
                                 if (a.hasFile) {
                                     const fileInp = row.querySelector('input[type="file"]');
                                     if (fileInp) {
-                                        fileInp.setAttribute('data-has-file', 'true');
                                         if (a.fileUrl) fileInp.setAttribute('data-file-url', a.fileUrl);
-                                        refreshFileUI(fileInp);
                                     }
                                 }
                             }
@@ -3279,9 +3286,7 @@
                     
                     const payRecInp = document.querySelector('[name="payment_receipt"]');
                     if (draftData.hasPaymentReceipt && payRecInp) {
-                        payRecInp.setAttribute('data-has-file', 'true');
                         if (draftData.paymentReceiptUrl) payRecInp.setAttribute('data-file-url', draftData.paymentReceiptUrl);
-                        refreshFileUI(payRecInp);
                     }
                 }
             });
@@ -3300,9 +3305,7 @@
                     }
                     const sigInp = document.querySelector('[name="signature_file"]');
                     if (draftData.declaration.hasFile && sigInp) {
-                        sigInp.setAttribute('data-has-file', 'true');
                         if (draftData.declaration.fileUrl) sigInp.setAttribute('data-file-url', draftData.declaration.fileUrl);
-                        refreshFileUI(sigInp);
                     }
                 }
             });
@@ -3935,17 +3938,16 @@
             if (idTypeSelect && !idTypeSelect.value) {
                 showFieldError(input, "Please select ID Type first.");
                 input.value = ''; // Clear the file selection
+                input.removeAttribute('data-has-file');
+                refreshFileUI(input);
                 return;
             }
         }
 
         const file = input.files[0];
         if (!file) {
-            // If we already had a file (e.g. from draft or previous upload), don't show error on cancel
-            if (input.getAttribute('data-has-file') === 'true') {
-                hideFieldError(input);
-                return;
-            }
+            input.removeAttribute('data-has-file');
+            refreshFileUI(input);
 
             if (input.hasAttribute('required')) {
                 showFieldError(input, "This field is required.");
@@ -4004,6 +4006,7 @@
                 hint.innerHTML = 'PDF 2MB';
             }
             showFieldError(input, errorMsg);
+            refreshFileUI(input);
             return;
         }
 
@@ -4073,9 +4076,10 @@
                     applyIdMask();
                     validateAadhaarMatch();
                     
-                    hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
                     input.setAttribute('data-has-file', 'true');
                     hideFieldError(input);
+                    if (hint) { hint.innerHTML = 'PDF 2MB'; }
+                    refreshFileUI(input);
                     showToast(`${typeName} detected & verified.`, "success");
                 } else {
                     let warnMsg = `Unable to detect ID number. Please enter manually.`;
@@ -4097,9 +4101,10 @@
                 hideFieldError(input);
             }
         } else {
-            hint.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background-color: #22c55e; border-radius: 50%; color: white; box-shadow: 0 2px 4px rgba(34, 197, 94, 0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
             input.setAttribute('data-has-file', 'true');
             hideFieldError(input);
+            if (hint && input.id === 'govIdUpload') { hint.innerHTML = 'PDF 2MB'; }
+            refreshFileUI(input);
         }
     }
 
@@ -5204,7 +5209,8 @@
             group.querySelector('.category-group-title span').textContent = category;
             
             document.getElementById('reportContainerGrouped').appendChild(group);
-            addReportRowGrouped(group); // Add initial report
+            addReportRowGrouped(group); // Add initial report 1
+            addReportRowGrouped(group); // Add initial report 2
         }
 
         // Attach listeners to Step 2 checkboxes dynamically
@@ -5266,15 +5272,19 @@
         const clone = template.content.cloneNode(true);
         const row = clone.querySelector('.report-row');
         
-        row.querySelector('.report-label').innerHTML = `Report ${currentCount + 1} ${currentCount === 0 ? '<span class="req">*</span>' : '(Optional)'}`;
+        row.querySelector('.report-label').innerHTML = `Report ${currentCount + 1} ${currentCount < 2 ? '<span class="req">*</span>' : '(Optional)'}`;
         row.querySelector('.report-category-hidden').value = category;
         
-        if (currentCount > 0) {
+        if (currentCount >= 2) {
             row.querySelector('.remove-report-btn').style.display = 'block';
             row.querySelector('input[type="file"]').removeAttribute('required');
+        } else {
+            row.querySelector('.remove-report-btn').style.display = 'none';
+            row.querySelector('input[type="file"]').setAttribute('required', 'required');
         }
         
         listContainer.appendChild(row);
+        updateReportStatsGrouped(groupElement);
     }
 
     function removeReportRowGrouped(btn) {
@@ -5284,9 +5294,13 @@
         // Re-index
         const rows = group.querySelectorAll('.report-row');
         rows.forEach((row, i) => {
-            row.querySelector('.report-label').innerHTML = `Report ${i + 1} ${i === 0 ? '<span class="req">*</span>' : '(Optional)'}`;
-            row.querySelector('.remove-report-btn').style.display = i === 0 ? 'none' : 'block';
-            if (i === 0) row.querySelector('input[type="file"]').setAttribute('required', 'required');
+            row.querySelector('.report-label').innerHTML = `Report ${i + 1} ${i < 2 ? '<span class="req">*</span>' : '(Optional)'}`;
+            row.querySelector('.remove-report-btn').style.display = i < 2 ? 'none' : 'block';
+            if (i < 2) {
+                row.querySelector('input[type="file"]').setAttribute('required', 'required');
+            } else {
+                row.querySelector('input[type="file"]').removeAttribute('required');
+            }
         });
     }
 
