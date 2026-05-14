@@ -161,7 +161,19 @@
 
         <!-- Mobile Menu Overlay -->
         <div class="mobile-menu-overlay d-lg-none" id="mobileMenu">
-             <div class="p-4 pt-5">
+             <div class="l-drawer-header">
+                 <div class="d-flex align-items-center gap-3">
+                     <img src="/images/eada_logo.png" alt="EADA" style="height: 40px; width: auto;">
+                     <div class="l-brand-text">
+                         <span class="l-brand-hindi" style="font-size: 0.9rem;">ई. ए. डी. ए.</span>
+                         <span class="l-brand-english" style="font-size: 1rem;">EADA</span>
+                     </div>
+                 </div>
+                 <button class="btn btn-link p-2 text-dark" onclick="toggleMobileMenu()">
+                     <i data-lucide="x" style="width: 28px; height: 28px; color: var(--l-primary);"></i>
+                 </button>
+             </div>
+             <div class="p-4">
                 <nav class="d-flex flex-column gap-4 mb-5">
                     <a asp-controller="Home" asp-action="Index" class="l-nav-link fs-4 fw-bold" onclick="toggleMobileMenu()">Home</a>
                     <div class="mobile-dropdown">

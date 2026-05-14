@@ -1020,13 +1020,13 @@
                                 <div>
                                     <label class="field-label-premium">From</label>
                                     <div style="display: flex; gap: 8px;">
-                                        <select class="exp-start-month" style="flex: 1;">
+                                        <select class="exp-start-month" style="flex: 1;" required>
                                             <option value="">Month</option>
                                             @foreach(var month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }) {
                                                 <option>@month</option>
                                             }
                                         </select>
-                                        <select class="exp-start-year" style="flex: 1.2;">
+                                        <select class="exp-start-year" style="flex: 1.2;" required>
                                             <option value="">Year</option>
                                             @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
                                         </select>
@@ -1035,16 +1035,16 @@
                                 <div>
                                     <label class="field-label-premium">To</label>
                                     <div style="display: flex; gap: 8px;">
-                                        <select class="exp-end-month" style="flex: 1;">
+                                        <select class="exp-end-month" style="flex: 1;" required>
                                             <option value="">Month</option>
                                             <option>Present</option>
                                             @foreach(var month in new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }) {
                                                 <option>@month</option>
                                             }
                                         </select>
-                                        <select class="exp-end-year" style="flex: 1.2;">
+                                        <select class="exp-end-year" style="flex: 1.2;" required>
                                             <option value="">Year</option>
-                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                            @for(int y = DateTime.Now.Year + 10; y >= 1970; y--) { <option>@y</option> }
                                         </select>
                                     </div>
                                     <input type="hidden" name="exp_duration[]" class="exp-duration-hidden" />
@@ -1066,10 +1066,13 @@
                                         <input type="text" class="other-proof-input" placeholder="Specify Document Type" oninput="updateOtherProofValue(this)" />
                                     </div>
                                 </div>
-                                <div class="upload-container">
-                                    <input type="file" name="exp_proof[]" accept=".pdf" required onchange="validateFileUpload(this)" />
+                                <div>
+                                    <label class="field-label-premium">&nbsp;</label>
+                                    <div class="upload-container">
+                                        <input type="file" name="exp_proof[]" accept=".pdf" required onchange="validateFileUpload(this)" />
+                                    </div>
+                                    <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                                 </div>
-                                <div class="file-validation-hint" style="font-size: 0.72rem; color: var(--muted); margin-top: 4px;">PDF 2MB</div>
                             </div>
 
                             <div>
@@ -1266,7 +1269,7 @@
                                     <th style="width: 60px; text-align: center;">S. No.</th>
                                     <th>Name of Certification</th>
                                     <th>Issuing Authority / Obtained from</th>
-                                    <th style="width: 180px;">Validity Status</th>
+                                    <th style="width: 180px;">Status</th>
                                     <th style="width: 120px;">Year</th>
                                     <th style="width: 250px;">Proof of Certification</th>
                                 </tr>
@@ -1287,7 +1290,7 @@
                                     <td>
                                         <select name="training_year[]">
                                             <option value="">Year</option>
-                                            @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                            @for(int y = DateTime.Now.Year + 10; y >= 1970; y--) { <option>@y</option> }
                                         </select>
                                     </td>
                                     <td>
@@ -1332,8 +1335,8 @@
                                 <td>
                                     <select name="membership_duration[]" onchange="handleMembershipChange(this)">
                                         <option value="">Select Status</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
+                                        <option value="Valid">Valid</option>
+                                        <option value="Expired">Expired</option>
                                         <option value="Lifetime">Lifetime</option>
                                     </select>
                                 </td>
@@ -1347,7 +1350,7 @@
                                     <select name="membership_to_year[]" onchange="handleMembershipChange(this)">
                                         <option value="">Year</option>
                                         <option value="Present">Present</option>
-                                        @for(int y = DateTime.Now.Year; y >= 1970; y--) { <option>@y</option> }
+                                        @for(int y = DateTime.Now.Year + 10; y >= 1970; y--) { <option>@y</option> }
                                     </select>
                                 </td>
                                 <td>
@@ -1664,10 +1667,6 @@
                         </div>
 
                         <div class="submit-actions-wrap" style="margin-top: 32px; display: flex; flex-direction: column; align-items: flex-end; gap: 16px;">
-                            <div style="display: flex; gap: 12px; justify-content: flex-end; align-items: center;">
-                                <button type="button" class="btn btn-ghost" style="padding: 10px 24px; font-size: 0.9rem;" onclick="clearChecklist()">Clear</button>
-                                <button id="submitFinalApplicationBtn" type="button" class="btn" style="background: #0E5A3C; color: white; padding: 10px 32px; font-size: 0.9rem; border-radius: 8px;" disabled>Submit Application</button>
-                            </div>
                             <p style="color: var(--muted); font-size: 0.85rem; text-align: left; max-width: 100%; margin: 0; line-height: 1.5;">
                                 By submitting, you consent to EADA verifying your credentials and contacting you via email/SMS/portal notifications.
                             </p>
@@ -1693,6 +1692,7 @@
         <div style="display: flex; gap: 12px; align-items: center;">
             <button type="button" id="btnSaveDraft" class="btn btn-ghost" onclick="saveDraft()">Save Draft</button>
             <button type="button" id="btnNext" class="btn btn-primary" onclick="nextStep()" style="background: #0E5A3C; color: white; border: none; box-shadow: 0 4px 12px rgba(14, 90, 60, 0.3); border-radius: 8px;">Next Section</button>
+            <button id="submitFinalApplicationBtn" type="button" class="btn" style="background: #0E5A3C; color: white; padding: 10px 32px; font-size: 0.9rem; border-radius: 8px; display: none;" disabled>Submit Application</button>
         </div>
     </div>
 </div>
@@ -1875,12 +1875,15 @@
         
         // Final Submit Logic
         const nextBtn = document.getElementById('btnNext');
+        const submitBtn = document.getElementById('submitFinalApplicationBtn');
         if (currentStep === totalSteps) {
             nextBtn.style.display = 'none';
+            if (submitBtn) submitBtn.style.display = 'inline-block';
             populateReviewSummary(); // Refresh review data when on last step
         } else {
             nextBtn.style.display = 'inline-block';
-            nextBtn.textContent = (currentStep === totalSteps - 1) ? 'Go to Review' : 'Next Section';
+            if (submitBtn) submitBtn.style.display = 'none';
+            nextBtn.textContent = (currentStep === totalSteps - 1) ? 'Go to Preview' : 'Next Section';
         }
 
         // Scroll
@@ -2236,20 +2239,12 @@
 
         if (!status || !fromYear || !toYear) return;
 
+        // Use global sync logic for disabling fields
+        syncValidityStatusLogic(status);
+
         hideFieldError(status);
         hideFieldError(fromYear);
         hideFieldError(toYear);
-
-        // 1. Lifetime Status Logic
-        if (status.value === 'Lifetime') {
-            toYear.value = '';
-            toYear.disabled = true;
-            toYear.style.backgroundColor = '#f1f5f9';
-            toYear.removeAttribute('required');
-        } else {
-            toYear.disabled = false;
-            toYear.style.backgroundColor = '';
-        }
 
         // 2. Chronological Validation Logic
         if (status.value !== 'Lifetime' && fromYear.value && toYear.value && toYear.value !== 'Present') {
@@ -2357,6 +2352,20 @@
                 }
             }
 
+            // Additional check for individual experience rows validation
+            const cards = section.querySelectorAll('.experience-card');
+            cards.forEach(card => {
+                const sMonth = card.querySelector('.exp-start-month');
+                const sYear = card.querySelector('.exp-start-year');
+                const eMonth = card.querySelector('.exp-end-month');
+                const eYear = card.querySelector('.exp-end-year');
+                
+                if (sMonth && !validateField(sMonth)) { valid = false; if (!firstInvalid) firstInvalid = sMonth; }
+                if (sYear && !validateField(sYear)) { valid = false; if (!firstInvalid) firstInvalid = sYear; }
+                if (eMonth && !validateField(eMonth)) { valid = false; if (!firstInvalid) firstInvalid = eMonth; }
+                if (eYear && !validateField(eYear)) { valid = false; if (!firstInvalid) firstInvalid = eYear; }
+            });
+
 
             // Note: Sector and Subject selection are now optional.
             const sectorSelect = document.getElementById('sectorSelect');
@@ -2448,7 +2457,10 @@
         if (!tbody) return;
         const row = tbody.querySelector('tr').cloneNode(true);
         
-        row.querySelectorAll('input, select').forEach(el => el.value = '');
+        row.querySelectorAll('input, select').forEach(el => {
+            el.value = '';
+            el.disabled = false;
+        });
         
         // Clear any file hints/previews if cloned from a row with files
         row.querySelectorAll('.file-validation-hint').forEach(hint => hint.innerHTML = '');
@@ -2514,6 +2526,7 @@
         });
         
         container.appendChild(newCard);
+        handleExperienceDateLogic(newCard.querySelector('.exp-start-year')); // Initialize logic for new row
         updateExperienceIndices();
     }
 
@@ -2537,6 +2550,51 @@
             }
         });
     }
+
+    // --- VALIDITY STATUS & YEAR SYNC LOGIC (STEPS 7 & 8) ---
+    function syncValidityStatusLogic(statusEl) {
+        if (!statusEl || statusEl.tagName !== 'SELECT') return;
+        const name = statusEl.name;
+        if (name !== 'training_duration[]' && name !== 'membership_duration[]') return;
+        
+        const row = statusEl.closest('tr');
+        if (!row) return;
+        
+        const yearFields = row.querySelectorAll('select[name*="_year[]"]');
+        
+        if (statusEl.value === 'Expired') {
+            yearFields.forEach(y => {
+                y.value = '';
+                y.disabled = true;
+                y.classList.add('field-disabled');
+                if (typeof hideFieldError === 'function') hideFieldError(y);
+            });
+        } else if (statusEl.value === 'Lifetime' && name === 'membership_duration[]') {
+            // For membership, Lifetime means 'To Year' is not applicable
+            yearFields.forEach(y => {
+                if (y.name === 'membership_to_year[]') {
+                    y.value = '';
+                    y.disabled = true;
+                    y.classList.add('field-disabled');
+                    if (typeof hideFieldError === 'function') hideFieldError(y);
+                } else {
+                    y.disabled = false;
+                    y.classList.remove('field-disabled');
+                }
+            });
+        } else {
+            yearFields.forEach(y => {
+                y.disabled = false;
+                y.classList.remove('field-disabled');
+            });
+        }
+    }
+
+    document.addEventListener('change', function(e) {
+        if (e.target && (e.target.name === 'training_duration[]' || e.target.name === 'membership_duration[]')) {
+            syncValidityStatusLogic(e.target);
+        }
+    });
 
 
 
@@ -2675,6 +2733,8 @@
         if (e.target.matches('.exp-start-month, .exp-start-year, .exp-end-month, .exp-end-year')) {
             const card = e.target.closest('.experience-card');
             if (card) {
+                handleExperienceDateLogic(e.target);
+                
                 const sMonth = card.querySelector('.exp-start-month').value;
                 const sYear = card.querySelector('.exp-start-year').value;
                 const eMonth = card.querySelector('.exp-end-month').value;
@@ -2690,6 +2750,66 @@
             }
         }
     });
+
+    function handleExperienceDateLogic(element) {
+        const card = element.closest('.experience-card');
+        if (!card) return;
+
+        const fromYearSelect = card.querySelector('.exp-start-year');
+        const toMonthSelect = card.querySelector('.exp-end-month');
+        const toYearSelect = card.querySelector('.exp-end-year');
+
+        if (!fromYearSelect || !toMonthSelect || !toYearSelect) return;
+
+        const fromYear = fromYearSelect.value ? parseInt(fromYearSelect.value) : null;
+        const toMonth = toMonthSelect.value;
+        const currentYear = new Date().getFullYear();
+
+        // 1. "Present" behavior
+        if (toMonth === "Present") {
+            toYearSelect.value = currentYear;
+            toYearSelect.disabled = true;
+            toYearSelect.style.backgroundColor = '#f8fafc';
+            toYearSelect.style.cursor = 'not-allowed';
+            hideFieldError(toYearSelect);
+        } else {
+            toYearSelect.disabled = false;
+            toYearSelect.style.backgroundColor = '';
+            toYearSelect.style.cursor = '';
+        }
+
+        // 2. Prevent invalid year selection (To Year < From Year)
+        if (fromYear && toYearSelect.value && toYearSelect.value !== "") {
+            const toYear = parseInt(toYearSelect.value);
+            if (toYear < fromYear) {
+                if (element === toYearSelect || element === toMonthSelect) {
+                    toYearSelect.value = "";
+                    showFieldError(toYearSelect, '"To Year" cannot be earlier than "From Year".');
+                } else if (element === fromYearSelect) {
+                    // Reset To Year if it's now invalid due to From Year change
+                    toYearSelect.value = "";
+                }
+            } else {
+                hideFieldError(toYearSelect);
+            }
+        }
+
+        // 3. Filter/Disable older years in To Year dropdown
+        if (fromYear) {
+            Array.from(toYearSelect.options).forEach(opt => {
+                if (opt.value !== "") {
+                    const optYear = parseInt(opt.value);
+                    if (optYear < fromYear) {
+                        opt.disabled = true;
+                    } else {
+                        opt.disabled = false;
+                    }
+                }
+            });
+        } else {
+            Array.from(toYearSelect.options).forEach(opt => opt.disabled = false);
+        }
+    }
 
     function addProjectRow() {
         const container = document.getElementById('projectContainerCat1');
@@ -3169,20 +3289,41 @@
                     if (expContainer) {
                         while (expContainer.querySelectorAll('.experience-card').length < draftData.experiences.length) addExperienceRow();
                         const cards = expContainer.querySelectorAll('.experience-card');
-                        draftData.experiences.forEach((exp, i) => {
+                         draftData.experiences.forEach((exp, i) => {
                             const card = cards[i];
                             if (card) {
                                 card.querySelector('[name="exp_org[]"]').value = exp.org || "";
                                 card.querySelector('[name="exp_designation[]"]').value = exp.designation || "";
                                 card.querySelector('[name="exp_nature[]"]').value = exp.nature || "";
                                 const durationHidden = card.querySelector('.exp-duration-hidden');
-                                if (durationHidden) durationHidden.value = exp.duration || "";
+                                if (durationHidden) {
+                                    durationHidden.value = exp.duration || "";
+                                    // Restore dropdowns from duration string
+                                    if (exp.duration) {
+                                        const dParts = exp.duration.split(' - ');
+                                        if (dParts[0]) {
+                                            const s = dParts[0].split(' ');
+                                            if (card.querySelector('.exp-start-month')) card.querySelector('.exp-start-month').value = s[0] || "";
+                                            if (card.querySelector('.exp-start-year')) card.querySelector('.exp-start-year').value = s[1] || "";
+                                        }
+                                        if (dParts[1]) {
+                                            if (dParts[1] === 'Present') {
+                                                if (card.querySelector('.exp-end-month')) card.querySelector('.exp-end-month').value = 'Present';
+                                            } else {
+                                                const e = dParts[1].split(' ');
+                                                if (card.querySelector('.exp-end-month')) card.querySelector('.exp-end-month').value = e[0] || "";
+                                                if (card.querySelector('.exp-end-year')) card.querySelector('.exp-end-year').value = e[1] || "";
+                                            }
+                                        }
+                                    }
+                                }
                                 if (exp.hasFile) {
                                     const fileInp = card.querySelector('[name="exp_proof[]"]');
                                     if (fileInp) {
                                         if (exp.fileUrl) fileInp.setAttribute('data-file-url', exp.fileUrl);
                                     }
                                 }
+                                handleExperienceDateLogic(card.querySelector('.exp-start-year'));
                             }
                         });
                     }
@@ -3279,6 +3420,7 @@
                             targetRow.querySelector('[name="training_from[]"]').value = t.from || "";
                             targetRow.querySelector('[name="training_duration[]"]').value = t.duration || "";
                             targetRow.querySelector('[name="training_year[]"]').value = t.year || "";
+                            syncValidityStatusLogic(targetRow.querySelector('[name="training_duration[]"]'));
                             if (t.hasFile) {
                                 const fileInp = targetRow.querySelector('input[type="file"]');
                                 if (fileInp) {
@@ -3303,6 +3445,7 @@
                                 row.querySelector('[name="membership_from[]"]').value = m.from || "";
                                 row.querySelector('[name="membership_year[]"]').value = m.year || "";
                                 row.querySelector('[name="membership_duration[]"]').value = m.duration || "";
+                                syncValidityStatusLogic(row.querySelector('[name="membership_duration[]"]'));
                                 if (m.hasFile) {
                                     const fileInp = row.querySelector('input[type="file"]');
                                     if (fileInp) {
@@ -4029,11 +4172,7 @@
         validateChecklistState(); 
     }
 
-    function clearChecklist() {
-        const cbs = document.querySelectorAll('.checklist-cb');
-        cbs.forEach(cb => cb.checked = false);
-        validateChecklistState();
-    }
+
 
     async function validateFileUpload(input) {
         if (!input) return;
@@ -4462,6 +4601,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         updateUI();
         updateExperienceIndices();
+        
+        // Initialize Validity Status Logic (Steps 7 & 8)
+        document.querySelectorAll('select[name="training_duration[]"], select[name="membership_duration[]"]').forEach(syncValidityStatusLogic);
 
         // Step 14: Retired Govt Employee & Declaration Sync
         const retiredRadios = document.querySelectorAll('input[name="decl_retired_gov"]');
