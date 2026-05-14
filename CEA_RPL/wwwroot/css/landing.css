@@ -866,6 +866,45 @@ body {
 .l-role-card h3 { font-size: 1.5rem; margin-bottom: 8px; color: var(--l-ink); font-weight: 800; }
 .l-role-card p { font-size: 0.95rem; color: var(--l-muted); line-height: 1.5; }
 
+/* Role Modal Mobile Responsiveness */
+@media (max-width: 640px) {
+    .l-modal {
+        padding: 32px 20px !important;
+        border-radius: 20px !important;
+    }
+
+    .l-role-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin-top: 24px !important;
+    }
+
+    .l-role-card {
+        padding: 24px !important;
+        border-radius: 16px !important;
+    }
+
+    .l-role-card h3 {
+        font-size: 1.25rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .l-role-card p {
+        font-size: 0.85rem !important;
+    }
+
+    .l-role-icon {
+        width: 48px !important;
+        height: 48px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .l-role-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
+
 /* =========================
    Section Improvements
    ========================= */

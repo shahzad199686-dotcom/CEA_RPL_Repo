@@ -501,19 +501,28 @@ body {
 @media (max-width: 768px) {
     .header-bar {
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap !important;
         align-items: center;
-        justify-content: space-between;
-        gap: 8px;
+        justify-content: space-between !important;
+        gap: 12px;
         padding: 12px 16px;
     }
 
+    .header-left {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
     .header-left h3 {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .header-right {
         flex: 0 0 auto;
+        margin-left: auto !important;
         gap: 8px;
     }
 
@@ -1136,6 +1145,14 @@ input[type="file"] {
     vertical-align: middle;
 }
 
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+
+
 .membership-file-wrap {
     display: flex;
     flex-direction: column;
@@ -1175,7 +1192,7 @@ input[type="file"] {
         gap: 12px;
     }
     .action-inner .save-status-wrap {
-        display: none;
+        display: block;
     }
     .action-inner > div {
         flex-direction: column !important;
@@ -1348,6 +1365,202 @@ input[type="file"] {
     display: none;
 }
 
+/* Step 15 Mobile Refinements */
+@media (max-width: 768px) {
+    .review-grid, .review-section, .review-dl {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .review-section {
+        padding: 16px;
+        border-radius: var(--radius-md);
+        margin-bottom: 20px;
+        overflow-x: hidden;
+    }
+
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+        width: 100%;
+    }
+
+    .review-header h4 {
+        font-size: 1rem;
+        line-height: 1.4;
+        width: 100%;
+    }
+
+    .edit-link {
+        width: 100%;
+        text-align: center;
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+
+    .review-dl {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .review-dl dd {
+        font-size: 0.9rem;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        margin: 0;
+    }
+
+    .review-table-wrap {
+        margin: 0 -4px;
+    }
+
+    .review-table {
+        font-size: 0.85rem;
+    }
+
+    .review-table th, .review-table td {
+        padding: 10px 12px;
+    }
+
+    /* Checklist Table Responsive Stack */
+    .checklist-table {
+        display: block;
+    }
+
+    .checklist-table thead {
+        display: none;
+    }
+
+    .checklist-table tbody, 
+    .checklist-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .checklist-table tr {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .checklist-table td {
+        display: block;
+        width: 100%;
+        padding: 0 !important;
+        border: none !important;
+        text-align: left !important;
+    }
+
+    .checklist-table td:nth-child(1) {
+        font-weight: 700;
+        color: var(--ink);
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+    }
+
+    .checklist-table td:nth-child(2) {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+    
+    .checklist-table td:nth-child(2)::before {
+        content: 'Mandatory: ';
+        font-weight: 600;
+    }
+
+    .checklist-table td:nth-child(3) {
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .checklist-table td:nth-child(3)::before {
+        content: 'Confirmed: ';
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    
+    .checklist-cb {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Step 14 Mobile Refinements */
+    .retired-gov-question {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 16px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .retired-gov-question label {
+        display: block !important;
+        height: auto !important;
+        margin-bottom: 12px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        overflow: visible !important;
+    }
+    
+    .retired-gov-question > div {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 24px !important;
+        margin-top: 0 !important;
+    }
+
+    .declaration-card {
+        margin-bottom: 20px !important;
+    }
+
+    .declaration-card > div {
+        gap: 12px !important;
+    }
+    
+    .declaration-card > div > div:first-child {
+        padding-top: 4px !important; /* Alignment fix */
+    }
+
+    .declaration-statement {
+        padding: 12px 16px !important;
+    }
+    
+    .declaration-statement p {
+        font-size: 0.9rem !important;
+        line-height: 1.3 !important;
+    }
+
+    .declaration-statement ul {
+        margin-left: 18px !important;
+        font-size: 13px !important;
+        gap: 6px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Form Grid Stacking for Step 14 */
+    #step-14 .grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    #step-14 .col-6 {
+        width: 100% !important;
+    }
+}
+
 /* Checklist Table (Step 15) */
 .checklist-table {
     width: 100%;
@@ -1420,12 +1633,18 @@ input[type="file"] {
    Mobile Optimization (< 768px)
 ========================= */
 @media (max-width: 768px) {
-    .application-wrap {
+    html, body {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    body {
         display: block;
-        padding-top: 110px; /* More space for fixed top bar */
-        padding-bottom: 140px; /* More space for fixed bottom bar */
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-top: 0 !important; /* Remove unwanted white space above header */
+        padding-bottom: 160px !important; /* Optimized space for stacked bottom action bar */
+        margin-top: 0 !important;
     }
 
     .sidebar-nav {
@@ -1509,6 +1728,22 @@ input[type="file"] {
         font-size: 0.8rem;
     }
 
+    .modern-table {
+        min-width: 1100px !important; /* Increased to accommodate many columns in Step 8/9 */
+    }
+
+    .modern-table td input, 
+    .modern-table td select {
+        min-width: 130px !important; /* Prevents fields from becoming tiny slivers */
+    }
+
+    /* Ensure specific text fields have enough room */
+    .modern-table td input[type="text"],
+    .modern-table td input:not([type]) {
+        min-width: 180px !important;
+    }
+
+
     /* Action Bar (Sticky Bottom) */
     .action-bar {
         padding: 12px 16px;
@@ -1524,6 +1759,39 @@ input[type="file"] {
         width: 100%;
         display: flex;
         gap: 8px;
+    }
+
+    /* Project Experience Card Mobile Fixes */
+    .project-grid-5 {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .project-grid-5 input, 
+    .project-grid-5 select {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Text Responsiveness & Overlap Fixes */
+    label, 
+    .helper-info, 
+    .form-section p,
+    .section-content p {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: block !important;
+        line-height: 1.4 !important;
+    }
+
+    .helper-info {
+        margin-top: 6px !important;
+        margin-bottom: 12px !important;
+    }
+
+    label {
+        margin-bottom: 6px !important;
     }
 
     .btn {
@@ -3192,8 +3460,12 @@ input[type="file"] {
 @media (max-width: 768px) {
     .form-wrapper {
         padding: 12px;
-        padding-top: 16px; /* Fix for excessive white space */
-        width: 100%;
+        padding-top: 16px; 
+        padding-bottom: 160px !important; /* Optimized padding to clear sticky footer */
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        min-height: unset !important;
     }
 
     .form-grid {
@@ -3220,15 +3492,58 @@ input[type="file"] {
     }
 
     .action-inner {
-        flex-direction: row !important;
-        gap: 8px !important;
-        padding: 8px 12px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        padding: 12px 16px !important;
     }
 
-    .action-inner button {
-        flex: 1;
-        font-size: 13px !important;
-        padding: 10px 4px !important;
+    /* Use contents to let buttons behave as direct grid children */
+    .action-inner .save-status-wrap,
+    .action-inner > div:nth-child(2) {
+        display: contents !important;
+    }
+
+    /* Save Draft at top */
+    #btnSaveDraft {
+        grid-column: 1 / span 2 !important;
+        order: 1 !important;
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Previous Step on left */
+    #btnPrev {
+        grid-column: 1 !important;
+        order: 2 !important;
+        width: 100% !important;
+        display: flex;
+        visibility: visible !important; /* Ensure it overrides any hidden states if needed */
+    }
+
+    /* Next / Submit on right */
+    #btnNext, 
+    #submitFinalApplicationBtn {
+        grid-column: 2 !important;
+        order: 2 !important;
+        width: 100% !important;
+        display: flex;
+    }
+
+    .action-inner .btn {
+        width: 100% !important;
+        margin: 0 !important;
+        font-size: 14px !important;
+        padding: 12px 8px !important;
+        height: 48px !important; /* Consistent height for better tapability */
+        display: flex;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+    }
+
+    .save-status-text {
+        display: none !important;
     }
 }
 

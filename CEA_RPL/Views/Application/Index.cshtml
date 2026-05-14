@@ -896,7 +896,8 @@
             <div class="form-section hide" id="step-3">
                 <div class="section-header"><h2 style="color: var(--accent);">Step 3: Educational Qualifications</h2></div>
                 <div class="section-content">
-                    <table class="modern-table" id="educationTable">
+                    <div class="table-responsive">
+                        <table class="modern-table" id="educationTable">
                         <thead>
                             <tr>
                                 <th style="width: 60px; text-align: center;">S. No.</th>
@@ -935,7 +936,8 @@
                                 </td>
                             </tr>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                     <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('educationTable')">+ Add Degree</button>
                 </div>
             </div>
@@ -961,7 +963,7 @@
                         </div>
                         <div class="col-12">
                                         <label>Select Relevant Professional Experience Sectors (Maximum 5)</label>
-                            <p class="helper-info" style="margin-top: -8px; margin-bottom: 12px; color: var(--muted); font-size: 0.85rem;">Choose up to 5 sectors that best match your professional experience.</p>
+                            <p class="helper-info" style="margin-bottom: 12px; color: var(--muted); font-size: 0.85rem;">Choose up to 5 sectors that best match your professional experience.</p>
                             <div class="l-multi-select" id="sectorSelect" data-limit="5" data-name="sector_experience[]">
                                 <div class="l-ms-control" onclick="toggleMsDropdown('sectorSelect', event)">
                                     <div class="l-ms-chips" id="sectorSelectChips"></div>
@@ -983,7 +985,7 @@
 
                         <div class="col-12">
                             <label>Select Relevant Subject Expertise (Maximum 3)</label>
-                            <p class="helper-info" style="margin-top: -8px; margin-bottom: 12px; color: var(--muted); font-size: 0.85rem;">Choose up to 3 subject areas that best match your technical knowledge and practical experience.</p>
+                            <p class="helper-info" style="margin-bottom: 12px; color: var(--muted); font-size: 0.85rem;">Choose up to 3 subject areas that best match your technical knowledge and practical experience.</p>
                             <div class="l-multi-select" id="subjectSelect" data-limit="3" data-name="subject_expertise[]">
                                 <div class="l-ms-control" onclick="toggleMsDropdown('subjectSelect', event)">
                                     <div class="l-ms-chips" id="subjectSelectChips"></div>
@@ -1219,7 +1221,8 @@
                     <!-- 1. TRAINING DETAILS -->
                     <div class="step7-sub-section" style="margin-bottom: 40px;">
                         <h3 style="font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--accent-light); padding-bottom: 8px;">TRAINING DETAILS</h3>
-                        <table class="modern-table" id="trainingTable">
+                        <div class="table-responsive">
+                            <table class="modern-table" id="trainingTable">
                             <thead>
                                 <tr>
                                     <th style="width: 60px; text-align: center;">S. No.</th>
@@ -1257,13 +1260,15 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                         <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('trainingTable')">+ Add Training</button>
                     </div>
 
                     <!-- 2. CERTIFICATION DETAILS -->
                     <div class="step7-sub-section">
                         <h3 style="font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--accent-light); padding-bottom: 8px;">CERTIFICATION DETAILS</h3>
-                        <table class="modern-table" id="certificationTable">
+                        <div class="table-responsive">
+                            <table class="modern-table" id="certificationTable">
                             <thead>
                                 <tr>
                                     <th style="width: 60px; text-align: center;">S. No.</th>
@@ -1302,6 +1307,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                         <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('certificationTable')">+ Add Certification</button>
                     </div>
 
@@ -1314,7 +1320,8 @@
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List of professional body memberships or institutional affiliations, including advisory roles or membership in any government committees</p>
                     
-                    <table class="modern-table" id="membershipTable">
+                    <div class="table-responsive">
+                        <table class="modern-table" id="membershipTable">
                         <thead>
                             <tr>
                                 <th style="width: 60px; text-align: center;">S. No.</th>
@@ -1367,8 +1374,8 @@
                             </tr>
                         </tbody>
                     </table>
-                    
-                    <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('membershipTable')">+ Add Row</button>
+                </div>
+                <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('membershipTable')">+ Add Row</button>
                 </div>
             </div>
 
@@ -1377,7 +1384,8 @@
                 <div class="section-content">
 
                     
-                    <table class="modern-table" id="publicationTable">
+                    <div class="table-responsive">
+                        <table class="modern-table" id="publicationTable">
                         <thead>
                             <tr>
                                 <th style="width: 60px; text-align: center;">S. No.</th>
@@ -1415,6 +1423,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                     
                     <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('publicationTable')">+ Add Row</button>
                 </div>
@@ -1425,10 +1434,12 @@
                 <div class="section-header"><h2 style="color: var(--accent);">Step 10: Awards / Recognition</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the major awards/ recognition/ appreciation received</p>
-                    <table class="modern-table" id="awardTable">
-                        <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Name of Award/recognition/appreciation</th><th>Received from</th><th style="width: 150px;">Year</th><th style="width: 70px; text-align: center;">Action</th></tr></thead>
-                        <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="award_name[]" placeholder="Name of Award/recognition/appreciation" /></td><td><input name="award_from[]" placeholder="Received from" /></td><td><input type="number" name="award_year[]" placeholder="Year" /></td><td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeGenericRow(this, 'awardTable')" style="display: none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg></button></td></tr></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="modern-table" id="awardTable">
+                            <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Name of Award/recognition/appreciation</th><th>Received from</th><th style="width: 150px;">Year</th><th style="width: 70px; text-align: center;">Action</th></tr></thead>
+                            <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="award_name[]" placeholder="Name of Award/recognition/appreciation" /></td><td><input name="award_from[]" placeholder="Received from" /></td><td><input type="number" name="award_year[]" placeholder="Year" /></td><td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeGenericRow(this, 'awardTable')" style="display: none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg></button></td></tr></tbody>
+                        </table>
+                    </div>
                     <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('awardTable')">+ Add Row</button>
                 </div>
             </div>
@@ -1438,10 +1449,12 @@
                 <div class="section-header"><h2 style="color: var(--accent);">Step 11: Software / Tools / Application Skills</h2></div>
                 <div class="section-content">
                     <p style="margin-top: -12px; margin-bottom: 24px; color: var(--muted); font-size: 0.95rem;">List the software tools or applications along with the level of proficiency</p>
-                    <table class="modern-table" id="softwareTable">
-                        <thead><tr><th style="width: 60px; text-align: center;">S. No.</th><th>Software (e.g., MS Office, SPSS, MATLAB, ArcGIS, AutoCAD, AERMOD, etc.)</th><th style="width: 200px;">Level of Proficiency</th><th style="width: 70px; text-align: center;">Action</th></tr></thead>
-                        <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="software_skill[]" placeholder="Enter Software Name" /></td><td><select name="proficiency_level[]"><option value="">Select</option><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td><td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeGenericRow(this, 'softwareTable')" style="display: none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg></button></td></tr></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="modern-table" id="softwareTable">
+                            <thead><tr><th style="text-align: center;">S. No.</th><th>Software (e.g., MS Office, SPSS, MATLAB, ArcGIS, AutoCAD, AERMOD, etc.)</th><th>Level of Proficiency</th><th style="text-align: center;">Action</th></tr></thead>
+                            <tbody><tr><td style="text-align: center; font-weight: 700; color: var(--accent);">1</td><td><input name="software_skill[]" placeholder="Enter Software Name" /></td><td><select name="proficiency_level[]"><option value="">Select</option><option>Basic</option><option>Intermediate</option><option>Expert</option></select></td><td style="text-align: center;"><button type="button" class="btn-remove" onclick="removeGenericRow(this, 'softwareTable')" style="display: none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg></button></td></tr></tbody>
+                        </table>
+                    </div>
                     <button type="button" class="btn btn-ghost" style="margin-top: 16px; background-color: var(--accent); color: white;" onclick="addGenericRow('softwareTable')">+ Add Row</button>
                 </div>
             </div>
@@ -1878,10 +1891,10 @@
         const submitBtn = document.getElementById('submitFinalApplicationBtn');
         if (currentStep === totalSteps) {
             nextBtn.style.display = 'none';
-            if (submitBtn) submitBtn.style.display = 'inline-block';
+            if (submitBtn) submitBtn.style.display = 'flex';
             populateReviewSummary(); // Refresh review data when on last step
         } else {
-            nextBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'flex';
             if (submitBtn) submitBtn.style.display = 'none';
             nextBtn.textContent = (currentStep === totalSteps - 1) ? 'Go to Preview' : 'Next Section';
         }
