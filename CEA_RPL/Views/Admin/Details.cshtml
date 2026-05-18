@@ -552,10 +552,117 @@
             </div>
         </div>
 
-        <!-- STEP 15: REVIEW / SUBMISSION METADATA -->
+        <!-- STEP 7: LABORATORY DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #0E5A3C;">
+                <i data-lucide="beaker"></i> Step 7: Laboratory Details
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="info-label">EPA/SPCB Recognized Laboratory?</label>
+                        <div class="info-value text-dark fw-bold">
+                            @(Model.HasRecognizedLab ?? "No")
+                        </div>
+                    </div>
+                    @if (Model.HasRecognizedLab == "Yes")
+                    {
+                        <div class="col-md-6">
+                            <label class="info-label">Type of Laboratory</label>
+                            <div class="info-value text-dark fw-bold">
+                                @(Model.LaboratoryType ?? "-")
+                            </div>
+                        </div>
+                        
+                        @if (Model.LaboratoryType == "In-house" && !string.IsNullOrEmpty(Model.InHouseLabDetailsJson))
+                        {
+                            <div class="col-12 mt-4">
+                                <label class="info-label mb-2">In-house Laboratory Details</label>
+                                <div class="table-responsive border rounded-3 bg-white">
+                                    <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+                                        <thead class="table-light text-muted uppercase">
+                                            <tr>
+                                                <th style="width: 80px; padding: 12px;">S.No.</th>
+                                                <th style="padding: 12px;">Name of Laboratory</th>
+                                                <th style="padding: 12px;">Recognition Type</th>
+                                                <th style="width: 200px; padding: 12px; text-align: center;">Certificate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var index = 1;
+                                                System.Text.Json.JsonDocument? labsDoc = null;
+                                                if (!string.IsNullOrEmpty(Model.InHouseLabDetailsJson))
+                                                {
+                                                    try {
+                                                        labsDoc = System.Text.Json.JsonDocument.Parse(Model.InHouseLabDetailsJson);
+                                                    } catch {}
+                                                }
+                                            }
+                                            @if (labsDoc != null && labsDoc.RootElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+                                            {
+                                                @foreach (var labElement in labsDoc.RootElement.EnumerateArray())
+                                                {
+                                                    var name = labElement.TryGetProperty("name", out var nameProp) ? (nameProp.GetString() ?? "") : "";
+                                                    var certPath = labElement.TryGetProperty("certificate_path", out var pathProp) ? (pathProp.GetString() ?? "") : "";
+                                                    var recognitionTypes = new System.Collections.Generic.List<string>();
+                                                    if (labElement.TryGetProperty("recognition_types", out var recTypesProp) && recTypesProp.ValueKind == System.Text.Json.JsonValueKind.Array)
+                                                    {
+                                                        @foreach (var typeItem in recTypesProp.EnumerateArray())
+                                                        {
+                                                            recognitionTypes.Add(typeItem.GetString() ?? "");
+                                                        }
+                                                    }
+                                                    <tr>
+                                                        <td style="padding: 12px;" class="fw-bold text-muted">@index</td>
+                                                        <td style="padding: 12px;" class="fw-bold text-dark">@name</td>
+                                                        <td style="padding: 12px;">
+                                                            @if (recognitionTypes.Any())
+                                                            {
+                                                                @foreach (var type in recognitionTypes)
+                                                                {
+                                                                    <span class="badge bg-light text-primary border border-primary-subtle me-1">@type</span>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>-</span>
+                                                            }
+                                                        </td>
+                                                        <td style="padding: 12px; text-align: center;">
+                                                            @if (!string.IsNullOrEmpty(certPath))
+                                                            {
+                                                                <a href="@certPath" target="_blank" class="btn btn-sm btn-secondary rounded-pill px-3 fw-bold">View File</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted small">No certificate</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="4" class="text-center p-3 text-muted">No laboratory details found</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 16: REVIEW / SUBMISSION METADATA -->
         <div class="modern-card mb-5">
             <div class="review-step-header">
-                <i data-lucide="history"></i> Step 15: Audit & Submission Metadata
+                <i data-lucide="history"></i> Step 16: Audit & Submission Metadata
             </div>
             <div class="card-body p-4">
                 <div class="info-grid">

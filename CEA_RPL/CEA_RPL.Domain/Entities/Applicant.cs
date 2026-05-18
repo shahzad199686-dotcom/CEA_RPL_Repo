@@ -44,6 +44,10 @@ public class Applicant : BaseEntity
     public string? ProfessionalExperienceSectors { get; set; }
     public string? TechnicalSubjectExpertise { get; set; }
     
+    public string? HasRecognizedLab { get; set; }
+    public string? LaboratoryType { get; set; }
+    public string? InHouseLabDetailsJson { get; set; }
+    
     // Navigation Properties
     public virtual Declaration? Declaration { get; set; } = null!;
     public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();

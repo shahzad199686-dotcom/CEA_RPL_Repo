@@ -113,5 +113,11 @@ public class ApplicationSubmissionRequest
     public IFormFile? signature_file { get; set; }
     public string? decl_retired_gov { get; set; }
 
+    // Section 14a: Laboratory Details
+    public string? has_recognized_lab { get; set; }
+    public string? laboratory_type { get; set; }
+    public List<string>? lab_name { get; set; }
+    public List<IFormFile>? lab_certificate { get; set; }
+
     public int? current_step { get; set; }
 }

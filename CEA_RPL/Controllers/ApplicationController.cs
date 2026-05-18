@@ -174,7 +174,7 @@ public class ApplicationController : Controller
             if (req.signature_file != null && !IsFileValid(req.signature_file, out fileError)) return BadRequest(new { message = fileError });
 
             // Batch validate collections
-            var collectionsWithFiles = new[] { req.edu_cert, req.exp_proof, req.audit_report, req.training_proof, req.membership_proof, req.paper_proof, req.award_proof };
+            var collectionsWithFiles = new[] { req.edu_cert, req.exp_proof, req.audit_report, req.training_proof, req.membership_proof, req.paper_proof, req.award_proof, req.lab_certificate };
             foreach (var list in collectionsWithFiles)
             {
                 if (list != null) foreach (var f in list) if (f != null && !IsFileValid(f, out fileError)) return BadRequest(new { message = fileError });
@@ -221,11 +221,50 @@ public class ApplicationController : Controller
             applicant.TotalExperience = req.total_experience;
             
             applicant.LastSavedAt = DateTime.Now;
+            
+            // --- LABORATORY DETAILS PERSISTENCE ---
+            applicant.HasRecognizedLab = req.has_recognized_lab;
+            applicant.LaboratoryType = req.laboratory_type;
+
+            if (req.has_recognized_lab == "Yes" && req.laboratory_type == "In-house" && req.lab_name != null)
+            {
+                var labDetailsList = new List<dynamic>();
+                for (int i = 0; i < req.lab_name.Count; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(req.lab_name[i])) continue;
+
+                    string? certificatePath = null;
+                    if (req.lab_certificate != null && i < req.lab_certificate.Count && req.lab_certificate[i] != null)
+                    {
+                        certificatePath = await _fileService.SaveFileAsync(req.lab_certificate[i].OpenReadStream(), req.lab_certificate[i].FileName);
+                    }
+                    else
+                    {
+                        certificatePath = Request.Form[$"lab_certificate_existing_{i}"];
+                    }
+
+                    var recognitionTypes = Request.Form[$"lab_recognition_{i}[]"].ToList();
+
+                    labDetailsList.Add(new {
+                        s_no = i + 1,
+                        name = req.lab_name[i],
+                        recognition_types = recognitionTypes,
+                        certificate_path = certificatePath
+                    });
+                }
+                
+                applicant.InHouseLabDetailsJson = System.Text.Json.JsonSerializer.Serialize(labDetailsList);
+            }
+            else
+            {
+                applicant.InHouseLabDetailsJson = null;
+            }
+
             if (isFinalSubmit)
             {
                 applicant.Status = "Submitted";
                 applicant.SubmittedAt = DateTime.Now;
-                applicant.CurrentStep = 15;
+                applicant.CurrentStep = 16;
             }
             else
             {
@@ -459,7 +498,26 @@ public class ApplicationController : Controller
                     applicant.Declaration.SignaturePath = await _fileService.SaveFileAsync(req.signature_file.OpenReadStream(), req.signature_file.FileName);
             }
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var entry in _context.ChangeTracker.Entries())
+                {
+                    var dbValues = await entry.GetDatabaseValuesAsync();
+                    if (dbValues == null)
+                    {
+                        entry.State = EntityState.Detached;
+                    }
+                    else
+                    {
+                        entry.OriginalValues.SetValues(dbValues);
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
             await transaction.CommitAsync();
 
             return Ok(new { 
@@ -520,6 +578,9 @@ public class ApplicationController : Controller
             categories = applicant.Categories.Split(", ", StringSplitOptions.RemoveEmptyEntries).ToList(),
             total_experience = applicant.TotalExperience,
             enclosure_desc = applicant.EnclosureDescription,
+            has_recognized_lab = applicant.HasRecognizedLab,
+            laboratory_type = applicant.LaboratoryType,
+            in_house_lab_details = applicant.InHouseLabDetailsJson,
             educations = applicant.Educations.Select(e => new { 
                 degree = e.Degree, 
                 discipline = e.Discipline, 
@@ -614,6 +675,16 @@ public class ApplicationController : Controller
     {
         errorMessage = "";
         if (file == null || file.Length == 0) return true;
+
+        if (file.Name.Contains("lab_certificate", StringComparison.OrdinalIgnoreCase))
+        {
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                errorMessage = $"Laboratory Certificate '{file.FileName}' exceeds 5MB limit.";
+                return false;
+            }
+            return true;
+        }
 
         var fileName = file.FileName.ToLower();
         var isImage = fileName.EndsWith(".jpg") || fileName.EndsWith(".jpeg") || fileName.EndsWith(".png");
