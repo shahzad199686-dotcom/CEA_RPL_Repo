@@ -226,7 +226,7 @@ public class ApplicationController : Controller
             applicant.HasRecognizedLab = req.has_recognized_lab;
             applicant.LaboratoryType = req.laboratory_type;
 
-            if (req.has_recognized_lab == "Yes" && req.laboratory_type == "In-house" && req.lab_name != null)
+            if (req.has_recognized_lab == "Yes" && (req.laboratory_type == "In-house" || req.laboratory_type == "Empanelled") && req.lab_name != null)
             {
                 var labDetailsList = new List<dynamic>();
                 for (int i = 0; i < req.lab_name.Count; i++)

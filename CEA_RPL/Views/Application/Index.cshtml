@@ -324,15 +324,6 @@
                 
                 <div class="section-content" style="padding: 0;">
                     <div class="form-card">
-                        <div class="form-card-header">
-                            <div class="form-card-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="form-card-title">CEA / REA / Through RPL</h3>
-                            </div>
-                        </div>
-                        
                         <div class="section-content-inner" style="padding: 24px;">
                             <div style="display: flex; gap: 32px; flex-wrap: wrap;">
                                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500; white-space: nowrap;">
@@ -1615,11 +1606,11 @@
                             Are you a retired Government employee applying under the RPL mode within one year from the date of retirement? <span class="req">*</span>
                         </label>
                         <div style="display: flex; gap: 24px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="radio" name="decl_retired_gov" value="Yes" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" /> Yes
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="decl_retired_gov" value="Yes" required style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" /> Yes
                             </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                <input type="radio" name="decl_retired_gov" value="No" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" /> No
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="decl_retired_gov" value="No" required style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" /> No
                             </label>
                         </div>
                     </div>
@@ -1627,7 +1618,7 @@
                         <div class="col-12 declaration-card" id="decl-card-gov" style="margin-bottom: 16px;">
                             <div style="display: flex; align-items: flex-start; gap: 8px;">
                                 <div style="padding-top: 12px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                    <input type="checkbox" name="declaration_consent_2" style="width: 18px; height: 18px; cursor: pointer; accent-color: #0E5A3C;" />
                                 </div>
                                 <div class="declaration-statement" style="flex: 1; padding: 12px 16px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 0; text-align: left;">
                                     <p style="font-weight: 700; color: var(--ink); margin-bottom: 4px; text-align: left; line-height: 1.2;">I hereby declare that:</p>
@@ -1642,7 +1633,7 @@
                         <div class="col-12 declaration-card" id="decl-card-general">
                             <div style="display: flex; align-items: flex-start; gap: 8px;">
                                 <div style="padding-top: 12px; flex-shrink: 0;">
-                                    <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);" />
+                                    <input type="checkbox" name="declaration_consent_1" style="width: 18px; height: 18px; cursor: pointer; accent-color: #0E5A3C;" />
                                 </div>
                                 <div class="declaration-statement" style="flex: 1; padding: 12px 16px; background: #f8fafc; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 0; text-align: left;">
                                     <p style="font-weight: 700; color: var(--ink); margin-bottom: 4px; text-align: left; line-height: 1.2;">I hereby declare that:</p>
@@ -1674,7 +1665,7 @@
             <!-- STEP 16: LABORATORY DETAILS -->
             <div class="form-section hide" id="step-16">
                 <div class="section-header">
-                    <h2 style="color: var(--accent);">Step 7 — Laboratory Details</h2>
+                    <h2 style="color: var(--accent);">Step 16: Laboratory Details</h2>
                     <p style="color: var(--muted); margin-top: 4px; font-size: 0.9rem;">In-house or empanelled EPA/SPCB recognised laboratory details</p>
                 </div>
                 
@@ -1685,11 +1676,11 @@
                             1. DOES THE ORGANIZATION HAVE AN EPA OR SPCB RECOGNIZED IN-HOUSE OR EMPANELLED LABORATORY? <span class="req">*</span>
                         </label>
                         <div style="display: flex; gap: 24px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); font-size: 14px;">
-                                <input type="radio" name="has_recognized_lab" value="Yes" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" onchange="toggleLabQuestions()" /> Yes
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="has_recognized_lab" value="Yes" required style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" onchange="toggleLabQuestions()" /> Yes
                             </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); font-size: 14px;">
-                                <input type="radio" name="has_recognized_lab" value="No" required style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" onchange="toggleLabQuestions()" /> No
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="has_recognized_lab" value="No" required style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" onchange="toggleLabQuestions()" /> No
                             </label>
                         </div>
                     </div>
@@ -1700,18 +1691,18 @@
                             2. TYPE OF LABORATORY <span class="req">*</span>
                         </label>
                         <div style="display: flex; gap: 24px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); font-size: 14px;">
-                                <input type="radio" name="laboratory_type" value="In-house" style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" onchange="toggleLabQuestions()" /> In-house
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="laboratory_type" value="In-house" style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" onchange="toggleLabQuestions()" /> In-house
                             </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); font-size: 14px;">
-                                <input type="radio" name="laboratory_type" value="Empanelled" style="accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;" onchange="toggleLabQuestions()" /> Empanelled
+                            <label style="display: flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; color: var(--ink) !important; font-size: 14px !important; white-space: nowrap !important; height: auto !important; line-height: 1.2 !important; margin: 0 !important;">
+                                <input type="radio" name="laboratory_type" value="Empanelled" style="accent-color: #0E5A3C !important; width: 18px !important; min-width: unset !important; max-width: 18px !important; height: 18px !important; cursor: pointer !important; flex-shrink: 0 !important; margin: 0 !important;" onchange="toggleLabQuestions()" /> Empanelled
                             </label>
                         </div>
                     </div>
 
                     <!-- Section 3 (Conditional) -->
                     <div class="lab-question-card hide" id="in-house-details-card" style="margin-bottom: 24px; padding: 20px; background: #fff; border-radius: 12px; border: 1px solid var(--border);">
-                        <label style="font-weight: 600; color: var(--ink); display: block; margin-bottom: 16px; font-size: 15px; text-transform: uppercase;">
+                        <label id="lab-details-heading" style="font-weight: 600; color: var(--ink); display: block; margin-bottom: 16px; font-size: 15px; text-transform: uppercase;">
                             3. IN-HOUSE LABORATORY DETAILS
                         </label>
                         <div class="table-responsive">
@@ -1732,33 +1723,33 @@
                                             <input type="text" name="lab_name[]" placeholder="Name of Laboratory" />
                                         </td>
                                         <td>
-                                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 16px; justify-items: start;" class="recognition-type-group">
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="EPA" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>EPA</span>
+                                            <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 12px 20px; justify-items: start; align-items: center;" class="recognition-type-group">
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="EPA" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">EPA</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="SPCB" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>SPCB</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="SPCB" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">SPCB</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="CPCB" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>CPCB</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="CPCB" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">CPCB</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="NABL" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>NABL</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="NABL" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">NABL</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="BIS" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>BIS</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="BIS" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">BIS</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="MoEFCC" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>MoEFCC</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="MoEFCC" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">MoEFCC</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="State Govt" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>State Govt</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="State Govt" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">State Govt</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="ISO/IEC 17025" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>ISO/IEC 17025</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="ISO/IEC 17025" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">ISO/IEC 17025</span>
                                                 </label>
-                                                <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                                                    <input type="checkbox" name="lab_recognition_0[]" value="Other" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>Other</span>
+                                                <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                    <input type="checkbox" name="lab_recognition_0[]" value="Other" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">Other</span>
                                                 </label>
                                             </div>
                                         </td>
@@ -2831,15 +2822,31 @@
         const hasLab = document.querySelector('input[name="has_recognized_lab"]:checked')?.value;
         const labTypeCard = document.getElementById('lab-type-card');
         const detailsCard = document.getElementById('in-house-details-card');
+        const headingElement = document.getElementById('lab-details-heading');
 
         if (hasLab === 'Yes') {
             labTypeCard?.classList.remove('hide');
             const labType = document.querySelector('input[name="laboratory_type"]:checked')?.value;
-            if (labType === 'In-house') {
+            if (labType === 'In-house' || labType === 'Empanelled') {
                 detailsCard?.classList.remove('hide');
+                
+                // Clear all form data if laboratory type was switched
+                if (window.lastLabType && window.lastLabType !== labType) {
+                    clearLabTableRequirements();
+                }
+                window.lastLabType = labType;
+
+                if (headingElement) {
+                    if (labType === 'In-house') {
+                        headingElement.textContent = '3. IN-HOUSE LABORATORY DETAILS';
+                    } else if (labType === 'Empanelled') {
+                        headingElement.textContent = '3. EMPANELLED LABORATORY DETAILS';
+                    }
+                }
             } else {
                 detailsCard?.classList.add('hide');
                 clearLabTableRequirements();
+                window.lastLabType = '';
             }
         } else {
             labTypeCard?.classList.add('hide');
@@ -2847,6 +2854,7 @@
             // Reset fields
             document.querySelectorAll('input[name="laboratory_type"]').forEach(el => el.checked = false);
             clearLabTableRequirements();
+            window.lastLabType = '';
         }
     }
 
@@ -2870,7 +2878,15 @@
             firstRow.querySelectorAll('.recognition-type-group input[type="checkbox"]').forEach(cb => cb.checked = false);
             
             const fileInput = firstRow.querySelector('input[name="lab_certificate[]"]');
-            if (fileInput) fileInput.value = '';
+            if (fileInput) {
+                fileInput.value = '';
+                fileInput.removeAttribute('data-has-file');
+                fileInput.removeAttribute('data-file-error');
+                refreshFileUI(fileInput);
+                if (typeof hideFieldError === 'function') {
+                    hideFieldError(fileInput);
+                }
+            }
 
             const removeBtn = firstRow.querySelector('.btn-remove');
             if (removeBtn) removeBtn.style.display = 'none';
@@ -2878,6 +2894,13 @@
             // Remove existing file indicator
             const existingFileSpan = firstRow.querySelector('.existing-file-info');
             if (existingFileSpan) existingFileSpan.remove();
+
+            // Clear any saved file hidden inputs
+            firstRow.querySelectorAll('input[type="hidden"]').forEach(hid => {
+                if (hid.name && hid.name.startsWith('lab_certificate_existing_')) {
+                    hid.remove();
+                }
+            });
         }
     }
 
@@ -2895,33 +2918,33 @@
                 <input type="text" name="lab_name[]" placeholder="Name of Laboratory" />
             </td>
             <td>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 16px; justify-items: start;" class="recognition-type-group">
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="EPA" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>EPA</span>
+                <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 12px 20px; justify-items: start; align-items: center;" class="recognition-type-group">
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="EPA" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">EPA</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="SPCB" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>SPCB</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="SPCB" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">SPCB</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="CPCB" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>CPCB</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="CPCB" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">CPCB</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="NABL" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>NABL</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="NABL" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">NABL</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="BIS" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>BIS</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="BIS" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">BIS</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="MoEFCC" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>MoEFCC</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="MoEFCC" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">MoEFCC</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="State Govt" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>State Govt</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="State Govt" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">State Govt</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="ISO/IEC 17025" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>ISO/IEC 17025</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="ISO/IEC 17025" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">ISO/IEC 17025</span>
                     </label>
-                    <label style="display: inline-flex !important; align-items: flex-start !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; line-height: 1.4 !important; margin: 0 !important;">
-                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="Other" style="width: 16px !important; height: 16px !important; min-width: unset !important; max-width: 16px !important; accent-color: var(--primary) !important; cursor: pointer; margin: 2px 0 0 0 !important; flex-shrink: 0 !important;" /> <span>Other</span>
+                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                        <input type="checkbox" name="lab_recognition_${newIndex}[]" value="Other" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">Other</span>
                     </label>
                 </div>
             </td>
@@ -3949,7 +3972,7 @@
                             typeRadio.dispatchEvent(new Event('change'));
                         }
 
-                        if (labTypeVal === 'In-house' && draftData.in_house_lab_details) {
+                        if ((labTypeVal === 'In-house' || labTypeVal === 'Empanelled') && draftData.in_house_lab_details) {
                             let labList = [];
                             try {
                                 labList = JSON.parse(draftData.in_house_lab_details);
@@ -3983,33 +4006,33 @@
                                                 <input type="text" name="lab_name[]" value="${lab.name || ''}" placeholder="Name of Laboratory" style="width: 100%; height: 38px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0 10px; font-size: 0.85rem;" />
                                             </td>
                                             <td style="padding: 12px;">
-                                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 12px;" class="recognition-type-group">
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="EPA" ${isChecked('EPA')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> EPA
+                                                <div style="display: grid; grid-template-columns: repeat(3, max-content); gap: 12px 20px; justify-items: start; align-items: center;" class="recognition-type-group">
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="EPA" ${isChecked('EPA')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">EPA</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="SPCB" ${isChecked('SPCB')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> SPCB
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="SPCB" ${isChecked('SPCB')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">SPCB</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="CPCB" ${isChecked('CPCB')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> CPCB
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="CPCB" ${isChecked('CPCB')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">CPCB</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="NABL" ${isChecked('NABL')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> NABL
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="NABL" ${isChecked('NABL')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">NABL</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="BIS" ${isChecked('BIS')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> BIS
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="BIS" ${isChecked('BIS')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">BIS</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="MoEFCC" ${isChecked('MoEFCC')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> MoEFCC
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="MoEFCC" ${isChecked('MoEFCC')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">MoEFCC</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="State Govt" ${isChecked('State Govt')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> State Govt
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="State Govt" ${isChecked('State Govt')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">State Govt</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="ISO/IEC 17025" ${isChecked('ISO/IEC 17025')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> ISO/IEC 17025
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="ISO/IEC 17025" ${isChecked('ISO/IEC 17025')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">ISO/IEC 17025</span>
                                                     </label>
-                                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 500; color: #334155;">
-                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="Other" ${isChecked('Other')} style="width: 14px; height: 14px; accent-color: #0E5A3C;" /> Other
+                                                    <label style="display: flex !important; align-items: center !important; gap: 8px !important; justify-content: flex-start !important; text-align: left !important; cursor: pointer !important; font-size: 0.85rem !important; font-weight: 500 !important; color: var(--ink) !important; height: auto !important; margin: 0 !important; padding: 0 !important; width: 100% !important; min-width: unset !important; max-width: unset !important; box-sizing: border-box !important; white-space: nowrap !important;">
+                                                        <input type="checkbox" name="lab_recognition_${idx}[]" value="Other" ${isChecked('Other')} style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; accent-color: #0E5A3C !important; cursor: pointer !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important;" /> <span style="margin: 0 !important; padding: 0 !important; line-height: 1.2 !important; display: inline-block !important; width: auto !important; min-width: unset !important; max-width: unset !important; text-align: left !important; white-space: nowrap !important;">Other</span>
                                                     </label>
                                                 </div>
                                             </td>
@@ -4682,10 +4705,11 @@
             const labTypeVal = document.querySelector('input[name="laboratory_type"]:checked')?.value || 'Not selected';
             labDetailsHtml += `<div><dt>Type of Laboratory</dt><dd>${labTypeVal}</dd></div>`;
             
-            if (labTypeVal === 'In-house') {
+            if (labTypeVal === 'In-house' || labTypeVal === 'Empanelled') {
+                const headerText = labTypeVal === 'Empanelled' ? 'Empanelled Laboratory Details' : 'In-house Laboratory Details';
                 labDetailsHtml += `
                     <div style="grid-column: 1 / -1; margin-top: 10px;">
-                        <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">In-house Laboratory Details</p>
+                        <p style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">${headerText}</p>
                         <div class="review-table-wrap">
                             <table class="review-table">
                                 <thead>

@@ -2,6 +2,7 @@
    Design System Tokens
 ========================= */
 :root {
+    --primary: #0E5A3C;
     --ink: #1F2937;
     --muted: #64748b;
     --muted-light: #f1f5f9;
@@ -627,6 +628,7 @@ input, select, textarea {
     height: 20px !important;
     margin: 0 !important;
     cursor: pointer !important;
+    accent-color: #0E5A3C !important;
 }
 
 .checkbox-align-fix label {
