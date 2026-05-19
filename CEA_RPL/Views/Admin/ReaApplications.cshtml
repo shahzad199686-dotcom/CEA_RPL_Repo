@@ -1,0 +1,124 @@
+@model IEnumerable<CEA_RPL.Domain.Entities.REAApplication>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "REA Application Directory";
+}
+
+<!-- FILTER BAR -->
+<div class="modern-card p-4 mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+            <label class="small fw-800 text-muted uppercase mb-2 d-block">Search Organization</label>
+            <div class="position-relative">
+                <i data-lucide="search" style="position: absolute; left: 14px; top: 12px; width: 18px; color: var(--a-muted);"></i>
+                <input type="text" id="appSearch" class="form-control" style="padding-left: 44px; border-radius: 12px; height: 46px; border: 1.5px solid var(--a-line);" placeholder="Organization Name, Email or App No...">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label class="small fw-800 text-muted uppercase mb-2 d-block">Filter Status</label>
+            <select id="statusFilter" class="form-select" style="border-radius: 12px; height: 46px; border: 1.5px solid var(--a-line); font-weight: 600;">
+                <option value="">All Statuses</option>
+                <option value="Draft">Draft</option>
+                <option value="Submitted">Submitted</option>
+                <option value="InReview">In Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary px-4 fw-bold" style="height: 46px; border-radius: 12px;">
+                <i data-lucide="file-plus" class="me-2" style="width: 18px;"></i> Export to Excel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- APPLICATION LIST -->
+<div id="cardContainer">
+    @if (!Model.Any())
+    {
+        <div class="modern-card p-5 text-center">
+            <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--a-muted); margin-bottom: 16px;"></i>
+            <h5 class="fw-bold">No Records Found</h5>
+            <p class="text-muted">Applications submitted by organizations will appear here.</p>
+        </div>
+    }
+
+    @foreach (var app in Model)
+    {
+        var stClass = app.Status switch
+        {
+            CEA_RPL.Domain.Entities.ApplicationStatus.Approved => "st-approved",
+            CEA_RPL.Domain.Entities.ApplicationStatus.Rejected => "st-rejected",
+            CEA_RPL.Domain.Entities.ApplicationStatus.Submitted => "st-submitted",
+            CEA_RPL.Domain.Entities.ApplicationStatus.InReview => "st-review",
+            CEA_RPL.Domain.Entities.ApplicationStatus.Draft => "st-review",
+            _ => "st-review"
+        };
+
+        var orgName = app.OrganizationDetail?.Name ?? "Pending Info";
+        var contactEmail = app.ContactDetail?.Email ?? "Pending Email";
+
+        <div class="app-row-item mb-3">
+            <div class="modern-card p-3 px-4 d-flex align-items-center justify-content-between hover-lift">
+                <div class="d-flex align-items-center gap-4" style="flex: 2;">
+                    <div class="rounded-circle bg-primary-light text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; border: 1.5px solid var(--a-primary-border);">
+                        @(orgName.Length > 0 ? orgName[0].ToString() : "O")
+                    </div>
+                    <div>
+                        <div class="fw-800 text-dark mb-1">@app.ApplicationNo &bull; @orgName</div>
+                        <div class="small fw-bold text-muted">@contactEmail</div>
+                    </div>
+                </div>
+
+                <div class="px-4 border-start border-end border-light d-none d-lg-block text-center" style="flex: 1;">
+                    <div class="small fw-800 text-muted uppercase mb-1" style="font-size: 0.6rem;">Submission Date</div>
+                    <div class="small fw-bold text-dark">@app.CreatedDate.ToString("dd MMM yyyy")</div>
+                </div>
+
+                <div class="px-4 text-center" style="flex: 1;">
+                    <span class="status-badge @stClass">@app.Status</span>
+                </div>
+
+                <div class="ms-4">
+                    <a asp-action="ReaDetails" asp-route-id="@app.Id" class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-4" style="border-width: 1.5px;">
+                        Open Review
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('appSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const items = document.querySelectorAll('.app-row-item');
+
+        function filterItems() {
+            const query = searchInput.value.toLowerCase();
+            const status = statusFilter.value.toLowerCase();
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                const itemStatus = item.querySelector('.status-badge').innerText.toLowerCase();
+                
+                const matchesSearch = text.includes(query);
+                const matchesStatus = status === "" || itemStatus.includes(status);
+                
+                item.style.display = matchesSearch && matchesStatus ? "block" : "none";
+            });
+        }
+
+        searchInput.addEventListener('input', filterItems);
+        statusFilter.addEventListener('change', filterItems);
+        lucide.createIcons();
+    </script>
+}
+
+<style>
+    .hover-lift { transition: all 0.2s ease; cursor: default; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px rgba(0,0,0,0.1) !important; border-color: var(--a-primary-border); }
+    .uppercase { text-transform: uppercase; }
+</style>

@@ -13,7 +13,7 @@
         <div>
             <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Total Volume</div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Total</div>
-            <div class="small text-success fw-bold"><i data-lucide="trending-up" style="width: 12px; height: 12px;"></i> +8.4%</div>
+            <div class="small text-muted fw-bold" style="font-size: 0.7rem;">RPL: @ViewBag.RplTotal | REA: @ViewBag.ReaTotal</div>
         </div>
     </div>
     
@@ -24,7 +24,7 @@
         <div>
             <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Awaiting Review</div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Pending</div>
-            <div class="small text-warning fw-bold">Active Requests</div>
+            <div class="small text-muted fw-bold" style="font-size: 0.7rem;">RPL: @ViewBag.RplPending | REA: @ViewBag.ReaPending</div>
         </div>
     </div>
 
@@ -35,7 +35,18 @@
         <div>
             <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Certified</div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.Approved</div>
-            <div class="small text-success fw-bold">Quality Quota</div>
+            <div class="small text-success fw-bold" style="font-size: 0.7rem;">Quality Approved</div>
+        </div>
+    </div>
+
+    <div class="modern-card p-4 d-flex align-items-center gap-4">
+        <div class="stat-icon-box bg-rose-subtle" style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; background: rgba(244,63,94,0.08); color: #f43f5e;">
+            <i data-lucide="indian-rupee"></i>
+        </div>
+        <div>
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">Finance Pending</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.FinancePending</div>
+            <div class="small text-danger fw-bold" style="font-size: 0.7rem;">Unverified Payments</div>
         </div>
     </div>
 
@@ -46,7 +57,7 @@
         <div>
             <div style="font-size: 0.75rem; font-weight: 800; color: var(--a-muted); text-transform: uppercase;">New Today</div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--a-ink);">@ViewBag.SubmittedToday</div>
-            <div class="small text-primary fw-bold">Live Stream</div>
+            <div class="small text-primary fw-bold" style="font-size: 0.7rem;">Combined Intake</div>
         </div>
     </div>
 </div>

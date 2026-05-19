@@ -12,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("CeaRplDbConnectionString"),
-        b => b.MigrationsAssembly("CEA_RPL.Infrastructure")));
+        b => b.MigrationsAssembly("CEA_RPL.Infrastructure").MigrationsHistoryTable("__EFMigrationsHistory", "rpl")));
+
+builder.Services.AddDbContext<ReaDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("CeaRplDbConnectionString")));
 
 // Register our Custom Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -92,30 +96,32 @@ using (var scope = app.Services.CreateScope())
     // Database Patch: Add missing Finance columns if they don't exist
     try
     {
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'PaymentStatus') ALTER TABLE Applicants ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'FinanceRemarks') ALTER TABLE Applicants ADD FinanceRemarks NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'ProfessionalExperienceSectors') ALTER TABLE Applicants ADD ProfessionalExperienceSectors NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TechnicalSubjectExpertise') ALTER TABLE Applicants ADD TechnicalSubjectExpertise NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'TotalExperience') ALTER TABLE Applicants ADD TotalExperience NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'HasRecognizedLab') ALTER TABLE Applicants ADD HasRecognizedLab NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'LaboratoryType') ALTER TABLE Applicants ADD LaboratoryType NVARCHAR(MAX);");
-        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Applicants') AND name = 'InHouseLabDetailsJson') ALTER TABLE Applicants ADD InHouseLabDetailsJson NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'PaymentStatus') ALTER TABLE rpl.Applicants ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'FinanceRemarks') ALTER TABLE rpl.Applicants ADD FinanceRemarks NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rea.Applications') AND name = 'PaymentStatus') ALTER TABLE rea.Applications ADD PaymentStatus NVARCHAR(MAX) DEFAULT 'Pending';");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rea.Applications') AND name = 'FinanceRemarks') ALTER TABLE rea.Applications ADD FinanceRemarks NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'ProfessionalExperienceSectors') ALTER TABLE rpl.Applicants ADD ProfessionalExperienceSectors NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'TechnicalSubjectExpertise') ALTER TABLE rpl.Applicants ADD TechnicalSubjectExpertise NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'TotalExperience') ALTER TABLE rpl.Applicants ADD TotalExperience NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'HasRecognizedLab') ALTER TABLE rpl.Applicants ADD HasRecognizedLab NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'LaboratoryType') ALTER TABLE rpl.Applicants ADD LaboratoryType NVARCHAR(MAX);");
+        context.Database.ExecuteSqlRaw("IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.Applicants') AND name = 'InHouseLabDetailsJson') ALTER TABLE rpl.Applicants ADD InHouseLabDetailsJson NVARCHAR(MAX);");
         
         // Data Patch: Expand Mobile column size for AES encryption
-        context.Database.ExecuteSqlRaw("ALTER TABLE Applicants ALTER COLUMN Mobile NVARCHAR(255) NOT NULL;");
+        context.Database.ExecuteSqlRaw("ALTER TABLE rpl.Applicants ALTER COLUMN Mobile NVARCHAR(255) NOT NULL;");
         
         // OTP Schema Patch
         context.Database.ExecuteSqlRaw(@"
-            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('OtpRecords') AND name = 'IsVerified')
+            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.OtpRecords') AND name = 'IsVerified')
             BEGIN
-                IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('OtpRecords') AND name = 'IsUsed')
-                    EXEC sp_rename 'OtpRecords.IsUsed', 'IsVerified', 'COLUMN';
+                IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('rpl.OtpRecords') AND name = 'IsUsed')
+                    EXEC sp_rename 'rpl.OtpRecords.IsUsed', 'IsVerified', 'COLUMN';
                 ELSE
-                    ALTER TABLE OtpRecords ADD IsVerified BIT NOT NULL DEFAULT 0;
+                    ALTER TABLE rpl.OtpRecords ADD IsVerified BIT NOT NULL DEFAULT 0;
             END");
 
         // Data Patch: Ensure existing NULLs are set to 'Pending'
-        context.Database.ExecuteSqlRaw("UPDATE Applicants SET PaymentStatus = 'Pending' WHERE PaymentStatus IS NULL;");
+        context.Database.ExecuteSqlRaw("UPDATE rpl.Applicants SET PaymentStatus = 'Pending' WHERE PaymentStatus IS NULL;");
     }
     catch { /* Ignore errors if already patched or schema locked */ }
     

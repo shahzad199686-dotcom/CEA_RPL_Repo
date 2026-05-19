@@ -28,6 +28,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("rpl");
         base.OnModelCreating(modelBuilder);
         
         // User

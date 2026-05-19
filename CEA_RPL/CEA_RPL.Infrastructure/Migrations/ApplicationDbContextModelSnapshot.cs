@@ -17,6 +17,7 @@ namespace CEA_RPL.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("rpl")
                 .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -87,6 +88,15 @@ namespace CEA_RPL.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HasRecognizedLab")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InHouseLabDetailsJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LaboratoryType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("LastSavedAt")
                         .HasColumnType("datetime2");
 
@@ -131,6 +141,9 @@ namespace CEA_RPL.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TotalExperience")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -142,7 +155,7 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Applicants");
+                    b.ToTable("Applicants", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Award", b =>
@@ -180,7 +193,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Awards");
+                    b.ToTable("Awards", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.CertificationTraining", b =>
@@ -222,7 +235,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("CertificationTrainings");
+                    b.ToTable("CertificationTrainings", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Declaration", b =>
@@ -241,12 +254,6 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Declaration1Accepted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Declaration2Accepted")
-                        .HasColumnType("bit");
 
                     b.Property<bool?>("IsRetiredGovtEmployee")
                         .HasColumnType("bit");
@@ -269,7 +276,7 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.HasIndex("ApplicantId")
                         .IsUnique();
 
-                    b.ToTable("Declarations");
+                    b.ToTable("Declarations", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Education", b =>
@@ -311,7 +318,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Educations");
+                    b.ToTable("Educations", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Membership", b =>
@@ -353,7 +360,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("Memberships");
+                    b.ToTable("Memberships", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.OtherEnclosure", b =>
@@ -385,7 +392,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("OtherEnclosures");
+                    b.ToTable("OtherEnclosures", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.OtpRecord", b =>
@@ -418,7 +425,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OtpRecords");
+                    b.ToTable("OtpRecords", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.PaperPublished", b =>
@@ -460,7 +467,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("PaperPublishedEntries", (string)null);
+                    b.ToTable("PaperPublishedEntries", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.PaymentDetail", b =>
@@ -497,7 +504,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("PaymentDetails");
+                    b.ToTable("PaymentDetails", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.ProfessionalExperience", b =>
@@ -544,7 +551,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("ProfessionalExperiences");
+                    b.ToTable("ProfessionalExperiences", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.ProjectExperience", b =>
@@ -591,7 +598,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("ProjectExperiences");
+                    b.ToTable("ProjectExperiences", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.SoftwareSkill", b =>
@@ -623,7 +630,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("SoftwareSkills");
+                    b.ToTable("SoftwareSkills", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.UploadReport", b =>
@@ -655,7 +662,7 @@ namespace CEA_RPL.Infrastructure.Migrations
 
                     b.HasIndex("ApplicantId");
 
-                    b.ToTable("UploadReports");
+                    b.ToTable("UploadReports", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.User", b =>
@@ -712,7 +719,7 @@ namespace CEA_RPL.Infrastructure.Migrations
                     b.HasIndex("Mobile")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "rpl");
                 });
 
             modelBuilder.Entity("CEA_RPL.Domain.Entities.Applicant", b =>

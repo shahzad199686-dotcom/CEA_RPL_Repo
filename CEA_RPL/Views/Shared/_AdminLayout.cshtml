@@ -16,27 +16,54 @@
         <aside class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-brand">
                 <img src="~/images/eada_logo.png" alt="EADA Logo" class="sidebar-logo">
-                <span style="font-weight: 800; font-size: 1.1rem; color: var(--a-ink);">CEA RPL <span class="badge" style="background: #f1f5f9; color: #94a3b8; font-size: 0.6rem; vertical-align: middle;">ADMIN</span></span>
+                <span style="font-weight: 800; font-size: 1.1rem; color: var(--a-ink);">EADA <span class="badge" style="background: #f1f5f9; color: #94a3b8; font-size: 0.6rem; vertical-align: middle;">ADMIN</span></span>
             </div>
 
             <div class="sidebar-nav">
-                <span class="nav-group-label">Main Dashboard</span>
-                <a asp-controller="Admin" asp-action="Dashboard" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
-                    <i data-lucide="layout-grid"></i> <span>Dashboard</span>
-                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <span class="nav-group-label">Main Dashboard</span>
+                    <a asp-controller="Admin" asp-action="Dashboard" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <i data-lucide="layout-grid"></i> <span>Dashboard</span>
+                    </a>
 
-                <span class="nav-group-label" style="margin-top: 24px;">Management</span>
-                <a asp-controller="Admin" asp-action="Applications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
-                    <i data-lucide="users-2"></i> <span>Applications</span>
-                </a>
-                <a asp-controller="Admin" asp-action="Documents" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Documents" ? "active" : "")">
-                    <i data-lucide="folder-kanban"></i> <span>Documents</span>
-                </a>
-                <a asp-controller="Admin" asp-action="Reports" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
-                    <i data-lucide="bar-chart-big"></i> <span>Reports</span>
-                </a>
+                    <span class="nav-group-label" style="margin-top: 24px;">Management</span>
+                    <a asp-controller="Admin" asp-action="Applications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Applications" ? "active" : "")">
+                        <i data-lucide="users-2"></i> <span>RPL Applications</span>
+                    </a>
+                    <a asp-controller="Admin" asp-action="ReaApplications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "ReaApplications" ? "active" : "")">
+                        <i data-lucide="shield-check"></i> <span>REA Applications</span>
+                    </a>
+                    <a asp-controller="Finance" asp-action="Dashboard" class="sidebar-nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Finance" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <i data-lucide="indian-rupee"></i> <span>RPL Finance</span>
+                    </a>
+                    <a asp-controller="Finance" asp-action="ReaApplications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Finance" && ViewContext.RouteData.Values["Action"]?.ToString() == "ReaApplications" ? "active" : "")">
+                        <i data-lucide="landmark"></i> <span>REA Finance</span>
+                    </a>
+                    <a asp-controller="Admin" asp-action="Reports" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Reports" ? "active" : "")">
+                        <i data-lucide="bar-chart-big"></i> <span>Reports</span>
+                    </a>
 
-                <span class="nav-group-label" style="margin-top: 24px;">System</span>
+                    <span class="nav-group-label" style="margin-top: 24px;">System</span>
+                    <a href="#" class="sidebar-nav-item" onclick="alert('User Management module coming soon.')">
+                        <i data-lucide="users"></i> <span>Users</span>
+                    </a>
+                    <a href="#" class="sidebar-nav-item" onclick="alert('System Settings module coming soon.')">
+                        <i data-lucide="settings"></i> <span>Settings</span>
+                    </a>
+                }
+                else if (User.IsInRole("Finance"))
+                {
+                    <span class="nav-group-label">Finance Verification</span>
+                    <a asp-controller="Finance" asp-action="Dashboard" class="sidebar-nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Finance" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <i data-lucide="indian-rupee"></i> <span>RPL Payments</span>
+                    </a>
+                    <a asp-controller="Finance" asp-action="ReaApplications" class="sidebar-nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Finance" && ViewContext.RouteData.Values["Action"]?.ToString() == "ReaApplications" ? "active" : "")">
+                        <i data-lucide="landmark"></i> <span>REA Payments</span>
+                    </a>
+                }
+
+                <span class="nav-group-label" style="margin-top: 24px;">General</span>
                 <a asp-controller="Admin" asp-action="Help" class="sidebar-nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Help" ? "active" : "")">
                     <i data-lucide="help-circle"></i> <span>Help Center</span>
                 </a>
@@ -80,7 +107,7 @@
 
             <!-- FOOTER -->
             <footer class="p-4 px-5 border-top d-flex justify-content-between align-items-center" style="background: white; font-size: 0.8rem; color: var(--a-muted);">
-                <div>&copy; 2026 <b>CEA RPL Portal</b> &bull; Central Electricity Authority</div>
+                <div>&copy; 2026 <b>EADA Portal</b> &bull; Central Electricity Authority</div>
                 <div class="d-flex gap-4">
                     <a href="/#home" class="text-muted text-decoration-none fw-bold">Main Portal</a>
                     <a href="#" class="text-muted text-decoration-none fw-bold">Technical Support</a>

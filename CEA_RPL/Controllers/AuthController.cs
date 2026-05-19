@@ -144,10 +144,10 @@ public class AuthController : Controller
         var user = await _authService.GetUserByEmailAsync(email);
         bool emailValid = false;
 
-        // --- TEMPORARY ADMIN DEMO OTP ---
-        // Allows testing Admin dashboard without requiring real email delivery.
-        // Isolated strictly to Admin role securely validated against the database.
-        if (user != null && user.Role == "Admin" && emailOtp == "123456")
+        // --- TEMPORARY ADMIN/FINANCE DEMO OTP ---
+        // Allows testing Admin and Finance dashboards without requiring real email delivery.
+        // Isolated strictly to Admin and Finance roles securely validated against the database.
+        if (user != null && (user.Role == "Admin" || user.Role == "Finance") && emailOtp == "123456")
         {
             emailValid = true;
         }

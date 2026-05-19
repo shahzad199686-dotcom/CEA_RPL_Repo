@@ -1,0 +1,663 @@
+@model CEA_RPL.Domain.Entities.REAApplication
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Review Case {Model.ApplicationNo}";
+
+    string GetCategoryName(int catId)
+    {
+        return catId switch
+        {
+            1 => "Category 1: Environmental Impact Assessment",
+            2 => "Category 2: Environmental Audit",
+            3 => "Category 3: Pollution Control",
+            4 => "Category 4: Waste Management",
+            _ => $"Category #{catId}"
+        };
+    }
+}
+
+<div class="row g-4">
+    <!-- LEFT PANE: REA DATA (70%) -->
+    <div class="col-xl-8">
+        
+        <!-- BACK ACTIONS -->
+        <div class="mb-4 d-flex align-items-center gap-3">
+            <a asp-action="ReaApplications" class="btn btn-secondary btn-sm rounded-pill px-3 fw-bold">
+                <i data-lucide="chevron-left" class="me-1" style="width: 14px;"></i> All REA Cases
+            </a>
+            @{
+                var stBadgeClass = Model.Status switch
+                {
+                    CEA_RPL.Domain.Entities.ApplicationStatus.Approved => "st-approved",
+                    CEA_RPL.Domain.Entities.ApplicationStatus.Rejected => "st-rejected",
+                    CEA_RPL.Domain.Entities.ApplicationStatus.Submitted => "st-submitted",
+                    CEA_RPL.Domain.Entities.ApplicationStatus.InReview => "st-review",
+                    _ => "st-review"
+                };
+            }
+            <span class="status-badge @stBadgeClass">
+                @Model.Status
+            </span>
+        </div>
+
+        <!-- SECTION A: ORGANIZATION DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="building"></i> Section A: Organization Details
+            </div>
+            <div class="card-body p-4">
+                @if (Model.OrganizationDetail == null)
+                {
+                    <div class="no-data-msg">No Organization details available.</div>
+                }
+                else
+                {
+                    <div class="info-grid mb-4">
+                        <div style="grid-column: span 2;"><label class="info-label">Organization Name</label><div class="info-value">@Model.OrganizationDetail.Name</div></div>
+                        <div><label class="info-label">Entity Type</label><div class="info-value">@Model.OrganizationDetail.EntityType</div></div>
+                        
+                        <div><label class="info-label">Establishment Year</label><div class="info-value">@Model.OrganizationDetail.YearOfEstablishment.ToString("yyyy")</div></div>
+                        <div><label class="info-label">Incorp Number</label><div class="info-value">@Model.OrganizationDetail.IncorpNo</div></div>
+                        <div><label class="info-label">PAN Card</label><div class="info-value">@Model.OrganizationDetail.PAN</div></div>
+                        
+                        <div><label class="info-label">GST Number</label><div class="info-value">@(Model.OrganizationDetail.GST ?? "-")</div></div>
+                        <div style="grid-column: span 2;"><label class="info-label">Website</label><div class="info-value">@(Model.OrganizationDetail.Website ?? "-")</div></div>
+                        
+                        <div style="grid-column: span 3;"><label class="info-label">Registered Address</label><div class="info-value">@Model.OrganizationDetail.RegisteredAddress</div></div>
+                        @if (!string.IsNullOrEmpty(Model.OrganizationDetail.CorrespondenceAddress))
+                        {
+                            <div style="grid-column: span 3;"><label class="info-label">Correspondence Address</label><div class="info-value">@Model.OrganizationDetail.CorrespondenceAddress</div></div>
+                        }
+                    </div>
+
+                    <div class="border-top pt-4">
+                        <h6 class="fw-800 text-dark uppercase small mb-3">Organization Documents</h6>
+                        <div class="row g-3">
+                            @if (!string.IsNullOrEmpty(Model.OrganizationDetail.IncorpCertPath))
+                            {
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light border rounded-4 text-center">
+                                        <div class="small fw-800 text-muted uppercase mb-2">Incorp Certificate</div>
+                                        <a href="@Model.OrganizationDetail.IncorpCertPath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View Incorp</a>
+                                    </div>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.OrganizationDetail.PANDocPath))
+                            {
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light border rounded-4 text-center">
+                                        <div class="small fw-800 text-muted uppercase mb-2">PAN Document</div>
+                                        <a href="@Model.OrganizationDetail.PANDocPath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View PAN</a>
+                                    </div>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.OrganizationDetail.GSTDocPath))
+                            {
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light border rounded-4 text-center">
+                                        <div class="small fw-800 text-muted uppercase mb-2">GST Certificate</div>
+                                        <a href="@Model.OrganizationDetail.GSTDocPath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View GST</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- SECTION B: AUTHORIZED SIGNATORY -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="user-check"></i> Section B: Authorized Signatory Contact Details
+            </div>
+            <div class="card-body p-4">
+                @if (Model.ContactDetail == null)
+                {
+                    <div class="no-data-msg">No Contact details available.</div>
+                }
+                else
+                {
+                    <div class="info-grid">
+                        <div style="grid-column: span 2;"><label class="info-label">Signatory Name</label><div class="info-value">@Model.ContactDetail.SignatoryName</div></div>
+                        <div><label class="info-label">Designation</label><div class="info-value">@Model.ContactDetail.Designation</div></div>
+                        
+                        <div><label class="info-label">Email Address</label><div class="info-value text-primary">@Model.ContactDetail.Email</div></div>
+                        <div><label class="info-label">Phone Number</label><div class="info-value">@Model.ContactDetail.Phone</div></div>
+                        <div><label class="info-label">Alternate Phone</label><div class="info-value">@(Model.ContactDetail.AlternatePhone ?? "-")</div></div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- SECTION C: CATEGORY SELECTIONS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="grid"></i> Section C: Applied Certification Categories
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-3">
+                    @if (!Model.Categories.Any())
+                    {
+                        <div class="no-data-msg">No categories selected.</div>
+                    }
+                    else
+                    {
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <div class="badge bg-primary-light text-primary border border-primary-subtle px-4 py-2 rounded-pill fw-800">
+                                @GetCategoryName(cat.CategoryId)
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION D: OPERATIONAL STATES -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="map-pin"></i> Section D: States of Operation
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-2">
+                    @if (!Model.States.Any())
+                    {
+                        <div class="no-data-msg">No operational states specified.</div>
+                    }
+                    else
+                    {
+                        @foreach (var state in Model.States)
+                        {
+                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-bold">@state.StateName</span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION E: FINANCIAL DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="trending-up"></i> Section E: Financial Performance Detail
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Financial Year</th>
+                            <th>Total Turnover</th>
+                            <th>Environmental Services Income</th>
+                            <th>Turnover Doc</th>
+                            <th class="text-end">Env Doc</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.FinancialDetails.Any())
+                        {
+                            <tr><td colspan="5" class="no-data-msg">No financial statements submitted</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var fin in Model.FinancialDetails)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-dark">@fin.Year</td>
+                                    <td class="fw-bold text-primary">₹ @fin.Turnover.ToString("N2")</td>
+                                    <td class="fw-bold text-success">₹ @fin.EnvIncome.ToString("N2")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(fin.TurnoverStmtPath))
+                                        {
+                                            <a href="@fin.TurnoverStmtPath" target="_blank" class="btn btn-sm btn-link text-primary"><i data-lucide="external-link"></i> View</a>
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(fin.EnvStmtPath))
+                                        {
+                                            <a href="@fin.EnvStmtPath" target="_blank" class="btn btn-sm btn-link text-success"><i data-lucide="external-link"></i> View</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION F: REGISTERED ENVIRONMENTAL AUDITORS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="award"></i> Section F: Registered Environmental Auditors (CEA)
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Auditor Name</th>
+                            <th>Certificate Number</th>
+                            <th>Registration Category</th>
+                            <th class="text-end">Employment Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.CEADetails.Any())
+                        {
+                            <tr><td colspan="4" class="no-data-msg">No CEA details declared</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var cea in Model.CEADetails)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-dark">@cea.Name</td>
+                                    <td class="fw-bold text-primary">@cea.CertNo</td>
+                                    <td><span class="badge bg-light text-dark border">@cea.Category</span></td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(cea.ProofOfEmploymentPath))
+                                        {
+                                            <a href="@cea.ProofOfEmploymentPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION G: LABORATORY INFO & DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="beaker"></i> Section G: Environmental Testing Laboratory Detail
+            </div>
+            <div class="card-body p-4">
+                @if (Model.LaboratoryInfo == null)
+                {
+                    <div class="no-data-msg">No Laboratory Info available.</div>
+                }
+                else
+                {
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="info-label">EPA/SPCB Recognized Laboratory?</label>
+                            <div class="info-value">@(Model.LaboratoryInfo.HasLab ? "Yes" : "No")</div>
+                        </div>
+                        @if (Model.LaboratoryInfo.HasLab)
+                        {
+                            <div class="col-md-6">
+                                <label class="info-label">Type of Laboratory</label>
+                                <div class="info-value text-primary">@Model.LaboratoryInfo.LabType</div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (Model.LaboratoryInfo.HasLab)
+                    {
+                        <div class="table-responsive border rounded-3 bg-white mt-3">
+                            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+                                <thead class="table-light text-muted uppercase">
+                                    <tr>
+                                        <th>Name of Laboratory</th>
+                                        <th>Recognition Type</th>
+                                        <th class="text-end">Certificate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!Model.LaboratoryDetails.Any())
+                                    {
+                                        <tr><td colspan="3" class="text-center p-3 text-muted">No laboratory details listed</td></tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var lab in Model.LaboratoryDetails)
+                                        {
+                                            <tr>
+                                                <td class="fw-bold text-dark">@lab.Name</td>
+                                                <td>
+                                                    @foreach (var type in (lab.RecognitionTypes ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries))
+                                                    {
+                                                        <span class="badge bg-light text-primary border border-primary-subtle me-1">@type</span>
+                                                    }
+                                                </td>
+                                                <td class="text-end">
+                                                    @if (!string.IsNullOrEmpty(lab.CertificatePath))
+                                                    {
+                                                        <a href="@lab.CertificatePath" target="_blank" class="btn btn-sm btn-secondary rounded-pill px-3 fw-bold">View Cert</a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- SECTION H: HARDWARE & SOFTWARE DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="cpu"></i> Section H: Technical Instrumentation & Tools
+            </div>
+            <div class="card-body p-4">
+                <h6 class="fw-800 text-dark uppercase small mb-3">Hardware & Equipments</h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-hover align-middle" style="font-size: 0.85rem;">
+                        <thead class="table-light text-muted uppercase">
+                            <tr>
+                                <th>Equipment Name</th>
+                                <th>Quantity</th>
+                                <th>Calibration Status</th>
+                                <th class="text-end">Utilization Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.HardwareDetails.Any())
+                            {
+                                <tr><td colspan="4" class="text-center p-3 text-muted">No hardware equipment declared</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var hw in Model.HardwareDetails)
+                                {
+                                    <tr>
+                                        <td class="fw-bold text-dark">@hw.Name</td>
+                                        <td class="fw-bold text-primary">@hw.Quantity</td>
+                                        <td><span class="badge bg-light text-warning border fw-bold">@hw.CalibrationStatus</span></td>
+                                        <td class="text-end text-muted">@hw.Purpose</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="fw-800 text-dark uppercase small mb-3 border-top pt-4">Software Applications</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" style="font-size: 0.85rem;">
+                        <thead class="table-light text-muted uppercase">
+                            <tr>
+                                <th>Software Name</th>
+                                <th>Type / License</th>
+                                <th>Version</th>
+                                <th class="text-end">Utilization Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.SoftwareDetails.Any())
+                            {
+                                <tr><td colspan="4" class="text-center p-3 text-muted">No modeling or audit software declared</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var sw in Model.SoftwareDetails)
+                                {
+                                    <tr>
+                                        <td class="fw-bold text-dark">@sw.Name</td>
+                                        <td><span class="badge bg-light text-primary border">@sw.Type &bull; @sw.LicenceType</span></td>
+                                        <td class="fw-bold">@sw.Version</td>
+                                        <td class="text-end text-muted">@sw.Purpose</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION I: AUDIT EXPERIENCE -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="clipboard-check"></i> Section I: Industrial Auditing Experience
+            </div>
+            <div class="table-responsive">
+                <table class="modern-table review-table">
+                    <thead>
+                        <tr>
+                            <th>Project / Client</th>
+                            <th>Audit Category</th>
+                            <th>Year of Audit</th>
+                            <th class="text-end">Audit Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.AuditExperiences.Any())
+                        {
+                            <tr><td colspan="4" class="no-data-msg">No audit project history submitted</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var audit in Model.AuditExperiences)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-dark wrap-text">
+                                        @audit.ProjectName
+                                        <div class="text-muted small fw-bold mt-1">Client: @audit.ClientName</div>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">@audit.Scope</span></td>
+                                    <td class="fw-bold text-primary">@audit.Year</td>
+                                    <td class="text-end">
+                                        @if (!string.IsNullOrEmpty(audit.ReportPath))
+                                        {
+                                            <a href="@audit.ReportPath" target="_blank" class="text-primary"><i data-lucide="external-link" style="width: 18px;"></i></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION J: PAYMENT DETAILS -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="indian-rupee"></i> Section J: Portal Fee Payment Details
+            </div>
+            <div class="card-body p-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-7">
+                        @if (Model.PaymentDetail == null)
+                        {
+                            <div class="no-data-msg">No payment receipt available.</div>
+                        }
+                        else
+                        {
+                            <div class="payment-utr-card">
+                                <div class="small fw-800 text-primary uppercase mb-1">Transaction Ref (UTR)</div>
+                                <div class="fs-4 fw-800 text-dark">@Model.PaymentDetail.UTR</div>
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div class="text-dark small fw-bold">Amount: ₹ @Model.PaymentDetail.Amount.ToString("N0") &bull; @Model.PaymentDetail.PaymentDate.ToString("dd MMM yyyy")</div>
+                                    @if (!string.IsNullOrEmpty(Model.PaymentDetail.ReceiptPath))
+                                    {
+                                        <a href="@Model.PaymentDetail.ReceiptPath" target="_blank" class="btn btn-primary btn-sm px-4 rounded-pill fw-bold">View Receipt</a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-5">
+                        <div class="p-4 rounded-4 text-center @(Model.PaymentStatus == "Verified" ? "bg-emerald-subtle text-success" : "bg-warning-light text-warning")" 
+                             style="border: 1px dashed @(Model.PaymentStatus == "Verified" ? "var(--st-success)" : "var(--st-warning)");">
+                            <div class="small fw-800 text-muted uppercase mb-2">Finance Certification Status</div>
+                            <div class="fs-4 fw-800">@(Model.PaymentStatus ?? "Pending Review")</div>
+                            <div class="mt-2 x-small fw-800 uppercase text-muted">Authorized via Finance Portal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION K: DECLARATION -->
+        <div class="modern-card mb-4">
+            <div class="review-step-header">
+                <i data-lucide="file-text"></i> Section K: Authorized Declaration Statement
+            </div>
+            <div class="card-body p-4">
+                @if (Model.Declaration == null)
+                {
+                    <div class="no-data-msg">Declaration not signed.</div>
+                }
+                else
+                {
+                    <div class="row g-4">
+                        <div class="col-md-8">
+                            <div class="p-4 bg-light rounded-4 border border-dashed" style="line-height: 1.8;">
+                                <p class="mb-0 text-dark fw-bold italic small">
+                                    "We hereby declare that all technical details and supporting credentials uploaded inside this application are authentic, true and fully verifiable. In the event of any discrepancies, we assume complete corporate liability."
+                                </p>
+                            </div>
+                            <div class="mt-4 row g-3">
+                                <div class="col-6"><label class="info-label">Place of Declaration</label><div class="info-value">@Model.Declaration.Place</div></div>
+                                <div class="col-6"><label class="info-label">Signed Date</label><div class="info-value">@Model.Declaration.Date.ToString("dd MMM yyyy")</div></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @if (!string.IsNullOrEmpty(Model.Declaration.SignaturePath))
+                            {
+                                <div class="text-center p-3 border rounded-4 bg-white shadow-sm">
+                                    <img src="@Model.Declaration.SignaturePath" alt="Signature" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+                                    <div class="mt-3 border-top pt-2 fw-800 text-dark small">@Model.Declaration.Name</div>
+                                    <div class="x-small text-muted uppercase">@Model.Declaration.Designation</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- SECTION L: ALL UPLOADED DOCUMENTS -->
+        <div class="modern-card mb-5">
+            <div class="review-step-header">
+                <i data-lucide="folder-open"></i> Section L: Repository of Uploaded Documents
+            </div>
+            <div class="file-item-list">
+                @if (!Model.Documents.Any())
+                {
+                    <div class="no-data-msg">No custom files uploaded</div>
+                }
+                else
+                {
+                    @foreach (var doc in Model.Documents)
+                    {
+                        <div class="file-item-row">
+                            <div class="file-info">
+                                <div class="file-icon"><i data-lucide="file-check"></i></div>
+                                <div>
+                                    <div class="file-name">@doc.FileName</div>
+                                    <div class="file-meta">Type: <span class="badge bg-light text-dark fw-800 border ms-1">@doc.FileType</span> &bull; Uploaded: @doc.UploadedDate.ToString("dd MMM yyyy")</div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="@doc.FilePath" target="_blank" class="btn btn-secondary btn-sm px-4 rounded-pill fw-bold">View</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANE: DECISION (30%) -->
+    <div class="col-xl-4">
+        <div class="sticky-top" style="top: 100px;">
+            <div class="modern-card shadow-lg" style="border-width: 2px;">
+                <div class="p-3 px-4 border-bottom bg-white fw-800 text-dark d-flex align-items-center gap-2">
+                    <i data-lucide="shield" class="text-primary" style="width: 20px;"></i> REA Case Disposition
+                </div>
+                <div class="card-body p-4">
+                    <form id="reviewForm">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="mb-4">
+                            <label class="info-label mb-2">Application Disposition</label>
+                            <select name="status" class="form-select fw-bold" style="border-radius: 12px; height: 50px; border: 2px solid var(--a-line);">
+                                <option value="InReview" selected="@(Model.Status == CEA_RPL.Domain.Entities.ApplicationStatus.InReview)">Mark Under Review</option>
+                                <option value="Approved" selected="@(Model.Status == CEA_RPL.Domain.Entities.ApplicationStatus.Approved)" disabled="@(Model.PaymentStatus != "Verified")">
+                                    Approve Organization @(Model.PaymentStatus != "Verified" ? "(Locked)" : "")
+                                </option>
+                                <option value="Rejected" selected="@(Model.Status == CEA_RPL.Domain.Entities.ApplicationStatus.Rejected)">Reject Application</option>
+                                <option value="ClarificationRequested" selected="@(Model.Status == CEA_RPL.Domain.Entities.ApplicationStatus.ClarificationRequested)">Request Clarification</option>
+                            </select>
+                            @if (Model.PaymentStatus != "Verified")
+                            {
+                                <div class="mt-3 p-3 rounded-4 bg-warning-light small fw-bold" style="border: 1px solid #fee2b3;">
+                                    <i data-lucide="lock" class="me-1" style="width: 14px; vertical-align: middle;"></i> Higher-level approval is locked until Finance verifies payment receipt in Section J.
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="info-label mb-2">Administrative Remarks / Notes</label>
+                            @{
+                                var lastRemark = Model.AdminRemarks.OrderByDescending(r => r.CreatedDate).FirstOrDefault()?.Remark ?? "";
+                            }
+                            <textarea name="feedback" class="form-control" rows="8" placeholder="Enter findings, notes or clarification requirements..." style="border-radius: 12px; border: 2px solid var(--a-line); font-size: 0.9rem; padding: 16px;">@lastRemark</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm">
+                            Submit Final Disposition
+                        </button>
+                    </form>
+                    <div id="statusResult" class="mt-4 p-3 rounded-4 text-center fw-bold small" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- AUDIT METADATA -->
+            <div class="modern-card mt-4 p-4 text-center">
+                <div class="small fw-800 text-muted uppercase mb-3">REA System Metadata</div>
+                <div class="bg-light p-3 rounded-4">
+                    <div class="small fw-bold text-dark">Application Reference</div>
+                    <div class="text-primary fw-800">@Model.ApplicationNo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const reviewForm = document.getElementById('reviewForm');
+        const statusResult = document.getElementById('statusResult');
+
+        reviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusResult.style.display = 'block';
+            statusResult.innerHTML = '<span class="text-muted">Saving disposition to server...</span>';
+            const formData = new FormData(reviewForm);
+            
+            try {
+                const response = await fetch('/api/admin/update-rea-status', { method: 'POST', body: formData });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    statusResult.innerHTML = result.message;
+                    statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-emerald-subtle text-success";
+                    setTimeout(() => window.location.href = '/Admin/ReaApplications', 1500);
+                } else {
+                    statusResult.innerHTML = result.message;
+                    statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-error-subtle text-danger";
+                }
+            } catch (err) {
+                statusResult.innerHTML = 'Communication error.';
+                statusResult.className = "mt-4 p-3 rounded-4 text-center fw-bold small bg-error-subtle text-danger";
+            }
+        });
+        lucide.createIcons();
+    </script>
+}
+
+<style>
+    .bg-light { background: #f8fafc !important; }
+    .bg-emerald-subtle { background: #ecfdf5 !important; }
+    .bg-primary-light { background: var(--a-primary-light) !important; }
+    .x-small { font-size: 0.7rem; }
+</style>

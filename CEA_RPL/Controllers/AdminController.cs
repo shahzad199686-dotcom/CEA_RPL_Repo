@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CEA_RPL.Infrastructure.Data;
 using CEA_RPL.Models;
+using CEA_RPL.Domain.Entities;
 
 namespace CEA_RPL.Controllers;
 
@@ -10,11 +11,13 @@ namespace CEA_RPL.Controllers;
 public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly ReaDbContext _reaContext;
     private readonly CEA_RPL.Infrastructure.Services.IEncryptionService _encryptionService;
 
-    public AdminController(ApplicationDbContext context, CEA_RPL.Infrastructure.Services.IEncryptionService encryptionService)
+    public AdminController(ApplicationDbContext context, ReaDbContext reaContext, CEA_RPL.Infrastructure.Services.IEncryptionService encryptionService)
     {
         _context = context;
+        _reaContext = reaContext;
         _encryptionService = encryptionService;
     }
 
@@ -27,11 +30,25 @@ public class AdminController : Controller
             .ThenByDescending(a => a.Id)
             .ToListAsync();
 
-        ViewBag.Total = applicants.Count;
-        ViewBag.Pending = applicants.Count(a => a.Status == "Submitted" || a.Status == "UnderReview");
-        ViewBag.Approved = applicants.Count(a => a.Status == "Approved");
-        ViewBag.Rejected = applicants.Count(a => a.Status == "Rejected");
-        ViewBag.SubmittedToday = applicants.Count(a => a.SubmittedAt.HasValue && a.SubmittedAt.Value.Date == DateTime.UtcNow.Date);
+        var reaApps = await _reaContext.Applications
+            .ToListAsync();
+
+        ViewBag.RplTotal = applicants.Count;
+        ViewBag.ReaTotal = reaApps.Count;
+        ViewBag.RplPending = applicants.Count(a => a.Status == "Submitted" || a.Status == "UnderReview");
+        ViewBag.ReaPending = reaApps.Count(a => a.Status == ApplicationStatus.Submitted || a.Status == ApplicationStatus.InReview);
+
+        // Unified counts for widgets
+        ViewBag.Total = applicants.Count + reaApps.Count;
+        ViewBag.Pending = ViewBag.RplPending + ViewBag.ReaPending;
+        ViewBag.Approved = applicants.Count(a => a.Status == "Approved") + reaApps.Count(a => a.Status == ApplicationStatus.Approved);
+        ViewBag.Rejected = applicants.Count(a => a.Status == "Rejected") + reaApps.Count(a => a.Status == ApplicationStatus.Rejected);
+        
+        ViewBag.SubmittedToday = applicants.Count(a => a.SubmittedAt.HasValue && a.SubmittedAt.Value.Date == DateTime.UtcNow.Date) +
+                                 reaApps.Count(a => a.CreatedDate.Date == DateTime.UtcNow.Date && a.Status != ApplicationStatus.Draft);
+
+        ViewBag.FinancePending = applicants.Count(a => a.Status != "Draft" && (a.PaymentStatus ?? "Pending") == "Pending") +
+                                 reaApps.Count(a => a.Status != ApplicationStatus.Draft && (a.PaymentStatus ?? "Pending") == "Pending");
 
         return View(applicants);
     }
@@ -191,5 +208,96 @@ public class AdminController : Controller
     public IActionResult Help()
     {
         return View();
+    }
+
+    [HttpGet("Admin/ReaApplications")]
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+    public async Task<IActionResult> ReaApplications()
+    {
+        var apps = await _reaContext.Applications
+            .Include(a => a.ContactDetail)
+            .Include(a => a.OrganizationDetail)
+            .OrderByDescending(a => a.CreatedDate)
+            .ToListAsync();
+
+        return View(apps);
+    }
+
+    [HttpGet("Admin/ReaDetails/{id}")]
+    public async Task<IActionResult> ReaDetails(int id)
+    {
+        var app = await _reaContext.Applications
+            .Include(a => a.OrganizationDetail)
+            .Include(a => a.ContactDetail)
+            .Include(a => a.Categories)
+            .Include(a => a.States)
+            .Include(a => a.FinancialDetails)
+            .Include(a => a.CEADetails)
+            .Include(a => a.LaboratoryInfo)
+            .Include(a => a.LaboratoryDetails)
+            .Include(a => a.HardwareDetails)
+            .Include(a => a.SoftwareDetails)
+            .Include(a => a.AuditExperiences)
+            .Include(a => a.PaymentDetail)
+            .Include(a => a.Declaration)
+            .Include(a => a.Checklist)
+            .Include(a => a.Documents)
+            .Include(a => a.AdminRemarks)
+            .Include(a => a.StatusHistories)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        if (app == null) return NotFound();
+
+        // Decrypt payment UTR if encrypted
+        if (app.PaymentDetail != null && !string.IsNullOrEmpty(app.PaymentDetail.UTR))
+        {
+            try
+            {
+                app.PaymentDetail.UTR = _encryptionService.Decrypt(app.PaymentDetail.UTR);
+            }
+            catch { /* Ignore decryption failure */ }
+        }
+
+        return View(app);
+    }
+
+    [HttpPost("api/admin/update-rea-status")]
+    public async Task<IActionResult> UpdateReaStatus([FromForm] int id, [FromForm] string status, [FromForm] string? feedback)
+    {
+        var app = await _reaContext.Applications.FindAsync(id);
+        if (app == null) return NotFound();
+
+        if (!Enum.TryParse<ApplicationStatus>(status, true, out var parsedStatus))
+        {
+            return BadRequest(new { message = "Invalid status value." });
+        }
+
+        // Safety Check: Admin cannot approve if Finance has not verified payment
+        if (parsedStatus == ApplicationStatus.Approved && app.PaymentStatus != "Verified")
+        {
+            return BadRequest(new { message = "Cannot approve application. Awaiting Finance Payment Verification." });
+        }
+
+        app.Status = parsedStatus;
+        app.LastUpdatedDate = DateTime.UtcNow;
+
+        _reaContext.AdminRemarks.Add(new AdminRemark
+        {
+            ApplicationId = id,
+            Remark = feedback ?? "Status updated by Centralized Admin.",
+            AdminId = User.Identity?.Name ?? "Admin",
+            CreatedDate = DateTime.UtcNow
+        });
+
+        _reaContext.StatusHistories.Add(new StatusHistory
+        {
+            ApplicationId = id,
+            Status = parsedStatus,
+            ChangedBy = User.Identity?.Name ?? "Admin",
+            ChangedDate = DateTime.UtcNow
+        });
+        
+        await _reaContext.SaveChangesAsync();
+        return Ok(new { message = $"Application status updated to {status}." });
     }
 }
